@@ -4,20 +4,47 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  color: #d1d5db; /* text-gray-300 */
   background: radial-gradient(circle at top, #0d0d10 0%, #0a0a0c 100%);
+  color: #e5e7eb;
   background-attachment: fixed;
   overflow-x: hidden;
 }
 
-/* Custom scrollbar */
+/* Sidebar glass effect */
+aside {
+  background: rgba(20, 20, 25, 0.7);
+  backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Topbar glass effect */
+header {
+  background: rgba(25, 25, 30, 0.6);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Neon scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #111;
 }
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #00b3ff, #b600ff);
   border-radius: 10px;
 }
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 6s ease-in-out infinite;
+}
+
