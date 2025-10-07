@@ -23,7 +23,7 @@ export default function DashboardPage() {
           Dashboard Monitoring Kependudukan
         </h1>
         <p className="text-sm text-gray-400">
-          Sistem monitoring futuristik Disdukcapil Kota Bandung
+          Sistem Monitoring Aktivitas Layanan Informasi Admindukcapil Kota Bandung
         </p>
       </div>
 

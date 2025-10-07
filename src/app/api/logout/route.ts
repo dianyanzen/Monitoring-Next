@@ -1,64 +1,67 @@
 import { NextResponse } from "next/server";
 import { getOracleConnection } from "@/lib/oracle";
 
-/**
- * 🔹 Logout API untuk sistem Monitoring Futuristik
- * Fungsi ini mereplikasi behavior dologout() Laravel:
- * - Update SIAK_SESSION_PLUS: IS_ACTIVE = 0, LAST_ACTIVITY = SYSDATE
- * - Menghapus cookie session_user
- * - Redirect user ke halaman login
- */
-
-export async function POST(req: Request) {
-  let connection;
+async function handleLogout(req: Request) {
+  let connection: any;
 
   try {
-    // Koneksi ke Oracle
+    console.log("🔍 [Logout] Starting logout process...");
     connection = await getOracleConnection();
+    console.log("✅ Oracle connection acquired.");
 
-    // Ambil cookie session_user dari request
     const cookieHeader = req.headers.get("cookie");
+    console.log("🍪 Cookie header:", cookieHeader);
+
     const match = cookieHeader?.match(/session_user=([^;]+)/);
 
-    // Jika tidak ada session, langsung hapus cookie dan redirect
+    // Jika tidak ada cookie session
     if (!match) {
+      console.warn("⚠️ Tidak ada cookie session_user.");
       const res = NextResponse.redirect(new URL("/login", req.url));
       res.cookies.delete("session_user");
       return res;
     }
 
-    // Parse data session user dari cookie
-    const session = JSON.parse(decodeURIComponent(match[1]));
-    const user_id = session.S_USER_ID;
-
-    // Cek apakah user punya record aktif
-    const check = await connection.execute(
-      `SELECT COUNT(1) AS CNT FROM SIAK_SESSION_PLUS WHERE USER_ID = :uid`,
-      [user_id]
-    );
-
-    const count =
-      Array.isArray(check.rows) && check.rows.length > 0
-        ? (check.rows[0] as any).CNT
-        : 0;
-
-    // Jika ada record, update statusnya jadi nonaktif
-    if (count > 0) {
-      await connection.execute(
-        `
-        UPDATE SIAK_SESSION_PLUS
-        SET LAST_ACTIVITY = SYSDATE,
-            IS_ACTIVE = 0
-        WHERE USER_ID = :uid
-        `,
-        [user_id],
-        { autoCommit: true }
-      );
+    // Parse session_user JSON
+    let user_id = "";
+    try {
+      const session = JSON.parse(decodeURIComponent(match[1]));
+      user_id = session?.S_USER_ID ?? "";
+      console.log("🧾 Parsed session:", session);
+      console.log("🪪 user_id:", user_id);
+    } catch (err) {
+      console.error("❌ Gagal parsing session cookie:", err);
+      const res = NextResponse.redirect(new URL("/login", req.url));
+      res.cookies.delete("session_user");
+      return res;
     }
 
-    // Hapus cookie session_user dan redirect ke halaman login
+    // Cek kalau tidak ada user_id
+    if (!user_id) {
+      console.warn("⚠️ Tidak ada user_id dalam session.");
+      const res = NextResponse.redirect(new URL("/login", req.url));
+      res.cookies.delete("session_user");
+      return res;
+    }
+
+    // ✅ Update status logout di Oracle
+    console.log("🟡 Menonaktifkan session untuk user:", user_id);
+
+    await connection.execute(
+      `UPDATE SIAK_SESSION_PLUS 
+      SET LAST_ACTIVITY = SYSDATE, IS_ACTIVE = 0 
+      WHERE USER_ID = :1`,
+      [user_id], // ← pakai array, bukan object
+      { autoCommit: true }
+    );
+
+
+    console.log("✅ Session user berhasil diupdate di Oracle.");
+
+    // Hapus cookie dan redirect ke /login
     const response = NextResponse.redirect(new URL("/login", req.url));
     response.cookies.delete("session_user");
+    console.log("🚪 Logout sukses. Cookie dihapus.");
 
     return response;
   } catch (err) {
@@ -68,11 +71,18 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   } finally {
-    if (connection) await connection.close();
+    if (connection) {
+      await connection.close();
+      console.log("🔌 Oracle connection closed.");
+    }
   }
 }
 
-// 🔹 Boleh juga akses langsung via GET (misal klik link Logout)
+// Route handler untuk POST dan GET
+export async function POST(req: Request) {
+  return handleLogout(req);
+}
+
 export async function GET(req: Request) {
-  return POST(req);
+  return handleLogout(req);
 }

@@ -1,37 +1,47 @@
-/* @import url("/assets/material-design-iconic-font/css/materialdesignicons.min.css"); */
+/* ============================================================
+   🔷 IMPORT & TAILWIND BASE
+   ============================================================ */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Ensure this file is processed by Tailwind/PostCSS, not loaded directly in the browser */
+
+/* @import url("/assets/material-design-iconic-font/css/materialdesignicons.min.css"); */
 
 
+/* ============================================================
+   🔷 BODY & LAYOUT BASE
+   ============================================================ */
 html, body {
   overflow-x: hidden;
 }
 
-
 body {
   font-family: 'Inter', sans-serif;
   background: radial-gradient(circle at top, #0d0d10 0%, #0a0a0c 100%);
-  color: #e5e7eb;
   background-attachment: fixed;
+  color: #e5e7eb;
   overflow-x: hidden;
 }
 
-/* Sidebar glass effect */
+/* ============================================================
+   🔷 GLASS EFFECT COMPONENTS
+   ============================================================ */
 aside {
   background: rgba(20, 20, 25, 0.7);
   backdrop-filter: blur(12px);
   border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Topbar glass effect */
 header {
   background: rgba(25, 25, 30, 0.6);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Neon scrollbar */
+/* ============================================================
+   🔷 SCROLLBAR NEON
+   ============================================================ */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -40,21 +50,224 @@ header {
   border-radius: 10px;
 }
 
+/* ============================================================
+   🔷 CYBERPUNK BACKGROUND ANIMATIONS
+   ============================================================ */
+@keyframes movegrid {
+  from { background-position: 0 0; }
+  to { background-position: 40px 40px; }
+}
+
+@keyframes glitch {
+  0%, 100% { transform: translate(0, 0); opacity: 0.4; }
+  20% { transform: translate(-2px, 2px); opacity: 0.6; }
+  40% { transform: translate(2px, -2px); opacity: 0.3; }
+  60% { transform: translate(-1px, 1px); opacity: 0.5; }
+  80% { transform: translate(1px, -1px); opacity: 0.4; }
+}
+
+@keyframes scanmove {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0; transform: scaleY(0.8); }
+  50% { opacity: 1; transform: scaleY(1.2); }
+}
+
+@keyframes pulse_delay {
+  0%, 100% { opacity: 0; }
+  25% { opacity: 1; }
+  75% { opacity: 0.8; }
+}
+
+/* ============================================================
+   🔷 GLOW, HOLOGRAM, DAN EFEK TEKS
+   ============================================================ */
+.glow {
+  text-shadow: 0 0 10px #00ffff,
+               0 0 20px #00ffff88,
+               0 0 40px #00ffff44;
+}
+
+@keyframes holo {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes glowline {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ============================================================
+   🔷 SCANLINE PANEL PUTIH (EFEK CRT)
+   ============================================================ */
+@keyframes scanlineMove {
+  0% { background-position-y: 0; }
+  100% { background-position-y: 10px; }
+}
+
+.animate-scanline {
+  animation: scanlineMove 1.8s linear infinite;
+}
+
+/* ============================================================
+   🔷 NEON GRADIENT DAN GLOW PULSE
+   ============================================================ */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes glowpulse {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(0,255,255,0.4)); }
+  50% { filter: drop-shadow(0 0 12px rgba(255,0,255,0.5)); }
+}
+
 @keyframes pulse-slow {
-  0%, 100% {
-    opacity: 0.6;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.9; }
+}
+
+/* ============================================================
+   🔷 UNIVERSAL ANIMATE CLASSES
+   ============================================================ */
+.animate-gradientShift {
+  animation: gradientShift 8s ease-in-out infinite;
+}
+
+.animate-glowline {
+  animation: glowline 4s linear infinite;
+}
+
+.animate-glowpulse {
+  animation: glowpulse 3s ease-in-out infinite;
 }
 
 .animate-pulse-slow {
-  animation: pulse 8s ease-in-out infinite;
+  animation: pulse-slow 6s ease-in-out infinite;
 }
-@keyframes pulse {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 0.6; }
+
+.animate-holo {
+  animation: holo 10s linear infinite;
 }
+
+/* ============================================================
+   🔷 CYBERPUNK DECORATIVE UTILITY CLASSES
+   ============================================================ */
+/* Grid lembut bergerak */
+.cyber-grid {
+  background:
+    linear-gradient(90deg, rgba(0,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(rgba(255,0,255,0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: movegrid 20s linear infinite;
+}
+
+/* Glitch aura magenta */
+.cyber-glitch {
+  mix-blend-mode: screen;
+  background: radial-gradient(circle, rgba(255,0,255,0.08) 0%, transparent 70%);
+  animation: glitch 3s infinite;
+}
+
+/* Scanline horizontal tipis */
+.cyber-scan {
+  background: repeating-linear-gradient(transparent 0px, rgba(255,255,255,0.05) 1px, transparent 2px);
+  opacity: 0.3;
+  animation: scanmove 6s linear infinite;
+}
+
+/* Pulse cahaya vertikal di tepi layar */
+.cyber-pulse-left {
+  background: linear-gradient(to bottom, #00ffff00, #00ffff66, #00ffff00);
+  width: 2px;
+  animation: pulse 5s linear infinite;
+}
+
+.cyber-pulse-right {
+  background: linear-gradient(to bottom, #ff00ff00, #ff00ff66, #ff00ff00);
+  width: 2px;
+  animation: pulse_delay 5s linear infinite;
+}
+
+/* ============================================================
+   🔷 BONUS: SHIMMER EFEK UNTUK TEKS ATAU BUTTON
+   ============================================================ */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #00ffff33 25%, #ffffff55 50%, #ff00ff33 75%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 5s linear infinite;
+}
+
+/* ============================================================
+   🔷 TAMBAHAN GLOBAL VISUAL STABILITY
+   ============================================================ */
+* {
+  scroll-behavior: smooth;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* === Holographic Panel === */
+.holo-panel {
+  backdrop-filter: blur(10px) saturate(1.5);
+  background: linear-gradient(150deg, rgba(255,255,255,0.9), rgba(240,240,255,0.1));
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 0 60px rgba(0,255,255,0.15), 0 0 100px rgba(255,0,255,0.1);
+}
+
+
+/* === Glitchy Logo === */
+.glitchy {
+  animation: rgbshift 2s infinite linear;
+}
+
+@keyframes rgbshift {
+  0%, 100% { filter: none; }
+  33% { filter: drop-shadow(2px 0 red); }
+  66% { filter: drop-shadow(-2px 0 cyan); }
+}
+
+/* === Sweep Scan === */
+@keyframes movegrid {
+  from { background-position: 0 0; }
+  to { background-position: 42px 42px; }
+}
+
+@keyframes sweep {
+  0% { background-position: 0 -250px; }
+  100% { background-position: 0 250px; }
+}
+
+@keyframes cyanchange {
+  0%,100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes borderGlow {
+  0%,100% {
+    box-shadow:
+      inset 0 0 12px rgba(0,255,255,0.15),
+      0 0 25px rgba(0,255,255,0.2),
+      0 0 40px rgba(0,255,255,0.15);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 20px rgba(0,255,255,0.25),
+      0 0 35px rgba(0,255,255,0.3),
+      0 0 60px rgba(0,255,255,0.25);
+  }
+}
+
+

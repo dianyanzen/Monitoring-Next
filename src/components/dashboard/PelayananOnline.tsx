@@ -1,137 +1,164 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+type TItem = {
+  name: string;
+  today: { baru: number; upload: number; tidakLengkap: number };
+  total: { baru: number; upload: number; tidakLengkap: number };
+  verif: number;
+  publish: number;
+};
+
+function useSalaman() {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<TItem[]>([]);
+
+  useEffect(() => {
+    let alive = true;
+    async function load() {
+      try {
+        const res = await fetch("/api/dashboard/salaman", { cache: "no-store" });
+        const json = await res.json();
+        if (!alive) return;
+        if (json?.success && Array.isArray(json?.data)) setData(json.data);
+        else setData([]);
+      } catch {
+        if (alive) setData([]);
+      } finally {
+        if (alive) setLoading(false);
+      }
+    }
+    load();
+    return () => { alive = false; };
+  }, []);
+
+  return { loading, data };
+}
+
 export default function PelayananOnline() {
-  const data = [
-    {
-      name: "Akta Kelahiran",
-      today: { baru: 71, upload: 3, tidakLengkap: 18 },
-      total: { baru: 168, upload: 19, tidakLengkap: 183 },
-      verif: 22,
-      publish: 0,
-    },
-    {
-      name: "Akta Kematian",
-      today: { baru: 59, upload: 5, tidakLengkap: 6 },
-      total: { baru: 59, upload: 10, tidakLengkap: 59 },
-      verif: 17,
-      publish: 0,
-    },
-    {
-      name: "Pindah Keluar",
-      today: { baru: 3, upload: 0, tidakLengkap: 3 },
-      total: { baru: 3, upload: 0, tidakLengkap: 53 },
-      verif: 21,
-      publish: 0,
-    },
-    {
-      name: "Kartu Identitas Anak",
-      today: { baru: 0, upload: 0, tidakLengkap: 0 },
-      total: { baru: 0, upload: 23, tidakLengkap: 0 },
-      verif: 0,
-      publish: 0,
-    },
-    {
-      name: "Perbaikan Data",
-      today: { baru: 1, upload: 0, tidakLengkap: 0 },
-      total: { baru: 2, upload: 2, tidakLengkap: 8 },
-      verif: 4,
-      publish: 0,
-    },
-    {
-      name: "Input Biodata",
-      today: { baru: 0, upload: 0, tidakLengkap: 0 },
-      total: { baru: 0, upload: 0, tidakLengkap: 0 },
-      verif: 0,
-      publish: 0,
-    },
-    {
-      name: "Kartu Keluarga",
-      today: { baru: 11, upload: 0, tidakLengkap: 6 },
-      total: { baru: 36, upload: 2, tidakLengkap: 53 },
-      verif: 3,
-      publish: 0,
-    },
-    {
-      name: "Cetak KTP-el",
-      today: { baru: 0, upload: 0, tidakLengkap: 0 },
-      total: { baru: 0, upload: 0, tidakLengkap: 0 },
-      verif: 0,
-      publish: 0,
-    },
-    {
-      name: "Pindah Datang",
-      today: { baru: 0, upload: 0, tidakLengkap: 0 },
-      total: { baru: 0, upload: 0, tidakLengkap: 0 },
-      verif: 0,
-      publish: 0,
-    },
-  ];
+  const { loading, data } = useSalaman();
 
   return (
-    <div className="bg-[#0b0b0b]/80 p-6 rounded-xl border border-gray-800 mt-8">
-      <h2 className="text-xl font-semibold text-cyan-400 mb-1">
-        Dashboard Pelayanan Online
-      </h2>
-      <p className="text-sm text-gray-400 mb-6">
-        Status pengajuan dan progress pelayanan daring Disdukcapil Kota Bandung
-      </p>
+    <section className="relative bg-[#0a0f14]/80 p-6 rounded-2xl border border-cyan-400/20 shadow-[0_0_25px_rgba(0,255,255,0.15)] backdrop-blur-xl overflow-hidden group mt-8">
+      {/* cyberpunk grid background */}
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,255,255,0.04)_1px,transparent_1px),linear-gradient(rgba(0,255,255,0.04)_1px,transparent_1px)] bg-[length:42px_42px] animate-[movegrid_24s_linear_infinite] opacity-25 pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(0,255,255,0.12)_50%,transparent_60%)] animate-[sweep_6s_linear_infinite]" />
+      <div className="absolute inset-0 rounded-2xl border border-cyan-400/10 shadow-[inset_0_0_20px_rgba(0,255,255,0.15)] pointer-events-none" />
 
-      {/* Grid 3 kolom (responsif otomatis) */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data.map((item, i) => (
-          <div
-            key={i}
-            className="bg-gradient-to-b from-[#0e0e0e]/80 to-[#101010]/95 border border-gray-800 p-5 rounded-xl hover:shadow-[0_0_15px_rgba(0,255,255,0.2)] transition-all"
-          >
-            <h3 className="text-lg font-semibold text-white mb-3">{item.name}</h3>
+      <div className="relative z-10">
+        {/* Judul utama */}
+        <h2 className="text-center text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-cyan-400 to-cyan-200 animate-cyanchange drop-shadow-[0_0_8px_rgba(0,255,255,0.5)] mb-2">
+          Dashboard Pelayanan Online
+        </h2>
+        <p className="text-center text-sm text-cyan-200/80 mb-8">
+          Status pengajuan dan progres pelayanan daring Disdukcapil Kota Bandung
+        </p>
 
-            <div className="space-y-1 text-sm">
-              <p className="text-cyan-400 font-medium">Hari Ini</p>
-              <div className="flex justify-between">
-                <span>Baru:</span>
-                <span>{item.today.baru.toLocaleString("id-ID")}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Upload Ulang:</span>
-                <span>{item.today.upload.toLocaleString("id-ID")}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Tidak Lengkap:</span>
-                <span>{item.today.tidakLengkap.toLocaleString("id-ID")}</span>
-              </div>
+        {loading ? (
+          <p className="text-center text-cyan-300/70 animate-pulse">
+            Memuat data pelayanan...
+          </p>
+        ) : data.length === 0 ? (
+          <p className="text-center text-cyan-300/70 italic">
+            Tidak ada data yang tersedia saat ini.
+          </p>
+        ) : (
+          <>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {data.map((item, i) => (
+                <div
+                  key={i}
+                  className="relative bg-[#0d151b]/80 rounded-xl border border-cyan-400/20 p-5 hover:shadow-[0_0_25px_rgba(0,255,255,0.25)] transition-all"
+                >
+                  {/* Nama layanan */}
+                  <h3 className="text-lg font-semibold text-center text-white mb-4 drop-shadow-[0_0_6px_rgba(0,255,255,0.3)]">
+                    {item.name}
+                  </h3>
+
+                  {/* Hari Ini */}
+                  <div className="mb-4">
+                    <p className="text-cyan-400 font-semibold text-center mb-2">
+                      Hari Ini
+                    </p>
+                    <div className="space-y-1 text-sm">
+                      <div className="flex justify-between text-cyan-100/90">
+                        <span>Baru</span>
+                        <span className="font-medium text-white">
+                          {item.today.baru.toLocaleString("id-ID")}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-cyan-100/90">
+                        <span>Upload Ulang</span>
+                        <span className="font-medium text-white">
+                          {item.today.upload.toLocaleString("id-ID")}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-cyan-100/90">
+                        <span>Tidak Lengkap</span>
+                        <span className="font-medium text-white">
+                          {item.today.tidakLengkap.toLocaleString("id-ID")}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Keseluruhan */}
+                  <div className="mb-4">
+                    <p className="text-cyan-400 font-semibold text-center mb-2">
+                      Keseluruhan
+                    </p>
+                    <div className="space-y-1 text-sm">
+                      <div className="flex justify-between text-cyan-100/90">
+                        <span>Baru</span>
+                        <span className="font-medium text-white">
+                          {item.total.baru.toLocaleString("id-ID")}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-cyan-100/90">
+                        <span>Upload Ulang</span>
+                        <span className="font-medium text-white">
+                          {item.total.upload.toLocaleString("id-ID")}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-cyan-100/90">
+                        <span>Tidak Lengkap</span>
+                        <span className="font-medium text-white">
+                          {item.total.tidakLengkap.toLocaleString("id-ID")}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Verifikasi & Publish */}
+                  <div className="flex justify-between border-t border-cyan-400/10 pt-3 text-sm">
+                    <div className="text-left">
+                      <p className="text-cyan-400 font-medium leading-tight">
+                        Terverifikasi
+                      </p>
+                      <p className="text-white font-semibold">
+                        {item.verif.toLocaleString("id-ID")}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-cyan-400 font-medium leading-tight">
+                        Terpublikasi
+                      </p>
+                      <p className="text-white font-semibold">
+                        {item.publish.toLocaleString("id-ID")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
 
-            <div className="mt-4 space-y-1 text-sm">
-              <p className="text-cyan-400 font-medium">Keseluruhan</p>
-              <div className="flex justify-between">
-                <span>Baru:</span>
-                <span>{item.total.baru.toLocaleString("id-ID")}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Upload Ulang:</span>
-                <span>{item.total.upload.toLocaleString("id-ID")}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Tidak Lengkap:</span>
-                <span>{item.total.tidakLengkap.toLocaleString("id-ID")}</span>
-              </div>
-            </div>
-
-            <div className="mt-4 flex justify-between text-sm">
-              <div>
-                <p className="text-cyan-400 font-medium">Terverifikasi</p>
-                <p>{item.verif.toLocaleString("id-ID")}</p>
-              </div>
-              <div>
-                <p className="text-cyan-400 font-medium">Terpublish</p>
-                <p>{item.publish.toLocaleString("id-ID")}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+            <p className="text-center text-xs text-cyan-300/60 mt-8 italic">
+              Sumber data: Pelayanan Salaman — Disdukcapil Kota Bandung diperbarui real-time
+            </p>
+          </>
+        )}
       </div>
-
-      <div className="text-xs text-gray-500 mt-5 italic">
-        Data simulasi dummy — update otomatis saat API real-time diaktifkan
-      </div>
-    </div>
+    </section>
   );
 }
