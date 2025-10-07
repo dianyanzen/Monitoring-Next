@@ -1,0 +1,195 @@
+/* @font-face {
+	font-family: Arial;
+	src: url("{{ storage_path('fonts/arial.ttf') }}") format('truetype');
+	-fs-pdf-font-embed: embed;
+	-fs-pdf-font-encoding: Identity-H;
+}
+@font-face {
+	font-family: 'OCR A Extended';
+	src: url("{{ storage_path('fonts/OCRAEXT.TTF') }}");
+	font-weight:bold;
+	-fs-pdf-font-embed: embed;
+	-fs-pdf-font-encoding: Identity-H;
+}
+@font-face {
+	font-family: Arial;
+	src: url("{{ storage_path('fonts/arialbd.ttf') }}") format('truetype');
+	font-weight:bold;
+	-fs-pdf-font-embed: embed;
+	-fs-pdf-font-encoding: Identity-H;
+}
+@font-face {
+	font-family: Arial;
+	src: url("{{ storage_path('fonts/ariali.ttf') }}") format('truetype');
+	font-style:italic;
+	-fs-pdf-font-embed: embed;
+	-fs-pdf-font-encoding: Identity-H;
+}
+@font-face {
+	font-family: Arial;
+	src: url("{{ storage_path('fonts/arialbi.ttf') }}") format('truetype');
+	font-style:italic;
+	font-weight:bold;	
+	-fs-pdf-font-embed: embed;
+	-fs-pdf-font-encoding: Identity-H;
+} */
+@page {  
+	margin: 0 0 0 0; 
+}
+@page :first {
+  margin-top: -0.21cm;
+}
+body{
+	font-family: Arial, Gadget, sans-serif;
+	font-size: 12px;
+}
+.ocraext{
+	font-family:'OCR A Extended';
+	font-size: 1.39em;	
+}
+.halamanbaru{
+	page-break-after:always;
+	margin:0 0 0 0;
+	padding:0 0 0 0;
+	height:0;
+}
+table{
+	page-break-after:auto;
+	margin-left:30px;
+}
+tr{
+	page-break-inside:avoid; 
+	page-break-after:auto
+}
+thead{
+	display:table-header-group;
+}
+tfoot{
+	display:table-footer-group;	
+}
+table, th, td{
+	border-collapse:collapse;			  
+}
+table.bordered, .bordered th , .bordered td{
+	border: 1px solid black;
+	padding: 3px 3px 0px 3px;
+}
+td.bordered{
+	border: 1px solid black;
+}
+.bordered th{
+	background-color:#dcdddd;
+}
+.kiri{
+	text-align:left;
+}
+.kanan{
+	text-align:right;
+}
+.tengah{
+	text-align:center;	
+}
+.atas{
+	vertical-align:top;
+}
+.bawah{
+	vertical-align:bottom;
+}
+.vtengah{
+	vertical-align:middle;
+}
+.font29{
+	font-size:40px;
+}
+.font28{
+	font-size:38px;
+}
+.font27{
+	font-size:27px;
+}
+.font26{
+	font-size:26px;
+}
+.font25{
+	font-size:25px;
+}
+.font24{
+	font-size:24px;
+}
+.font23{
+	font-size:23px;
+}
+.font22{
+	font-size:22px;
+}
+.font21{
+	font-size:21px;
+}
+.font20{
+	font-size:20px;
+}
+.font19{
+	font-size:19px;
+}
+.font18{
+	font-size:18px;
+}
+.font17{
+	font-size:17px;
+}
+.font16{
+	font-size:16px;
+}
+.font15{
+	font-size:15px;
+}
+.font14{
+	font-size:14px;
+}
+.font13{
+	font-size:13px;
+}
+
+.font12{
+	font-size:12px;
+}
+
+.font11{
+	font-size:11px;
+}
+
+.font10{
+	font-size:10px;
+}
+.font9{
+	font-size:9px;
+}
+.font81{
+	font-size:0.67em;
+}
+.font8{
+	font-size:8px;
+}
+.font7{
+	font-size:7px;
+}
+.font6{
+	font-size:6px;
+}
+.font5{
+	font-size:5px;
+}
+.rata {
+	 text-align: justify;
+	 text-justify: inter-word;
+}
+.atas tr{
+	vertical-align: top;
+}
+.melayang_wrap{
+	position: relative;
+}
+.melayang_wrap .melayang{
+	position: absolute;
+	z-index: -1;
+}

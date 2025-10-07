@@ -1,6 +1,13 @@
+/* @import url("/assets/material-design-iconic-font/css/materialdesignicons.min.css"); */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+html, body {
+  overflow-x: hidden;
+}
+
 
 body {
   font-family: 'Inter', sans-serif;
@@ -45,6 +52,9 @@ header {
 }
 
 .animate-pulse-slow {
-  animation: pulse-slow 6s ease-in-out infinite;
+  animation: pulse 8s ease-in-out infinite;
 }
-
+@keyframes pulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.6; }
+}
