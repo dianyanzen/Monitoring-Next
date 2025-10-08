@@ -168,7 +168,7 @@ export default function Sidebar() {
       />
 
       <div className="relative text-cyan-400 font-semibold text-lg p-4 border-b border-cyan-800/40 backdrop-blur-sm">
-        ⚡ Navigation
+        &nbsp;
       </div>
 
       <div className="flex-1 overflow-y-auto p-3 relative z-10">

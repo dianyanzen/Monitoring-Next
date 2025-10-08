@@ -270,4 +270,41 @@ header {
   }
 }
 
+/* === Hacker Lab Glitch Effect === */
+.glitch {
+  position: relative;
+  text-shadow: 0 0 4px #00ffff, 0 0 8px #00ffff;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  width: 100%;
+  color: #00ffff;
+  clip: rect(0, 0, 0, 0);
+}
+.glitch::before {
+  animation: glitchTop 2s infinite linear alternate-reverse;
+  color: #ff00ff;
+}
+.glitch::after {
+  animation: glitchBottom 2s infinite linear alternate-reverse;
+  color: #00ffff;
+}
+@keyframes glitchTop {
+  0%, 100% { clip: rect(0, 9999px, 0, 0); }
+  20% { clip: rect(0, 9999px, 10px, 0); }
+  40% { clip: rect(0, 9999px, 5px, 0); }
+  60% { clip: rect(0, 9999px, 8px, 0); }
+  80% { clip: rect(0, 9999px, 3px, 0); }
+}
+@keyframes glitchBottom {
+  0%, 100% { clip: rect(0, 9999px, 0, 0); }
+  20% { clip: rect(5px, 9999px, 10px, 0); }
+  40% { clip: rect(3px, 9999px, 8px, 0); }
+  60% { clip: rect(4px, 9999px, 6px, 0); }
+  80% { clip: rect(2px, 9999px, 4px, 0); }
+}
+
 

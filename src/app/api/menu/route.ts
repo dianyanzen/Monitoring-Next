@@ -4,11 +4,12 @@ import { getOracleConnection } from "@/lib/oracle";
 // ✅ Fungsi recursive ambil sub-menu (seperti Shr::get_sub_menu)
 async function getSubMenus(connection: any, parentId: number, userLevel: number) {
   const result = await connection.execute(
-    `SELECT MENU_ID, PARENT_ID, ICON, TITLE, URL, IS_ACTIVE, USER_LEVEL, MENU_LEVEL
+    `SELECT MENU_ID, PARENT_ID, ICON, TITLE, URL, IS_ACTIVE, USER_LEVEL, MENU_LEVEL, IS_NEXT
      FROM VW_SIAK_MENU
      WHERE USER_LEVEL = :user_level
        AND PARENT_ID = :parent_id
        AND ACTIVE_MENU = 1
+       AND IS_NEXT = 1
      ORDER BY LEVEL_HEAD, LEVEL_SUB, LEVEL_CONTENT, TITLE`,
     { user_level: userLevel, parent_id: parentId }
   );
@@ -34,11 +35,12 @@ export async function GET() {
 
     // ✅ Ambil menu utama (MENU_LEVEL = 1)
     const result = await connection.execute(
-      `SELECT MENU_ID, PARENT_ID, ICON, TITLE, URL, IS_ACTIVE, USER_LEVEL, MENU_LEVEL
+      `SELECT MENU_ID, PARENT_ID, ICON, TITLE, URL, IS_ACTIVE, USER_LEVEL, MENU_LEVEL, IS_NEXT
        FROM VW_SIAK_MENU
        WHERE USER_LEVEL = :user_level
          AND MENU_LEVEL = 1
          AND ACTIVE_MENU = 1
+         AND IS_NEXT = 1
        ORDER BY LEVEL_HEAD, LEVEL_SUB, LEVEL_CONTENT, TITLE`,
       { user_level: userLevel }
     );
