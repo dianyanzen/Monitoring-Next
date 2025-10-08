@@ -1,3 +1,4 @@
+// FILE: src/hooks/dashboard/useCapaian.ts
 "use client";
 
 import { useEffect, useState } from "react";
@@ -17,59 +18,42 @@ type TCapaianAPI = {
   };
 };
 
-const toNum = (s?: string) => Number(String(s ?? "0").replace(/\./g, "").replace(",", ".")) || 0;
-const toPct = (s?: string) => Number(String(s ?? "0").replace("%", "").replace(",", ".")) || 0;
+const toNum = (s?: string) =>
+  Number(String(s ?? "0").replace(/\./g, "").replace(",", ".")) || 0;
 
 export function useCapaian() {
   const [loading, setLoading] = useState(true);
-  const [rows, setRows] = useState([
+  const [rows, setRows] = useState<
     {
-      key: "rekam",
-      title: "Perekaman KTP-EL",
-      realisasi: "0",
-      persenR: "0.00%",
-      target: "0",
-      persenT: "0.00%",
-      progress: 0,
-    },
-    {
-      key: "kia",
-      title: "Kartu Identitas Anak (KIA)",
-      realisasi: "0",
-      persenR: "0.00%",
-      target: "0",
-      persenT: "0.00%",
-      progress: 0,
-    },
-    {
-      key: "akta",
-      title: "Akta Kelahiran 0–17 Tahun",
-      realisasi: "0",
-      persenR: "0.00%",
-      target: "0",
-      persenT: "0.00%",
-      progress: 0,
-    },
-    {
-      key: "ikd",
-      title: "Identitas Kependudukan Digital (IKD)",
-      realisasi: "0",
-      persenR: "0.00%",
-      target: "0",
-      persenT: "0.00%",
-      progress: 0,
-    },
-  ]);
+      key: string;
+      title: string;
+      realisasi: string;
+      persenR: string;
+      target: string;
+      persenT: string;
+      progress: number;
+    }[]
+  >([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let alive = true;
+    const controller = new AbortController();
 
     async function load() {
       try {
-        const res: TCapaianAPI = await fetch("/api/dashboard/capaian", { cache: "no-store" }).then(r => r.json());
-        if (!alive || !res?.success || !res.data) return;
+        setLoading(true);
+        setError(null);
 
-        const d = res.data;
+        const res = await fetch("/api/dashboard/capaian", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const json: TCapaianAPI = await res.json();
+        if (!json?.success || !json.data) throw new Error("Data kosong");
+
+        const d = json.data;
         const calc = (realisasiStr: string, targetStr: string) => {
           const real = toNum(realisasiStr);
           const targ = toNum(targetStr);
@@ -118,16 +102,19 @@ export function useCapaian() {
         ];
 
         setRows(next);
-      } catch (e) {
-        console.error("load capaian error:", e);
+      } catch (err: any) {
+        if (err.name !== "AbortError") {
+          console.error("load capaian error:", err);
+          setError(err.message || "Gagal memuat data capaian");
+        }
       } finally {
-        if (alive) setLoading(false);
+        setLoading(false);
       }
     }
 
     load();
-    return () => { alive = false; };
+    return () => controller.abort();
   }, []);
 
-  return { loading, rows };
+  return { loading, rows, error };
 }

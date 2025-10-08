@@ -1,46 +1,43 @@
-import { NextResponse } from "next/server";
-import { withConnection } from "@/lib/oracle";
+// FILE: /app/api/dashboard/salaman/route.ts
+import { execRows } from "@/lib/db";
+import { ok, err } from "@/lib/http";
 
 /**
  * Endpoint: /api/dashboard/salaman
- * Sumber data: VW_SIAK_SALAMAN (schema WEBDB)
- * Tujuan: Menyediakan data layanan Salaman untuk Dashboard Pelayanan Online
+ * Sumber: VW_SIAK_SALAMAN (schema WEBDB)
+ * Tujuan: Menyediakan data pelayanan online Salaman untuk dashboard.
  */
-
 export async function GET() {
   try {
-    // Gunakan connection pool yang sudah dibuat via withConnection()
-    const rows = await withConnection("WEBDB", async (conn) => {
-      const rs = await conn.execute<{
-        ID: number;
-        LAYANAN: string;
-        BARU_TDY: number;
-        UPLOAD_ULANG_TDY: number;
-        BTL_TDY: number;
-        BARU: number;
-        UPLOAD_ULANG: number;
-        BTL: number;
-        TERVERIFIKASI: number;
-        TERPUBLISH: number;
-      }>(`
-        SELECT 
-          ID,
-          LAYANAN,
-          COALESCE(BARU_TDY, 0) AS BARU_TDY,
-          COALESCE(UPLOAD_ULANG_TDY, 0) AS UPLOAD_ULANG_TDY,
-          COALESCE(BTL_TDY, 0) AS BTL_TDY,
-          COALESCE(BARU, 0) AS BARU,
-          COALESCE(UPLOAD_ULANG, 0) AS UPLOAD_ULANG,
-          COALESCE(BTL, 0) AS BTL,
-          COALESCE(TERVERIFIKASI, 0) AS TERVERIFIKASI,
-          COALESCE(TERPUBLISH, 0) AS TERPUBLISH
-        FROM VW_SIAK_SALAMAN
-        ORDER BY ID
-      `);
-      return rs.rows ?? [];
-    });
+    const sql = `
+      SELECT 
+        ID,
+        LAYANAN,
+        NVL(BARU_TDY, 0) AS BARU_TDY,
+        NVL(UPLOAD_ULANG_TDY, 0) AS UPLOAD_ULANG_TDY,
+        NVL(BTL_TDY, 0) AS BTL_TDY,
+        NVL(BARU, 0) AS BARU,
+        NVL(UPLOAD_ULANG, 0) AS UPLOAD_ULANG,
+        NVL(BTL, 0) AS BTL,
+        NVL(TERVERIFIKASI, 0) AS TERVERIFIKASI,
+        NVL(TERPUBLISH, 0) AS TERPUBLISH
+      FROM VW_SIAK_SALAMAN
+      ORDER BY ID
+    `;
 
-    // 🔹 Transform ke format siap frontend
+    const rows = await execRows<{
+      ID: number;
+      LAYANAN: string;
+      BARU_TDY: number;
+      UPLOAD_ULANG_TDY: number;
+      BTL_TDY: number;
+      BARU: number;
+      UPLOAD_ULANG: number;
+      BTL: number;
+      TERVERIFIKASI: number;
+      TERPUBLISH: number;
+    }>(sql, {}, {}, "WEBDB"); // 🔹 gunakan alias "WEBDB" sesuai koneksi schema
+
     const data = rows.map((r) => ({
       name: r.LAYANAN?.trim() || "Tanpa Nama",
       today: {
@@ -57,12 +54,9 @@ export async function GET() {
       publish: Number(r.TERPUBLISH) || 0,
     }));
 
-    return NextResponse.json({ success: true, data }, { status: 200 });
-  } catch (err) {
-    console.error("❌ /api/dashboard/salaman error:", err);
-    return NextResponse.json(
-      { success: false, message: "Gagal mengambil data layanan Salaman", data: [] },
-      { status: 500 }
-    );
+    return ok(data, 30); // cache 30 detik
+  } catch (e) {
+    console.error("❌ /api/dashboard/salaman error:", e);
+    return err("Gagal mengambil data layanan Salaman");
   }
 }

@@ -1,3 +1,4 @@
+// FILE: src/hooks/dashboard/useDashboardData.ts
 "use client";
 
 import { useEffect, useState } from "react";
@@ -67,21 +68,22 @@ export function useDashboardData(refreshMs = 900000) { // ⏱ 15 menit = 900000 
         if (!alive) return;
 
         setData({
-          perekaman:     toNum(m1.perekaman_today),
-          pencetakan:    toNum(m2.pencetakan_today),
-          blangko_out:   toNum(m6.blangko_out),
-          sisa_blangko:  toNum(m8.sisa_blangko),
-          prr:           toNum(m3.sisa_prr),
-          sfe:           toNum(m4.sisa_sfe),
-          duplicate:     toNum(m7.duplicate),
-          suket:         toNum(m5.sisa_suket),
+          perekaman:     toNum(m1.data?.perekaman_today ?? m1.perekaman_today),
+          pencetakan:    toNum(m2.data?.pencetakan_today ?? m2.pencetakan_today),
+          blangko_out:   toNum(m6.data?.blangko_out ?? m6.blangko_out),
+          sisa_blangko:  toNum(m8.data?.sisa_blangko ?? m8.sisa_blangko),
+          prr:           toNum(m3.data?.sisa_prr ?? m3.sisa_prr),
+          sfe:           toNum(m4.data?.sisa_sfe ?? m4.sisa_sfe),
+          duplicate:     toNum(m7.data?.duplicate ?? m7.duplicate),
+          suket:         toNum(m5.data?.sisa_suket ?? m5.sisa_suket),
           time: {
-            date: String(t.dashboard_date ?? "00-00-0000"),
-            time: String(t.dashboard_time ?? "00:00:00"),
-            between: Number(t.dashboard_between ?? 0) === 1 ? 1 : 0,
-            minutesAgo: Number(t.dashboard_minutes ?? 9999),
+            date: String(t.data?.dashboard_date ?? t.dashboard_date ?? "00-00-0000"),
+            time: String(t.data?.dashboard_time ?? t.dashboard_time ?? "00:00:00"),
+            between: Number(t.data?.dashboard_between ?? t.dashboard_between ?? 0) === 1 ? 1 : 0,
+            minutesAgo: Number(t.data?.dashboard_minutes ?? t.dashboard_minutes ?? 9999),
           },
         });
+
       } finally {
         if (alive) setLoading(false);
       }

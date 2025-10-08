@@ -1,28 +1,28 @@
-import { NextResponse } from "next/server";
-import { getOracleConnection } from "@/lib/oracle";
+// 📄 src/app/api/dashboard/capaian/route.ts
+import { execRows } from "@/lib/db";
+import { ok, err } from "@/lib/http";
 
 export async function GET() {
-  let conn;
   try {
-    conn = await getOracleConnection();
-
-    const sql = `
-      SELECT UPPER(SYSTEM_CODE) AS SYSTEM_CODE, NVL(SYSTEM_VALUE_NUM,0) AS SYSTEM_VALUE_NUM
+    const rows = await execRows<{ SYSTEM_CODE: string; SYSTEM_VALUE_NUM: number }>(
+      `
+      SELECT
+        UPPER(SYSTEM_CODE) AS SYSTEM_CODE,
+        NVL(SYSTEM_VALUE_NUM, 0) AS SYSTEM_VALUE_NUM
       FROM SIAK_MASTER
-      WHERE SYSTEM_TYPE = 'SET_DASHBOARD'
+      WHERE SYSTEM_TYPE = :b_type
       ORDER BY SYSTEM_CODE DESC
-    `;
-    const rows = (await conn.execute(sql)).rows as Array<{ SYSTEM_CODE: string; SYSTEM_VALUE_NUM: number }>;
+      `,
+      { b_type: "SET_DASHBOARD" }
+    );
 
-    if (!rows?.length) {
-      return NextResponse.json({ success: false, message: "Data tidak ditemukan" });
-    }
+    if (!rows.length) return err("Data tidak ditemukan", 404);
 
     const map: Record<string, number> = {};
     for (const r of rows) map[r.SYSTEM_CODE] = Number(r.SYSTEM_VALUE_NUM) || 0;
 
     const fmt = (n: number) => Number(n || 0).toLocaleString("id-ID");
-    const pct = (n: number) => `${(Number(n || 0)).toFixed(2)}%`;
+    const pct = (n: number) => `${Number(n || 0).toFixed(2)}%`;
 
     const data = {
       TARGET_REKAM_R: fmt(map.TARGET_REKAM_R),
@@ -44,11 +44,9 @@ export async function GET() {
       CAPAIAN_IKD_P: pct(map.CAPAIAN_IKD_P),
     };
 
-    return NextResponse.json({ success: true, data });
-  } catch (err) {
-    console.error("❌ /capaian error:", err);
-    return NextResponse.json({ success: false, message: "DB error capaian" }, { status: 500 });
-  } finally {
-    if (conn) await conn.close();
+    return ok(data, 30); // Cache 30 detik
+  } catch (e) {
+    console.error("❌ /dashboard/capaian error:", e);
+    return err("Gagal mengambil data capaian");
   }
 }

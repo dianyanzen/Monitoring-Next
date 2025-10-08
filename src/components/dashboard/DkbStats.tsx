@@ -1,6 +1,6 @@
 "use client";
 
-import { useDkb } from "@/hooks/useDkb";
+import { useDkb } from "@/hooks/dashboard/useDkb";
 
 export default function DkbStats() {
   const { loading, ref, rows, latest } = useDkb();

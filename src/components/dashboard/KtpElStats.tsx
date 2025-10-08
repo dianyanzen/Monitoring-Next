@@ -1,6 +1,6 @@
 "use client";
 
-import { useDashboardData } from "@/hooks/useDashboardData";
+import { useDashboardData } from "@/hooks/dashboard/useDashboardData";
 
 export default function KtpElStats() {
   const { data, loading } = useDashboardData();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useNonGeulisData } from "@/hooks/useNonGeulisData";
+import { useNonGeulisData } from "@/hooks/dashboard/useNonGeulisData";
 
 function formatTanggal(date: Date) {
   return date.toLocaleDateString("id-ID", {

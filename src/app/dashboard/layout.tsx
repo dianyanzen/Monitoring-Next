@@ -1,9 +1,10 @@
+// 📄 src/app/dashboard/layout.tsx
 import "../globals.css";
 import DashboardLayoutClient from "./DashboardLayoutClient";
 
 export const metadata = {
-  title: "Monitoring Futuristik",
-  description: "Disdukcapil Kota Bandung | AI-powered Dashboard",
+   title: "Monalisa System - Dashboard",
+  description: "Disdukcapil Kota Bandung | AI-powered System",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

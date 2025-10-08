@@ -1,6 +1,6 @@
 "use client";
 
-import { useCapaian } from "@/hooks/useCapaian";
+import { useCapaian } from "@/hooks/dashboard/useCapaian";
 
 export default function DataCapaian() {
   const { loading, rows } = useCapaian();

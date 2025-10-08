@@ -1,9 +1,9 @@
 import "../globals.css";
-import Footer from "@/components/Footer";
+import Footer from "@/components/layout/Footer";
 
 export const metadata = {
-  title: "Monalisa System",
-  description: "Disdukcapil Kota Bandung | AI-powered Dashboard",
+  title: "Monalisa System - Login",
+  description: "Disdukcapil Kota Bandung | AI-powered System",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { usePopulation } from "@/hooks/usePopulation";
+import { usePopulation } from "@/hooks/dashboard/usePopulation";
 
 export default function PendudukEfektif() {
   const { loading, population, periode } = usePopulation();

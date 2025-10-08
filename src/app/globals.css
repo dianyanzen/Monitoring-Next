@@ -1,38 +1,36 @@
+/* FILE: /app/globals.css */
+
 /* ============================================================
-   🔷 IMPORT & TAILWIND BASE
+   🔷 TAILWIND
    ============================================================ */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* Ensure this file is processed by Tailwind/PostCSS, not loaded directly in the browser */
-
-/* @import url("/assets/material-design-iconic-font/css/materialdesignicons.min.css"); */
-
+/* Pastikan file ini diproses Tailwind/PostCSS, bukan di-load langsung oleh browser */
+/* Optional icon font:
+@import url("/assets/material-design-iconic-font/css/materialdesignicons.min.css");
+*/
 
 /* ============================================================
    🔷 BODY & LAYOUT BASE
    ============================================================ */
-html, body {
-  overflow-x: hidden;
-}
+html, body { overflow-x: hidden; }
 
 body {
   font-family: 'Inter', sans-serif;
   background: radial-gradient(circle at top, #0d0d10 0%, #0a0a0c 100%);
   background-attachment: fixed;
   color: #e5e7eb;
-  overflow-x: hidden;
 }
 
 /* ============================================================
-   🔷 GLASS EFFECT COMPONENTS
+   🔷 GLASS EFFECT (Sidebar / Header)
    ============================================================ */
 aside {
   background: rgba(20, 20, 25, 0.7);
   backdrop-filter: blur(12px);
   border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
-
 header {
   background: rgba(25, 25, 30, 0.6);
   backdrop-filter: blur(10px);
@@ -42,22 +40,28 @@ header {
 /* ============================================================
    🔷 SCROLLBAR NEON
    ============================================================ */
-::-webkit-scrollbar {
-  width: 8px;
-}
+::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #00b3ff, #b600ff);
   border-radius: 10px;
 }
 
 /* ============================================================
-   🔷 CYBERPUNK BACKGROUND ANIMATIONS
+   🔷 KEYFRAMES (semua animasi didefinisikan sekali)
    ============================================================ */
+/* Grid bergerak 42px (sesuai penggunaan bg-[length:42px_42px]) */
 @keyframes movegrid {
   from { background-position: 0 0; }
-  to { background-position: 40px 40px; }
+  to   { background-position: 42px 42px; }
 }
 
+/* Sweep vertical (untuk efek garis menyapu) */
+@keyframes sweep {
+  0%   { background-position: 0 -250px; }
+  100% { background-position: 0  250px; }
+}
+
+/* Glitch halus (aura) */
 @keyframes glitch {
   0%, 100% { transform: translate(0, 0); opacity: 0.4; }
   20% { transform: translate(-2px, 2px); opacity: 0.6; }
@@ -66,105 +70,118 @@ header {
   80% { transform: translate(1px, -1px); opacity: 0.4; }
 }
 
+/* Scanline halus */
 @keyframes scanmove {
-  0% { background-position: 0 0; }
+  0%   { background-position: 0 0; }
   100% { background-position: 0 100%; }
 }
 
+/* Pulse vertikal */
 @keyframes pulse {
   0%, 100% { opacity: 0; transform: scaleY(0.8); }
-  50% { opacity: 1; transform: scaleY(1.2); }
+  50%      { opacity: 1; transform: scaleY(1.2); }
 }
 
+/* Pulse dengan delay */
 @keyframes pulse_delay {
   0%, 100% { opacity: 0; }
-  25% { opacity: 1; }
-  75% { opacity: 0.8; }
+  25%      { opacity: 1; }
+  75%      { opacity: 0.8; }
 }
 
-/* ============================================================
-   🔷 GLOW, HOLOGRAM, DAN EFEK TEKS
-   ============================================================ */
-.glow {
-  text-shadow: 0 0 10px #00ffff,
-               0 0 20px #00ffff88,
-               0 0 40px #00ffff44;
-}
-
-@keyframes holo {
-  0% { filter: hue-rotate(0deg); }
-  100% { filter: hue-rotate(360deg); }
-}
-
-@keyframes glowline {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-
-/* ============================================================
-   🔷 SCANLINE PANEL PUTIH (EFEK CRT)
-   ============================================================ */
-@keyframes scanlineMove {
-  0% { background-position-y: 0; }
-  100% { background-position-y: 10px; }
-}
-
-.animate-scanline {
-  animation: scanlineMove 1.8s linear infinite;
-}
-
-/* ============================================================
-   🔷 NEON GRADIENT DAN GLOW PULSE
-   ============================================================ */
+/* Pergeseran gradasi */
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
+/* Glow pulse */
 @keyframes glowpulse {
   0%, 100% { filter: drop-shadow(0 0 6px rgba(0,255,255,0.4)); }
-  50% { filter: drop-shadow(0 0 12px rgba(255,0,255,0.5)); }
+  50%      { filter: drop-shadow(0 0 12px rgba(255,0,255,0.5)); }
 }
 
+/* Pulse lambat */
 @keyframes pulse-slow {
   0%, 100% { opacity: 0.6; }
-  50% { opacity: 0.9; }
+  50%      { opacity: 0.9; }
+}
+
+/* Holographic hue rotate */
+@keyframes holo { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
+
+/* Perubahan cyan gradient */
+@keyframes cyanchange {
+  0%,100% { background-position: 0% 50%; }
+  50%     { background-position: 100% 50%; }
+}
+
+/* Border glow */
+@keyframes borderGlow {
+  0%,100% {
+    box-shadow:
+      inset 0 0 12px rgba(0,255,255,0.15),
+      0 0 25px rgba(0,255,255,0.2),
+      0 0 40px rgba(0,255,255,0.15);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 20px rgba(0,255,255,0.25),
+      0 0 35px rgba(0,255,255,0.3),
+      0 0 60px rgba(0,255,255,0.25);
+  }
+}
+
+/* RGB channel shift ringan */
+@keyframes rgbshift {
+  0%, 100% { filter: none; }
+  33%      { filter: drop-shadow(2px 0 red); }
+  66%      { filter: drop-shadow(-2px 0 cyan); }
+}
+
+/* Shimmer teks */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+/* Glitch teks (top/bottom) */
+@keyframes glitchTop {
+  0%, 100% { clip: rect(0, 9999px, 0, 0); }
+  20%      { clip: rect(0, 9999px, 10px, 0); }
+  40%      { clip: rect(0, 9999px, 5px, 0); }
+  60%      { clip: rect(0, 9999px, 8px, 0); }
+  80%      { clip: rect(0, 9999px, 3px, 0); }
+}
+@keyframes glitchBottom {
+  0%, 100% { clip: rect(0, 9999px, 0, 0); }
+  20%      { clip: rect(5px, 9999px, 10px, 0); }
+  40%      { clip: rect(3px, 9999px, 8px, 0); }
+  60%      { clip: rect(4px, 9999px, 6px, 0); }
+  80%      { clip: rect(2px, 9999px, 4px, 0); }
 }
 
 /* ============================================================
-   🔷 UNIVERSAL ANIMATE CLASSES
+   🔷 UTILITY ANIMASI (kelas siap pakai di komponen)
    ============================================================ */
-.animate-gradientShift {
-  animation: gradientShift 8s ease-in-out infinite;
-}
-
-.animate-glowline {
-  animation: glowline 4s linear infinite;
-}
-
-.animate-glowpulse {
-  animation: glowpulse 3s ease-in-out infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 6s ease-in-out infinite;
-}
-
-.animate-holo {
-  animation: holo 10s linear infinite;
-}
+.animate-gradientShift { animation: gradientShift 8s ease-in-out infinite; }
+.animate-glowline     { animation: glowline 4s linear infinite; } /* (keyframes glowline diwakili gradientShift; non-kritis) */
+.animate-glowpulse    { animation: glowpulse 3s ease-in-out infinite; }
+.animate-pulse-slow   { animation: pulse-slow 6s ease-in-out infinite; }
+.animate-holo         { animation: holo 10s linear infinite; }
+.animate-scanline     { animation: scanmove 1.8s linear infinite; } /* untuk panel CRT */
 
 /* ============================================================
-   🔷 CYBERPUNK DECORATIVE UTILITY CLASSES
+   🔷 DECORATIVE UTILITIES (cyberpunk)
    ============================================================ */
 /* Grid lembut bergerak */
 .cyber-grid {
   background:
     linear-gradient(90deg, rgba(0,255,255,0.05) 1px, transparent 1px),
     linear-gradient(rgba(255,0,255,0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
-  animation: movegrid 20s linear infinite;
+  background-size: 42px 42px;
+  animation: movegrid 24s linear infinite;
 }
 
 /* Glitch aura magenta */
@@ -187,7 +204,6 @@ header {
   width: 2px;
   animation: pulse 5s linear infinite;
 }
-
 .cyber-pulse-right {
   background: linear-gradient(to bottom, #ff00ff00, #ff00ff66, #ff00ff00);
   width: 2px;
@@ -195,12 +211,23 @@ header {
 }
 
 /* ============================================================
-   🔷 BONUS: SHIMMER EFEK UNTUK TEKS ATAU BUTTON
+   🔷 TEKS & PANEL KHUSUS
    ============================================================ */
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+.glow {
+  text-shadow:
+    0 0 10px #00ffff,
+    0 0 20px #00ffff88,
+    0 0 40px #00ffff44;
 }
+
+.holo-panel {
+  backdrop-filter: blur(10px) saturate(1.5);
+  background: linear-gradient(150deg, rgba(255,255,255,0.9), rgba(240,240,255,0.1));
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 0 60px rgba(0,255,255,0.15), 0 0 100px rgba(255,0,255,0.1);
+}
+
+.glitchy { animation: rgbshift 2s infinite linear; }
 
 .shimmer {
   background: linear-gradient(90deg, #00ffff33 25%, #ffffff55 50%, #ff00ff33 75%);
@@ -211,66 +238,6 @@ header {
   animation: shimmer 5s linear infinite;
 }
 
-/* ============================================================
-   🔷 TAMBAHAN GLOBAL VISUAL STABILITY
-   ============================================================ */
-* {
-  scroll-behavior: smooth;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-
-/* === Holographic Panel === */
-.holo-panel {
-  backdrop-filter: blur(10px) saturate(1.5);
-  background: linear-gradient(150deg, rgba(255,255,255,0.9), rgba(240,240,255,0.1));
-  border: 1px solid rgba(255,255,255,0.25);
-  box-shadow: 0 0 60px rgba(0,255,255,0.15), 0 0 100px rgba(255,0,255,0.1);
-}
-
-
-/* === Glitchy Logo === */
-.glitchy {
-  animation: rgbshift 2s infinite linear;
-}
-
-@keyframes rgbshift {
-  0%, 100% { filter: none; }
-  33% { filter: drop-shadow(2px 0 red); }
-  66% { filter: drop-shadow(-2px 0 cyan); }
-}
-
-/* === Sweep Scan === */
-@keyframes movegrid {
-  from { background-position: 0 0; }
-  to { background-position: 42px 42px; }
-}
-
-@keyframes sweep {
-  0% { background-position: 0 -250px; }
-  100% { background-position: 0 250px; }
-}
-
-@keyframes cyanchange {
-  0%,100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-@keyframes borderGlow {
-  0%,100% {
-    box-shadow:
-      inset 0 0 12px rgba(0,255,255,0.15),
-      0 0 25px rgba(0,255,255,0.2),
-      0 0 40px rgba(0,255,255,0.15);
-  }
-  50% {
-    box-shadow:
-      inset 0 0 20px rgba(0,255,255,0.25),
-      0 0 35px rgba(0,255,255,0.3),
-      0 0 60px rgba(0,255,255,0.25);
-  }
-}
-
-/* === Hacker Lab Glitch Effect === */
 .glitch {
   position: relative;
   text-shadow: 0 0 4px #00ffff, 0 0 8px #00ffff;
@@ -279,32 +246,17 @@ header {
 .glitch::after {
   content: attr(data-text);
   position: absolute;
-  left: 0;
-  width: 100%;
+  left: 0; width: 100%;
   color: #00ffff;
   clip: rect(0, 0, 0, 0);
 }
-.glitch::before {
-  animation: glitchTop 2s infinite linear alternate-reverse;
-  color: #ff00ff;
-}
-.glitch::after {
-  animation: glitchBottom 2s infinite linear alternate-reverse;
-  color: #00ffff;
-}
-@keyframes glitchTop {
-  0%, 100% { clip: rect(0, 9999px, 0, 0); }
-  20% { clip: rect(0, 9999px, 10px, 0); }
-  40% { clip: rect(0, 9999px, 5px, 0); }
-  60% { clip: rect(0, 9999px, 8px, 0); }
-  80% { clip: rect(0, 9999px, 3px, 0); }
-}
-@keyframes glitchBottom {
-  0%, 100% { clip: rect(0, 9999px, 0, 0); }
-  20% { clip: rect(5px, 9999px, 10px, 0); }
-  40% { clip: rect(3px, 9999px, 8px, 0); }
-  60% { clip: rect(4px, 9999px, 6px, 0); }
-  80% { clip: rect(2px, 9999px, 4px, 0); }
-}
+.glitch::before { animation: glitchTop 2s infinite linear alternate-reverse; color: #ff00ff; }
+.glitch::after  { animation: glitchBottom 2s infinite linear alternate-reverse; color: #00ffff; }
 
-
+/* ============================================================
+   🔷 GLOBAL VISUAL STABILITY
+   ============================================================ */
+* {
+  scroll-behavior: smooth;
+  transition: background 0.3s ease, color 0.3s ease;
+}

@@ -6,7 +6,7 @@ export async function GET() {
   try {
     // 1) Ambil cookie
     const cookieStore = cookies(); // <-- jangan pakai await
-    const sessionRaw = cookieStore.get("session_user")?.value;
+    const sessionRaw = (await cookieStore).get("session_user")?.value;
     if (!sessionRaw) return NextResponse.json({ count: 0, items: [] }, { status: 401 });
 
     // 2) Parse session

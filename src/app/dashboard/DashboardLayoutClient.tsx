@@ -1,9 +1,10 @@
+// 📄 src/app/dashboard/DashboardLayoutClient.tsx
 "use client";
 
 import { useState } from "react";
-import Sidebar from "@/components/Sidebar";
-import Topbar from "@/components/Topbar";
-import Footer from "@/components/Footer";
+import Sidebar from "@/components/layout/Sidebar";
+import Topbar from "@/components/layout/Topbar";
+import Footer from "@/components/layout/Footer";
 
 export default function DashboardLayoutClient({
   children,

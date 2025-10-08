@@ -1,21 +1,22 @@
-import { NextResponse } from "next/server";
-import { getOracleConnection } from "@/lib/oracle";
+// 📄 src/app/api/dashboard/m1/route.ts
+import { execOne } from "@/lib/db";
+import { ok, err } from "@/lib/http";
 
 export async function GET() {
-  let conn;
   try {
-    conn = await getOracleConnection();
-    const sql = `
+    const row = await execOne<{ JML: number }>(
+      `
       SELECT NVL(SUM(VAL),0) AS JML
       FROM VW_SIAK_DASHBOARD
       WHERE UPPER(ID) = 'GET_PEREKAMAN'
-    `;
-    const row = (await conn.execute(sql)).rows?.[0] as any || {};
-    return NextResponse.json({ success: true, perekaman_today: Number(row.JML).toLocaleString("id-ID") });
-  } catch (err) {
-    console.error("❌ /m1 error:", err);
-    return NextResponse.json({ success: false, perekaman_today: "0" }, { status: 500 });
-  } finally {
-    if (conn) await conn.close();
+      `
+    );
+
+    const total = Number(row?.JML || 0);
+
+    return ok({ perekaman_today: total.toLocaleString("id-ID") }, 30); 
+  } catch (e) {
+    console.error("❌ /dashboard/m1 error:", e);
+    return err("Gagal mengambil data perekaman hari ini");
   }
 }

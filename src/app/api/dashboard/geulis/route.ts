@@ -1,10 +1,9 @@
-import { NextResponse } from "next/server";
-import { getOracleConnection } from "@/lib/oracle";
+// FILE: /app/api/dashboard/geulis/route.ts
+import { execRows } from "@/lib/db";
+import { ok, err } from "@/lib/http";
 
 export async function GET() {
-  let conn;
   try {
-    conn = await getOracleConnection();
     const sql = `
       SELECT 
         A.NO_WIL,
@@ -22,12 +21,21 @@ export async function GET() {
       GROUP BY A.NO_WIL, B.NAMA_WIL
       ORDER BY A.NO_WIL
     `;
-    const rows = (await conn.execute(sql)).rows || [];
-    return NextResponse.json({ success: true, rows });
-  } catch (err) {
-    console.error("❌ /geulis error:", err);
-    return NextResponse.json({ success: false, rows: [] }, { status: 500 });
-  } finally {
-    if (conn) await conn.close();
+
+    const rows = await execRows<{
+      NO_WIL: string;
+      NAMA_WIL: string;
+      TOTAL_REKAM: number;
+      TOTAL_CETAK: number;
+      TOTAL_IKD: number;
+      TOTAL_AKTE_17: number;
+      TOTAL_KIA: number;
+      TOTAL_JUMLAH: number;
+    }>(sql);
+
+    return ok(rows);
+  } catch (e) {
+    console.error("❌ /api/dashboard/geulis error:", e);
+    return err("DB error geulis");
   }
 }

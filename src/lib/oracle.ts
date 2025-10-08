@@ -1,74 +1,84 @@
+// FILE: /lib/oracle.ts
 import oracledb from "oracledb";
 
-// Jangan import { Connection, Pool } karena tidak diekspor langsung
+// Tipe instance (karena Connection/Pool tidak diekspor sebagai type langsung)
 type Connection = InstanceType<typeof oracledb.Connection>;
 type Pool = InstanceType<typeof oracledb.Pool>;
 
-
 /**
- * Oracle manager fleksibel:
- * - Multi-alias: "DB", "WEBDB", "DB222", "DB2", dst. (mengikuti .env kamu)
- * - Pooling per-alias + hot-reload safe (pakai global map)
- * - ENV fleksibel: <ALIAS>_CONN ATAU (<ALIAS>_HOST + _PORT + (_DATABASE | _SERVICE_NAME))
- * - Helper withConnection(alias, fn) untuk auto-open/close
+ * Oracle manager:
+ * - Multi-alias: "DB", "WEBDB", "DB222", dst. (ikuti .env)
+ * - Pool per-alias + hot-reload safe (cache di global)
+ * - ENV fleksibel:
+ *     <ALIAS>_CONN  (host:port/service)
+ *       ATAU
+ *     <ALIAS>_{HOST,PORT,SERVICE_NAME|DATABASE}
+ * - withConnection(alias, fn): buka → fn(conn) → tutup (tanpa auto-commit di sini)
  */
+
+// Format hasil SELECT = object
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
+// Jangan set autoCommit global; tentukan di execute({ autoCommit: true }) saat DML
 oracledb.autoCommit = false;
 
 // ─────────────────────────────────────────────
-// 🌐 Global Pool Map (agar aman dari hot-reload)
+// 🌐 Global pool map (aman untuk hot-reload Next.js)
 // ─────────────────────────────────────────────
 const g = globalThis as unknown as { __ORACLE_POOLS__?: Map<string, Pool> };
 if (!g.__ORACLE_POOLS__) g.__ORACLE_POOLS__ = new Map();
 const pools = g.__ORACLE_POOLS__;
 
 // ─────────────────────────────────────────────
-// 🧩 Util: Ambil Credential dari .env
+// 🔧 ENV helpers
 // ─────────────────────────────────────────────
-function buildConnectString(prefix: string): string {
+function connectStringFromEnv(prefix: string): string {
   const direct = process.env[`${prefix}_CONN`];
-  if (direct) return direct;
+  if (direct && direct.trim()) return direct.trim(); // "host:port/service"
 
   const HOST = process.env[`${prefix}_HOST`];
   const PORT = process.env[`${prefix}_PORT`];
-  const DB = process.env[`${prefix}_DATABASE`] || process.env[`${prefix}_SERVICE_NAME`];
+  const SVC  = process.env[`${prefix}_SERVICE_NAME`] || process.env[`${prefix}_DATABASE`];
 
-  if (!HOST || !PORT || !DB)
-    throw new Error(`❌ ENV ${prefix}_CONN atau kombinasi ${prefix}_HOST/_PORT/_DATABASE belum lengkap.`);
-
-  return `${HOST}:${PORT}/${DB}`;
+  if (!HOST || !PORT || !SVC) {
+    throw new Error(
+      `ENV ${prefix}_CONN atau ${prefix}_{HOST,PORT,SERVICE_NAME|DATABASE} belum lengkap.`
+    );
+  }
+  return `${HOST}:${PORT}/${SVC}`;
 }
 
-function getCred(alias: string) {
+function getCredentials(alias: string) {
   const A = alias.toUpperCase();
   const user = process.env[`${A}_USERNAME`] || process.env[`${A}_USER`];
   const password = process.env[`${A}_PASSWORD`] || process.env[`${A}_PASS`];
-  const connectString = process.env[`${A}_CONN`] || buildConnectString(A);
+  const connectString = connectStringFromEnv(A);
 
   if (!user || !password || !connectString) {
-    throw new Error(`❌ ENV ${A}_USERNAME/_PASSWORD/_CONN tidak lengkap`);
+    throw new Error(`ENV ${A}_USERNAME/_PASSWORD/_CONN tidak lengkap`);
   }
-
   return { user, password, connectString };
 }
 
 // ─────────────────────────────────────────────
-// 🧠 Pool Manager: Reuse or Create Oracle Pool
+// 🧠 Pool manager
 // ─────────────────────────────────────────────
-async function getPool(alias: string): Promise<Pool> {
+async function getPool(alias = "DB"): Promise<Pool> {
   const key = alias.toUpperCase();
   if (pools.has(key)) return pools.get(key)!;
 
-  const cred = getCred(key);
+  const { user, password, connectString } = getCredentials(key);
+
   const pool = await oracledb.createPool({
-    user: cred.user,
-    password: cred.password,
-    connectString: cred.connectString,
-    poolMin: 1,
-    poolMax: 6,              // cukup untuk dashboard use case
+    user,
+    password,
+    connectString,
+    poolMin: 0,
+    poolMax: 10,        // cukup untuk dashboard/API ringan
     poolIncrement: 1,
-    queueTimeout: 10000,     // 10 detik timeout
-    stmtCacheSize: 20,       // ringan tapi cepat
+    queueTimeout: 10_000,
+    poolPingInterval: 60,
+    homogeneous: true,
+    stmtCacheSize: 40,  // cache statement moderat
   });
 
   pools.set(key, pool);
@@ -77,7 +87,7 @@ async function getPool(alias: string): Promise<Pool> {
 }
 
 // ─────────────────────────────────────────────
-// 🔌 Ambil Connection dari Pool
+// 🔌 Ambil koneksi
 // ─────────────────────────────────────────────
 export async function getOracleConnection(alias = "DB"): Promise<Connection> {
   const pool = await getPool(alias);
@@ -85,7 +95,7 @@ export async function getOracleConnection(alias = "DB"): Promise<Connection> {
 }
 
 // ─────────────────────────────────────────────
-// 🧰 Helper: Jalankan Query Auto-Close Connection
+// 🧰 Jalankan dengan koneksi (tanpa auto-commit implicit)
 // ─────────────────────────────────────────────
 export async function withConnection<T>(
   alias: string,
@@ -94,32 +104,20 @@ export async function withConnection<T>(
   let conn: Connection | null = null;
   try {
     conn = await getOracleConnection(alias);
-    const result = await fn(conn);
-
-    // Commit hanya jika ada perubahan
-    try {
-      if (conn && (await conn.getStatementInfo("COMMIT"))) await conn.commit();
-    } catch {
-      // ignore jika bukan DML
-    }
-
-    return result;
+    return await fn(conn);
   } catch (err) {
     console.error(`❌ Oracle error [${alias}]:`, err);
     throw err;
   } finally {
     if (conn) {
-      try {
-        await conn.close();
-      } catch (closeErr) {
-        console.warn(`⚠️ Gagal menutup koneksi [${alias}]:`, closeErr);
-      }
+      try { await conn.close(); }
+      catch (e) { console.warn(`⚠️ Gagal menutup koneksi [${alias}]:`, e); }
     }
   }
 }
 
 // ─────────────────────────────────────────────
-// ❤️ Health Checker: Tes koneksi tiap alias
+// ❤️ Health check (ping DUAL)
 // ─────────────────────────────────────────────
 export async function checkOracleHealth(
   aliases: string[] = ["DB"]
@@ -127,9 +125,7 @@ export async function checkOracleHealth(
   const result: Record<string, boolean> = {};
   for (const a of aliases) {
     try {
-      await withConnection(a, async (c) => {
-        await c.execute("SELECT 1 AS OK FROM DUAL");
-      });
+      await withConnection(a, (c) => c.execute("SELECT 1 AS OK FROM DUAL"));
       result[a] = true;
     } catch {
       result[a] = false;

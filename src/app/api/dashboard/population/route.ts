@@ -1,11 +1,9 @@
-import { NextResponse } from "next/server";
-import { getOracleConnection } from "@/lib/oracle";
+// FILE: /app/api/dashboard/population/route.ts
+import { execRows } from "@/lib/db";
+import { ok, err } from "@/lib/http";
 
 export async function GET() {
-  let conn;
   try {
-    conn = await getOracleConnection();
-
     const sql = `
       WITH 
       CUTOFF AS (
@@ -59,26 +57,20 @@ export async function GET() {
       ) FROM DUAL
     `;
 
-    const rs = await conn.execute(sql);
-    const rows = (rs.rows as Array<{ KET: string; JML: number }>) || [];
+    const rows = await execRows<{ KET: string; JML: number }>(sql);
     const map: Record<string, number> = {};
     for (const r of rows) map[r.KET] = Number(r.JML) || 0;
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        JUMLAH_PENDUDUK: map.JUMLAH_PENDUDUK ?? 0,
-        AKTA_KELAHIRAN: map.AKTA_KELAHIRAN ?? 0,
-        AKTA_KEMATIAN: map.AKTA_KEMATIAN ?? 0,
-        PERPINDAHAN: map.PERPINDAHAN ?? 0,
-        KEDATANGAN: map.KEDATANGAN ?? 0,
-        PENDUDUK_EFEKTIF: map.PENDUDUK_EFEKTIF ?? 0,
-      },
+    return ok({
+      JUMLAH_PENDUDUK: map.JUMLAH_PENDUDUK ?? 0,
+      AKTA_KELAHIRAN: map.AKTA_KELAHIRAN ?? 0,
+      AKTA_KEMATIAN: map.AKTA_KEMATIAN ?? 0,
+      PERPINDAHAN: map.PERPINDAHAN ?? 0,
+      KEDATANGAN: map.KEDATANGAN ?? 0,
+      PENDUDUK_EFEKTIF: map.PENDUDUK_EFEKTIF ?? 0,
     });
-  } catch (err) {
-    console.error("❌ /population error:", err);
-    return NextResponse.json({ success: false, message: "DB error population" }, { status: 500 });
-  } finally {
-    if (conn) await conn.close();
+  } catch (e) {
+    console.error("❌ /api/dashboard/population error:", e);
+    return err("DB error population");
   }
 }

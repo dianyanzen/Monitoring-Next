@@ -1,30 +1,23 @@
-import { NextResponse } from "next/server";
-import { getOracleConnection } from "@/lib/oracle";
+// 📄 src/app/api/dashboard/dkb/ref/route.ts
+import { execOneText } from "@/lib/db";
+import { ok, err } from "@/lib/http";
 
 export async function GET() {
-  let connection = null;
   try {
-    connection = await getOracleConnection();
-
-    const result = await connection.execute(
-      `SELECT SYSTEM_VALUE_TXT AS VAL 
-       FROM SIAK_MASTER 
-       WHERE SYSTEM_TYPE = 'INIT_SETING' AND SYSTEM_CODE = 'DKB'`
+    const val = await execOneText(
+      `
+      SELECT NVL(SYSTEM_VALUE_TXT, '') AS VAL
+      FROM SIAK_MASTER
+      WHERE SYSTEM_TYPE = :b_type
+        AND SYSTEM_CODE = :b_code
+      FETCH FIRST 1 ROW ONLY
+      `,
+      { b_type: "INIT_SETING", b_code: "DKB" }
     );
 
-    const val = (result.rows?.[0]?.VAL || "").toString().trim();
-
-    return NextResponse.json({
-      success: true,
-      dkb: val, // langsung kirim teks aslinya
-    });
-  } catch (err: any) {
-    console.error("❌ DKB REF Error:", err);
-    return NextResponse.json(
-      { success: false, error: err.message },
-      { status: 500 }
-    );
-  } finally {
-    if (connection) await connection.close();
+    return ok({ dkb: val }, 30); // Cache 30 detik
+  } catch (e) {
+    console.error("❌ /dashboard/dkb/ref error:", e);
+    return err("Gagal mengambil referensi DKB");
   }
 }

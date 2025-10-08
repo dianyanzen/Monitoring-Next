@@ -1,9 +1,10 @@
+// FILE: src/hooks/dashboard/useGeulisData.ts
 "use client";
 
 import { useEffect, useState } from "react";
 
 export type TWilayahData = {
-  NO_WIL: string;
+  NO_WIL: number;
   NAMA_WIL: string;
   TOTAL_REKAM: number;
   TOTAL_CETAK: number;
@@ -13,29 +14,31 @@ export type TWilayahData = {
   TOTAL_JUMLAH: number;
 };
 
-/**
- * Hook untuk data NON-GEULIS (wilayah pelayanan reguler)
- * Endpoint: /api/dashboard/nongeulis
- */
-export function useNonGeulisData() {
+export function useGeulisData() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<TWilayahData[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let alive = true;
+    const controller = new AbortController();
 
     async function load() {
       try {
-        const res = await fetch("/api/dashboard/nongeulis", { cache: "no-store" });
+        setLoading(true);
+        setError(null);
+
+        const res = await fetch("/api/dashboard/geulis", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
 
-        if (!alive) return;
-
-        if (json?.success && Array.isArray(json?.rows)) {
+        if (json?.success && Array.isArray(json?.data)) {
           setData(
-            json.rows.map((r: any) => ({
-              NO_WIL: r.NO_WIL,
-              NAMA_WIL: r.NAMA_WIL,
+            json.data.map((r: any) => ({
+              NO_WIL: Number(r.NO_WIL) || 0,
+              NAMA_WIL: String(r.NAMA_WIL ?? ""),
               TOTAL_REKAM: Number(r.TOTAL_REKAM) || 0,
               TOTAL_CETAK: Number(r.TOTAL_CETAK) || 0,
               TOTAL_IKD: Number(r.TOTAL_IKD) || 0,
@@ -47,18 +50,19 @@ export function useNonGeulisData() {
         } else {
           setData([]);
         }
-      } catch {
-        if (alive) setData([]);
+      } catch (err: any) {
+        if (err.name !== "AbortError") {
+          setError(err.message || "Gagal memuat data");
+          setData([]);
+        }
       } finally {
-        if (alive) setLoading(false);
+        setLoading(false);
       }
     }
 
     load();
-    return () => {
-      alive = false;
-    };
+    return () => controller.abort();
   }, []);
 
-  return { data, loading };
+  return { data, loading, error };
 }

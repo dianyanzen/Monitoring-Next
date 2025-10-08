@@ -1,11 +1,10 @@
-import { NextResponse } from "next/server";
-import { getOracleConnection } from "@/lib/oracle";
+// FILE: /app/api/dashboard/m2/route.ts
+import { execOne } from "@/lib/db";
+import { ok, err } from "@/lib/http";
 
 export async function GET() {
-  let conn;
   try {
-    conn = await getOracleConnection();
-    const sql = `
+    const row = await execOne<{ JML: number }>(`
       WITH LUDO AS (
         SELECT (AMBIL - RUSAK - PENGEMBALIAN) AS CETAK_LUDO
         FROM SIAK_MONEV_BLANGKO_LUDO
@@ -15,13 +14,14 @@ export async function GET() {
       SELECT NVL(B.VAL,0) + NVL((SELECT CETAK_LUDO FROM LUDO),0) AS JML
       FROM VW_SIAK_DASHBOARD B
       WHERE UPPER(B.ID) = 'GET_PENCETAKAN_KTP'
-    `;
-    const row = (await conn.execute(sql)).rows?.[0] as any || {};
-    return NextResponse.json({ success: true, pencetakan_today: Number(row.JML).toLocaleString("id-ID") });
-  } catch (err) {
-    console.error("❌ /m2 error:", err);
-    return NextResponse.json({ success: false, pencetakan_today: "0" }, { status: 500 });
-  } finally {
-    if (conn) await conn.close();
+    `);
+
+    const val = Number(row?.JML ?? 0);
+    const formatted = val.toLocaleString("id-ID");
+
+    return ok({ pencetakan_today: formatted });
+  } catch (e) {
+    console.error("❌ /api/dashboard/m2 error:", e);
+    return err("DB error pencetakan_today");
   }
 }
