@@ -1,10 +1,25 @@
+// File: app/(components)/Topbar.tsx
 "use client";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { LogOut, Settings, Menu, Mail, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+
+/** Bentuk respons helper (/api/http.ts bisa kirim { success, data }) */
+function getUserFrom(res: any) {
+  // dukung { user } atau { data: { user } }
+  return res?.user ?? res?.data?.user ?? null;
+}
+function getCountFrom(res: any) {
+  // dukung { count } atau { data: { count } }
+  return typeof res?.count === "number" ? res.count : (res?.data?.count ?? 0);
+}
+function getItemsFrom(res: any) {
+  // dukung { items } atau { data: { items } }
+  return Array.isArray(res?.items) ? res.items : (res?.data?.items ?? []);
+}
 
 export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => void }) {
   const [user, setUser] = useState<any>(null);
@@ -17,40 +32,48 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchAll = async () => {
-      try {
-        const [sRes, uRes, pRes] = await Promise.all([
-          fetch("/api/session", { credentials: "include" }),
-          fetch("/api/messages/unread", { credentials: "include" }),
-          fetch("/api/messages/previews", { credentials: "include" }),
-        ]);
+  const fetchAll = useCallback(async (signal?: AbortSignal) => {
+    try {
+      const [sRes, uRes, pRes] = await Promise.all([
+        fetch("/api/session", { credentials: "include", signal }),
+        fetch("/api/messages/unread", { credentials: "include", signal }),
+        fetch("/api/messages/previews", { credentials: "include", signal }),
+      ]);
 
-        if (!sRes.ok || !uRes.ok || !pRes.ok) {
-          setLoading(false);
-          return;
-        }
+      // jika salah satu unauthorized → biarkan middleware redirect
+      if (!sRes.ok || !uRes.ok || !pRes.ok) return;
 
-        const sText = await sRes.text();
-        const uText = await uRes.text();
-        const pText = await pRes.text();
+      const [sData, uData, pData] = await Promise.all([sRes.json(), uRes.json(), pRes.json()]);
+      if (signal?.aborted) return;
 
-        const sData = JSON.parse(sText);
-        const uData = JSON.parse(uText);
-        const pData = JSON.parse(pText);
-
-        setUser(sData.user);
-        setUnread(uData.count || 0);
-        setMessages(pData.items || []);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
+      setUser(getUserFrom(sData));
+      setUnread(getCountFrom(uData) || 0);
+      setMessages(getItemsFrom(pData) || []);
+    } catch (err) {
+      if ((err as any)?.name !== "AbortError") {
+        console.error("Topbar fetch error:", err);
       }
-    };
-
-    fetchAll();
+    } finally {
+      if (!signal?.aborted) setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    const ac = new AbortController();
+    fetchAll(ac.signal);
+    return () => ac.abort();
+  }, [fetchAll]);
+
+  // (opsional) polling ringan untuk badge unread & preview
+  useEffect(() => {
+    const ac = new AbortController();
+    const tick = () => fetchAll(ac.signal);
+    const id = window.setInterval(tick, 60_000); // 60 dtk
+    return () => {
+      ac.abort();
+      window.clearInterval(id);
+    };
+  }, [fetchAll]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -67,8 +90,10 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
     if (loggingOut) return;
     setLoggingOut(true);
     try {
-      const res = await fetch("/api/logout", { method: "POST" });
+      const res = await fetch("/api/logout", { method: "POST", credentials: "include" });
       if (res.ok) router.replace("/login");
+    } catch (e) {
+      console.error("Logout error:", e);
     } finally {
       setLoggingOut(false);
     }
@@ -77,35 +102,35 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
   // 🌌 Efek Hacker Lab Mewah
   const HackerLabOverlay = () => (
     <>
-      {/* Grid bergerak */}
       <motion.div
+        aria-hidden
         className="absolute inset-0 opacity-[0.07] bg-[linear-gradient(to_right,#00ffff22_1px,transparent_1px),linear-gradient(to_bottom,#00ffff22_1px,transparent_1px)] bg-[size:40px_40px]"
         animate={{ backgroundPosition: ["0px 0px", "40px 40px"] }}
         transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
       />
-      {/* Cahaya partikel halus */}
       <motion.div
+        aria-hidden
         className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,#00ffff22,transparent_60%),radial-gradient(circle_at_70%_60%,#ff00ff22,transparent_60%)]"
-        animate={{
-          backgroundPosition: ["0% 0%", "100% 100%"],
-        }}
+        animate={{ backgroundPosition: ["0% 0%", "100% 100%"] }}
         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
       />
-      {/* Sinar horizontal scanner */}
       <motion.div
+        aria-hidden
         className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 opacity-60"
         animate={{ y: ["0%", "100%"] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       />
-      {/* Lapisan pantulan kaca */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent mix-blend-overlay pointer-events-none" />
+      <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent mix-blend-overlay pointer-events-none" />
     </>
   );
 
+  const avatarSrc =
+    user?.S_NIK ? `/assets/upload/pp/${user.S_NIK}.jpg` : "/assets/upload/pp/3273000000000000.jpg";
+
   return (
     <header className="fixed top-0 left-0 w-full z-[9999] overflow-visible pointer-events-auto">
-      {/* Background animasi cyberpunk */}
       <motion.div
+        aria-hidden
         className="absolute inset-0 bg-gradient-to-r from-[#0d0d20] via-[#1a1a3f] to-[#0d0d20]"
         animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -123,9 +148,10 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
         >
           <h1 className="text-lg font-bold tracking-wide leading-tight text-cyan-300 relative">
             <span className="block text-sm font-light text-gray-300">MONALISA SYSTEM</span>
-            <span className="text-cyan-400 glow">
+            <span className="text-cyan-400">
               Disdukcapil Kota Bandung
               <motion.span
+                aria-hidden
                 className="absolute -bottom-1 left-0 w-full h-[1px] bg-gradient-to-r from-cyan-400 via-pink-400 to-transparent"
                 animate={{ opacity: [0.3, 1, 0.3] }}
                 transition={{ duration: 2, repeat: Infinity }}
@@ -138,6 +164,7 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
         <div className="flex items-center gap-3 relative" ref={dropdownRef}>
           {/* Sidebar Toggle */}
           <motion.button
+            aria-label="Toggle sidebar"
             whileHover={{ scale: 1.15, rotate: 6 }}
             whileTap={{ scale: 0.95 }}
             onClick={onToggleSidebar}
@@ -148,17 +175,22 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
 
           {/* Mail Button */}
           <motion.button
+            aria-haspopup="menu"
+            aria-expanded={openMail}
             whileHover={{ scale: 1.1, rotate: -5 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => {
-              setOpenMail(!openMail);
+              setOpenMail((v) => !v);
               setOpenUser(false);
             }}
             className="relative p-2 bg-cyan-600/20 hover:bg-cyan-600/40 rounded-md border border-cyan-700/40 text-cyan-300 shadow-[0_0_10px_#00ffff88]"
           >
             <Mail className="w-5 h-5" />
             {unread > 0 && (
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-pink-500 rounded-full animate-pulse shadow-[0_0_8px_#ff00ff]" />
+              <span
+                aria-label={`${unread} unread`}
+                className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-pink-500 rounded-full animate-pulse shadow-[0_0_8px_#ff00ff]"
+              />
             )}
           </motion.button>
 
@@ -166,44 +198,54 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
           <AnimatePresence>
             {openMail && (
               <motion.div
+                role="menu"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.25 }}
                 className="absolute right-14 top-12 w-80 bg-[#0e0e1c]/95 border border-cyan-700/50 text-gray-200 rounded-xl shadow-[0_0_25px_#00ffff33,0_0_15px_#ff00ff22_inset] backdrop-blur-xl overflow-hidden z-[9999]"
               >
-                {messages.length === 0 ? (
+                {loading ? (
+                  <div className="px-4 py-3 text-sm text-cyan-200/80">Loading messages…</div>
+                ) : messages.length === 0 ? (
                   <div className="px-4 py-3 text-sm text-center border-b border-cyan-800/40 font-semibold text-cyan-300">
                     You Don’t Have Any Message
                   </div>
                 ) : (
                   <div className="max-h-64 overflow-y-auto divide-y divide-cyan-900/30">
                     {messages.map((msg, idx) => (
-                      <div
-                        key={idx}
+                      <button
+                        type="button"
+                        key={`${msg.nik}-${idx}`}
                         onClick={() => router.push(`/Chat?from=${msg.nik}`)}
-                        className="flex items-start gap-3 px-4 py-3 hover:bg-cyan-900/20 cursor-pointer transition-colors"
+                        className="w-full text-left flex items-start gap-3 px-4 py-3 hover:bg-cyan-900/20 cursor-pointer transition-colors"
                       >
                         <Image
                           src={msg.avatarUrl || "/assets/upload/pp/3273000000000000.jpg"}
-                          alt="avatar"
+                          alt={`${msg.name || "User"} avatar`}
                           width={34}
                           height={34}
                           unoptimized
                           className="rounded-full border border-cyan-400/40 object-cover"
                         />
-                        <div className="flex-1">
-                          <div className="font-semibold text-cyan-300 text-sm leading-tight">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-cyan-300 text-sm leading-tight truncate">
                             {msg.name}
                           </div>
                           <div className="text-xs text-gray-400 truncate">{msg.text}</div>
+                          <div className="text-[10px] text-cyan-600/70">{msg.createdAt || ""}</div>
                         </div>
-                      </div>
+                        {Number(msg.unread ?? 0) > 0 && (
+                          <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-pink-600/30 border border-pink-400/40 text-pink-200">
+                            {msg.unread}
+                          </span>
+                        )}
+                      </button>
                     ))}
                   </div>
                 )}
                 <button
-                  onClick={() => (window.location.href = "/Chat")}
+                  onClick={() => router.push("/Chat")}
                   className="block w-full text-center px-4 py-2 text-sm text-cyan-200 hover:bg-cyan-900/30 transition-colors"
                 >
                   Lihat Semua Pesan →
@@ -214,19 +256,17 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
 
           {/* User Button */}
           <motion.button
+            aria-haspopup="menu"
+            aria-expanded={openUser}
             whileHover={{ scale: 1.05 }}
             onClick={() => {
-              setOpenUser(!openUser);
+              setOpenUser((v) => !v);
               setOpenMail(false);
             }}
             className="flex items-center gap-2 bg-[#1b1b3a] hover:bg-[#24244b] px-3 py-2 rounded-lg border border-cyan-700/40 transition-all shadow-[0_0_12px_#00ffff55]"
           >
             <Image
-              src={
-                user?.S_NIK
-                  ? `/assets/upload/pp/${user.S_NIK}.jpg`
-                  : "/assets/upload/pp/3273000000000000.jpg"
-              }
+              src={avatarSrc}
               alt="user"
               width={34}
               height={34}
@@ -237,9 +277,7 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
               {user?.S_USER_ID || "-"}
             </span>
             <ChevronDown
-              className={`w-4 h-4 text-cyan-300 transition-transform ${
-                openUser ? "rotate-180" : ""
-              }`}
+              className={`w-4 h-4 text-cyan-300 transition-transform ${openUser ? "rotate-180" : ""}`}
             />
           </motion.button>
 
@@ -256,11 +294,7 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
               >
                 <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#1f1f3e] to-[#262654] border-b border-cyan-900/40">
                   <Image
-                    src={
-                      user?.S_NIK
-                        ? `/assets/upload/pp/${user.S_NIK}.jpg`
-                        : "/assets/upload/pp/3273000000000000.jpg"
-                    }
+                    src={avatarSrc}
                     alt="profile"
                     width={45}
                     height={45}
@@ -271,9 +305,7 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
                     <h4 className="font-semibold text-cyan-300 text-sm">
                       {user?.S_NAMA_DPN || "User"}
                     </h4>
-                    <p className="text-xs text-cyan-100/70">
-                      {user?.S_NIK || "3273000000000000"}
-                    </p>
+                    <p className="text-xs text-cyan-100/70">{user?.S_NIK || "3273000000000000"}</p>
                   </div>
                 </div>
 
@@ -293,7 +325,7 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
                   className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-red-900/20 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {loggingOut ? (
-                    <svg className="w-4 h-4 text-gray-400 animate-spin" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-gray-400 animate-spin" viewBox="0 0 24 24" aria-hidden>
                       <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     </svg>
                   ) : (

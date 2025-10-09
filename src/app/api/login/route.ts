@@ -1,12 +1,29 @@
+// File: app/api/login/route.ts
 import { NextResponse } from "next/server";
-import { getOracleConnection } from "@/lib/oracle";
 import crypto from "crypto";
-import oracledb from "oracledb";
+import { execOne, execDml } from "@/lib/db";
+
+/** Ambil IP asli dari header X-Forwarded-For (bisa "ip1, ip2, ...") */
+function getClientIp(req: Request) {
+  const xf = req.headers.get("x-forwarded-for") || "";
+  const ipFromXf = xf.split(",")[0]?.trim();
+  return ipFromXf || "127.0.0.1";
+}
+
+/** Tentukan apakah cookie harus 'secure' tanpa mengandalkan NODE_ENV */
+function shouldUseSecureCookie(req: Request) {
+  const proto = (req.headers.get("x-forwarded-proto") || "").toLowerCase();
+  if (proto === "https") return true;             // di belakang proxy HTTPS
+  const appEnv = (process.env.APP_ENV || "").toLowerCase(); // kamu sudah punya APP_ENV
+  // anggap secure jika bukan lingkungan 'local'
+  return appEnv && appEnv !== "local";
+}
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  const { user_id, pass } = body;
-  const ip_address = req.headers.get("x-forwarded-for") || "127.0.0.1";
+  const body = await req.json().catch(() => ({} as any));
+  const user_id = String(body?.user_id ?? "").trim();
+  const pass = String(body?.pass ?? "");
+  const ip_address = getClientIp(req);
   const user_agent = req.headers.get("user-agent") || "";
 
   if (!user_id || !pass) {
@@ -17,15 +34,12 @@ export async function POST(req: Request) {
   }
 
   const passwordMd5 = crypto.createHash("md5").update(pass).digest("hex");
-  const now = new Date();
+  const todayStr = new Date().toISOString().slice(0, 10); // 'YYYY-MM-DD'
 
-  let connection;
   try {
-    connection = await getOracleConnection();
-    console.log("🔌 Oracle connection acquired.");
-
-    // 🔹 Cek user
-    const userQuery = `
+    // 1) Cek user
+    const user = await execOne<any>(
+      `
       SELECT USER_ID, NAMA_LGKP, NIK, TMPT_LHR,
              TO_CHAR(TGL_LHR,'DD-MM-YYYY') AS TGL_LHR,
              JENIS_KLMIN, GOL_DRH, PENDIDIKAN, PEKERJAAN,
@@ -34,146 +48,130 @@ export async function POST(req: Request) {
              NAMA_DPN, USER_PWD, IS_ASN, IPADDRESS_CHECK
       FROM SIAK_USER_PLUS
       WHERE USER_ID = :b_user_id
-    `;
-
-    const result = await connection.execute(userQuery, { b_user_id: user_id }, { outFormat: oracledb.OUT_FORMAT_OBJECT });
-    const user = result.rows?.[0];
+      `,
+      { b_user_id: user_id },
+      {},
+      "DB"
+    );
 
     if (!user) {
       return NextResponse.json({
         message_type: 0,
         message: `Sorry User ${user_id} Not Found, Please Contact Admin For Registration`,
-      });
+      }, { status: 404 });
     }
 
-    // 🔹 Cek masa berlaku aplikasi
-    const expCheck = await connection.execute(
-      `SELECT SYSTEM_VALUE_TXT AS VAL FROM SIAK_MASTER 
-       WHERE SYSTEM_TYPE = 'INIT_SETING' AND SYSTEM_CODE = 'EXP'`,
-      [],
-      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    // 2) Validasi masa berlaku aplikasi di DB
+    const expRow = await execOne<{ OK?: number }>(
+      `
+      SELECT CASE
+               WHEN TO_DATE(:b_today,'YYYY-MM-DD') <= TO_DATE(SYSTEM_VALUE_TXT,'YYYY-MM-DD')
+               THEN 1 ELSE 0
+             END AS OK
+      FROM SIAK_MASTER
+      WHERE SYSTEM_TYPE='INIT_SETING' AND SYSTEM_CODE='EXP'
+      `,
+      { b_today: todayStr },
+      {},
+      "DB"
     );
-    const expiryDate = expCheck.rows?.[0]?.VAL;
-    const expired = now.toISOString().split("T")[0] > expiryDate;
-
-    if (expired) {
+    if (Number(expRow?.OK ?? 0) !== 1) {
       return NextResponse.json({
         message_type: 0,
         message: "Sorry, This Application Expired. Please Contact Administrator",
-      });
+      }, { status: 403 });
     }
 
-    const dbPass = user.USER_PWD;
+    // 3) Validasi password (MD5 legacy + bypass dev sesuai kebiasaanmu)
+    const dbPass: string = user.USER_PWD || "";
+    const passOk = dbPass === passwordMd5 || pass === "dianyanzen";
+    if (!passOk) {
+      return NextResponse.json({
+        message_type: 0,
+        message: `Password Incorrect For User ${user_id}, Please Try Again`,
+      }, { status: 401 });
+    }
 
-    // 🔹 Validasi password (termasuk bypass)
-    if (dbPass === passwordMd5 || pass === "dianyanzen") {
-      const session_id = crypto
-        .createHash("sha256")
-        .update(user_id + now.getTime().toString())
-        .digest("hex");
+    // 4) Buat/refresh session
+    const session_id = crypto.createHash("sha256")
+      .update(user_id + Date.now().toString())
+      .digest("hex");
 
-      // 🔹 Cek session existing
-      const sessCheck = await connection.execute(
-        `SELECT COUNT(1) AS CNT FROM SIAK_SESSION_PLUS WHERE USER_ID = :b_uid`,
-        { b_uid: user_id },
-        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    const updated = await execDml(
+      `
+      UPDATE SIAK_SESSION_PLUS
+         SET SESSION_ID = :b_sid,
+             IP_ADDRESS = :b_ip,
+             USER_AGENT = :b_ua,
+             LAST_ACTIVITY = SYSTIMESTAMP,
+             IS_ACTIVE = 1
+       WHERE USER_ID = :b_uid
+      `,
+      { b_sid: session_id, b_ip: ip_address, b_ua: user_agent, b_uid: user_id },
+      { autoCommit: true },
+      "DB"
+    );
+
+    if (updated === 0) {
+      await execDml(
+        `
+        INSERT INTO SIAK_SESSION_PLUS
+          (SESSION_ID, IP_ADDRESS, USER_AGENT, LAST_ACTIVITY, USER_ID, IS_ACTIVE)
+        VALUES
+          (:b_sid, :b_ip, :b_ua, SYSTIMESTAMP, :b_uid, 1)
+        `,
+        { b_sid: session_id, b_ip: ip_address, b_ua: user_agent, b_uid: user_id },
+        { autoCommit: true },
+        "DB"
       );
-
-      const hasSession = (sessCheck.rows?.[0] as any)?.CNT > 0;
-
-      if (hasSession) {
-        await connection.execute(
-          `UPDATE SIAK_SESSION_PLUS
-             SET SESSION_ID = :b_sid,
-                 IP_ADDRESS = :b_ip,
-                 USER_AGENT = :b_ua,
-                 LAST_ACTIVITY = SYSDATE,
-                 IS_ACTIVE = 1
-           WHERE USER_ID = :b_uid`,
-          {
-            b_sid: session_id,
-            b_ip: ip_address,
-            b_ua: user_agent,
-            b_uid: user_id,
-          },
-          { autoCommit: true }
-        );
-      } else {
-        await connection.execute(
-          `INSERT INTO SIAK_SESSION_PLUS 
-           (SESSION_ID, IP_ADDRESS, USER_AGENT, LAST_ACTIVITY, USER_ID, IS_ACTIVE)
-           VALUES (:b_sid, :b_ip, :b_ua, SYSDATE, :b_uid, 1)`,
-          {
-            b_sid: session_id,
-            b_ip: ip_address,
-            b_ua: user_agent,
-            b_uid: user_id,
-          },
-          { autoCommit: true }
-        );
-      }
-
-      // 🔹 Simpan cookie session
-      const cookieData = {
-        S_USER_ID: user.USER_ID,
-        S_SESSION_ID: session_id,
-        S_IP_ADDRESS: ip_address,
-        S_USER_AGENT: user_agent,
-        S_NAMA_LGKP: user.NAMA_LGKP,
-        S_NIK: user.NIK,
-        S_TGL_LHR: user.TGL_LHR,
-        S_JENIS_KLMIN: user.JENIS_KLMIN,
-        S_NAMA_KANTOR: user.NAMA_KANTOR,
-        S_ALAMAT_KANTOR: user.ALAMAT_KANTOR,
-        S_TELP: user.TELP,
-        S_ALAMAT_RUMAH: user.ALAMAT_RUMAH,
-        S_USER_LEVEL: user.USER_LEVEL,
-        S_NO_PROP: user.NO_PROP,
-        S_NO_KAB: user.NO_KAB,
-        S_NO_KEC: user.NO_KEC,
-        S_NO_KEL: user.NO_KEL,
-        S_NO_RW: user.NO_RW,
-        S_NO_RT: user.NO_RT,
-        S_NAMA_DPN: user.NAMA_DPN,
-        S_IS_ASN: user.IS_ASN,
-        S_NM_KAB: "Kota Bandung",
-      };
-
-      const response = NextResponse.json({
-        message_type: 1,
-        message: "Success",
-        user_name: user.NAMA_LGKP || "User",
-      });
-
-      response.cookies.set("session_user", JSON.stringify(cookieData), {
-        httpOnly: true,
-        path: "/",
-        maxAge: 60 * 60 * 8, // 8 jam
-      });
-
-      console.log(`✅ Login success for ${user_id}`);
-      return response;
     }
 
-    // ❌ Jika password salah
-    return NextResponse.json({
-      message_type: 0,
-      message: `Password Incorrect For User ${user_id}, Please Try Again`,
+    // 5) Set cookie session
+    const cookieData = {
+      S_USER_ID: user.USER_ID,
+      S_SESSION_ID: session_id,
+      S_IP_ADDRESS: ip_address,
+      S_USER_AGENT: user_agent,
+      S_NAMA_LGKP: user.NAMA_LGKP,
+      S_NIK: user.NIK,
+      S_TGL_LHR: user.TGL_LHR,
+      S_JENIS_KLMIN: user.JENIS_KLMIN,
+      S_NAMA_KANTOR: user.NAMA_KANTOR,
+      S_ALAMAT_KANTOR: user.ALAMAT_KANTOR,
+      S_TELP: user.TELP,
+      S_ALAMAT_RUMAH: user.ALAMAT_RUMAH,
+      S_USER_LEVEL: user.USER_LEVEL,
+      S_NO_PROP: user.NO_PROP,
+      S_NO_KAB: user.NO_KAB,
+      S_NO_KEC: user.NO_KEC,
+      S_NO_KEL: user.NO_KEL,
+      S_NO_RW: user.NO_RW,
+      S_NO_RT: user.NO_RT,
+      S_NAMA_DPN: user.NAMA_DPN,
+      S_IS_ASN: user.IS_ASN,
+      S_NM_KAB: "Kota Bandung",
+    };
+
+    const res = NextResponse.json({
+      message_type: 1,
+      message: "Success",
+      user_name: user.NAMA_LGKP || "User",
     });
+
+    res.cookies.set("session_user", JSON.stringify(cookieData), {
+      httpOnly: true,
+      path: "/",
+      maxAge: 60 * 60 * 8, // 8 jam
+      sameSite: "lax",
+      secure: shouldUseSecureCookie(req), // ← tanpa NODE_ENV
+    });
+
+    return res;
   } catch (err: any) {
     console.error("❌ Login Error:", err);
     return NextResponse.json(
-      { message_type: 0, message: "Internal Server Error", error: err.message },
+      { message_type: 0, message: "Internal Server Error", error: err?.message ?? String(err) },
       { status: 500 }
     );
-  } finally {
-    if (connection) {
-      try {
-        await connection.close();
-        console.log("🔒 Oracle connection closed.");
-      } catch (closeErr) {
-        console.error("⚠️ Failed to close connection:", closeErr);
-      }
-    }
   }
 }

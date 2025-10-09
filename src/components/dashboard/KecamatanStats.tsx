@@ -65,13 +65,13 @@ export default function KecamatanStats() {
                       <td className="py-2 px-3 font-semibold text-white">
                         {row.NAMA_WIL}
                       </td>
-                      <td className="text-right px-3">
+                      <td className="text-right px-3 font-semibold text-white">
                         {row.TOTAL_REKAM.toLocaleString("id-ID")}
                       </td>
-                      <td className="text-right px-3">
+                      <td className="text-right px-3 font-semibold text-white">
                         {row.TOTAL_CETAK.toLocaleString("id-ID")}
                       </td>
-                      <td className="text-right px-3">
+                      <td className="text-right px-3 font-semibold text-white">
                         {row.TOTAL_IKD.toLocaleString("id-ID")}
                       </td>
                       <td className="text-right font-bold text-white px-3">

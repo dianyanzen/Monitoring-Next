@@ -1,39 +1,43 @@
-import { NextResponse } from "next/server";
-import { withConnection } from "@/lib/oracle";
+// app/api/messages/unread/route.ts
 import { cookies } from "next/headers";
+import { execOne } from "@/lib/db";
+import { ok, badRequest, unauthorized, err } from "@/lib/http";
+
+type CountRow = { JML?: number | string };
 
 export async function GET() {
   try {
+    // 1) Ambil cookie (sinkron, tanpa await)
     const sessionRaw = (await cookies()).get("session_user")?.value;
-    if (!sessionRaw) {
-      return NextResponse.json({ success: false, message: "Unauthorized", count: 0 }, { status: 401 });
+    if (!sessionRaw) return unauthorized("Unauthorized");
+
+    // 2) Parse session
+    let sessionData: any;
+    try {
+      sessionData = JSON.parse(sessionRaw);
+    } catch {
+      return badRequest("Invalid session format");
     }
 
-    const sessionData = JSON.parse(sessionRaw);
-    const nik = Number(sessionData.S_NIK ?? 0);
-    if (!nik) {
-      return NextResponse.json({ success: false, message: "Invalid session", count: 0 }, { status: 401 });
-    }
+    const nik = String(sessionData?.S_NIK ?? "");
+    if (!nik || nik === "0") return unauthorized("Invalid session");
 
+    // 3) Hitung jumlah PENGIRIM unik yang punya pesan unread ke NIK ini
+    //    Catatan: Jika kolom TO_ID bertipe VARCHAR2, pakai TO_CHAR(:b_nik).
+    //             Jika NUMBER, ganti ke: WHERE TO_ID = :b_nik
     const sql = `
-      SELECT COUNT(DISTINCT(FROM_ID)) AS JML
+      SELECT COUNT(DISTINCT FROM_ID) AS JML
       FROM MESSAGES
-      WHERE TO_ID = :nik AND READ = 0
+      WHERE TO_ID = TO_CHAR(:b_nik)
+        AND READ = 0
     `;
 
-    const result = await withConnection("DB", (conn) =>
-      conn.execute(sql, { nik }, {
-        outFormat: (conn as any).oracledb?.OUT_FORMAT_OBJECT ?? undefined,
-      })
-    );
+    const row = await execOne<CountRow>(sql, { b_nik: nik }, {}, "DB");
+    const count = Number(row?.JML ?? 0);
 
-    // 🔹 Safe fallback
-    const rows = (result as any)?.rows ?? [];
-    const count = rows.length > 0 ? Number(rows[0]?.JML ?? 0) : 0;
-
-    return NextResponse.json({ success: true, count });
-  } catch (e) {
-    console.error("Unread API error:", e);
-    return NextResponse.json({ success: false, count: 0 }, { status: 500 });
+    return ok({ count });
+  } catch (e: any) {
+    console.error("🔥 /api/messages/unread error:", e);
+    return err(e?.message || "Internal server error");
   }
 }

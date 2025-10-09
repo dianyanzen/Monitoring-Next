@@ -60,10 +60,10 @@ export default function DkbStats() {
                 <tbody>
                   {rows.map((r, i) => (
                     <tr key={`${r.DKB}-${i}`} className="border-b border-cyan-400/10 hover:bg-white/5">
-                      <td className="p-3 text-white">{r.DKB}</td>
-                      <td className="p-3 text-cyan-100">{Number(r.R1).toLocaleString("id-ID")}</td>
-                      <td className="p-3 text-cyan-100">{Number(r.R2).toLocaleString("id-ID")}</td>
-                      <td className="p-3 text-cyan-50 font-semibold">{Number(r.JUMLAH).toLocaleString("id-ID")}</td>
+                      <td className="p-3 text-white font-semibold">{r.DKB}</td>
+                      <td className="p-3 text-white font-semibold">{Number(r.R1).toLocaleString("id-ID")}</td>
+                      <td className="p-3 text-white font-semibold">{Number(r.R2).toLocaleString("id-ID")}</td>
+                      <td className="p-3 text-white font-semibold">{Number(r.JUMLAH).toLocaleString("id-ID")}</td>
                     </tr>
                   ))}
                 </tbody>
