@@ -1,8 +1,8 @@
 // app/api/messages/previews/route.ts
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { readServerSession } from "@/lib/session";
 import { execOne, execRows } from "@/lib/db";
 import { ok, badRequest, unauthorized, err } from "@/lib/http";
+import { Log } from "@/lib/log";
 
 type Row = {
   USER_ID: string;
@@ -17,24 +17,19 @@ type Row = {
   CREATED_AT: string | null;
 };
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 export async function GET() {
+  const t0 = Date.now();
   try {
-    // 1) Cookie (sinkron, tanpa await)
-    const sessionRaw = (await cookies()).get("session_user")?.value;
-    if (!sessionRaw) return unauthorized("Tidak ada sesi (cookie hilang)");
+    // ✅ Pakai helper resmi; tidak parse manual cookie (menghindari "Format cookie sesi tidak valid")
+    const s = await readServerSession();
+    if (!s?.S_NIK) return unauthorized("Sesi tidak valid (NIK kosong)");
 
-    // 2) Parse payload sesi
-    let sessionData: any;
-    try {
-      sessionData = JSON.parse(sessionRaw);
-    } catch {
-      return badRequest("Format cookie sesi tidak valid");
-    }
+    const nik = String(s.S_NIK);
 
-    const nik = String(sessionData?.S_NIK ?? "");
-    if (!nik || nik === "0") return unauthorized("Sesi tidak valid (NIK kosong)");
-
-    // 3) Hitung jumlah pengirim yang punya unread ke NIK ini
+    // ✳️ SQL ASLI — TIDAK DIUBAH
     const sqlCount = `
       SELECT COUNT(DISTINCT FROM_ID) AS JML
       FROM MESSAGES
@@ -42,9 +37,12 @@ export async function GET() {
     `;
     const countRow = await execOne<{ JML?: number | string }>(sqlCount, { b_nik: nik }, {}, "DB");
     const unreadCount = Number(countRow?.JML ?? 0);
-    if (unreadCount === 0) return ok({ count: 0, items: [] });
+    if (unreadCount === 0) {
+      await Log.info({ scope: "API", msg: "Previews none", at: "/api/messages/previews", user: nik, tookMs: Date.now() - t0 });
+      return ok({ count: 0, items: [] });
+    }
 
-    // 4) Ambil daftar preview per pengirim (terakhir per thread)
+    // ✳️ SQL ASLI — TIDAK DIUBAH
     const sqlMessages = `
       SELECT
         A.USER_ID,
@@ -135,9 +133,24 @@ export async function GET() {
       avatarUrl: `/assets/upload/pp/${r.NIK}.jpg`,
     }));
 
+    await Log.info({
+      scope: "API",
+      msg: "Previews ok",
+      at: "/api/messages/previews",
+      user: nik,
+      tookMs: Date.now() - t0,
+      extra: { count: unreadCount, items: items.length },
+    });
+
     return ok({ count: unreadCount, items });
   } catch (e: any) {
-    console.error("🔥 Error @ /api/messages/previews:", e);
+    await Log.error({
+      scope: "API",
+      msg: "Previews failed",
+      at: "/api/messages/previews",
+      tookMs: Date.now() - t0,
+      err: { name: e?.name ?? "Error", message: e?.message ?? String(e), stack: e?.stack },
+    });
     return err(e?.message || "Terjadi kesalahan server");
   }
 }

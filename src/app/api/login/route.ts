@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { execOne, execDml } from "@/lib/db";
+import { setSessionCookie } from "@/lib/session"; // ⬅️ pakai util ini
 
 /** Ambil IP asli dari header X-Forwarded-For (bisa "ip1, ip2, ...") */
 function getClientIp(req: Request) {
@@ -127,7 +128,7 @@ export async function POST(req: Request) {
     }
 
     // 5) Set cookie session
-    const cookieData = {
+     const cookieData = {
       S_USER_ID: user.USER_ID,
       S_SESSION_ID: session_id,
       S_IP_ADDRESS: ip_address,
@@ -158,13 +159,8 @@ export async function POST(req: Request) {
       user_name: user.NAMA_LGKP || "User",
     });
 
-    res.cookies.set("session_user", JSON.stringify(cookieData), {
-      httpOnly: true,
-      path: "/",
-      maxAge: 60 * 60 * 8, // 8 jam
-      sameSite: "lax",
-      secure: shouldUseSecureCookie(req), // ← tanpa NODE_ENV
-    });
+    // gunakan maxAge 8 jam (atau dari ENV)
+    await setSessionCookie(cookieData, 60 * 60 * 8);
 
     return res;
   } catch (err: any) {

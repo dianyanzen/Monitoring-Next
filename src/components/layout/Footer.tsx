@@ -1,3 +1,4 @@
+// File: app/(components)/layout/Footer.tsx
 export default function Footer() {
   const year = new Date().getFullYear();
 

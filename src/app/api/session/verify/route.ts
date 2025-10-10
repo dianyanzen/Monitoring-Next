@@ -1,18 +1,11 @@
 // File: app/api/session/verify/route.ts
-import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 import { execOne } from "@/lib/db";
-import { ok, badRequest, unauthorized } from "@/lib/http";
+import { readServerSession } from "@/lib/session";
 
 export async function GET() {
-  const raw = (await cookies()).get("session_user")?.value;
-  if (!raw) return unauthorized("Tidak ada sesi.");
-
-  let data: any;
-  try { data = JSON.parse(decodeURIComponent(raw)); } catch { return badRequest("Cookie sesi rusak."); }
-
-  const uid = String(data?.S_USER_ID || "");
-  const sid = String(data?.S_SESSION_ID || "");
-  if (!uid || !sid) return badRequest("Session user tidak lengkap.");
+  const s = await readServerSession();
+  if (!s) return NextResponse.json({ ok: false, message: "Tidak ada sesi." }, { status: 401 });
 
   const row = await execOne<{ CNT?: number }>(
     `SELECT COUNT(1) AS CNT
@@ -20,12 +13,18 @@ export async function GET() {
       WHERE USER_ID = :b_uid
         AND SESSION_ID = :b_sid
         AND IS_ACTIVE = 1`,
-    { b_uid: uid, b_sid: sid },
+    { b_uid: s.S_USER_ID, b_sid: s.S_SESSION_ID },
     {},
     "DB"
   );
 
   const valid = Number(row?.CNT ?? 0) > 0;
-  if (!valid) return unauthorized("Sesi tidak valid atau sudah berakhir.");
-  return ok({ valid: true, user: data });
+  if (!valid) {
+    return NextResponse.json(
+      { ok: false, message: "Sesi tidak valid atau sudah berakhir." },
+      { status: 401 }
+    );
+  }
+
+  return NextResponse.json({ ok: true, valid: true, user: s });
 }

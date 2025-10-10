@@ -2,8 +2,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-/** Daftar path publik (tanpa sesi) yang boleh diakses. */
-const PUBLIC_PATHS = [/^\/$/, /^\/login$/];
+/** HANYA /login yang publik */
+const PUBLIC_PATHS = [/^\/login$/];
 
 /** Cek apakah path termasuk rute publik. */
 function isPublicPath(pathname: string) {
@@ -38,7 +38,7 @@ function redirect(url: URL, clearCookie = false) {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Lewatkan semua file statis & API (sudah dicover di config.matcher, ini jaga-jaga)
+  // Lewatkan file statis & API (sudah dicover di config.matcher, ini jaga-jaga)
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/assets") ||
@@ -57,12 +57,24 @@ export function middleware(request: NextRequest) {
     return redirect(url, true);
   }
 
-  // Belum login
-  if (!session) {
-    // Boleh akses halaman publik (/, /login)
-    if (isPublicPath(pathname)) return NextResponse.next();
+  // ======== KHUSUS ROOT "/" SESUAI PERMINTAAN ========
+  if (pathname === "/") {
+    // Belum login → ke /login
+    if (!session) {
+      return redirect(new URL("/login", request.url));
+    }
+    // Sudah login → arahkan sesuai level
+    const level = Number(session.S_USER_LEVEL ?? session.USER_LEVEL ?? 0);
+    if (level === 8) {
+      return redirect(new URL("/laporanpindah", request.url));
+    }
+    return redirect(new URL("/dashboard", request.url));
+  }
+  // ====================================================
 
-    // Selain publik → redirect ke /login dengan parameter redirect
+  // Belum login (selain halaman publik) → redirect ke /login?redirect=<path>
+  if (!session) {
+    if (isPublicPath(pathname)) return NextResponse.next();
     const url = new URL("/login", request.url);
     url.searchParams.set("redirect", pathname);
     return redirect(url);
@@ -79,20 +91,11 @@ export function middleware(request: NextRequest) {
     return redirect(new URL("/dashboard", request.url));
   }
 
-  // Akses root "/" → arahkan sesuai level
-  if (pathname === "/") {
-    if (level === 8) {
-      return redirect(new URL("/laporanpindah", request.url));
-    }
-    return redirect(new URL("/dashboard", request.url));
-  }
-
   // Sudah login & bukan kasus khusus → lanjut
   return NextResponse.next();
 }
 
 export const config = {
-  // Kecualikan _next, api, assets, favicon, dan static files
   matcher: [
     "/((?!_next|api|assets|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|css|js|ico|woff|woff2)$).*)",
   ],

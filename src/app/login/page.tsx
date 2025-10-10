@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
+import RouteChangeOverlay, { triggerRouteOverlay } from "@/components/system/RouteChangeOverlay";
 
 export default function LoginPage() {
   const year = new Date().getFullYear();
@@ -151,12 +152,18 @@ export default function LoginPage() {
     setLoading(false);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") handleLogin();
-  };
+const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    triggerRouteOverlay();   // 🔵 nyalakan overlay
+    handleLogin();           // lanjut login
+  }
+};
 
   return (
     <div className="flex min-h-screen">
+      {/* Overlay route-change global */}
+      <RouteChangeOverlay />
       {/* === KIRI: Background penuh === */}
       <div className="relative flex-1 hidden md:block h-screen">
         <div className="absolute inset-0">
@@ -228,6 +235,7 @@ export default function LoginPage() {
 
           <button
             type="button"
+            data-overlay-on-click
             onClick={handleLogin}
             disabled={loading}
             className="w-full py-3 bg-gradient-to-r from-[#00ffff] to-[#ff00ff] hover:from-[#ff00ff] hover:to-[#00ffff]

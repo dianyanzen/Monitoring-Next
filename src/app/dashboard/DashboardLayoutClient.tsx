@@ -5,6 +5,7 @@ import { useState } from "react";
 import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/layout/Topbar";
 import Footer from "@/components/layout/Footer";
+import RouteChangeOverlay from "@/components/system/RouteChangeOverlay";
 
 export default function DashboardLayoutClient({
   children,
@@ -15,6 +16,8 @@ export default function DashboardLayoutClient({
 
   return (
     <div className="flex h-screen w-full overflow-hidden">
+      {/* Overlay route-change global */}
+      <RouteChangeOverlay />
       {/* Sidebar dengan animasi buka/tutup */}
       {sidebarVisible && (
         <div className="h-full transition-all duration-300 ease-in-out">

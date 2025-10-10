@@ -1,89 +1,69 @@
-// File: app/(components)/Topbar.tsx
+// File: app/(components)/layout/Topbar.tsx
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { useEffect, useMemo, useRef, useState, useId } from "react";
 import { LogOut, Settings, Menu, Mail, ChevronDown } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-
-/** Bentuk respons helper (/api/http.ts bisa kirim { success, data }) */
-function getUserFrom(res: any) {
-  // dukung { user } atau { data: { user } }
-  return res?.user ?? res?.data?.user ?? null;
-}
-function getCountFrom(res: any) {
-  // dukung { count } atau { data: { count } }
-  return typeof res?.count === "number" ? res.count : (res?.data?.count ?? 0);
-}
-function getItemsFrom(res: any) {
-  // dukung { items } atau { data: { items } }
-  return Array.isArray(res?.items) ? res.items : (res?.data?.items ?? []);
-}
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useSession } from "@/contexts/session";
 
 export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => void }) {
-  const [user, setUser] = useState<any>(null);
+  const { user, unread, messages, loading, refreshPreviews } = useSession();
   const [openUser, setOpenUser] = useState(false);
   const [openMail, setOpenMail] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
-  const [messages, setMessages] = useState<any[]>([]);
-  const [unread, setUnread] = useState(0);
-  const [loading, setLoading] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
+  const reduceMotion = useReducedMotion();
 
-  const fetchAll = useCallback(async (signal?: AbortSignal) => {
-    try {
-      const [sRes, uRes, pRes] = await Promise.all([
-        fetch("/api/session", { credentials: "include", signal }),
-        fetch("/api/messages/unread", { credentials: "include", signal }),
-        fetch("/api/messages/previews", { credentials: "include", signal }),
-      ]);
+  // id unik untuk mengaitkan tombol ↔ menu (a11y)
+  const mailBtnId = useId();
+  const mailMenuId = useId();
+  const userBtnId = useId();
+  const userMenuId = useId();
 
-      // jika salah satu unauthorized → biarkan middleware redirect
-      if (!sRes.ok || !uRes.ok || !pRes.ok) return;
+  // Fallback avatar
+  const avatarSrc = useMemo(
+    () => (user?.S_NIK ? `/assets/upload/pp/${user.S_NIK}.jpg` : "/assets/upload/pp/3273000000000000.jpg"),
+    [user?.S_NIK]
+  );
 
-      const [sData, uData, pData] = await Promise.all([sRes.json(), uRes.json(), pRes.json()]);
-      if (signal?.aborted) return;
-
-      setUser(getUserFrom(sData));
-      setUnread(getCountFrom(uData) || 0);
-      setMessages(getItemsFrom(pData) || []);
-    } catch (err) {
-      if ((err as any)?.name !== "AbortError") {
-        console.error("Topbar fetch error:", err);
-      }
-    } finally {
-      if (!signal?.aborted) setLoading(false);
-    }
-  }, []);
-
+  // Tutup dropdown kalau klik di luar
   useEffect(() => {
-    const ac = new AbortController();
-    fetchAll(ac.signal);
-    return () => ac.abort();
-  }, [fetchAll]);
-
-  // (opsional) polling ringan untuk badge unread & preview
-  useEffect(() => {
-    const ac = new AbortController();
-    const tick = () => fetchAll(ac.signal);
-    const id = window.setInterval(tick, 60_000); // 60 dtk
-    return () => {
-      ac.abort();
-      window.clearInterval(id);
-    };
-  }, [fetchAll]);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+    const onDown = (e: MouseEvent) => {
+      if (!dropdownRef.current) return;
+      if (!dropdownRef.current.contains(e.target as Node)) {
         setOpenUser(false);
         setOpenMail(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, []);
+
+  // Tutup dropdown saat pindah route (biar bersih)
+  useEffect(() => {
+    setOpenUser(false);
+    setOpenMail(false);
+  }, [pathname]);
+
+  // Buka mail → refresh badge/preview terbaru (tanpa polling terus-menerus)
+  useEffect(() => {
+    if (openMail) refreshPreviews();
+  }, [openMail, refreshPreviews]);
+
+  // ESC untuk menutup dropdown
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpenUser(false);
+        setOpenMail(false);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, []);
 
   const handleLogout = async () => {
@@ -99,44 +79,41 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
     }
   };
 
-  // 🌌 Efek Hacker Lab Mewah
-  const HackerLabOverlay = () => (
+  // 🌌 Efek Hacker Lab Mewah (patuh prefers-reduced-motion)
+  const HackerLabOverlay = ({ reduce }: { reduce: boolean }) => (
     <>
       <motion.div
         aria-hidden
         className="absolute inset-0 opacity-[0.07] bg-[linear-gradient(to_right,#00ffff22_1px,transparent_1px),linear-gradient(to_bottom,#00ffff22_1px,transparent_1px)] bg-[size:40px_40px]"
-        animate={{ backgroundPosition: ["0px 0px", "40px 40px"] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+        animate={reduce ? undefined : { backgroundPosition: ["0px 0px", "40px 40px"] }}
+        transition={reduce ? undefined : { duration: 6, repeat: Infinity, ease: "linear" }}
       />
       <motion.div
         aria-hidden
         className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,#00ffff22,transparent_60%),radial-gradient(circle_at_70%_60%,#ff00ff22,transparent_60%)]"
-        animate={{ backgroundPosition: ["0% 0%", "100% 100%"] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        animate={reduce ? undefined : { backgroundPosition: ["0% 0%", "100% 100%"] }}
+        transition={reduce ? undefined : { duration: 8, repeat: Infinity, ease: "linear" }}
       />
       <motion.div
         aria-hidden
         className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 opacity-60"
-        animate={{ y: ["0%", "100%"] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        animate={reduce ? undefined : { y: ["0%", "100%"] }}
+        transition={reduce ? undefined : { duration: 5, repeat: Infinity, ease: "easeInOut" }}
       />
       <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent mix-blend-overlay pointer-events-none" />
     </>
   );
-
-  const avatarSrc =
-    user?.S_NIK ? `/assets/upload/pp/${user.S_NIK}.jpg` : "/assets/upload/pp/3273000000000000.jpg";
 
   return (
     <header className="fixed top-0 left-0 w-full z-[9999] overflow-visible pointer-events-auto">
       <motion.div
         aria-hidden
         className="absolute inset-0 bg-gradient-to-r from-[#0d0d20] via-[#1a1a3f] to-[#0d0d20]"
-        animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        animate={reduceMotion ? undefined : { backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+        transition={reduceMotion ? undefined : { duration: 20, repeat: Infinity, ease: "linear" }}
         style={{ backgroundSize: "200% 200%" }}
       />
-      <HackerLabOverlay />
+      <HackerLabOverlay reduce={reduceMotion} />
 
       <div className="relative flex justify-between items-center px-6 py-3 border-b border-cyan-700/50 shadow-[0_0_25px_#00ffff33,0_0_60px_#ff00ff11_inset] backdrop-blur-xl bg-opacity-70">
         {/* === Logo & Title === */}
@@ -153,8 +130,8 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
               <motion.span
                 aria-hidden
                 className="absolute -bottom-1 left-0 w-full h-[1px] bg-gradient-to-r from-cyan-400 via-pink-400 to-transparent"
-                animate={{ opacity: [0.3, 1, 0.3] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                animate={reduceMotion ? undefined : { opacity: [0.3, 1, 0.3] }}
+                transition={reduceMotion ? undefined : { duration: 2, repeat: Infinity }}
               />
             </span>
           </h1>
@@ -165,8 +142,8 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
           {/* Sidebar Toggle */}
           <motion.button
             aria-label="Toggle sidebar"
-            whileHover={{ scale: 1.15, rotate: 6 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={reduceMotion ? undefined : { scale: 1.15, rotate: 6 }}
+            whileTap={reduceMotion ? undefined : { scale: 0.95 }}
             onClick={onToggleSidebar}
             className="p-2 rounded-md bg-cyan-600/20 hover:bg-cyan-600/40 border border-cyan-700/40 text-cyan-300 shadow-[0_0_10px_#00ffff88]"
           >
@@ -175,19 +152,24 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
 
           {/* Mail Button */}
           <motion.button
+            id={mailBtnId}
             aria-haspopup="menu"
             aria-expanded={openMail}
-            whileHover={{ scale: 1.1, rotate: -5 }}
-            whileTap={{ scale: 0.95 }}
+            aria-controls={mailMenuId}
+            whileHover={reduceMotion ? undefined : { scale: 1.1, rotate: -5 }}
+            whileTap={reduceMotion ? undefined : { scale: 0.95 }}
             onClick={() => {
               setOpenMail((v) => !v);
               setOpenUser(false);
             }}
+            onMouseEnter={() => { if (!openMail) { void refreshPreviews(); } }}
             className="relative p-2 bg-cyan-600/20 hover:bg-cyan-600/40 rounded-md border border-cyan-700/40 text-cyan-300 shadow-[0_0_10px_#00ffff88]"
           >
             <Mail className="w-5 h-5" />
-            {unread > 0 && (
+            {(unread ?? 0) > 0 && (
               <span
+                role="status"
+                aria-live="polite"
                 aria-label={`${unread} unread`}
                 className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-pink-500 rounded-full animate-pulse shadow-[0_0_8px_#ff00ff]"
               />
@@ -198,7 +180,9 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
           <AnimatePresence>
             {openMail && (
               <motion.div
+                id={mailMenuId}
                 role="menu"
+                aria-labelledby={mailBtnId}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -207,13 +191,13 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
               >
                 {loading ? (
                   <div className="px-4 py-3 text-sm text-cyan-200/80">Loading messages…</div>
-                ) : messages.length === 0 ? (
+                ) : (messages?.length ?? 0) === 0 ? (
                   <div className="px-4 py-3 text-sm text-center border-b border-cyan-800/40 font-semibold text-cyan-300">
                     You Don’t Have Any Message
                   </div>
                 ) : (
                   <div className="max-h-64 overflow-y-auto divide-y divide-cyan-900/30">
-                    {messages.map((msg, idx) => (
+                    {messages.map((msg: any, idx: number) => (
                       <button
                         type="button"
                         key={`${msg.nik}-${idx}`}
@@ -256,22 +240,28 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
 
           {/* User Button */}
           <motion.button
+            id={userBtnId}
             aria-haspopup="menu"
             aria-expanded={openUser}
-            whileHover={{ scale: 1.05 }}
+            aria-controls={userMenuId}
+            whileHover={reduceMotion ? undefined : { scale: 1.05 }}
             onClick={() => {
               setOpenUser((v) => !v);
               setOpenMail(false);
             }}
             className="flex items-center gap-2 bg-[#1b1b3a] hover:bg-[#24244b] px-3 py-2 rounded-lg border border-cyan-700/40 transition-all shadow-[0_0_12px_#00ffff55]"
           >
-            <Image
+            {/* pakai img untuk fallback cepat */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={avatarSrc}
-              alt="user"
+              alt={`user ${user?.S_USER_ID || ""}`}
               width={34}
               height={34}
-              unoptimized
               className="rounded-full border border-cyan-400/60 object-cover"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = "/assets/upload/pp/3273000000000000.jpg";
+              }}
             />
             <span className="hidden sm:block text-sm font-medium text-cyan-100">
               {user?.S_USER_ID || "-"}
@@ -285,57 +275,67 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
           <AnimatePresence>
             {openUser && (
               <motion.div
+                id={userMenuId}
                 role="menu"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.25 }}
-                className="absolute right-0 top-14 w-64 bg-[#101020]/95 border border-cyan-800/50 text-gray-200 rounded-xl shadow-[0_0_25px_#00ffff33,0_0_15px_#ff00ff22_inset] overflow-hidden backdrop-blur-xl z-[9999]"
+                aria-labelledby={userBtnId}
+                initial={{ opacity: 0, y: -12, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -12, scale: 0.98 }}
+                transition={{ duration: 0.22 }}
+                className="absolute right-0 top-14 w-80 bg-[#101020]/95 border border-cyan-800/50 text-gray-200 rounded-2xl shadow-[0_0_30px_#00ffff33,0_0_18px_#ff00ff22_inset] overflow-hidden backdrop-blur-xl z-[9999]"
               >
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#1f1f3e] to-[#262654] border-b border-cyan-900/40">
-                  <Image
+                {/* Header user lebih besar */}
+                <div className="flex items-center gap-4 p-5 bg-gradient-to-r from-[#1f1f3e] to-[#262654] border-b border-cyan-900/40">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={avatarSrc}
                     alt="profile"
-                    width={45}
-                    height={45}
-                    unoptimized
-                    className="rounded-full border border-cyan-400/40"
+                    width={72}
+                    height={72}
+                    className="rounded-full border border-cyan-400/40 object-cover shadow-[0_0_15px_#00ffff33]"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = "/assets/upload/pp/3273000000000000.jpg";
+                    }}
                   />
                   <div className="leading-tight">
-                    <h4 className="font-semibold text-cyan-300 text-sm">
+                    <h4 className="font-semibold text-cyan-300 text-[15px] leading-snug">
                       {user?.S_NAMA_DPN || "User"}
                     </h4>
-                    <p className="text-xs text-cyan-100/70">{user?.S_NIK || "3273000000000000"}</p>
+                    <p className="text-[13px] text-cyan-100/75">{user?.S_NIK || "3273000000000000"}</p>
                   </div>
                 </div>
 
+                {/* Actions lebih lapang */}
                 <button
                   type="button"
+                  data-overlay-on-click
                   onClick={() => router.push("/Activity/setting")}
-                  className="w-full flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-cyan-900/30 transition-colors"
+                  className="w-full flex items-center gap-3 px-5 py-3 text-[14px] hover:bg-cyan-900/30 transition-colors"
                 >
-                  <Settings className="w-4 h-4 text-cyan-400" />
+                  <Settings className="w-5 h-5 text-cyan-400" />
                   <span>Account Setting</span>
                 </button>
 
                 <button
                   type="button"
+                  data-overlay-on-click
                   onClick={handleLogout}
                   disabled={loggingOut}
-                  className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-red-900/20 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full flex items-center gap-3 px-5 py-3 text-[14px] text-red-400 hover:bg-red-900/20 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {loggingOut ? (
-                    <svg className="w-4 h-4 text-gray-400 animate-spin" viewBox="0 0 24 24" aria-hidden>
+                    <svg className="w-5 h-5 text-gray-400 animate-spin" viewBox="0 0 24 24" aria-hidden>
                       <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     </svg>
                   ) : (
-                    <LogOut className="w-4 h-4 text-red-500" />
+                    <LogOut className="w-5 h-5 text-red-500" />
                   )}
                   <span>{loggingOut ? "Logging out..." : "Logout"}</span>
                 </button>
               </motion.div>
             )}
           </AnimatePresence>
+
         </div>
       </div>
     </header>

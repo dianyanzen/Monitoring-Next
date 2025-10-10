@@ -1,285 +1,283 @@
-// File: src/app/setting/ChangePass/page.tsx
+// src/app/Activity/setting/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
+import { ShieldCheck, KeyRound, User as IconUser } from "lucide-react";
+
 
 type Profile = {
-  S_USER_ID?: string;
-  S_NAMA_DPN?: string;
-  S_NAMA_LGKP?: string;
-  S_NIK?: string | number;
-  S_JENIS_KLMIN?: string;
-  S_TGL_LHR?: string;
-  S_ALAMAT_RUMAH?: string;
-  S_TELP?: string;
-  S_NAMA_KANTOR?: string;
+  user_id: string | null;
+  nama_lgkp: string | null;
+  nik: string | null;
+  tmpt_lhr: string | null;
+  tgl_lhr: string | null;
+  jenis_klmin: string | null;
+  telp: string | null;
+  user_siak: string | null;
+  user_bcard: string | null;
+  user_benrol: string | null;
 };
 
-export default function AccountSettingPage() {
-  const [user, setUser] = useState<Profile | null>(null);
+export default function ActivitySettingPage() {
+  // ---- state data ----
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [msg, setMsg] = useState<string | null>(null);
 
-  const [oldPass, setOld] = useState("");
-  const [newPass, setNew] = useState("");
-  const [rePass, setRe] = useState("");
+  // ---- state password ----
+  const [oldPass, setOldPass] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [rePass, setRePass] = useState("");
+  const [saving, setSaving] = useState(false);
 
-  const [submitting, setSubmitting] = useState(false);
-  const [msg, setMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
-
+  // fetch profil dari API (pakai session S_USER_ID)
   useEffect(() => {
+    let alive = true;
     (async () => {
       try {
-        const r = await fetch("/api/account/profile", { credentials: "include" });
-        const j = await r.json();
-        setUser(j?.data?.user || j?.user || null);
-      } catch {
-        setUser(null);
+        const res = await fetch("/api/user", { cache: "no-store" });
+        const j = await res.json();
+        if (!res.ok) throw new Error(j?.message || "fetch failed");
+        if (alive) setProfile(j.data as Profile);
+      } catch (e: any) {
+        if (alive) setMsg(e?.message || "Gagal memuat profil");
       } finally {
-        setLoading(false);
+        if (alive) setLoading(false);
       }
     })();
+    return () => { alive = false; };
   }, []);
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (submitting) return;
+  // avatar dari NIK (fall back ke default)
+  const avatarSrc = useMemo(() => {
+    const nik = profile?.nik?.toString().trim();
+    return nik ? `/assets/upload/pp/${nik}.jpg` : "/assets/upload/pp/3273000000000000.jpg";
+  }, [profile?.nik]);
+
+  // handler update password (port dari project lama)
+  async function onUpdatePassword() {
     setMsg(null);
 
-    if (!oldPass || !newPass || !rePass) {
-      setMsg({ type: "err", text: "Semua field wajib diisi." });
-      return;
-    }
-    if (newPass.length < 6) {
-      setMsg({ type: "err", text: "Password baru minimal 6 karakter." });
-      return;
-    }
-    if (newPass !== rePass) {
-      setMsg({ type: "err", text: "Konfirmasi password tidak sama." });
-      return;
-    }
+    // validasi seperti skrip lama
+    if (!oldPass) return setMsg("Old Password Cannot Be Empty !");
+    if (!newPass) return setMsg("New Password Cannot Be Empty !");
+    if (!rePass)  return setMsg("Re Password Cannot Be Empty !");
+    if (newPass.length <= 3) return setMsg("New Password Too Short, We Need More Complex !");
+    if (rePass.length <= 3)  return setMsg("Re Password Too Short, We Need More Complex !");
+    if (newPass !== rePass)  return setMsg("New Password And Re Password Doesn't Match  !");
 
-    setSubmitting(true);
+    setSaving(true);
+    // RouteChangeOverlay(); // nyalakan overlay
     try {
-      const r = await fetch("/api/account/password", {
+      const res = await fetch("/api/activity/do_save", {
         method: "POST",
-        credentials: "include",
         headers: { "Content-Type": "application/json" },
+        // user_name opsional (API akan baca dari session); kirim bila perlu:
         body: JSON.stringify({
+          // user_name: profile?.user_id ?? undefined,
           old_password: oldPass,
           new_password: newPass,
-          re_password: rePass,
         }),
       });
-      const j = await r.json();
-      if (r.ok && (j?.success || j?.data?.changed || j?.changed)) {
-        setMsg({ type: "ok", text: "Password berhasil diubah." });
-        setOld(""); setNew(""); setRe("");
+      const data = await res.json();
+      if (data.message_type > 0) {
+        setMsg(data.message || "Password updated ✔");
+        setOldPass(""); setNewPass(""); setRePass("");
       } else {
-        setMsg({ type: "err", text: j?.message || "Gagal mengubah password." });
+        setMsg(data.message || "Update failed");
       }
-    } catch (e: any) {
-      setMsg({ type: "err", text: e?.message || "Gagal mengubah password." });
+    } catch {
+      setMsg("Ooops!, Please Try Again, Something Went Wrong");
     } finally {
-      setSubmitting(false);
+      setSaving(false);
     }
-  };
-
-  const avatar =
-    user?.S_NIK ? `/assets/upload/pp/${user.S_NIK}.jpg` : "/assets/upload/pp/3273000000000000.jpg";
+  }
 
   return (
-    <div className="relative px-6 md:px-8 py-6 text-gray-200 space-y-6">
-      {/* CYBER AURA */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -top-24 right-1/4 w-[900px] h-[900px] rounded-full blur-[180px] bg-cyan-700/15 animate-pulse" />
-        <div className="absolute -bottom-24 left-1/3 w-[800px] h-[800px] rounded-full blur-[180px] bg-fuchsia-600/15 animate-pulse" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
+    <div className="relative px-8 pb-8 pt-6 md:pt-8 text-gray-200 space-y-8 mt-5">
+      {/* Ambient Background */}
+      <div className="absolute inset-0 overflow-hidden -z-10">
+        <div className="absolute top-0 left-1/3 w-[800px] h-[800px] bg-cyan-500/20 blur-[160px] rounded-full animate-pulse-slow" />
+        <div className="absolute bottom-0 right-1/3 w-[700px] h-[700px] bg-fuchsia-600/10 blur-[140px] rounded-full animate-pulse-slow" />
       </div>
 
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl md:text-2xl font-semibold tracking-wide">
-          <span className="text-cyan-300">Account</span>{" "}
-          <span className="text-fuchsia-300">Setting</span>
-        </h1>
-      </div>
+      {/* Frame */}
+      <div className="space-y-1 mb-2 rounded-2xl border border-cyan-700/40 bg-[#0b0b1a]/80 backdrop-blur-xl shadow-[0_0_25px_#00ffff33,0_0_60px_#ff00ff11_inset] overflow-hidden">
+        <HeaderBar title="ACCOUNT SETTING" />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* PROFIL */}
-        <div className="relative rounded-2xl border border-cyan-900/40 bg-gradient-to-b from-[#0b0c14]/90 to-[#0b0c14]/60 overflow-hidden">
-          <div className="relative h-28 bg-[radial-gradient(1200px_300px_at_20%_-20%,rgba(34,211,238,0.35),transparent),radial-gradient(1200px_300px_at_80%_-20%,rgba(236,72,153,0.35),transparent)]">
-            <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-[480px_1fr] gap-6 p-6">
+          {/* LEFT */}
+          <div className="space-y-6">
+            <UserBanner
+              name={profile?.nama_lgkp || "User"}
+              sub="DINAS KEPENDUDUKAN DAN PENCATATAN SIPIL KOTA BANDUNG"
+              src={avatarSrc}
+              fallback="/assets/upload/pp/3273000000000000.jpg"
+            />
+            <Card className="shadow-[0_0_16px_#00ffff22_inset]">
+              <SectionTitle title="My User Control" />
+              {loading ? (
+                <div className="text-sm text-cyan-300/80">Loading profile…</div>
+              ) : !profile ? (
+                <div className="text-sm text-red-300/80">Profile not found.</div>
+              ) : (
+                <div className="space-y-3">
+                  {profile.nama_lgkp && (
+                    <div className="text-cyan-300 font-semibold">{profile.nama_lgkp}</div>
+                  )}
+                  <div className="text-[13px] text-cyan-200/90 font-semibold">My Profile</div>
 
-          <div className="px-5 pb-6 -mt-10">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <Image
-                  src={avatar}
-                  alt="avatar"
-                  width={86}
-                  height={86}
-                  unoptimized
-                  className="rounded-full border-2 border-cyan-400/60 shadow-[0_0_20px_rgba(34,211,238,0.35)] bg-[#0b0c14] object-cover"
-                />
-                <span className="absolute -right-1 -bottom-1 w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-              </div>
-              <div>
-                <div className="text-cyan-200 font-bold text-lg leading-tight">
-                  {user?.S_NAMA_LGKP || (loading ? "Loading..." : "User")}
-                </div>
-                <div className="text-xs text-gray-400">{user?.S_NIK || "-"}</div>
-              </div>
-            </div>
-
-            <div className="mt-4 rounded-xl border border-cyan-900/40 bg-[#0f1020]/60 p-4">
-              <div className="text-cyan-300 font-semibold mb-2">My User Control</div>
-              <div className="space-y-1 text-sm">
-                <Info label="Username" value={user?.S_USER_ID} />
-                <Info label="Kantor" value={user?.S_NAMA_KANTOR} />
-                <Info label="Telepon" value={user?.S_TELP} />
-                <Info label="Alamat" value={user?.S_ALAMAT_RUMAH} />
-                <Info label="Tanggal Lahir" value={user?.S_TGL_LHR} />
-                <Info label="Jenis Kelamin" value={user?.S_JENIS_KLMIN} />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* FORM PASSWORD */}
-        <div className="lg:col-span-2 relative rounded-2xl border border-cyan-900/40 bg-gradient-to-b from-[#0b0c14]/90 to-[#0b0c14]/60 p-5">
-          <div className="mb-5 border-b border-cyan-900/40 pb-3">
-            <div className="inline-flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
-              <h2 className="text-cyan-300 font-semibold tracking-wide">Setting</h2>
-            </div>
-          </div>
-
-          {loading ? (
-            <SkeletonForm />
-          ) : (
-            <form onSubmit={onSubmit} className="max-w-xl space-y-5">
-              <Field
-                label="Old Password"
-                type="password"
-                value={oldPass}
-                onChange={setOld}
-                placeholder="Enter old password"
-              />
-              <Field
-                label="New Password"
-                type="password"
-                value={newPass}
-                onChange={setNew}
-                placeholder="Enter new password"
-              />
-              <Field
-                label="Re-Password"
-                type="password"
-                value={rePass}
-                onChange={setRe}
-                placeholder="Re-enter new password"
-              />
-
-              {msg && (
-                <div
-                  className={`text-sm px-3 py-2 rounded border ${
-                    msg.type === "ok"
-                      ? "bg-emerald-900/30 border-emerald-700/40 text-emerald-200"
-                      : "bg-red-900/25 border-red-700/40 text-red-200"
-                  }`}
-                >
-                  {msg.text}
+                  {profile.user_id   && <Field label="Username" value={profile.user_id} />}
+                  {profile.nik       && <Field label="NIK" value={profile.nik} />}
+                  {profile.jenis_klmin && <Field label="Jenis Kelamin" value={profile.jenis_klmin} />}
+                  {profile.tmpt_lhr  && <Field label="Tempat Lahir" value={profile.tmpt_lhr} />}
+                  {profile.tgl_lhr   && <Field label="Tanggal Lahir" value={profile.tgl_lhr} />}
+                  {profile.telp      && <Field label="Telephone" value={profile.telp} />}
+                  {profile.user_siak && <Field label="User Siak" value={profile.user_siak} />}
+                  {profile.user_bcard&& <Field label="User Bcard" value={profile.user_bcard} />}
+                  {profile.user_benrol&& <Field label="User Benrol" value={profile.user_benrol} />}
                 </div>
               )}
+            </Card>
+          </div>
 
+          {/* RIGHT */}
+          <Card className="shadow-[0_0_16px_#ff00ff22_inset]">
+            <div className="flex items-center gap-3 mb-2">
+              <ShieldCheck className="w-5 h-5 text-cyan-300" />
+              <h2 className="text-[15px] font-semibold text-cyan-200">Setting</h2>
+            </div>
+            <Divider />
+
+            <FormRow label="Old Password">
+              <InputPassword value={oldPass} onChange={(e) => setOldPass(e.target.value)} />
+            </FormRow>
+
+            <FormRow label="New Password">
+              <InputPassword value={newPass} onChange={(e) => setNewPass(e.target.value)} />
+            </FormRow>
+
+            <FormRow label="Re-Password">
+              <InputPassword value={rePass} onChange={(e) => setRePass(e.target.value)} />
+            </FormRow>
+
+            {msg && (
+              <div className="pt-2 text-sm text-cyan-200/80">
+                {msg}
+              </div>
+            )}
+
+            <div className="pt-4">
               <button
-                type="submit"
-                disabled={submitting}
-                className="relative inline-flex items-center gap-2 px-4 py-2 rounded-lg
-                  bg-cyan-600 hover:bg-cyan-500 disabled:opacity-60 text-white font-medium
-                  ring-1 ring-cyan-400/30 shadow-[0_0_16px_rgba(34,211,238,0.35)] transition"
+                type="button"
+                disabled={saving}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-600/30 hover:bg-cyan-600/50 border border-cyan-400/40 text-cyan-100 text-sm shadow-[0_0_14px_#00ffff66] transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400/60 disabled:opacity-60"
+                onClick={onUpdatePassword}
               >
-                {submitting ? <Spinner /> : <SaveIcon />}
-                <span>{submitting ? "Updating..." : "Update Password"}</span>
+                <KeyRound className="w-4 h-4" />
+                {saving ? "Updating…" : "Update Password"}
               </button>
-            </form>
-          )}
+            </div>
+          </Card>
         </div>
       </div>
     </div>
   );
 }
 
-function Info({ label, value }: { label: string; value?: string | number }) {
+/* =============== components =============== */
+
+function HeaderBar({ title }: { title: string }) {
   return (
-    <div className="flex items-start gap-2">
-      <span className="text-gray-400 min-w-[110px]">{label} :</span>
-      <span className="text-gray-200">{value || "-"}</span>
+    <div className="px-6 py-4 border-b border-cyan-800/40 flex items-center gap-3">
+      <IconUser className="w-5 h-5 text-cyan-300" />
+      <h1 className="text-sm md:text-base font-semibold tracking-wide text-cyan-200">{title}</h1>
     </div>
   );
 }
 
-function Field({
-  label,
-  type = "text",
-  value,
-  onChange,
-  placeholder,
+function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <section className={`rounded-2xl border border-cyan-800/40 bg-[#0e0e1c]/70 p-6 ${className}`}>
+      {children}
+    </section>
+  );
+}
+
+function SectionTitle({ title }: { title: string }) {
+  return (
+    <div className="mb-4">
+      <h2 className="text-[15px] font-semibold text-cyan-200">{title}</h2>
+      <div className="mt-2 h-[1px] w-full bg-gradient-to-r from-cyan-500/60 via-pink-400/40 to-transparent" />
+    </div>
+  );
+}
+
+function Divider() {
+  return <div className="my-3 h-px bg-cyan-900/40" />;
+}
+
+function Field({ label, value }: { label: string | number; value: string | number }) {
+  return (
+    <div className="grid grid-cols-[140px_1fr] text-sm">
+      <span className="text-cyan-300/90">{label} :</span>
+      <span className="text-cyan-100/90">{value}</span>
+    </div>
+  );
+}
+
+function FormRow({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-3 py-2 items-center">
+      <label className="text-sm text-cyan-200/90">{label}</label>
+      <div className="flex-1">{children}</div>
+    </div>
+  );
+}
+
+function InputPassword(props: React.InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <input
+      type="password"
+      placeholder="•••••••••••"
+      {...props}
+      className={`w-full bg-transparent border border-cyan-800/60 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-400/70 focus:ring-2 focus:ring-cyan-400/20 ${props.className ?? ""}`}
+    />
+  );
+}
+
+function UserBanner({
+  name,
+  sub,
+  src,
+  fallback,
 }: {
-  label: string;
-  type?: string;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder?: string;
+  name: string;
+  sub: string;
+  src: string;
+  fallback: string;
 }) {
   return (
-    <div>
-      <label className="block text-sm text-gray-300 mb-1">{label}</label>
-      <div className="relative">
-        <input
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          className="w-full bg-[#0d0f1a] border border-cyan-900/50 rounded-lg px-3 py-2.5 text-gray-100
-                     outline-none focus:border-cyan-400 ring-0 transition
-                     placeholder:text-gray-500"
+    <section className="relative rounded-2xl overflow-hidden border border-cyan-800/40">
+      <div className="h-44 bg-[radial-gradient(60%_70%_at_30%_30%,#162a41_0%,transparent_70%),radial-gradient(60%_70%_at_75%_60%,#3a1d5a_0%,transparent_65%)]" />
+      <div className="absolute inset-0 opacity-30 bg-[url('/noise.svg')] bg-cover" />
+      <div className="absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400 opacity-70" />
+
+      <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt="avatar"
+          className="w-28 h-28 rounded-full object-cover border-2 border-cyan-300 shadow-[0_0_25px_#00ffff66]"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src = fallback;
+          }}
         />
-        <div className="pointer-events-none absolute -inset-px rounded-lg opacity-30 bg-[conic-gradient(from_180deg_at_50%_50%,#22d3ee33_0deg,transparent_120deg,#ec489933_240deg,#22d3ee33_360deg)]" />
-      </div>
-    </div>
-  );
-}
-
-function SkeletonForm() {
-  return (
-    <div className="max-w-xl space-y-5">
-      {[...Array(3)].map((_, i) => (
-        <div key={i} className="space-y-2">
-          <div className="h-3 w-28 bg-cyan-900/30 rounded" />
-          <div className="h-10 w-full bg-cyan-900/20 rounded" />
+        <div className="mt-3 text-center">
+          <div className="text-cyan-200 font-semibold tracking-wide">{name}</div>
+          <div className="text-[12px] text-cyan-100/70">{sub}</div>
         </div>
-      ))}
-      <div className="h-10 w-40 bg-cyan-900/30 rounded" />
-    </div>
-  );
-}
-
-function Spinner() {
-  return (
-    <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.25" />
-      <path d="M21 12a9 9 0 0 1-9 9" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.9" />
-    </svg>
-  );
-}
-
-function SaveIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M21 15v4a2 2 0 0 1-2 2H7l-4 3V5a2 2 0 0 1 2-2h7" />
-      <path d="M17 8l4-4M21 4l-7 7" />
-    </svg>
+      </div>
+    </section>
   );
 }

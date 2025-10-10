@@ -1,6 +1,6 @@
-// File: app/(components)/Sidebar.tsx
+// File: app/(components)/layout/Sidebar.tsx
 "use client";
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -24,10 +24,11 @@ function sanitizeIconClass(cls?: string) {
   return cls.match(/[a-zA-Z0-9\- _:]/g)?.join("") ?? "";
 }
 
-/** Normalisasi URL: pastikan diawali "/" dan hilangkan double slash */
+/** Normalisasi URL: trim, pastikan diawali "/" dan hilangkan double slash */
 function normalizeUrl(url?: string) {
-  if (!url || url === "#") return "#";
-  const u = url.startsWith("/") ? url : `/${url}`;
+  const t = (url ?? "").trim();
+  if (!t || t === "#") return "#";
+  const u = t.startsWith("/") ? t : `/${t}`;
   return u.replace(/\/{2,}/g, "/");
 }
 
@@ -117,6 +118,8 @@ export default function Sidebar() {
                   <button
                     type="button"
                     onClick={() => toggleMenu(item.MENU_ID)}
+                    aria-expanded={isOpen}
+                    aria-controls={`sub-${item.MENU_ID}`}
                     className={`w-full flex justify-between items-center px-3 py-2 text-sm rounded transition-all duration-200 border ${
                       active
                         ? "bg-cyan-900/40 text-cyan-400 border-cyan-500/40 shadow-[0_0_10px_#00ffff55]"
@@ -154,6 +157,7 @@ export default function Sidebar() {
                   <AnimatePresence>
                     {isOpen && (
                       <motion.div
+                        id={`sub-${item.MENU_ID}`}
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
@@ -166,24 +170,53 @@ export default function Sidebar() {
                   </AnimatePresence>
                 </div>
               ) : (
-                <Link
-                  href={href}
-                  className={`flex items-center gap-2 px-3 py-2 text-sm rounded transition-all duration-200 border ${
-                    active
-                      ? "bg-cyan-900/40 text-cyan-400 border-cyan-500/40 shadow-[0_0_10px_#00ffff55]"
-                      : "border-transparent text-gray-300 hover:bg-gray-800/40 hover:border-cyan-500/20"
-                  }`}
-                >
-                  {iconClass && (
-                    <i
-                      className={`${iconClass} text-base ${
-                        active ? "text-cyan-400" : "text-gray-400"
+                (() => {
+                  const isDisabled = href === "#";
+                  return isDisabled ? (
+                    <div
+                      className={`flex items-center gap-2 px-3 py-2 text-sm rounded border
+                        ${
+                          active
+                            ? "bg-cyan-900/20 text-cyan-400 border-cyan-500/30"
+                            : "border-transparent text-gray-400/70"
+                        }
+                        cursor-not-allowed select-none`}
+                      aria-disabled="true"
+                      title={item.TITLE}
+                    >
+                      {iconClass && (
+                        <i
+                          className={`${iconClass} text-base ${
+                            active ? "text-cyan-400" : "text-gray-400"
+                          }`}
+                          aria-hidden
+                        />
+                      )}
+                      <span className="truncate">{item.TITLE}</span>
+                    </div>
+                  ) : (
+                    <Link
+                      href={href}
+                      className={`flex items-center gap-2 px-3 py-2 text-sm rounded transition-all duration-200 border ${
+                        active
+                          ? "bg-cyan-900/40 text-cyan-400 border-cyan-500/40 shadow-[0_0_10px_#00ffff55]"
+                          : "border-transparent text-gray-300 hover:bg-gray-800/40 hover:border-cyan-500/20"
                       }`}
-                      aria-hidden
-                    />
-                  )}
-                  <span className="truncate">{item.TITLE}</span>
-                </Link>
+                      aria-current={active ? "page" : undefined}
+                      title={item.TITLE}
+                    >
+                      {iconClass && (
+                        <i
+                          className={`${iconClass} text-base ${
+                            active ? "text-cyan-400" : "text-gray-400"
+                          }`}
+                          aria-hidden
+                        />
+                      )}
+                      <span className="truncate">{item.TITLE}</span>
+                    </Link>
+                  );
+                })()
               )}
             </li>
           );

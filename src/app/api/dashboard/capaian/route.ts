@@ -1,8 +1,14 @@
 // 📄 src/app/api/dashboard/capaian/route.ts
 import { execRows } from "@/lib/db";
 import { ok, err } from "@/lib/http";
+import { Log } from "@/lib/log";
+import { getClientInfo } from "@/lib/session";
 
 export async function GET() {
+  const t0 = Date.now();
+  const { ip, ua } = await getClientInfo();
+  const at = "/api/dashboard/capaian";
+
   try {
     const rows = await execRows<{ SYSTEM_CODE: string; SYSTEM_VALUE_NUM: number }>(
       `
@@ -16,7 +22,18 @@ export async function GET() {
       { b_type: "SET_DASHBOARD" }
     );
 
-    if (!rows.length) return err("Data tidak ditemukan", 404);
+    if (!rows.length) {
+      await Log.warn({
+        scope: "API",
+        msg: "capaian not found",
+        at,
+        ip,
+        ua,
+        tookMs: Date.now() - t0,
+        extra: { rows: 0 }
+      });
+      return err("Data tidak ditemukan", 404);
+    }
 
     const map: Record<string, number> = {};
     for (const r of rows) map[r.SYSTEM_CODE] = Number(r.SYSTEM_VALUE_NUM) || 0;
@@ -44,9 +61,27 @@ export async function GET() {
       CAPAIAN_IKD_P: pct(map.CAPAIAN_IKD_P),
     };
 
+    await Log.info({
+      scope: "API",
+      msg: "capaian ok",
+      at,
+      ip,
+      ua,
+      tookMs: Date.now() - t0,
+      extra: { rows: rows.length }
+    });
+
     return ok(data, 30); // Cache 30 detik
-  } catch (e) {
-    console.error("❌ /dashboard/capaian error:", e);
+  } catch (e: any) {
+    await Log.error({
+      scope: "API",
+      msg: "capaian error",
+      at,
+      ip,
+      ua,
+      tookMs: Date.now() - t0,
+      err: { name: e?.name ?? "Error", message: e?.message ?? String(e), stack: e?.stack }
+    });
     return err("Gagal mengambil data capaian");
   }
 }

@@ -1,15 +1,18 @@
 // 📄 src/app/dashboard/layout.tsx
 import "../globals.css";
 import DashboardLayoutClient from "./DashboardLayoutClient";
+import { SessionProvider } from "@/contexts/session";
+import { readServerSession } from "@/lib/session";
 
 export const metadata = {
-   title: "Monalisa System - Dashboard",
+  title: "Monalisa System - Dashboard",
   description: "Disdukcapil Kota Bandung | AI-powered System",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async  function RootLayout({ children }: { children: React.ReactNode }) {
+   const s = await readServerSession();
   return (
-    <html lang="en">
+      <html lang="id" data-scroll-behavior="smooth">
       <head>
         <link
           rel="stylesheet"
@@ -17,7 +20,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="bg-[#0b0b0d] text-gray-100 min-h-screen overflow-x-hidden">
-        <DashboardLayoutClient>{children}</DashboardLayoutClient>
+        <SessionProvider initialUser={s ?? null}>
+                  <DashboardLayoutClient>{children}</DashboardLayoutClient>
+                </SessionProvider>
       </body>
     </html>
   );

@@ -1,5 +1,6 @@
 // FILE: /lib/oracle.ts
 import oracledb from "oracledb";
+import { Log } from "./log";
 
 // Tipe instance (karena Connection/Pool tidak diekspor sebagai type langsung)
 type Connection = InstanceType<typeof oracledb.Connection>;
@@ -82,7 +83,9 @@ async function getPool(alias = "DB"): Promise<Pool> {
   });
 
   pools.set(key, pool);
-  console.log(`✅ Oracle pool created [${key}]`);
+  // console.log(`✅ Oracle pool created [${key}]`);
+  await Log.info({ scope: "SYSTEM", msg: `Oracle pool created`, extra: { alias: key } });
+
   return pool;
 }
 
@@ -106,7 +109,7 @@ export async function withConnection<T>(
     conn = await getOracleConnection(alias);
     return await fn(conn);
   } catch (err) {
-    console.error(`❌ Oracle error [${alias}]:`, err);
+    await Log.error({ scope: "DB", msg: "Oracle error", extra: { alias }, err: err as any });
     throw err;
   } finally {
     if (conn) {
