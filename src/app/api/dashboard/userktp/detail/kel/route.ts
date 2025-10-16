@@ -52,7 +52,7 @@ export async function GET(req: Request) {
 
   try {
     const binds = { p_user: p_user_raw, p_start, p_end };
-    const rows = await execRows(sql, binds, {}, "DB2");
+    const rows = await execRows(sql, binds, {}, "DB5CETAK");
     await Log.info({
       scope: "API",
       msg: "kel served",
