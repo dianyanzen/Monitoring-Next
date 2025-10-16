@@ -11,7 +11,7 @@ function formatTanggal(date: Date) {
 }
 
 export default function GeulisStats() {
-  const { data, loading } = useGeulisData();
+  const { data, loading, totalRow  } = useGeulisData();
   const today = new Date();
   const start = new Date();
   start.setDate(today.getDate() - 30);
@@ -83,7 +83,19 @@ export default function GeulisStats() {
                       </td>
                     </tr>
                   ))}
+                  
                 </tbody>
+                <tfoot className="bg-[#0e1418]/80 border-t border-cyan-400/20">
+                    <tr>
+                      <td className="py-2 px-3 font-extrabold text-cyan-300 uppercase">{totalRow.NAMA_WIL}</td>
+                      <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_REKAM.toLocaleString("id-ID")}</td>
+                      <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_CETAK.toLocaleString("id-ID")}</td>
+                      <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_IKD.toLocaleString("id-ID")}</td>
+                      <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_AKTE_17.toLocaleString("id-ID")}</td>
+                      <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_KIA.toLocaleString("id-ID")}</td>
+                      <td className="text-right px-3 font-extrabold text-cyan-200">{totalRow.TOTAL_JUMLAH.toLocaleString("id-ID")}</td>
+                    </tr>
+                  </tfoot>
               </table>
             </div>
 

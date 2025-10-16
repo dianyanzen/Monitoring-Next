@@ -1,6 +1,7 @@
-// File: app/(components)/layout/Sidebar.tsx
+// FILE: app/(components)/layout/Sidebar.tsx
 "use client";
-import { useEffect, useState, useCallback } from "react";
+
+import { useEffect, useMemo, useState, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,14 +18,11 @@ interface MenuItem {
   SUB_MENU?: MenuItem[];
 }
 
-/** Sanitizer sederhana untuk class icon yang dikirim dari DB (hindari injeksi) */
+/* ── util ──────────────────────────────────────────────────────────────── */
 function sanitizeIconClass(cls?: string) {
   if (!cls) return "";
-  // hanya huruf/angka/spasi/dash/underscore/colon (tailwind variants)
   return cls.match(/[a-zA-Z0-9\- _:]/g)?.join("") ?? "";
 }
-
-/** Normalisasi URL: trim, pastikan diawali "/" dan hilangkan double slash */
 function normalizeUrl(url?: string) {
   const t = (url ?? "").trim();
   if (!t || t === "#") return "#";
@@ -32,6 +30,46 @@ function normalizeUrl(url?: string) {
   return u.replace(/\/{2,}/g, "/");
 }
 
+/** Cari LEAF yang paling cocok (prefix terpanjang) → hanya 1 item yang aktif */
+function findActiveLeafId(items: MenuItem[], pathname: string): number | null {
+  let best: { id: number; len: number } | null = null;
+
+  const walk = (arr: MenuItem[]) => {
+    for (const it of arr) {
+      const hasSub = Array.isArray(it.SUB_MENU) && it.SUB_MENU.length > 0;
+      if (hasSub) {
+        walk(it.SUB_MENU!);
+      } else {
+        const clean = normalizeUrl(it.URL);
+        if (clean !== "#" && clean) {
+          if (pathname === clean || pathname.startsWith(clean + "/")) {
+            const len = clean.length;
+            if (!best || len > best.len) best = { id: it.MENU_ID, len };
+          }
+        }
+      }
+    }
+  };
+  walk(items);
+  return best?.id ?? null;
+}
+
+/** Kembalikan rantai ID dari root → target (termasuk target). */
+function chainToTarget(items: MenuItem[], targetId: number): number[] {
+  const dfs = (arr: MenuItem[]): number[] => {
+    for (const it of arr) {
+      if (it.MENU_ID === targetId) return [it.MENU_ID];
+      if (it.SUB_MENU?.length) {
+        const sub = dfs(it.SUB_MENU);
+        if (sub.length) return [it.MENU_ID, ...sub];
+      }
+    }
+    return [];
+  };
+  return dfs(items);
+}
+
+/* ── component ─────────────────────────────────────────────────────────── */
 export default function Sidebar() {
   const [menus, setMenus] = useState<MenuItem[]>([]);
   const [openIds, setOpenIds] = useState<number[]>([]);
@@ -40,14 +78,12 @@ export default function Sidebar() {
 
   const fetchMenus = useCallback(async (signal?: AbortSignal) => {
     try {
-      const res = await fetch("/api/menu", { credentials: "include", signal }); // kirim cookie sesi
-      if (!res.ok) return; // biarkan middleware yang handle redirect jika unauthorized
+      const res = await fetch("/api/menu", { credentials: "include", signal });
+      if (!res.ok) return;
       const json = await res.json();
       if (json?.success && Array.isArray(json.data)) setMenus(json.data);
-    } catch (err) {
-      if ((err as any)?.name !== "AbortError") {
-        console.error("❌ Fetch menu error:", err);
-      }
+    } catch (err: any) {
+      if (err?.name !== "AbortError") console.error("❌ Fetch menu error:", err);
     } finally {
       if (!signal?.aborted) setLoading(false);
     }
@@ -59,57 +95,36 @@ export default function Sidebar() {
     return () => ac.abort();
   }, [fetchMenus]);
 
-  const isActive = useCallback(
-    (url?: string) => {
-      if (!url) return false;
-      const clean = normalizeUrl(url);
-      return pathname === clean || pathname.startsWith(clean + "/");
-    },
-    [pathname]
+  // Hitung LEAF aktif (hanya satu) + buka parent chain-nya
+  const activeLeafId = useMemo(
+    () => (menus.length ? findActiveLeafId(menus, pathname) : null),
+    [menus, pathname]
   );
 
-  // Expand parent chain berdasarkan route aktif
   useEffect(() => {
-    const collectExpanded = (items: MenuItem[], path: string, acc: number[] = []) => {
-      for (const it of items) {
-        const hasSub = Array.isArray(it.SUB_MENU) && it.SUB_MENU.length > 0;
-        if (hasSub) {
-          const before = acc.length;
-          collectExpanded(it.SUB_MENU!, path, acc);
-          if (acc.length > before || isActive(it.URL)) {
-            acc.push(it.MENU_ID);
-          }
-        } else if (isActive(it.URL)) {
-          // no-op, penanda aktif pada leaf akan “mengangkat” parent di atasnya
-        }
-      }
-      return acc;
-    };
-    if (menus.length) {
-      const expanded = Array.from(new Set(collectExpanded(menus, pathname)));
-      if (expanded.length) setOpenIds(expanded);
-    }
-  }, [menus, pathname, isActive]);
+    if (!menus.length || activeLeafId == null) return;
+    const chain = chainToTarget(menus, activeLeafId).slice(0, -1); // parent only
+    setOpenIds((prev) => {
+      const s = new Set([...prev, ...chain]);
+      return [...s];
+    });
+  }, [menus, activeLeafId]);
 
   const toggleMenu = (id: number) => {
-    setOpenIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+    setOpenIds((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
   };
 
   const renderMenu = useCallback(
     (items: MenuItem[], depth = 0) => (
-      <ul
-        className={
-          depth === 0
-            ? "space-y-1"
-            : "pl-4 space-y-1 border-l border-cyan-700/40 ml-2"
-        }
-      >
+      <ul className={depth === 0 ? "space-y-1" : "pl-4 space-y-1 border-l border-cyan-700/40 ml-2"}>
         {items.map((item) => {
           const hasSub = !!(item.SUB_MENU && item.SUB_MENU.length > 0);
           const isOpen = openIds.includes(item.MENU_ID);
-          const active = isActive(item.URL);
           const iconClass = sanitizeIconClass(item.ICON);
           const href = normalizeUrl(item.URL);
+
+          // ⚡ HANYA leaf yang bisa “aktif” (highlight). Parent tidak akan aktif.
+          const isActiveLeaf = !hasSub && activeLeafId === item.MENU_ID;
 
           return (
             <li key={item.MENU_ID}>
@@ -120,21 +135,11 @@ export default function Sidebar() {
                     onClick={() => toggleMenu(item.MENU_ID)}
                     aria-expanded={isOpen}
                     aria-controls={`sub-${item.MENU_ID}`}
-                    className={`w-full flex justify-between items-center px-3 py-2 text-sm rounded transition-all duration-200 border ${
-                      active
-                        ? "bg-cyan-900/40 text-cyan-400 border-cyan-500/40 shadow-[0_0_10px_#00ffff55]"
-                        : "border-transparent text-gray-300 hover:bg-gray-800/40 hover:border-cyan-500/20"
-                    }`}
+                    className={`w-full flex justify-between items-center px-3 py-2 text-sm rounded transition-all duration-200 border
+                      ${isOpen ? "text-cyan-300 border-cyan-500/20 bg-cyan-900/10" : "border-transparent text-gray-300 hover:bg-gray-800/40 hover:border-cyan-500/20"}`}
                   >
                     <span className="flex items-center gap-2">
-                      {iconClass && (
-                        <i
-                          className={`${iconClass} text-base ${
-                            active ? "text-cyan-400" : "text-gray-400"
-                          }`}
-                          aria-hidden
-                        />
-                      )}
+                      {iconClass && <i className={`${iconClass} text-base text-gray-400`} aria-hidden />}
                       <span className="truncate">{item.TITLE}</span>
                     </span>
 
@@ -146,9 +151,7 @@ export default function Sidebar() {
                     >
                       <span
                         className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                          isOpen
-                            ? "bg-cyan-400 shadow-[0_0_8px_#00ffff]"
-                            : "bg-pink-500/40 shadow-[0_0_6px_#ff00ff55]"
+                          isOpen ? "bg-cyan-400 shadow-[0_0_8px_#00ffff]" : "bg-pink-500/40 shadow-[0_0_6px_#ff00ff55]"
                         }`}
                       />
                     </motion.span>
@@ -174,23 +177,16 @@ export default function Sidebar() {
                   const isDisabled = href === "#";
                   return isDisabled ? (
                     <div
-                      className={`flex items-center gap-2 px-3 py-2 text-sm rounded border
-                        ${
-                          active
-                            ? "bg-cyan-900/20 text-cyan-400 border-cyan-500/30"
-                            : "border-transparent text-gray-400/70"
-                        }
-                        cursor-not-allowed select-none`}
+                      className={`flex items-center gap-2 px-3 py-2 text-sm rounded border ${
+                        isActiveLeaf
+                          ? "bg-cyan-900/40 text-cyan-400 border-cyan-500/40 shadow-[0_0_10px_#00ffff55]"
+                          : "border-transparent text-gray-400/70"
+                      } cursor-not-allowed select-none`}
                       aria-disabled="true"
                       title={item.TITLE}
                     >
                       {iconClass && (
-                        <i
-                          className={`${iconClass} text-base ${
-                            active ? "text-cyan-400" : "text-gray-400"
-                          }`}
-                          aria-hidden
-                        />
+                        <i className={`${iconClass} text-base ${isActiveLeaf ? "text-cyan-400" : "text-gray-400"}`} aria-hidden />
                       )}
                       <span className="truncate">{item.TITLE}</span>
                     </div>
@@ -198,20 +194,15 @@ export default function Sidebar() {
                     <Link
                       href={href}
                       className={`flex items-center gap-2 px-3 py-2 text-sm rounded transition-all duration-200 border ${
-                        active
+                        isActiveLeaf
                           ? "bg-cyan-900/40 text-cyan-400 border-cyan-500/40 shadow-[0_0_10px_#00ffff55]"
                           : "border-transparent text-gray-300 hover:bg-gray-800/40 hover:border-cyan-500/20"
                       }`}
-                      aria-current={active ? "page" : undefined}
+                      aria-current={isActiveLeaf ? "page" : undefined}
                       title={item.TITLE}
                     >
                       {iconClass && (
-                        <i
-                          className={`${iconClass} text-base ${
-                            active ? "text-cyan-400" : "text-gray-400"
-                          }`}
-                          aria-hidden
-                        />
+                        <i className={`${iconClass} text-base ${isActiveLeaf ? "text-cyan-400" : "text-gray-400"}`} aria-hidden />
                       )}
                       <span className="truncate">{item.TITLE}</span>
                     </Link>
@@ -223,7 +214,7 @@ export default function Sidebar() {
         })}
       </ul>
     ),
-    [openIds, isActive]
+    [openIds, activeLeafId]
   );
 
   return (

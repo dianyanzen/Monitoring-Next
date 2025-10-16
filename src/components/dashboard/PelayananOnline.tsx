@@ -78,25 +78,25 @@ export default function PelayananOnline() {
 
                   {/* Hari Ini */}
                   <div className="mb-4">
-                    <p className="text-cyan-400 font-semibold text-center mb-2">
+                    <p className="text-cyan-400 font-bold text-center mb-2">
                       Hari Ini
                     </p>
                     <div className="space-y-1 text-sm">
-                      <div className="flex justify-between text-cyan-100/90">
+                      <div className="flex justify-between font-bold text-cyan-100/90">
                         <span>Baru</span>
-                        <span className="font-medium text-white">
+                        <span className="font-bold text-white">
                           {item.today.baru.toLocaleString("id-ID")}
                         </span>
                       </div>
-                      <div className="flex justify-between text-cyan-100/90">
+                      <div className="flex justify-between font-bold text-cyan-100/90">
                         <span>Upload Ulang</span>
-                        <span className="font-medium text-white">
+                        <span className="font-bold text-white">
                           {item.today.upload.toLocaleString("id-ID")}
                         </span>
                       </div>
-                      <div className="flex justify-between text-cyan-100/90">
+                      <div className="flex justify-between font-bold text-cyan-100/90">
                         <span>Tidak Lengkap</span>
-                        <span className="font-medium text-white">
+                        <span className="font-bold text-white">
                           {item.today.tidakLengkap.toLocaleString("id-ID")}
                         </span>
                       </div>
@@ -105,25 +105,25 @@ export default function PelayananOnline() {
 
                   {/* Keseluruhan */}
                   <div className="mb-4">
-                    <p className="text-cyan-400 font-semibold text-center mb-2">
+                    <p className="text-cyan-400 font-bold text-center mb-2">
                       Keseluruhan
                     </p>
                     <div className="space-y-1 text-sm">
-                      <div className="flex justify-between text-cyan-100/90">
+                      <div className="flex justify-between font-bold text-cyan-100/90">
                         <span>Baru</span>
-                        <span className="font-medium text-white">
+                        <span className="font-bold text-white">
                           {item.total.baru.toLocaleString("id-ID")}
                         </span>
                       </div>
-                      <div className="flex justify-between text-cyan-100/90">
+                      <div className="flex justify-between font-bold text-cyan-100/90">
                         <span>Upload Ulang</span>
-                        <span className="font-medium text-white">
+                        <span className="font-bold text-white">
                           {item.total.upload.toLocaleString("id-ID")}
                         </span>
                       </div>
-                      <div className="flex justify-between text-cyan-100/90">
+                      <div className="flex justify-between font-bold text-cyan-100/90">
                         <span>Tidak Lengkap</span>
-                        <span className="font-medium text-white">
+                        <span className="font-bold text-white">
                           {item.total.tidakLengkap.toLocaleString("id-ID")}
                         </span>
                       </div>
@@ -133,18 +133,18 @@ export default function PelayananOnline() {
                   {/* Verifikasi & Publish */}
                   <div className="flex justify-between border-t border-cyan-400/10 pt-3 text-sm">
                     <div className="text-left">
-                      <p className="text-cyan-400 font-medium leading-tight">
+                      <p className="text-cyan-400 font-bold leading-tight">
                         Terverifikasi
                       </p>
-                      <p className="text-white font-semibold">
+                      <p className="text-white font-bold">
                         {item.verif.toLocaleString("id-ID")}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-cyan-400 font-medium leading-tight">
+                      <p className="text-cyan-400 font-bold leading-tight">
                         Terpublikasi
                       </p>
-                      <p className="text-white font-semibold">
+                      <p className="text-white font-bold">
                         {item.publish.toLocaleString("id-ID")}
                       </p>
                     </div>

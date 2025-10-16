@@ -1,0 +1,111 @@
+/* wrapper */
+.dt-dark.dataTable,
+.dt-dark.dataTable.no-footer {
+  border-bottom: 0 !important;
+  background: transparent;
+}
+
+.dataTables_wrapper {
+  width: 100%;
+}
+
+/* Toolbar atas */
+.dataTables_wrapper .dt-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .75rem;
+  padding: .5rem .25rem .75rem;
+}
+
+.dataTables_wrapper .dt-buttons .dt-button {
+  border: 1px solid rgba(0,255,255,.25) !important;
+  background: rgba(0,255,255,.10) !important;
+  color: #bffaff !important;
+  border-radius: .5rem !important;
+  padding: .35rem .6rem !important;
+  margin-right: .35rem !important;
+  box-shadow: 0 0 10px #00ffff22;
+}
+.dataTables_wrapper .dt-buttons .dt-button:hover {
+  background: rgba(0,255,255,.18) !important;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.18);
+  color: #e7fbff;
+  padding: .4rem .6rem;
+  border-radius: .5rem;
+}
+
+/* Header */
+.dt-dark thead th {
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+  color: #c8f3ff;
+  border: 0 !important;
+  font-weight: 600;
+  padding: .6rem .75rem !important;
+}
+.dt-dark thead th.sorting,
+.dt-dark thead th.sorting_asc,
+.dt-dark thead th.sorting_desc {
+  background-clip: padding-box;
+}
+
+/* Body rows */
+.dt-dark tbody tr {
+  background: rgba(255,255,255,.03);
+}
+.dt-dark tbody tr:hover {
+  background: rgba(0,255,255,.08);
+}
+.dt-dark tbody td {
+  border-top: 6px solid transparent !important; /* jadi ada jarak antar baris (card feel) */
+  padding: .55rem .75rem !important;
+  color: #daeff3;
+}
+
+/* Footer */
+.dt-dark tfoot th {
+  background: rgba(0,255,255,.08);
+  color: #dffcff;
+  border-top: 0 !important;
+  font-weight: 700;
+  padding: .55rem .75rem !important;
+}
+
+/* Info + pagination */
+.dataTables_wrapper .dataTables_info {
+  color: #aee8ff;
+  padding-top: .5rem;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  color: #bffaff !important;
+  border: 1px solid rgba(0,255,255,.25) !important;
+  background: rgba(0,255,255,.10) !important;
+  border-radius: .5rem !important;
+  margin-left: .25rem !important;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  background: rgba(0,255,255,.22) !important;
+}
+
+/* Column helpers */
+.dt-body-center { text-align: center !important; }
+.dt-body-right  { text-align: right  !important; }
+
+/* Compact */
+table.dataTable.compact thead th,
+table.dataTable.compact tbody td,
+table.dataTable.compact tfoot th {
+  padding-top: .45rem !important;
+  padding-bottom: .45rem !important;
+}
+
+/* Responsive control icon warna */
+table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before,
+table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
+  background-color: rgba(0,255,255,.6);
+  box-shadow: 0 0 8px #00ffff55;
+}

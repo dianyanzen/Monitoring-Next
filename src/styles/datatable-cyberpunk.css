@@ -1,0 +1,427 @@
+/* FILE: /src/styles/datatable-cyberpunk.css */
+
+/* ===== CYBERPUNK PRO REFINEMENT =====
+   Lebih kontras, proporsional, dan nyaman untuk dashboard profesional.
+   Dipakai bareng DataTables v2 (no-jQuery) + 'datatables.net-dt' CSS.
+-------------------------------------------------------------- */
+
+/* Palette (utama) */
+:root {
+  --cp-bg: #0b0b1a;
+  --cp-surface: #111122;
+  --cp-surface-2: #16162b;
+  --cp-text: #d7e4f4;
+  --cp-muted: #9aa5c5;
+  --cp-primary: #27f3ff;
+  --cp-accent: #ff3fad;
+  --cp-accent-soft: #b632ff;
+  --cp-warn: #ffd166;
+  --cp-border: rgba(39,243,255,0.15);
+  --cp-glow: 0 0 24px rgba(39,243,255,.25), 0 0 48px rgba(255,63,173,.15);
+  --cp-soft-glow: 0 0 14px rgba(39,243,255,.25);
+}
+
+/* Wrapper base */
+.dataTables_wrapper {
+  background: linear-gradient(180deg, var(--cp-surface) 0%, var(--cp-surface-2) 100%);
+  border: 1px solid var(--cp-border);
+  border-radius: 14px;
+  box-shadow: var(--cp-glow);
+  padding: 16px 20px;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+}
+
+/* Filter + Toolbar */
+.dataTables_wrapper .dataTables_filter label {
+  color: var(--cp-muted);
+  font-size: 13px;
+}
+.dataTables_wrapper .dataTables_filter input {
+  background: #0f1022;
+  color: var(--cp-text);
+  border: 1px solid rgba(39,243,255,.25);
+  outline: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  transition: all .2s ease;
+}
+.dataTables_wrapper .dataTables_filter input:focus {
+  border-color: var(--cp-primary);
+  box-shadow: 0 0 0 3px rgba(39,243,255,.15);
+}
+
+/* Table core */
+table.dataTable.dt-cyberpunk {
+  width: 100% !important;
+  border-collapse: collapse;
+  background: var(--cp-bg);
+  font-size: 13px;
+  line-height: 1.5;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+/* Header */
+table.dataTable.dt-cyberpunk thead th {
+  background: linear-gradient(180deg,
+    rgba(39,243,255,0.28) 0%,
+    rgba(39,243,255,0.14) 100%
+  );
+  color: #dffaff;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(39,243,255,0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  text-align: center;
+  padding: 12px 14px;
+  text-shadow: 0 0 6px rgba(39,243,255,0.55),
+               0 0 14px rgba(39,243,255,0.25);
+  box-shadow: inset 0 -1px 0 rgba(39,243,255,0.15);
+}
+table.dataTable.dt-cyberpunk thead th:first-child {
+  border-top-left-radius: 10px;
+}
+table.dataTable.dt-cyberpunk thead th:last-child {
+  border-top-right-radius: 10px;
+}
+
+/* Body */
+table.dataTable.dt-cyberpunk tbody tr {
+  transition: background .12s ease, transform .1s ease;
+}
+table.dataTable.dt-cyberpunk tbody tr:nth-child(odd) {
+  background: rgba(255,63,173,.02);
+}
+table.dataTable.dt-cyberpunk tbody tr:hover {
+  background: rgba(39,243,255,.08);
+}
+table.dataTable.dt-cyberpunk tbody td {
+  padding: 9px 12px;
+  color: var(--cp-text);
+  border-top: 1px solid rgba(255,255,255,.03);
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Buttons */
+.dt-buttons .dt-button {
+  background: linear-gradient(180deg, #0f1022, #0c0d1c);
+  color: var(--cp-text) !important;
+  border: 1px solid rgba(39,243,255,.25) !important;
+  border-radius: 10px !important;
+  padding: 7px 12px !important;
+  box-shadow: var(--cp-soft-glow);
+  margin-top: 5px;
+  transition: transform .08s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.dt-buttons .dt-button:hover {
+  transform: translateY(-1px);
+  border-color: var(--cp-primary) !important;
+  box-shadow: 0 0 0 3px rgba(39,243,255,.12), var(--cp-soft-glow);
+}
+.dt-buttons .dt-button:active { transform: translateY(0); }
+
+/* Pagination */
+.dataTables_wrapper .dataTables_paginate {
+  margin-top: 10px;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  border: 1px solid rgba(39,243,255,.25) !important;
+  background: linear-gradient(180deg, #0f1022, #0c0d1c) !important;
+  color: var(--cp-text) !important;
+  border-radius: 8px;
+  margin-left: 6px;
+  padding: 5px 10px;
+  font-size: 12px;
+  box-shadow: var(--cp-soft-glow);
+  transition: all .15s ease;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  border-color: var(--cp-primary) !important;
+  transform: translateY(-1px);
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  border-color: var(--cp-primary) !important;
+  box-shadow: 0 0 0 3px rgba(39,243,255,.12), var(--cp-soft-glow);
+}
+
+/* Length menu */
+.dataTables_wrapper .dataTables_length label {
+  color: var(--cp-muted);
+  font-size: 13px;
+}
+.dataTables_wrapper .dataTables_length select {
+  background: #0f1022;
+  color: var(--cp-text);
+  border: 1px solid rgba(39,243,255,.25);
+  border-radius: 10px;
+  padding: 5px 8px;
+}
+
+/* Scrollbar (neon gradient) */
+.dataTables_scrollBody::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+.dataTables_scrollBody::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--cp-primary), var(--cp-accent));
+  border-radius: 999px;
+}
+.dataTables_scrollBody::-webkit-scrollbar-track {
+  background: #0d0e1e;
+  border-radius: 999px;
+}
+
+/* Toolbar modern */
+.dataTables_wrapper .dt-toolbar,
+.dt-container .dt-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+/* === FOOTER CYBERPUNK — HYPER CYAN GLOW === */
+table.dataTable.dt-cyberpunk tfoot th {
+  position: relative;
+  background: linear-gradient(90deg,
+    rgba(39,243,255,0.18) 0%,
+    rgba(39,243,255,0.08) 50%,
+    rgba(39,243,255,0.18) 100%
+  );
+  color: #e8fdff;
+  font-weight: 700;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(39,243,255,0.25);
+  text-align: center;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 16px rgba(39,243,255,0.25),
+    inset 0 0 32px rgba(39,243,255,0.12),
+    0 0 10px rgba(39,243,255,0.2);
+}
+
+/* === Kolom total (angka kanan) — animasi menyala === */
+table.dataTable.dt-cyberpunk tfoot th:last-child {
+  text-align: center !important;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  background: radial-gradient(circle at right,
+    rgba(39,243,255,0.45),
+    rgba(39,243,255,0.1) 70%
+  );
+  text-shadow:
+    0 0 8px rgba(39,243,255,1),
+    0 0 18px rgba(39,243,255,0.8),
+    0 0 32px rgba(39,243,255,0.4);
+  box-shadow:
+    inset 0 0 30px rgba(39,243,255,0.45),
+    0 0 20px rgba(39,243,255,0.25);
+  border-left: 1px solid rgba(39,243,255,0.2);
+  animation: hyperPulse 2.6s ease-in-out infinite,
+             scanLight 4s linear infinite;
+}
+
+/* 💫 Efek “denyut energi” cyan lembut */
+@keyframes hyperPulse {
+  0%, 100% {
+    text-shadow:
+      0 0 10px rgba(39,243,255,0.9),
+      0 0 22px rgba(39,243,255,0.6),
+      0 0 36px rgba(39,243,255,0.3);
+    opacity: 0.95;
+    transform: scale(1);
+  }
+  50% {
+    text-shadow:
+      0 0 20px rgba(255,255,255,1),
+      0 0 42px rgba(39,243,255,0.9),
+      0 0 64px rgba(39,243,255,0.7);
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+/* 🔷 Efek “scan light” — garis cahaya bergerak */
+@keyframes scanLight {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Terapkan gradasi bergerak untuk efek cahaya berjalan */
+table.dataTable.dt-cyberpunk tfoot th:last-child {
+  background-image: linear-gradient(
+    90deg,
+    rgba(39,243,255,0.05) 0%,
+    rgba(255,255,255,0.35) 50%,
+    rgba(39,243,255,0.05) 100%
+  );
+  background-size: 300% 100%;
+}
+
+/* === ENERGETIC HOLOGRAM SCAN EFFECT FOR COPY TOOLTIP === */
+/* === FUTURISTIC CYBERPUNK COPY TOOLTIP — CENTERED & ENERGETIC === */
+div.dt-button-info {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 9999 !important;
+  width: 380px;
+  max-width: 80vw;
+  background: rgba(8, 12, 20, 0.92);
+  border: 1px solid rgba(39,243,255,0.4);
+  border-radius: 14px;
+  box-shadow:
+    0 0 25px rgba(39,243,255,0.6),
+    0 0 60px rgba(39,243,255,0.25),
+    inset 0 0 20px rgba(39,243,255,0.3);
+  text-align: center;
+  padding: 24px 36px;
+  color: #dffaff;
+  font-family: 'Orbitron', 'Rajdhani', 'Exo 2', 'Inter', sans-serif;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  text-shadow:
+    0 0 10px rgba(39,243,255,0.9),
+    0 0 30px rgba(39,243,255,0.5);
+  animation: holoPop 0.3s ease-out, holoPulse 2.6s ease-in-out infinite;
+}
+
+/* 🌈 Cahaya bergerak cepat di permukaan */
+div.dt-button-info::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -200%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(39,243,255,0.6) 40%,
+    rgba(255,255,255,0.8) 50%,
+    rgba(39,243,255,0.6) 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: holoSweep 1.4s linear infinite;
+}
+
+/* 🪩 Teks utama futuristik */
+div.dt-button-info h2 {
+  color: #27f3ff;
+  font-weight: 800;
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+  letter-spacing: 2px;
+  text-shadow:
+    0 0 8px rgba(39,243,255,0.9),
+    0 0 20px rgba(39,243,255,0.5),
+    0 0 40px rgba(39,243,255,0.3);
+  animation: neonBlink 2s ease-in-out infinite alternate;
+}
+
+/* 🧊 Subteks kecil */
+div.dt-button-info > div {
+  color: rgba(170,255,255,0.85);
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  opacity: 0.95;
+  text-transform: none;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+/* 🎞️ Animasi muncul hologram */
+@keyframes holoPop {
+  0% { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* ⚡ Denyut lembut LED biru */
+@keyframes holoPulse {
+  0%, 100% { box-shadow: 0 0 25px rgba(39,243,255,0.6), 0 0 50px rgba(39,243,255,0.3); }
+  50% { box-shadow: 0 0 35px rgba(39,243,255,1), 0 0 70px rgba(39,243,255,0.5); }
+}
+
+/* 💨 Sapu cahaya bergerak */
+@keyframes holoSweep {
+  0% { left: -200%; }
+  100% { left: 200%; }
+}
+
+/* ✴️ Teks berkedip halus */
+@keyframes neonBlink {
+  0%, 100% { opacity: 1; text-shadow: 0 0 8px #27f3ff, 0 0 16px #27f3ff; }
+  50% { opacity: 0.75; text-shadow: 0 0 4px #27f3ff, 0 0 10px #27f3ff; }
+}
+
+
+
+/* === PRINT VIEW FIX — CYBERPUNK MODE === */
+@media print {
+  body {
+    background: #0b0b1a !important;
+    color: #dffaff !important;
+    font-family: 'Inter', sans-serif !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  table.dataTable {
+    background: #0b0b1a !important;
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+
+  table.dataTable thead th {
+    background: linear-gradient(180deg,
+      rgba(39,243,255,0.3) 0%,
+      rgba(39,243,255,0.12) 100%
+    ) !important;
+    color: #e6fcff !important;
+    border: 1px solid rgba(39,243,255,0.35) !important;
+    text-transform: uppercase;
+    font-size: 12px !important;
+    padding: 8px !important;
+  }
+
+  table.dataTable tbody td {
+    color: #d7e4f4 !important;
+    border: 1px solid rgba(39,243,255,0.15) !important;
+    padding: 8px !important;
+    text-align: center !important;
+  }
+
+  table.dataTable tfoot th {
+    background: linear-gradient(90deg,
+      rgba(39,243,255,0.2),
+      rgba(39,243,255,0.1)
+    ) !important;
+    color: #ffffff !important;
+    text-shadow: 0 0 6px rgba(39,243,255,0.9) !important;
+    border-top: 1px solid rgba(39,243,255,0.3) !important;
+    font-weight: 800 !important;
+    text-align: right !important;
+  }
+
+  /* Hapus toolbar tombol agar tidak ikut tercetak */
+  .dt-buttons, .dt-search, .dt-toolbar, .dataTables_info, .dataTables_paginate {
+    display: none !important;
+  }
+
+  /* Hilangkan margin browser */
+  @page {
+    margin: 10mm;
+  }
+}
+

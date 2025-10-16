@@ -11,7 +11,7 @@ function formatTanggal(date: Date) {
 }
 
 export default function KecamatanStats() {
-  const { data, loading } = useNonGeulisData();
+  const { data, loading, totalRow } = useNonGeulisData();
 
   const today = new Date();
   const start = new Date();
@@ -80,6 +80,15 @@ export default function KecamatanStats() {
                     </tr>
                   ))}
                 </tbody>
+                <tfoot className="bg-[#0e1418]/80 border-t border-cyan-400/20">
+                    <tr>
+                      <td className="py-2 px-3 font-extrabold text-cyan-300 uppercase">{totalRow.NAMA_WIL}</td>
+                      <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_REKAM.toLocaleString("id-ID")}</td>
+                      <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_CETAK.toLocaleString("id-ID")}</td>
+                      <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_IKD.toLocaleString("id-ID")}</td>
+                      <td className="text-right px-3 font-extrabold text-cyan-200">{totalRow.TOTAL_JUMLAH.toLocaleString("id-ID")}</td>
+                    </tr>
+                  </tfoot>
               </table>
             </div>
 

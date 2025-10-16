@@ -1,9 +1,9 @@
-// src/app/Activity/setting/page.tsx
+// FILE: src/app/Activity/setting/page.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { ShieldCheck, KeyRound, User as IconUser } from "lucide-react";
-
+import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
 
 type Profile = {
   user_id: string | null;
@@ -22,13 +22,35 @@ export default function ActivitySettingPage() {
   // ---- state data ----
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [msg, setMsg] = useState<string | null>(null);
 
   // ---- state password ----
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [rePass, setRePass] = useState("");
   const [saving, setSaving] = useState(false);
+
+  // ---- state modal (semua notif & konfirmasi) ----
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalKind, setModalKind] = useState<ModalKind>("info");
+  const [modalTitle, setModalTitle] = useState("Notification");
+  const [modalMsg, setModalMsg] = useState("");
+  const [modalOnYes, setModalOnYes] = useState<(() => void) | undefined>();
+
+  // helpers modal
+  function openAlert(kind: ModalKind, title: string, message: string) {
+    setModalKind(kind);
+    setModalTitle(title);
+    setModalMsg(message);
+    setModalOnYes(undefined);
+    setModalOpen(true);
+  }
+  function openConfirm(title: string, message: string, onYes: () => void) {
+    setModalKind("confirm");
+    setModalTitle(title);
+    setModalMsg(message);
+    setModalOnYes(() => onYes);
+    setModalOpen(true);
+  }
 
   // fetch profil dari API (pakai session S_USER_ID)
   useEffect(() => {
@@ -40,12 +62,14 @@ export default function ActivitySettingPage() {
         if (!res.ok) throw new Error(j?.message || "fetch failed");
         if (alive) setProfile(j.data as Profile);
       } catch (e: any) {
-        if (alive) setMsg(e?.message || "Gagal memuat profil");
+        if (alive) openAlert("error", "Error", e?.message || "Gagal memuat profil");
       } finally {
         if (alive) setLoading(false);
       }
     })();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, []);
 
   // avatar dari NIK (fall back ke default)
@@ -54,40 +78,44 @@ export default function ActivitySettingPage() {
     return nik ? `/assets/upload/pp/${nik}.jpg` : "/assets/upload/pp/3273000000000000.jpg";
   }, [profile?.nik]);
 
-  // handler update password (port dari project lama)
+  // validasi + buka modal confirm
+  function handleTryUpdate() {
+    if (!oldPass) return openAlert("warning", "Warning!", "Old Password Cannot Be Empty !");
+    if (!newPass) return openAlert("warning", "Warning!", "New Password Cannot Be Empty !");
+    if (!rePass) return openAlert("warning", "Warning!", "Re Password Cannot Be Empty !");
+    if (newPass.length <= 3)
+      return openAlert("warning", "Warning!", "New Password Too Short, We Need More Complex !");
+    if (rePass.length <= 3)
+      return openAlert("warning", "Warning!", "Re Password Too Short, We Need More Complex !");
+    if (newPass !== rePass)
+      return openAlert("warning", "Warning!", "New Password And Re Password Doesn't Match !");
+    openConfirm("Are you sure?", "Anda akan memperbarui password akun ini.", onUpdatePassword);
+  }
+
+  // eksekusi simpan (dipanggil dari modal confirm)
   async function onUpdatePassword() {
-    setMsg(null);
-
-    // validasi seperti skrip lama
-    if (!oldPass) return setMsg("Old Password Cannot Be Empty !");
-    if (!newPass) return setMsg("New Password Cannot Be Empty !");
-    if (!rePass)  return setMsg("Re Password Cannot Be Empty !");
-    if (newPass.length <= 3) return setMsg("New Password Too Short, We Need More Complex !");
-    if (rePass.length <= 3)  return setMsg("Re Password Too Short, We Need More Complex !");
-    if (newPass !== rePass)  return setMsg("New Password And Re Password Doesn't Match  !");
-
+    setModalOpen(false);
     setSaving(true);
-    // RouteChangeOverlay(); // nyalakan overlay
     try {
       const res = await fetch("/api/activity/do_save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // user_name opsional (API akan baca dari session); kirim bila perlu:
         body: JSON.stringify({
-          // user_name: profile?.user_id ?? undefined,
           old_password: oldPass,
           new_password: newPass,
         }),
       });
       const data = await res.json();
       if (data.message_type > 0) {
-        setMsg(data.message || "Password updated ✔");
-        setOldPass(""); setNewPass(""); setRePass("");
+        setOldPass("");
+        setNewPass("");
+        setRePass("");
+        openAlert("success", "Success", data.message || "Password updated ✔");
       } else {
-        setMsg(data.message || "Update failed");
+        openAlert("error", "Failed", data.message || "Update failed");
       }
     } catch {
-      setMsg("Ooops!, Please Try Again, Something Went Wrong");
+      openAlert("error", "Error", "Ooops! Please Try Again, Something Went Wrong");
     } finally {
       setSaving(false);
     }
@@ -127,15 +155,15 @@ export default function ActivitySettingPage() {
                   )}
                   <div className="text-[13px] text-cyan-200/90 font-semibold">My Profile</div>
 
-                  {profile.user_id   && <Field label="Username" value={profile.user_id} />}
-                  {profile.nik       && <Field label="NIK" value={profile.nik} />}
+                  {profile.user_id && <Field label="Username" value={profile.user_id} />}
+                  {profile.nik && <Field label="NIK" value={profile.nik} />}
                   {profile.jenis_klmin && <Field label="Jenis Kelamin" value={profile.jenis_klmin} />}
-                  {profile.tmpt_lhr  && <Field label="Tempat Lahir" value={profile.tmpt_lhr} />}
-                  {profile.tgl_lhr   && <Field label="Tanggal Lahir" value={profile.tgl_lhr} />}
-                  {profile.telp      && <Field label="Telephone" value={profile.telp} />}
+                  {profile.tmpt_lhr && <Field label="Tempat Lahir" value={profile.tmpt_lhr} />}
+                  {profile.tgl_lhr && <Field label="Tanggal Lahir" value={profile.tgl_lhr} />}
+                  {profile.telp && <Field label="Telephone" value={profile.telp} />}
                   {profile.user_siak && <Field label="User Siak" value={profile.user_siak} />}
-                  {profile.user_bcard&& <Field label="User Bcard" value={profile.user_bcard} />}
-                  {profile.user_benrol&& <Field label="User Benrol" value={profile.user_benrol} />}
+                  {profile.user_bcard && <Field label="User Bcard" value={profile.user_bcard} />}
+                  {profile.user_benrol && <Field label="User Benrol" value={profile.user_benrol} />}
                 </div>
               )}
             </Card>
@@ -161,18 +189,12 @@ export default function ActivitySettingPage() {
               <InputPassword value={rePass} onChange={(e) => setRePass(e.target.value)} />
             </FormRow>
 
-            {msg && (
-              <div className="pt-2 text-sm text-cyan-200/80">
-                {msg}
-              </div>
-            )}
-
             <div className="pt-4">
               <button
                 type="button"
                 disabled={saving}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-600/30 hover:bg-cyan-600/50 border border-cyan-400/40 text-cyan-100 text-sm shadow-[0_0_14px_#00ffff66] transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400/60 disabled:opacity-60"
-                onClick={onUpdatePassword}
+                onClick={handleTryUpdate}
               >
                 <KeyRound className="w-4 h-4" />
                 {saving ? "Updating…" : "Update Password"}
@@ -181,6 +203,19 @@ export default function ActivitySettingPage() {
           </Card>
         </div>
       </div>
+
+      {/* Modal serbaguna (warning/error/success/confirm) */}
+      <NeonModal
+        open={modalOpen}
+        kind={modalKind}
+        title={modalTitle}
+        message={modalMsg}
+        confirmText={modalKind === "confirm" ? "Yes, update" : "OK"}
+        cancelText="No"
+        loading={saving && modalKind === "confirm"}
+        onConfirm={modalOnYes}
+        onClose={() => !saving && setModalOpen(false)}
+      />
     </div>
   );
 }

@@ -6,6 +6,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 /* Pastikan file ini diproses Tailwind/PostCSS, bukan di-load langsung oleh browser */
 /* Optional icon font:
 @import url("/assets/material-design-iconic-font/css/materialdesignicons.min.css");
@@ -259,4 +260,29 @@ header {
 * {
   scroll-behavior: smooth;
   transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* FILE: src/app/globals.css  (tambahkan di paling bawah) */
+
+/* ✨ Futuristic animations */
+
+@keyframes borderSpin { 
+  to { transform: rotate(360deg); } 
+}
+@keyframes float {
+  0%,100% { transform: translate3d(0,0,0); }
+  50% { transform: translate3d(0,-6px,0); }
+}
+@keyframes scanlines {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+
+@keyframes energyPulse {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(0,255,255,0.4)); opacity: 0.8; }
+  50% { filter: drop-shadow(0 0 20px rgba(255,0,255,0.6)); opacity: 1; }
+}
+
+.energy-pulse {
+  animation: energyPulse 4s ease-in-out infinite;
 }

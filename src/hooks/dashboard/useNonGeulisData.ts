@@ -1,11 +1,19 @@
 // FILE: src/hooks/dashboard/useNonGeulisData.ts
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export type TWilayahData = {
   NO_WIL: number;                
   NAMA_WIL: string;
+  TOTAL_REKAM: number;
+  TOTAL_CETAK: number;
+  TOTAL_IKD: number;
+  TOTAL_AKTE_17: number;
+  TOTAL_KIA: number;
+  TOTAL_JUMLAH: number;
+};
+export type TTotals = {
   TOTAL_REKAM: number;
   TOTAL_CETAK: number;
   TOTAL_IKD: number;
@@ -65,5 +73,36 @@ export function useNonGeulisData() {
     return () => controller.abort();
   }, []);
 
-  return { data, loading, error };
+  const totals: TTotals = useMemo(() => {
+      return data.reduce<TTotals>(
+        (acc, r) => ({
+          TOTAL_REKAM: acc.TOTAL_REKAM + (r.TOTAL_REKAM ?? 0),
+          TOTAL_CETAK: acc.TOTAL_CETAK + (r.TOTAL_CETAK ?? 0),
+          TOTAL_IKD: acc.TOTAL_IKD + (r.TOTAL_IKD ?? 0),
+          TOTAL_AKTE_17: acc.TOTAL_AKTE_17 + (r.TOTAL_AKTE_17 ?? 0),
+          TOTAL_KIA: acc.TOTAL_KIA + (r.TOTAL_KIA ?? 0),
+          TOTAL_JUMLAH: acc.TOTAL_JUMLAH + (r.TOTAL_JUMLAH ?? 0),
+        }),
+        {
+          TOTAL_REKAM: 0,
+          TOTAL_CETAK: 0,
+          TOTAL_IKD: 0,
+          TOTAL_AKTE_17: 0,
+          TOTAL_KIA: 0,
+          TOTAL_JUMLAH: 0,
+        }
+      );
+    }, [data]);
+  
+    // 🧾 Row siap pakai untuk <tfoot>
+    const totalRow: TWilayahData = useMemo(
+      () => ({
+        NO_WIL: 0,
+        NAMA_WIL: "Total",
+        ...totals,
+      }),
+      [totals]
+    );
+
+  return { data, loading, error, totals, totalRow };
 }
