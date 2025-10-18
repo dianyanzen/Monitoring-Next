@@ -120,7 +120,7 @@ export default function userrekamDetailPage() {
             <ArrowLeft className="w-4 h-4" /> Back
           </Link>
           <div className="ml-auto flex items-center gap-2 text-cyan-200">
-            <span className="text-sm opacity-80">Detail Pencetakan:</span>
+            <span className="text-sm opacity-80">Detail Perekaman:</span>
             <span className="px-2 py-1 rounded-md border border-cyan-400/40 bg-cyan-600/20 text-cyan-100 font-semibold shadow-[0_0_10px_#00ffff44]">
               {user}
             </span>

@@ -1,6 +1,7 @@
+// FILE: src/contexts/session.tsx
 "use client";
 import {
-  createContext, useContext, useEffect, useMemo, useState, useCallback,
+  createContext, useContext, useEffect, useMemo, useState, useCallback, useRef,
 } from "react";
 
 export type SessionUser = {
@@ -14,9 +15,9 @@ type State = {
   unread: number; setUnread: (n: number) => void;
   messages: any[]; setMessages: (m: any[]) => void;
   loading: boolean;
-  refresh: () => Promise<void>;            // unread + previews (kalau perlu)
-  refreshUnread: () => Promise<void>;      // hanya unread (dipakai di first load + polling)
-  refreshPreviews: () => Promise<void>;    // hanya previews (saat dropdown dibuka/hover)
+  refresh: () => Promise<void>;
+  refreshUnread: () => Promise<void>;
+  refreshPreviews: () => Promise<void>;
 };
 
 const Ctx = createContext<State | null>(null);
@@ -26,6 +27,10 @@ export const useSession = () => {
   return s;
 };
 
+// ✅ Helper yang hilang: cek visibilitas tab dengan aman
+const isVisible = () =>
+  typeof document !== "undefined" && document.visibilityState === "visible";
+
 export function SessionProvider({
   children,
   initialUser = null,
@@ -34,68 +39,67 @@ export function SessionProvider({
   const [unread, setUnread] = useState(0);
   const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const didInit = useRef(false); // cegah double-run di dev StrictMode
 
-  // --- fetchers ---------------------------------------------------------------
   const fetchUnread = useCallback(async () => {
+    if (!isVisible()) return;
     const res = await fetch("/api/messages/unread", { credentials: "include", cache: "no-store" });
     if (res.ok) {
-      const json = await res.json(); // { ok: true, count: number } atau { ok, count }
+      const json = await res.json();
       setUnread(Number(json?.count ?? 0));
     }
   }, []);
 
   const fetchPreviews = useCallback(async () => {
+    if (!isVisible()) return;
     const res = await fetch("/api/messages/previews", { credentials: "include", cache: "no-store" });
     if (res.ok) {
-      const json = await res.json(); // { success: true, data: { items: [], count } }
+      const json = await res.json();
       const items = json?.data?.items ?? json?.items ?? [];
       setMessages(Array.isArray(items) ? items : []);
     }
   }, []);
 
-  // --- APIs yang diexpose ke komponen ----------------------------------------
   const refresh = useCallback(async () => {
     setLoading(true);
-    try {
-      await Promise.all([fetchUnread(), fetchPreviews()]);
-    } finally {
-      setLoading(false);
-    }
+    try { await Promise.all([fetchUnread(), fetchPreviews()]); }
+    finally { setLoading(false); }
   }, [fetchUnread, fetchPreviews]);
 
-  const refreshUnread = useCallback(async () => {
-    try { await fetchUnread(); } catch {}
-  }, [fetchUnread]);
-
+  const refreshUnread = useCallback(async () => { try { await fetchUnread(); } catch {} }, [fetchUnread]);
   const refreshPreviews = useCallback(async () => {
     setLoading(true);
     try { await fetchPreviews(); } finally { setLoading(false); }
   }, [fetchPreviews]);
 
-  // --- lifecycle -------------------------------------------------------------
-  // First load → hanya unread (biar badge cepat muncul)
+  // first load → hanya unread
   useEffect(() => {
+    if (didInit.current) return;
+    didInit.current = true;
     void refreshUnread();
   }, [refreshUnread]);
 
-  // Polling ringan tiap 30 detik → hanya unread
+  // polling tiap 15 menit; refresh sekali saat tab kembali fokus
   useEffect(() => {
-    const id = window.setInterval(() => { void refreshUnread(); }, 30_000);
-    return () => window.clearInterval(id);
+    const tick = () => { if (isVisible()) void refreshUnread(); };
+    const id = window.setInterval(tick, 900_000); // 15 menit
+    const onVis = () => { if (isVisible()) void refreshUnread(); };
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      window.clearInterval(id);
+      document.removeEventListener("visibilitychange", onVis);
+    };
   }, [refreshUnread]);
 
-  const value = useMemo(
-    () => ({
-      user, setUser,
-      unread, setUnread,
-      messages, setMessages,
-      loading,
-      refresh,           // lengkap (kalau mau dipakai tempat lain)
-      refreshUnread,     // dipakai Topbar untuk badge
-      refreshPreviews,   // dipakai Topbar saat buka/hover menu Mail
-    }),
-    [user, unread, messages, loading, refresh, refreshUnread, refreshPreviews]
-  );
+  const value = useMemo(() => ({
+    user, setUser,
+    unread, setUnread,
+    messages, setMessages,
+    loading,
+    refresh,
+    refreshUnread,
+    refreshPreviews,
+  }), [user, unread, messages, loading, refresh, refreshUnread, refreshPreviews]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

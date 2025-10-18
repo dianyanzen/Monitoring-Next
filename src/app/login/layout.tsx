@@ -15,7 +15,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="/assets/material-design-iconic-font/css/materialdesignicons.min.css"
         />
       </head>
-
       {/* ❌ Hapus overflow-auto di <main> agar login tidak scroll */}
       <body className="bg-[#0b0b0d] text-gray-100 min-h-screen overflow-hidden">
         <div className="flex h-screen w-full">

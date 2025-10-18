@@ -29,7 +29,7 @@ export default function DataCapaian() {
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-white font-semibold">{item.title}</h3>
                 <span className="text-xs text-cyan-300/90">
-                  Progress: <b className="text-cyan-200">{item.progress.toFixed(2)}%</b>
+                  Progress: <b className="text-cyan-300">{item.progress.toFixed(2)}%</b>
                 </span>
               </div>
 
@@ -46,14 +46,14 @@ export default function DataCapaian() {
                   <span className="text-cyan-300/90">Realisasi</span>
                   <div className="flex items-center justify-between">
                     <span className="text-white font-semibold">{item.realisasi}</span>
-                    <span className="text-cyan-200">{item.persenR}</span>
+                    <span className="text-cyan-300">{item.persenR}</span>
                   </div>
                 </div>
                 <div className="bg-[#0f1720]/60 border border-cyan-400/10 rounded-md p-2">
                   <span className="text-cyan-300/90">Target</span>
                   <div className="flex items-center justify-between">
                     <span className="text-white font-semibold">{item.target}</span>
-                    <span className="text-cyan-200">{item.persenT}</span>
+                    <span className="text-cyan-300">{item.persenT}</span>
                   </div>
                 </div>
               </div>

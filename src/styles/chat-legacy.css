@@ -1,0 +1,10 @@
+/* FILE: src/styles/chat-legacy.css */
+.notiv_mini {
+  text-align: center !important;
+  background-color: #06d755 !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  border-radius: 600px !important;
+  padding: 4px 7px 3px !important;
+}

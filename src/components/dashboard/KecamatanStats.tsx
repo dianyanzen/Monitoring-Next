@@ -86,7 +86,7 @@ export default function KecamatanStats() {
                       <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_REKAM.toLocaleString("id-ID")}</td>
                       <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_CETAK.toLocaleString("id-ID")}</td>
                       <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_IKD.toLocaleString("id-ID")}</td>
-                      <td className="text-right px-3 font-extrabold text-cyan-200">{totalRow.TOTAL_JUMLAH.toLocaleString("id-ID")}</td>
+                      <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_JUMLAH.toLocaleString("id-ID")}</td>
                     </tr>
                   </tfoot>
               </table>

@@ -3,7 +3,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative z-[50] mt-10">
+    <footer className="relative z-[50] mt-3">
       {/* 🌈 Animated gradient background line */}
       <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-cyan-400 via-pink-500 to-cyan-400 animate-[glowline_4s_linear_infinite]" />
 

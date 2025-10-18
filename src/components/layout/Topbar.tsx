@@ -3,12 +3,13 @@
 
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useMemo, useRef, useState, useId } from "react";
-import { LogOut, Settings, Menu, Mail, ChevronDown } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, useId, useCallback } from "react";
+import { LogOut, Settings, Menu, Mail, ChevronDown, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useSession } from "@/contexts/session";
 
 export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => void }) {
+   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const { user, unread, messages, loading, refreshPreviews } = useSession();
   const [openUser, setOpenUser] = useState(false);
   const [openMail, setOpenMail] = useState(false);
@@ -29,6 +30,17 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
     () => (user?.S_NIK ? `/assets/upload/pp/${user.S_NIK}.jpg` : "/assets/upload/pp/3273000000000000.jpg"),
     [user?.S_NIK]
   );
+
+    const applyTheme = useCallback((t: "dark" | "light") => {
+    const root = document.documentElement;
+    if (t === "dark") {
+      root.classList.add("dark");
+      root.dataset.theme = "dark";
+    } else {
+      root.classList.remove("dark");
+      root.dataset.theme = "light";
+    }
+  }, []);
 
   // Tutup dropdown kalau klik di luar
   useEffect(() => {
@@ -78,6 +90,19 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
       setLoggingOut(false);
     }
   };
+
+  const toggleTheme = useCallback(() => {
+    setTheme((prev) => {
+      const next: "dark" | "light" = prev === "dark" ? "light" : "dark";
+      try {
+        localStorage.setItem("theme", next);
+      } catch {
+        // ignore
+      }
+      applyTheme(next);
+      return next;
+    });
+  }, [applyTheme]);
 
   // 🌌 Efek Hacker Lab Mewah (patuh prefers-reduced-motion)
   const HackerLabOverlay = ({ reduce }: { reduce: boolean }) => (
@@ -200,8 +225,9 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
                     {messages.map((msg: any, idx: number) => (
                       <button
                         type="button"
+                        data-overlay-on-click
                         key={`${msg.nik}-${idx}`}
-                        onClick={() => router.push(`/Chat?from=${msg.nik}`)}
+                        onClick={() => router.push(`/chat?from=${msg.nik}`)}
                         className="w-full text-left flex items-start gap-3 px-4 py-3 hover:bg-cyan-900/20 cursor-pointer transition-colors"
                       >
                         <Image
@@ -229,7 +255,8 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
                   </div>
                 )}
                 <button
-                  onClick={() => router.push("/Chat")}
+                  onClick={() => router.push("/chat")}
+                  data-overlay-on-click
                   className="block w-full text-center px-4 py-2 text-sm text-cyan-200 hover:bg-cyan-900/30 transition-colors"
                 >
                   Lihat Semua Pesan →
@@ -239,6 +266,20 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
           </AnimatePresence>
 
           {/* User Button */}
+          {/* 🌗 Theme Toggle (Dark / Light) */}
+          <motion.button
+            type="button"
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} view`}
+            aria-pressed={theme === "dark"}
+            title={theme === "dark" ? "Light view" : "Dark view"}
+            whileHover={reduceMotion ? undefined : { scale: 1.1, rotate: theme === "dark" ? -6 : 6 }}
+            whileTap={reduceMotion ? undefined : { scale: 0.95 }}
+            onClick={toggleTheme}
+            className="p-2 rounded-md bg-cyan-600/20 hover:bg-cyan-600/40 border border-cyan-700/40 text-cyan-300 shadow-[0_0_10px_#00ffff88]"
+          >
+            {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </motion.button>
+
           <motion.button
             id={userBtnId}
             aria-haspopup="menu"

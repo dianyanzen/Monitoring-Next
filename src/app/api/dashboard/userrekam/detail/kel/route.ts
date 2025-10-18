@@ -1,4 +1,3 @@
-// FILE: src/app/api/dashboard/userrekam/detail/kel/route.ts
 import { ok, err } from "@/lib/http";
 import { execRows } from "@/lib/db";
 import { Log } from "@/lib/log";
@@ -12,47 +11,57 @@ const todayISO = () => {
   const dd = String(d.getDate()).padStart(2, "0");
   return `${d.getFullYear()}-${mm}-${dd}`;
 };
+const isoToDDMMYYYY = (iso: string) => {
+  const [y, m, d] = iso.split("-");
+  return `${d}-${m}-${y}`;
+};
 
 export async function GET(req: Request) {
   const t0 = Date.now();
   const url = new URL(req.url);
 
-  const p_user_raw = (url.searchParams.get("user") || "").trim();
-  let p_start = (url.searchParams.get("start") || "").trim();
-  let p_end = (url.searchParams.get("end") || "").trim();
+  const qUser = (url.searchParams.get("user") || "").trim();
+  let startIso = (url.searchParams.get("start") || "").trim();
+  let endIso = (url.searchParams.get("end") || "").trim();
 
-  // fallback & sanitize
   const isISO = (s: string) => /^\d{4}-\d{2}-\d{2}$/.test(s);
-  if (!isISO(p_start) && !isISO(p_end)) {
-    p_start = todayISO();
-    p_end = p_start;
+  if (!isISO(startIso) && !isISO(endIso)) {
+    startIso = todayISO();
+    endIso = startIso;
   } else {
-    if (!isISO(p_start)) p_start = p_end || todayISO();
-    if (!isISO(p_end)) p_end = p_start;
+    if (!isISO(startIso)) startIso = endIso || todayISO();
+    if (!isISO(endIso)) endIso = startIso;
   }
-  if (p_end < p_start) [p_start, p_end] = [p_end, p_start];
+  if (endIso < startIso) [startIso, endIso] = [endIso, startIso];
+
+  // ✅ binds harus sama dgn placeholder :b_start/:b_end/:p_user
+  const b_start = isoToDDMMYYYY(startIso);
+  const b_end = isoToDDMMYYYY(endIso);
+  const p_user = qUser ? `%${qUser}%` : "%";
 
   const sql = `
     SELECT 
-					CASE WHEN B.NAMA_KEC IS NULL THEN '-' ELSE B.NAMA_KEC END NAMA_KEC
-					, CASE WHEN B.NAMA_KEL IS NULL THEN '-' ELSE B.NAMA_KEL END NAMA_KEL
-					, COUNT(1) JML
-					FROM DEMOGRAPHICS B INNER JOIN FINGERS A ON A.NIK = B.NIK
-					WHERE TRUNC(A.CREATED) >= TO_DATE(:b_start,'DD-MM-YYYY') AND  TRUNC(A.CREATED) < TO_DATE(:b_end,'DD-MM-YYYY') +1
-					AND  UPPER(TO_CHAR(A.CREATED_USERNAME))  LIKE UPPER(:p_user)
-					GROUP BY B.NAMA_KEC, B.NAMA_KEL
-					ORDER BY B.NAMA_KEC, B.NAMA_KEL
+      NVL(B.NAMA_KEC,'-') AS NAMA_KEC,
+      NVL(B.NAMA_KEL,'-') AS NAMA_KEL,
+      COUNT(1)            AS JML
+    FROM FINGERS A
+    JOIN DEMOGRAPHICS B ON A.NIK = B.NIK
+    WHERE A.CREATED >= TO_DATE(:b_start,'DD-MM-YYYY')
+      AND A.CREATED <  TO_DATE(:b_end,'DD-MM-YYYY') + 1
+      AND UPPER(A.CREATED_USERNAME) LIKE UPPER(:p_user)
+    GROUP BY B.NAMA_KEC, B.NAMA_KEL
+    ORDER BY B.NAMA_KEC, B.NAMA_KEL
   `;
 
   try {
-    const binds = { p_user: p_user_raw, p_start, p_end };
+    const binds = { b_start, b_end, p_user };
     const rows = await execRows(sql, binds, {}, "DB5");
     await Log.info({
       scope: "API",
       msg: "kel served",
       at: "/api/dashboard/userrekam/detail/kel",
       tookMs: Date.now() - t0,
-      extra: { rowCount: rows.length },
+      extra: { rowCount: rows.length, startIso, endIso, qUser },
       binds,
     });
     return ok({ data: rows });
@@ -63,6 +72,7 @@ export async function GET(req: Request) {
       at: "/api/dashboard/userrekam/detail/kel",
       tookMs: Date.now() - t0,
       err: { name: e?.name || "Error", message: e?.message || String(e) },
+      extra: { startIso, endIso, qUser },
     });
     return err(e?.message ?? "Failed", 500);
   }

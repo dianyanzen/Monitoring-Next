@@ -93,7 +93,7 @@ export default function GeulisStats() {
                       <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_IKD.toLocaleString("id-ID")}</td>
                       <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_AKTE_17.toLocaleString("id-ID")}</td>
                       <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_KIA.toLocaleString("id-ID")}</td>
-                      <td className="text-right px-3 font-extrabold text-cyan-200">{totalRow.TOTAL_JUMLAH.toLocaleString("id-ID")}</td>
+                      <td className="text-right px-3 font-extrabold text-cyan-300">{totalRow.TOTAL_JUMLAH.toLocaleString("id-ID")}</td>
                     </tr>
                   </tfoot>
               </table>
