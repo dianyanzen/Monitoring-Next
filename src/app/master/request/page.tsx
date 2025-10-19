@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { RefreshCcw } from "lucide-react";
 import { useMasterRequest, TMasterRequestRow } from "@/hooks/master/useMasterRequest";
@@ -17,59 +17,69 @@ function formatNumber(value: number | null | undefined) {
 
 function RequestStat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="request-card__stat">
-      <span className="request-card__stat-label">{label}</span>
-      <span className="request-card__stat-value">{formatNumber(value)}</span>
+    <div className="master-card__stat">
+      <span className="master-card__stat-label">{label}</span>
+      <span className="master-card__stat-value">{formatNumber(value)}</span>
     </div>
   );
 }
 
 function RequestCard({ row }: { row: TMasterRequestRow }) {
-  const avatar = getAvatarUrl(row.nik);
-
   return (
-    <article className="request-card">
-      <header className="request-card__hero">
-        <div className="request-card__avatar-wrapper">
-          <img
-            src={avatar}
-            alt={row.nama_lgkp || row.user_id || "Petugas"}
-            loading="lazy"
-            onError={(event) => {
-              event.currentTarget.onerror = null;
-              event.currentTarget.src = fallbackAvatar;
-            }}
-          />
-        </div>
-        <h2 className="request-card__name">{row.nama_lgkp || "Tanpa Nama"}</h2>
-        <p className="request-card__office">{row.nama_kantor || "—"}</p>
-        <p className="request-card__user">{row.user_id || "—"}</p>
-      </header>
+    <article className="master-card request-card">
+      <div className="master-card__hero">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={getAvatarUrl(row.nik)}
+          onError={(event) => {
+            const target = event.currentTarget as HTMLImageElement;
+            target.onerror = null;
+            target.src = fallbackAvatar;
+          }}
+          alt={row.nama_lgkp || row.user_id || "Petugas"}
+          className="master-card__avatar"
+          loading="lazy"
+        />
+        <h2 className="master-card__name">
+          {(row.nama_lgkp || row.user_id || "-").toUpperCase()}
+        </h2>
+        <p className="master-card__office">{row.nama_kantor || "-"}</p>
+      </div>
 
-      <div className="request-card__body">
+      <div className="master-card__body">
         <RequestStat label="Pengajuan Kemarin" value={row.pengajuan_y} />
         <RequestStat label="Pengajuan Hari Ini" value={row.pengajuan_n} />
         <RequestStat label="Pengajuan Bulan Ini" value={row.pengajuan_b} />
       </div>
+
+      <footer className="master-card__footer">
+        <span className="master-card__nik-label">NIK</span>
+        <span className="master-card__nik-value">{row.nik || "-"}</span>
+        <span className="master-card__user">{row.user_id || "-"}</span>
+      </footer>
     </article>
   );
 }
 
 function RequestSkeletonCard() {
   return (
-    <div className="request-card request-card--skeleton animate-pulse" aria-hidden="true">
-      <div className="request-card__hero">
-        <div className="request-card__avatar-wrapper skeleton-circle" />
-        <div className="request-card__name skeleton-line" />
-        <div className="request-card__office skeleton-line" />
-        <div className="request-card__user skeleton-line" />
+    <article className="master-card master-card--skeleton request-card animate-pulse" aria-hidden="true">
+      <div className="master-card__hero">
+        <div className="master-card__avatar master-card__avatar--skeleton skeleton-circle" />
+        <div className="master-card__name skeleton-line" style={{ width: "70%" }} />
+        <div className="master-card__office skeleton-line" style={{ width: "45%" }} />
       </div>
-      <div className="request-card__body">
+      <div className="master-card__body">
         {Array.from({ length: 3 }).map((_, idx) => (
-          <div key={idx} className="request-card__stat skeleton-block" />
+          <div key={idx} className="master-card__stat skeleton-block" />
         ))}
       </div>
-    </div>
+      <div className="master-card__footer">
+        <div className="master-card__nik-label skeleton-line" style={{ width: "40%" }} />
+        <div className="master-card__nik-value skeleton-line" style={{ width: "60%" }} />
+        <div className="master-card__user skeleton-line" style={{ width: "50%" }} />
+      </div>
+    </article>
   );
 }
 
@@ -136,3 +146,6 @@ export default function PengajuanPage() {
     </div>
   );
 }
+
+
+
