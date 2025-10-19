@@ -12,6 +12,7 @@ import "datatables.net-buttons-dt/css/buttons.dataTables.css";
 
 // ====== CSS tema kamu ======
 import "@/styles/datatable-cyberpunk.css";
+import "@/styles/datatable-light.css";
 
 type AnyRow = Record<string, unknown>;
 type ColumnDef =

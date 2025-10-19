@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useMemo, useRef, useState, useId, useCallback } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from "react";
 import { LogOut, Settings, Menu, Mail, ChevronDown, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useSession } from "@/contexts/session";
@@ -20,27 +20,36 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
   const reduceMotion = useReducedMotion();
 
   // id unik untuk mengaitkan tombol ↔ menu (a11y)
-  const mailBtnId = useId();
-  const mailMenuId = useId();
-  const userBtnId = useId();
-  const userMenuId = useId();
+  const IDS = {
+    mailBtn: "tb-mail-btn",
+    mailMenu: "tb-mail-menu",
+    userBtn: "tb-user-btn",
+    userMenu: "tb-user-menu",
+  } as const;
 
-  // Fallback avatar
   const avatarSrc = useMemo(
     () => (user?.S_NIK ? `/assets/upload/pp/${user.S_NIK}.jpg` : "/assets/upload/pp/3273000000000000.jpg"),
     [user?.S_NIK]
   );
 
-    const applyTheme = useCallback((t: "dark" | "light") => {
+  const applyTheme = useCallback((t: "dark" | "light") => {
     const root = document.documentElement;
-    if (t === "dark") {
-      root.classList.add("dark");
-      root.dataset.theme = "dark";
-    } else {
-      root.classList.remove("dark");
-      root.dataset.theme = "light";
-    }
+    if (t === "dark") { root.classList.add("dark"); root.dataset.theme = "dark"; }
+    else { root.classList.remove("dark"); root.dataset.theme = "light"; }
   }, []);
+
+  useLayoutEffect(() => {
+    let stored: "dark" | "light" | null = null;
+    try {
+      const value = localStorage.getItem("theme");
+      stored = value === "light" || value === "dark" ? value : null;
+    } catch {
+      stored = null;
+    }
+    const initial = stored ?? "dark";
+    setTheme(initial);
+    applyTheme(initial);
+  }, [applyTheme]);
 
   // Tutup dropdown kalau klik di luar
   useEffect(() => {
@@ -177,10 +186,10 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
 
           {/* Mail Button */}
           <motion.button
-            id={mailBtnId}
+            id={IDS.mailBtn}
             aria-haspopup="menu"
             aria-expanded={openMail}
-            aria-controls={mailMenuId}
+            aria-controls={IDS.mailMenu}
             whileHover={reduceMotion ? undefined : { scale: 1.1, rotate: -5 }}
             whileTap={reduceMotion ? undefined : { scale: 0.95 }}
             onClick={() => {
@@ -205,9 +214,9 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
           <AnimatePresence>
             {openMail && (
               <motion.div
-                id={mailMenuId}
+                id={IDS.mailMenu}
                 role="menu"
-                aria-labelledby={mailBtnId}
+                aria-labelledby={IDS.mailBtn}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -281,10 +290,10 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
           </motion.button>
 
           <motion.button
-            id={userBtnId}
+            id={IDS.userBtn}
             aria-haspopup="menu"
             aria-expanded={openUser}
-            aria-controls={userMenuId}
+            aria-controls={IDS.userMenu}
             whileHover={reduceMotion ? undefined : { scale: 1.05 }}
             onClick={() => {
               setOpenUser((v) => !v);
@@ -316,9 +325,9 @@ export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => vo
           <AnimatePresence>
             {openUser && (
               <motion.div
-                id={userMenuId}
+                id={IDS.userMenu}
                 role="menu"
-                aria-labelledby={userBtnId}
+                aria-labelledby={IDS.userBtn}
                 initial={{ opacity: 0, y: -12, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -12, scale: 0.98 }}

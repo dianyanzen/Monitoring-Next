@@ -9,21 +9,17 @@ export const metadata = {
   description: "Disdukcapil Kota Bandung | AI-powered System",
 };
 
-export default async  function RootLayout({ children }: { children: React.ReactNode }) {
-   const s = await readServerSession();
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const s = await readServerSession();
+
   return (
-      <html lang="id" data-scroll-behavior="smooth">
-      <head>
-        <link
-          rel="stylesheet"
-          href="/assets/material-design-iconic-font/css/materialdesignicons.min.css"
-        />
-      </head>
-      <body className="bg-[#0b0b0d] text-gray-100 min-h-screen overflow-x-hidden">
-        <SessionProvider initialUser={s ?? null}>
-                  <DashboardLayoutClient>{children}</DashboardLayoutClient>
-                </SessionProvider>
-      </body>
-    </html>
+    <SessionProvider initialUser={s ?? null}>
+      {/* Semua styling/scroll di-handle oleh client layout */}
+      <DashboardLayoutClient>{children}</DashboardLayoutClient>
+    </SessionProvider>
   );
 }

@@ -1,7 +1,7 @@
 // FILE: src/app/chat/page.tsx
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback, ReactNode } from "react";
 import { useSession } from "@/contexts/session";
 import { useSearchParams } from "next/navigation";
 
@@ -57,12 +57,69 @@ const dayLabel = (d: Date) => {
   return d.toLocaleDateString();
 };
 
-// linkify sederhana
-const linkify = (t: string) =>
-  t.replace(/(https?:\/\/[^\s)]+)|(www\.[^\s)]+)/gi, (m) => {
-    const href = m.startsWith("http") ? m : `https://${m}`;
-    return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="cp-link">${m}</a>`;
+const renderMessageNodes = (text: string): ReactNode[] => {
+  const urlRegex = /(https?:\/\/[^\s)]+|www\.[^\s)]+)/gi;
+  type Fragment = { type: "text"; value: string } | { type: "link"; value: string };
+  const fragments: Fragment[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = urlRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      fragments.push({ type: "text", value: text.slice(lastIndex, match.index) });
+    }
+    fragments.push({ type: "link", value: match[0] });
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    fragments.push({ type: "text", value: text.slice(lastIndex) });
+  }
+
+  if (!fragments.length) {
+    fragments.push({ type: "text", value: text });
+  }
+
+  const nodes: ReactNode[] = [];
+  let key = 0;
+
+  fragments.forEach((fragment, fragmentIndex) => {
+    if (fragment.type === "link") {
+      const display = fragment.value;
+      const href = display.startsWith("http") ? display : `https://${display}`;
+      nodes.push(
+        <a
+          key={`msg-link-${fragmentIndex}-${key++}`}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="cp-link"
+        >
+          {display}
+        </a>
+      );
+      return;
+    }
+
+    const parts = fragment.value.split(/\n/);
+    parts.forEach((part, partIndex) => {
+      if (part.length) {
+        nodes.push(
+          <span key={`msg-text-${fragmentIndex}-${partIndex}-${key++}`}>{part}</span>
+        );
+      }
+      if (partIndex < parts.length - 1) {
+        nodes.push(<br key={`msg-br-${fragmentIndex}-${partIndex}-${key++}`} />);
+      }
+    });
+
+    if (fragment.value === "") {
+      nodes.push(<br key={`msg-empty-${fragmentIndex}-${key++}`} />);
+    }
   });
+
+  return nodes;
+};
 
 export default function ChatPage() {
   const { user } = useSession();
@@ -453,10 +510,9 @@ export default function ChatPage() {
                           borderBottomRightRadius: mine ? (groupBottom ? 16 : 8) : 16,
                         }}
                       >
-                        <p
-                          className="whitespace-pre-wrap text-cyan-100 leading-relaxed"
-                          dangerouslySetInnerHTML={{ __html: linkify(m.text) }}
-                        />
+                        <div className="text-cyan-100 leading-relaxed">
+                          {renderMessageNodes(m.text)}
+                        </div>
                         <div className="mt-1 flex items-center gap-2 justify-end text-[10px]">
                           {m._error ? (
                             <button

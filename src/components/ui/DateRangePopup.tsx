@@ -44,6 +44,9 @@ export default function DateRangePopup({
     endDate: parseISOlocal(end),
     key: "selection",
   });
+  const [manualStart, setManualStart] = useState(fmtDMY(parseISOlocal(start)));
+  const [manualEnd, setManualEnd] = useState(fmtDMY(parseISOlocal(end)));
+  const [manualError, setManualError] = useState<string>("");
 
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [pos, setPos] = useState<{ top: number; left: number; width: number }>({
@@ -59,6 +62,8 @@ export default function DateRangePopup({
       endDate: parseISOlocal(end),
       key: "selection",
     });
+    setManualStart(fmtDMY(parseISOlocal(start)));
+    setManualEnd(fmtDMY(parseISOlocal(end)));
   }, [start, end]);
 
   /* Hitung & clamp posisi popover saat dibuka / relayout */
@@ -124,6 +129,12 @@ export default function DateRangePopup({
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!draft.startDate || !draft.endDate) return;
+    setManualStart(fmtDMY(draft.startDate));
+    setManualEnd(fmtDMY(draft.endDate));
+  }, [draft.startDate, draft.endDate]);
+
   const display = useMemo(() => {
     if (!draft.startDate || !draft.endDate) return "";
     return `${fmtDMY(draft.startDate)} - ${fmtDMY(draft.endDate)}`;
@@ -131,16 +142,53 @@ export default function DateRangePopup({
 
   function onSelect(ranges: RangeKeyDict) {
     setDraft(ranges.selection);
+    if (ranges.selection.startDate) setManualStart(fmtDMY(ranges.selection.startDate));
+    if (ranges.selection.endDate) setManualEnd(fmtDMY(ranges.selection.endDate));
+    setManualError("");
+  }
+
+  const parseManual = (value: string) => {
+    if (!/^\d{2}-\d{2}-\d{4}$/.test(value)) return null;
+    const [dd, mm, yyyy] = value.split("-").map(Number);
+    const date = new Date(yyyy, (mm || 1) - 1, dd || 1, 0, 0, 0, 0);
+    if (
+      date.getFullYear() !== yyyy ||
+      date.getMonth() !== ((mm || 1) - 1) ||
+      date.getDate() !== (dd || 1)
+    ) {
+      return null;
+    }
+    return date;
+  };
+
+  function validateManualInputs() {
+    const startDate = parseManual(manualStart);
+    const endDate = parseManual(manualEnd);
+    if (!startDate || !endDate) {
+      setManualError("Gunakan format DD-MM-YYYY.");
+      return null;
+    }
+    if (endDate < startDate) {
+      setManualError("Tanggal akhir tidak boleh sebelum tanggal awal.");
+      return null;
+    }
+    setManualError("");
+    return { startDate, endDate };
   }
 
   function apply() {
-    if (!draft.startDate || !draft.endDate) return;
-    // normalisasi ke YYYY-MM-DD lokal
-    onChange(toISOlocal(draft.startDate), toISOlocal(draft.endDate));
+    const parsed = validateManualInputs();
+    if (!parsed) return;
+    const { startDate, endDate } = parsed;
+    setDraft({ startDate, endDate, key: "selection" });
+    onChange(toISOlocal(startDate), toISOlocal(endDate));
     setOpen(false);
   }
   function cancel() {
     setDraft({ startDate: parseISOlocal(start), endDate: parseISOlocal(end), key: "selection" });
+    setManualStart(fmtDMY(parseISOlocal(start)));
+    setManualEnd(fmtDMY(parseISOlocal(end)));
+    setManualError("");
     setOpen(false);
   }
 
@@ -181,7 +229,49 @@ export default function DateRangePopup({
                   rangeColors={["#22d3ee"]}
                   weekStartsOn={1}
                   scroll={{ enabled: false }}
+                  showMonthAndYearPickers
                 />
+                <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <label className="flex flex-col gap-1 text-xs text-cyan-200/80 tracking-wide uppercase">
+                    Tanggal awal (DD-MM-YYYY)
+                    <input
+                      value={manualStart}
+                      onChange={(e) => setManualStart(e.target.value)}
+                      onBlur={validateManualInputs}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          apply();
+                        }
+                      }}
+                      className="drp-input px-3 py-2 rounded-lg border text-sm outline-none"
+                      placeholder="01-01-2024"
+                    />
+                  </label>
+                  <label className="flex flex-col gap-1 text-xs text-cyan-200/80 tracking-wide uppercase">
+                    Tanggal akhir (DD-MM-YYYY)
+                    <input
+                      value={manualEnd}
+                      onChange={(e) => setManualEnd(e.target.value)}
+                      onBlur={validateManualInputs}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          apply();
+                        }
+                      }}
+                      className="drp-input px-3 py-2 rounded-lg border text-sm outline-none"
+                      placeholder="31-12-2024"
+                    />
+                  </label>
+                </div>
+                {manualError ? (
+                  <p className="mt-2 text-xs text-rose-400">{manualError}</p>
+                ) : (
+                  <p className="mt-2 text-xs text-cyan-200/70">
+                    Ketik manual dengan format DD-MM-YYYY atau gunakan kalender di atas.
+                  </p>
+                )}
                 <div className="flex items-center justify-end gap-2 mt-3">
                   <button
                     type="button"

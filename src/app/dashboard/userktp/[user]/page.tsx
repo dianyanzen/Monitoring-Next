@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Download, Search, Trash2 } from "lucide-react";
 import DateRangePopup from "@/components/ui/DateRangePopup";
@@ -46,8 +46,9 @@ function ensureFooter(api: any, html: string): HTMLTableSectionElement {
 
 export default function UserKtpDetailPage() {
   const { user } = useParams<{ user: string }>();
-  const [start, setStart] = useState(todayISO());
-  const [end, setEnd] = useState(todayISO());
+  const searchParams = useSearchParams();
+  const [start, setStart] = useState(() => searchParams.get("start") ?? todayISO());
+  const [end, setEnd] = useState(() => searchParams.get("end") ?? todayISO());
   const [rows, setRows] = useState<AnyRow[]>([]);
   const [kec, setKec] = useState<KecRow[]>([]);
   const [kel, setKel] = useState<KelRow[]>([]);
@@ -83,7 +84,7 @@ export default function UserKtpDetailPage() {
     }
   }, [user, start, end]);
 
-  useEffect(() => { load(); }, []); // first load
+  useEffect(() => { load(); }, [load]); // first load + refresh when deps change
   useEffect(() => { if (end < start) setEnd(start); }, [start, end]);
 
   function onClear() { const t = todayISO(); setStart(t); setEnd(t); }

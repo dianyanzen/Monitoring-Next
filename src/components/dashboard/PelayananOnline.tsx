@@ -48,7 +48,7 @@ export default function PelayananOnline() {
 
       <div className="relative z-10">
         {/* Judul utama */}
-        <h2 className="text-center text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-cyan-400 to-cyan-200 animate-cyanchange drop-shadow-[0_0_8px_rgba(0,255,255,0.5)] mb-2">
+        <h2 className="relative text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-cyan-400 to-cyan-200 animate-cyanchange mb-6 text-center drop-shadow-[0_0_8px_rgba(0,255,255,0.5)]">
           Dashboard Pelayanan Online
         </h2>
         <p className="text-center text-sm text-cyan-200/80 mb-8">

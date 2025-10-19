@@ -1,4 +1,4 @@
-// 📄 src/app/dashboard/userktp/mainlayout.tsx
+// FILE: src/app/master/request/mainlayout.tsx
 "use client";
 
 import { useState } from "react";
@@ -7,7 +7,7 @@ import Topbar from "@/components/layout/Topbar";
 import Footer from "@/components/layout/Footer";
 import RouteChangeOverlay from "@/components/system/RouteChangeOverlay";
 
-export default function userKtpLayoutUser({
+export default function MainLayoutClient({
   children,
 }: {
   children: React.ReactNode;

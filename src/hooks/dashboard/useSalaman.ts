@@ -1,7 +1,6 @@
-// FILE: src/hooks/dashboard/useSalaman.ts
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export type TSalamanRow = {
   name: string;
@@ -30,17 +29,15 @@ export function useSalaman() {
   const [rows, setRows] = useState<TSalamanRow[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function load() {
+  const load = useCallback(
+    async (signal?: AbortSignal) => {
       try {
         setLoading(true);
         setError(null);
 
         const res = await fetch("/api/dashboard/salaman", {
           cache: "no-store",
-          signal: controller.signal,
+          signal,
         });
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -53,19 +50,26 @@ export function useSalaman() {
           throw new Error(data.message || "Data Salaman tidak valid");
         }
       } catch (err: any) {
-        if (err.name !== "AbortError") {
-          console.error("❌ Gagal memuat data salaman:", err);
-          setError(err.message || "Gagal memuat data Salaman");
-          setRows([]);
-        }
+        if (err?.name === "AbortError") return;
+        console.error("? Gagal memuat data salaman:", err);
+        setError(err?.message || "Gagal memuat data Salaman");
+        setRows([]);
       } finally {
         setLoading(false);
       }
-    }
+    },
+    []
+  );
 
-    load();
+  useEffect(() => {
+    const controller = new AbortController();
+    load(controller.signal);
     return () => controller.abort();
-  }, []);
+  }, [load]);
 
-  return { loading, error, rows };
+  const reload = useCallback(() => {
+    load();
+  }, [load]);
+
+  return { loading, error, rows, reload };
 }

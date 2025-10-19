@@ -11,7 +11,7 @@ function formatTanggal(date: Date) {
 }
 
 export default function KecamatanStats() {
-  const { data, loading, totalRow } = useNonGeulisData();
+  const { data, loading, totalRow, error } = useNonGeulisData();
 
   const today = new Date();
   const start = new Date();
@@ -27,8 +27,8 @@ export default function KecamatanStats() {
 
       <div className="relative z-10">
         {/* ── Header ───────────────────────────────────────── */}
-        <h2 className="text-center text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-cyan-400 to-cyan-200 drop-shadow-[0_0_8px_rgba(0,255,255,0.5)] mb-2">
-          Rekapitulasi Layanan Kependudukan per-Kecamatan dan Jenis Layanan
+        <h2 className="relative text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-cyan-400 to-cyan-200 animate-cyanchange mb-6 text-center drop-shadow-[0_0_8px_rgba(0,255,255,0.5)]">
+          Rekapitulasi Layanan Kependudukan per-Kecamatan
         </h2>
         <p className="text-center text-sm text-cyan-200/80 mb-8">{periode}</p>
 
@@ -36,6 +36,10 @@ export default function KecamatanStats() {
         {loading ? (
           <p className="text-center text-cyan-300/70 animate-pulse">
             Memuat data kecamatan...
+          </p>
+        ) : error ? (
+          <p className="text-center text-rose-400/80">
+            {error}. Silakan coba muat ulang halaman.
           </p>
         ) : data.length === 0 ? (
           <p className="text-center text-cyan-300/70 italic">

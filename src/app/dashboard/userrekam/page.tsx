@@ -208,7 +208,10 @@ export default function userrekamPage() {
                         </div>
 
                         <Link
-                          href={`/dashboard/userrekam/${encodeURIComponent(r.USER_ID)}`}
+                          href={{
+                            pathname: `/dashboard/userrekam/${encodeURIComponent(r.USER_ID)}`,
+                            query: { start, end },
+                          }}
                           className="inline-flex items-center justify-center gap-2
                                     px-4 py-2 rounded-lg text-sm font-medium
                                     bg-cyan-600/30 hover:bg-cyan-600/45

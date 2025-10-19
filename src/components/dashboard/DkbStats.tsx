@@ -14,7 +14,7 @@ export default function DkbStats() {
 
       <div className="relative z-10">
         <div className="mb-4">
-          <h2 className="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-cyan-400 to-cyan-200 animate-cyanchange drop-shadow-[0_0_8px_rgba(0,255,255,0.5)] text-center">
+          <h2 className="relative text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-cyan-400 to-cyan-200 animate-cyanchange mb-6 text-center drop-shadow-[0_0_8px_rgba(0,255,255,0.5)]">
             Dashboard DKB
           </h2>
           {!loading && (

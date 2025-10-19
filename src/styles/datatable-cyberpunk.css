@@ -96,6 +96,23 @@ table.dataTable.dt-cyberpunk tbody td {
   text-align: center; vertical-align: middle;
 }
 
+.dt-master-nama {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  text-align: left;
+}
+.dt-master-nama__title {
+  font-weight: 600;
+  color: #e8f1ff;
+}
+.dt-master-nama__subtitle {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: rgba(223, 243, 255, 0.65);
+}
+
 /* Buttons */
 .dt-buttons .dt-button {
   background: linear-gradient(180deg, #0f1022, #0c0d1c);
@@ -362,7 +379,7 @@ html[data-theme="light"] table.dataTable.dt-cyberpunk tfoot th {
 html[data-theme="light"] table.dataTable.dt-cyberpunk tfoot th:last-child {
   text-align:center !important; color: var(--dtL-velvet);
   font-size:15px; font-weight:800; background:#fffdfa;
-  border-left:1px solid rgba(15,23,42,.08); box-shadow:none; text-shadow:none; animation:none;
+  border-left:1px solid rgba(0, 0, 0, 0.08); box-shadow:none; text-shadow:none; animation:none;
 }
 
 /* Tooltip (light elegan) */

@@ -1,4 +1,4 @@
-// 📄 src/app/dashboard/userrekam/mainlayout.tsx
+// FILE: src/app/dashboard/master/salaman//mainlayout.tsx
 "use client";
 
 import { useState } from "react";
@@ -7,7 +7,7 @@ import Topbar from "@/components/layout/Topbar";
 import Footer from "@/components/layout/Footer";
 import RouteChangeOverlay from "@/components/system/RouteChangeOverlay";
 
-export default function userLayoutUser({
+export default function MainLayoutClient({
   children,
 }: {
   children: React.ReactNode;

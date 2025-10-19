@@ -16,7 +16,7 @@ export default function PendudukEfektif() {
       <div className="relative z-10">
         {/* Judul */}
         <div className="mb-4">
-          <h2 className="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-cyan-400 to-cyan-200 animate-cyanchange drop-shadow-[0_0_8px_rgba(0,255,255,0.5)]">
+          <h2 className="relative text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-cyan-400 to-cyan-200 animate-cyanchange mb-6 text-center drop-shadow-[0_0_8px_rgba(0,255,255,0.5)]">
             Dashboard Penduduk Efektif
           </h2>
           {!loading && (
@@ -93,9 +93,9 @@ export default function PendudukEfektif() {
               </div>
 
               <div className="relative p-6 text-center text-white">
-                <h3 className="text-2xl font-semibold text-cyan-100">
+                <h2 className="relative text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-cyan-400 to-cyan-200 animate-cyanchange mb-6 text-center drop-shadow-[0_0_8px_rgba(0,255,255,0.5)]">
                   Real-Time Population Estimate
-                </h3>
+                </h2>
                 <p className="text-sm text-cyan-100/90 mt-1">
                   Dynamic Population Projection Based on Civil Registration Updates
                 </p>
