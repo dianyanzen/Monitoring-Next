@@ -2,8 +2,8 @@ import { execOne, execRows } from "@/lib/db";
 import type { SessionUser } from "@/lib/session";
 
 const ALIAS_SEARCH = (process.env.KTPEL_DB_ALIAS || "DB5CETAK").toUpperCase();
-const ALIAS_WKTP = (process.env.KTPEL_WKTP_ALIAS || ALIAS_SEARCH).toUpperCase();
 const ALIAS_MASTER = (process.env.KTPEL_MASTER_ALIAS || "DB").toUpperCase();
+const ALIAS_WKTP = (process.env.KTPEL_WKTP_ALIAS || ALIAS_MASTER).toUpperCase();
 const ALIAS_WILAYAH = (process.env.KTPEL_WIL_ALIAS || "DB222").toUpperCase();
 const ALIAS_DEMOG_221 =
   (process.env.KTPEL_DEMOG_221_ALIAS || process.env.KTPEL_PUSH_221_ALIAS || process.env.KTPEL_DB221_ALIAS || "DB221").toUpperCase();
@@ -34,6 +34,7 @@ export type KtpelRow = {
   nama: string | null;
   tempatLahir: string | null;
   tanggalLahir: string | null;
+  umur: string | null;
   jenisKelamin: string | null;
   alamat: string | null;
   rt: string | null;
@@ -125,6 +126,7 @@ export function mapRekamRow(row: Record<string, any>, source: "rekam" | "hist"):
     nama: s(row.NAMA_LGKP) || null,
     tempatLahir: s(row.TMPT_LHR) || null,
     tanggalLahir: s(row.TGL_LHR) || null,
+    umur: null,
     jenisKelamin: s(row.JENIS_KLMIN) || null,
     alamat: s(row.ALAMAT) || null,
     rt: s(row.RT) || null,
@@ -159,6 +161,7 @@ export function mapWktpRow(row: Record<string, any>): KtpelRow {
     nama: s(row.NAMA_LGKP) || null,
     tempatLahir: s(row.TMPT_LHR) || null,
     tanggalLahir: s(row.TGL_LHR) || null,
+    umur: s(row.UMUR) || null,
     jenisKelamin: null,
     alamat: s(row.ALAMAT) || null,
     rt: s(row.RT) || null,

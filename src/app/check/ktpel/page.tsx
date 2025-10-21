@@ -37,6 +37,7 @@ type KtpelRow = {
   nama: string | null;
   tempatLahir: string | null;
   tanggalLahir: string | null;
+  umur: string | null;
   jenisKelamin: string | null;
   alamat: string | null;
   rt: string | null;
@@ -83,6 +84,42 @@ const MODE_LABEL: Record<Mode, string> = {
   hist: "Cek Hist Biodata Master",
   wktp: "Cek Nik Belum Rekam",
 };
+
+const INVALID_REKAM_STATUSES = new Set([
+  "ENROLL_FAILURE_AT_REGIONAL",
+  "PACKET_RETRY",
+  "RECEIVED_AT_CENTRAL",
+  "PROCESSING",
+  "SENT_FOR_ENROLLMENT",
+  "ENROLL_FAILURE_AT_CENTRAL",
+  "SEARCH_FAILURE_AT_CENTRAL",
+  "ADJUDICATE_RECORD",
+  "ADJUDICATE_IN_PROCESS",
+  "SENT_FOR_DEDUP",
+]);
+
+function normalizeStatus(value: string | null | undefined) {
+  return (value ?? "").toString().trim().toUpperCase();
+}
+
+function resolveRowAccent(row: KtpelRow): "success" | "danger" {
+  const status = normalizeStatus(row.currentStatus);
+  const note = normalizeStatus(row.keterangan);
+
+  if (row.pushEligible) {
+    return "danger";
+  }
+
+  if (status && INVALID_REKAM_STATUSES.has(status)) {
+    return "success";
+  }
+
+  if (!status || status === "-" || status.includes("BELUM") || note.includes("BELUM")) {
+    return "danger";
+  }
+
+  return "success";
+}
 
 function createInitialFilter(): FilterState {
   return {
@@ -164,7 +201,7 @@ function formatStatusLabel(status: string | null | undefined) {
     case "PENGAJUAN DITOLAK":
       return "Pengajuan Ditolak";
     default:
-      return value;
+      return value.replace(/_/g, " ");
   }
 }
 
@@ -486,34 +523,68 @@ export default function KtpelPage() {
 
   function handleExportCsv() {
     if (!rows.length) return;
-    const headers = [
-      "NO",
-      "NIK",
-      "NAMA",
-      "TEMPAT LAHIR",
-      "TANGGAL LAHIR",
-      "STATUS KTP",
-      "CETAK KTP OLEH",
-      "CETAK KTP TANGGAL",
-      "DISTRIBUSI OLEH",
-      "DISTRIBUSI TANGGAL",
-      "PENGAJUAN OLEH",
-      "PENGAJUAN TANGGAL",
-      "PENGAJUAN DIPROSES OLEH",
-      "PENGAJUAN STATUS",
-      "NOMOR KK",
-      "NAMA KECAMATAN",
-      "NAMA KELURAHAN",
-      "ALAMAT",
-      "RT",
-      "RW",
-      "KODE POS",
-      "JUMLAH CETAK",
-    ];
+
+    const isWktp = resultMode === "wktp";
+    const headers = isWktp
+      ? [
+          "NO",
+          "NIK",
+          "NAMA",
+          "UMUR",
+          "STATUS REKAM",
+          "KETERANGAN",
+          "NOMOR KK",
+          "NAMA KECAMATAN",
+          "NAMA KELURAHAN",
+          "ALAMAT",
+          "RT",
+          "RW",
+        ]
+      : [
+          "NO",
+          "NIK",
+          "NAMA",
+          "TEMPAT LAHIR",
+          "TANGGAL LAHIR",
+          "STATUS KTP",
+          "CETAK KTP OLEH",
+          "CETAK KTP TANGGAL",
+          "DISTRIBUSI OLEH",
+          "DISTRIBUSI TANGGAL",
+          "PENGAJUAN OLEH",
+          "PENGAJUAN TANGGAL",
+          "PENGAJUAN DIPROSES OLEH",
+          "PENGAJUAN STATUS",
+          "NOMOR KK",
+          "NAMA KECAMATAN",
+          "NAMA KELURAHAN",
+          "ALAMAT",
+          "RT",
+          "RW",
+          "KODE POS",
+          "JUMLAH CETAK",
+        ];
 
     const lines = rows.map((row, index) => {
       const nikCsv = formatLeadingComma(row.nik);
       const noKkCsv = formatLeadingComma(row.noKk);
+      if (isWktp) {
+        return [
+          index + 1,
+          nikCsv,
+          row.nama ?? "",
+          row.umur ?? "",
+          row.currentStatus ?? "",
+          row.keterangan ?? "",
+          noKkCsv,
+          row.namaKecamatan ?? "",
+          row.namaKelurahan ?? "",
+          row.alamat ?? "",
+          row.rt ?? "",
+          row.rw ?? "",
+        ];
+      }
+
       return [
         index + 1,
         nikCsv,
@@ -570,11 +641,7 @@ export default function KtpelPage() {
         key={mode}
         type="button"
         onClick={() => setActiveTab(mode)}
-        className={`rounded-full px-4 py-1 text-sm font-medium transition-all ${
-          active
-            ? "bg-cyan-500/20 text-cyan-200 shadow-[0_0_12px_#22d3ee55]"
-            : "text-cyan-100/70 hover:text-cyan-50 hover:bg-cyan-500/10"
-        }`}
+        className={`ktpel-tab${active ? " ktpel-tab--active" : ""}`}
       >
         {MODE_LABEL[mode]}
       </button>
@@ -875,6 +942,83 @@ export default function KtpelPage() {
       return <div className="ktpel-empty-state">Belum ada data yang ditampilkan.</div>;
     }
 
+    if (resultMode === "wktp") {
+      return (
+        <div className="overflow-hidden rounded-xl border border-cyan-800/40 bg-black/30">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-cyan-800/60 text-sm text-cyan-100/90">
+              <thead className="bg-cyan-500/10 text-xs uppercase tracking-wide text-cyan-200">
+                <tr>
+                  <th className="px-3 py-3 text-center">No</th>
+                  <th className="px-3 py-3 text-left">Nama</th>
+                  <th className="px-3 py-3 text-center">NIK</th>
+                  <th className="px-3 py-3 text-center">Umur</th>
+                  <th className="px-3 py-3 text-left">Status Rekam</th>
+                  <th className="px-3 py-3 text-left">Keterangan</th>
+                  <th className="px-3 py-3 text-center">Nomor KK</th>
+                  <th className="px-3 py-3 text-left">Nama Kec</th>
+                  <th className="px-3 py-3 text-left">Nama Kel</th>
+                  <th className="px-3 py-3 text-left">Alamat</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-cyan-900/60">
+                {rows.map((row, index) => {
+                  const formattedNik = formatLeadingComma(row.nik);
+                  const formattedNoKk = formatLeadingComma(row.noKk);
+                  const accent = resolveRowAccent(row);
+                  const rowClass = `transition hover:bg-cyan-500/10 ktpel-row-accent ktpel-row-accent-${accent}`;
+                  return (
+                    <tr key={`${row.nik}-${index}`} className={rowClass}>
+                      <td className="px-3 py-3 text-center text-xs font-medium text-cyan-100/70">{index + 1}</td>
+                      <td className="px-3 py-3">
+                        <span className="font-semibold text-cyan-50">{toDisplay(row.nama)}</span>
+                      </td>
+                      <td className="px-3 py-3 text-center">
+                        {formattedNik ? (
+                          <span className="font-medium tracking-wide">
+                            <span className="ktpel-soft-leading-comma">{formattedNik.slice(0, 1)}</span>
+                            <span>{formattedNik.slice(1)}</span>
+                          </span>
+                        ) : (
+                          <span>-</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-3 text-center text-xs text-cyan-100/80">
+                        {row.umur ? `${row.umur} th` : "-"}
+                      </td>
+                      <td className="px-3 py-3 text-xs text-cyan-100/80">{formatStatusLabel(row.currentStatus)}</td>
+                      <td className="px-3 py-3 text-xs text-cyan-100/80">{toDisplay(row.keterangan)}</td>
+                      <td className="px-3 py-3 text-center text-xs font-medium text-cyan-100/80">
+                        {formattedNoKk ? (
+                          <>
+                            <span className="ktpel-soft-leading-comma">{formattedNoKk.slice(0, 1)}</span>
+                            <span>{formattedNoKk.slice(1)}</span>
+                          </>
+                        ) : (
+                          <span>{toDisplay(row.noKk)}</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-3 text-xs text-cyan-100/80">{toDisplay(row.namaKecamatan)}</td>
+                      <td className="px-3 py-3 text-xs text-cyan-100/80">{toDisplay(row.namaKelurahan)}</td>
+                      <td className="px-3 py-3 text-xs text-cyan-100/80">
+                        <div>{toDisplay(row.alamat)}</div>
+                        <div className="text-cyan-200/60">
+                          RT {toDisplay(row.rt)} / RW {toDisplay(row.rw)}
+                        </div>
+                        {row.kodePos ? (
+                          <div className="text-cyan-200/60">Kode Pos: {toDisplay(row.kodePos)}</div>
+                        ) : null}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="overflow-hidden rounded-xl border border-cyan-800/40 bg-black/30">
         <div className="overflow-x-auto">
@@ -902,8 +1046,10 @@ export default function KtpelPage() {
                 const isPushing = pushLoadingNik === row.nik;
                 const formattedNik = formatLeadingComma(row.nik);
                 const formattedNoKk = formatLeadingComma(row.noKk);
+                const accent = resolveRowAccent(row);
+                const rowClass = `transition hover:bg-cyan-500/10 ktpel-row-accent ktpel-row-accent-${accent}`;
                 return (
-                  <tr key={`${row.nik}-${index}`} className="transition hover:bg-cyan-500/10">
+                  <tr key={`${row.nik}-${index}`} className={rowClass}>
                     <td className="px-3 py-3 text-center text-xs font-medium text-cyan-100/70">{index + 1}</td>
                     <td className="px-3 py-3">
                       <div className="flex flex-col">
@@ -1069,7 +1215,7 @@ export default function KtpelPage() {
         </header>
 
         <div className="space-y-8 p-6">
-          <div className="flex flex-wrap gap-3">{(["rekam", "hist", "wktp"] as Mode[]).map(renderTabButton)}</div>
+          <div className="ktpel-tabs">{(["rekam", "hist", "wktp"] as Mode[]).map(renderTabButton)}</div>
 
           {metaError ? (
             <div className="flex items-center gap-3 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-100">

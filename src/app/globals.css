@@ -2972,6 +2972,14 @@ KTP-el Monitoring: Luxe Light vs Cyberpunk Dark styling
   --ktpel-empty-border: rgba(217, 119, 6, 0.35);
   --ktpel-empty-text: #92400e;
   --ktpel-empty-shadow: 0 18px 48px -32px rgba(217, 119, 6, 0.5);
+  --ktpel-row-success-border: rgba(34, 118, 84, 0.55);
+  --ktpel-row-success-glow: 0 9px 24px rgba(26, 109, 74, 0.22);
+  --ktpel-row-success-glow-strong: 0 14px 34px rgba(34, 118, 84, 0.32);
+  --ktpel-row-success-animation: none;
+  --ktpel-row-danger-border: rgba(176, 50, 50, 0.55);
+  --ktpel-row-danger-glow: 0 10px 26px rgba(176, 50, 50, 0.22);
+  --ktpel-row-danger-glow-strong: 0 16px 36px rgba(176, 50, 50, 0.3);
+  --ktpel-row-danger-animation: none;
 }
 
 .dark {
@@ -2995,6 +3003,14 @@ KTP-el Monitoring: Luxe Light vs Cyberpunk Dark styling
   --ktpel-empty-border: rgba(34, 211, 238, 0.48);
   --ktpel-empty-text: #a5f3fc;
   --ktpel-empty-shadow: 0 0 42px rgba(34, 211, 238, 0.4);
+  --ktpel-row-success-border: rgba(34, 197, 94, 0.82);
+  --ktpel-row-success-glow: 0 0 26px rgba(34, 197, 94, 0.55), 0 0 58px rgba(74, 222, 128, 0.32);
+  --ktpel-row-success-glow-strong: 0 0 32px rgba(52, 211, 153, 0.75), 0 0 74px rgba(110, 231, 183, 0.45);
+  --ktpel-row-success-animation: ktpelNeonPulseGreen 3s ease-in-out infinite;
+  --ktpel-row-danger-border: rgba(248, 113, 113, 0.85);
+  --ktpel-row-danger-glow: 0 0 24px rgba(248, 113, 113, 0.55), 0 0 52px rgba(255, 99, 132, 0.32);
+  --ktpel-row-danger-glow-strong: 0 0 32px rgba(252, 165, 165, 0.75), 0 0 70px rgba(248, 113, 113, 0.48);
+  --ktpel-row-danger-animation: ktpelNeonPulseRed 3.1s ease-in-out infinite;
 }
 
 .ktpel-status-card {
@@ -3165,3 +3181,134 @@ KTP-el Monitoring: Luxe Light vs Cyberpunk Dark styling
   display: inline-block;
 }
 
+html[data-theme="light"] .ktpel-soft-leading-comma {
+  color: #fff !important;
+}
+
+@keyframes ktpelNeonPulseGreen {
+  0%,
+  100% {
+    box-shadow: 0 0 24px rgba(34, 197, 94, 0.6), 0 0 60px rgba(74, 222, 128, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 42px rgba(52, 211, 153, 0.9), 0 0 96px rgba(110, 231, 183, 0.5);
+  }
+}
+
+@keyframes ktpelNeonPulseRed {
+  0%,
+  100% {
+    box-shadow: 0 0 24px rgba(248, 113, 113, 0.6), 0 0 60px rgba(252, 165, 165, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 42px rgba(251, 113, 133, 0.92), 0 0 94px rgba(248, 150, 150, 0.55);
+  }
+}
+
+.ktpel-row-accent {
+  position: relative;
+  isolation: isolate;
+}
+
+.ktpel-row-accent > td {
+  position: relative;
+  z-index: 1;
+}
+
+.ktpel-row-accent::after {
+  content: "";
+  position: absolute;
+  inset: 4px 6px;
+  border-radius: 16px;
+  pointer-events: none;
+  opacity: 0.85;
+  z-index: 0;
+  transition: opacity 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.ktpel-row-accent-success::after {
+  border: 1px solid var(--ktpel-row-success-border);
+  box-shadow: var(--ktpel-row-success-glow);
+  animation: var(--ktpel-row-success-animation);
+}
+
+.ktpel-row-accent-danger::after {
+  border: 1px solid var(--ktpel-row-danger-border);
+  box-shadow: var(--ktpel-row-danger-glow);
+  animation: var(--ktpel-row-danger-animation);
+}
+
+.ktpel-row-accent:hover::after {
+  opacity: 1;
+}
+
+.ktpel-row-accent-success:hover::after {
+  box-shadow: var(--ktpel-row-success-glow-strong);
+}
+
+.ktpel-row-accent-danger:hover::after {
+  box-shadow: var(--ktpel-row-danger-glow-strong);
+}
+
+.ktpel-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.ktpel-tab {
+  position: relative;
+  border-radius: 999px;
+  padding: 0.45rem 1.15rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: 1px solid rgba(34, 211, 238, 0.22);
+  background: rgba(14, 165, 233, 0.16);
+  color: rgba(224, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease,
+    box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.ktpel-tab:hover {
+  color: #f0fdff;
+  border-color: rgba(56, 189, 248, 0.45);
+  background: rgba(59, 130, 246, 0.24);
+}
+
+.ktpel-tab--active {
+  color: #ecfeff;
+  border-color: rgba(165, 243, 252, 0.72);
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.32), rgba(59, 130, 246, 0.22));
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.35);
+}
+
+.ktpel-tab--active:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 26px rgba(34, 211, 238, 0.45);
+}
+
+html[data-theme="light"] .ktpel-tab {
+  color: rgba(120, 90, 48, 0.78);
+  border-color: rgba(202, 168, 96, 0.42);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 10px 24px rgba(20, 24, 33, 0.05);
+}
+
+html[data-theme="light"] .ktpel-tab:hover {
+  color: var(--lux-ink);
+  border-color: rgba(202, 168, 96, 0.62);
+  background: rgba(255, 248, 233, 0.85);
+}
+
+html[data-theme="light"] .ktpel-tab--active {
+  color: var(--lux-ink);
+  border-color: rgba(202, 168, 96, 0.82);
+  background: var(--lux-gold-grad);
+  box-shadow: 0 14px 30px rgba(210, 182, 138, 0.34);
+}
+
+html[data-theme="light"] .ktpel-tab--active:hover {
+  box-shadow: 0 18px 36px rgba(210, 182, 138, 0.45);
+}
