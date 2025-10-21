@@ -1,31 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import Sidebar from "@/components/layout/Sidebar";
-import Topbar from "@/components/layout/Topbar";
-import Footer from "@/components/layout/Footer";
-import RouteChangeOverlay from "@/components/system/RouteChangeOverlay";
+import ResponsiveAppShell from "@/components/layout/ResponsiveAppShell";
 
-export default function MainLayoutClient({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [sidebarVisible, setSidebarVisible] = useState(true);
-
-  return (
-    <div className="flex h-screen w-full overflow-hidden">
-      <RouteChangeOverlay />
-      {sidebarVisible && (
-        <div className="h-full transition-all duration-300 ease-in-out">
-          <Sidebar />
-        </div>
-      )}
-      <div className="flex flex-col flex-1 h-full overflow-hidden">
-        <Topbar onToggleSidebar={() => setSidebarVisible(!sidebarVisible)} />
-        <main className="flex-1 overflow-y-auto px-6 py-4">{children}</main>
-        <Footer />
-      </div>
-    </div>
-  );
+export default function MainLayoutClient({ children }: { children: React.ReactNode }) {
+  return <ResponsiveAppShell>{children}</ResponsiveAppShell>;
 }

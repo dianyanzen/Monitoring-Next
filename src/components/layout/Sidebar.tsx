@@ -70,7 +70,13 @@ function chainToTarget(items: MenuItem[], targetId: number): number[] {
 }
 
 /* ── component ─────────────────────────────────────────────────────────── */
-export default function Sidebar() {
+type SidebarProps = {
+  mode?: "pinned" | "overlay";
+  onNavigate?: () => void;
+  className?: string;
+};
+
+export default function Sidebar({ mode = "pinned", onNavigate, className = "" }: SidebarProps) {
   const [menus, setMenus] = useState<MenuItem[]>([]);
   const [openIds, setOpenIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
@@ -200,6 +206,9 @@ export default function Sidebar() {
                       }`}
                       aria-current={isActiveLeaf ? "page" : undefined}
                       title={item.TITLE}
+                      onClick={() => {
+                        if (mode === "overlay") onNavigate?.();
+                      }}
                     >
                       {iconClass && (
                         <i className={`${iconClass} text-base ${isActiveLeaf ? "text-cyan-400" : "text-gray-400"}`} aria-hidden />
@@ -214,11 +223,20 @@ export default function Sidebar() {
         })}
       </ul>
     ),
-    [openIds, activeLeafId]
+    [openIds, activeLeafId, mode, onNavigate]
   );
 
+  const baseClasses = [
+    "w-80 bg-gradient-to-b from-[#07070a] to-[#0d0d10] border-r border-cyan-900/40 text-gray-200 flex flex-col overflow-x-hidden relative",
+    mode === "overlay" ? "h-full" : "h-screen mt-4",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const composedClass = baseClasses || "w-80";
+
   return (
-    <aside className="w-80 bg-gradient-to-b from-[#07070a] to-[#0d0d10] border-r border-cyan-900/40 text-gray-200 h-screen flex flex-col overflow-x-hidden mt-4 relative">
+    <aside className={composedClass} data-sidebar-mode={mode}>
       {/* Background animasi */}
       <motion.div
         aria-hidden

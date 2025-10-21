@@ -92,13 +92,28 @@ export default function UserKtpDetailPage() {
   function exportCSV() {
     if (!rows.length) return;
     const headers = Object.keys(rows[0]);
-    const csv = [
-      headers.join(","),
-      ...rows.map(r => headers.map(h => {
-        const v = (r as any)[h]; const s = v == null ? "" : String(v);
-        return `"${s.replace(/"/g,'""')}"`;
-      }).join(",")),
-    ].join("\n");
+    const stringColumns = new Set(["TGL_LHR", "PRINTED_DATE", "REQ_DATE", "DIS_DT", "DISTRIBUSI_TANGGAL", "NO_KK"]);
+    const csvRows = rows.map((row) => {
+      return headers
+        .map((key) => {
+          const upperKey = key.toUpperCase();
+          const raw = (row as any)[key] ?? (row as any)[upperKey] ?? (row as any)[key.toLowerCase()];
+          if (raw == null) return '""';
+          let text: string;
+          if (upperKey === "NIK") {
+            text = `${raw},`;
+          } else if (stringColumns.has(upperKey)) {
+            text = String(raw);
+          } else if (typeof raw === "number") {
+            text = raw.toString();
+          } else {
+            text = String(raw);
+          }
+          return `"${text.replace(/"/g, '""')}"`;
+        })
+        .join(",");
+    });
+    const csv = [headers.join(","), ...csvRows].join("\n");
     const blob = new Blob([csv], { type:"text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -305,8 +320,8 @@ export default function UserKtpDetailPage() {
                       const nik = r.NIK ?? r.nik;
                       if (!nik) return "";
                       return `
-                        <span style="color:rgba(255,63,173,.02)">,</span>
                         <span>${nik}</span>
+                        <span style="color:rgba(255,63,173,.02)">,</span>
                       `;
                     },
                     title: "Nik",
