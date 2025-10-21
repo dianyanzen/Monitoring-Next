@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, Download, Loader2, RefreshCcw, Search, Trash2 } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import { AlertTriangle, Calendar, Download, Loader2, RefreshCcw, Search, Trash2 } from "lucide-react";
 import { useSession } from "@/contexts/session";
+
+/* ======================== Types ======================== */
 
 type WilayahOption = { value: string; label: string };
 
@@ -10,8 +12,8 @@ type FilterState = {
   nik: string;
   noKec: string;
   noKel: string;
-  dateStart: string;
-  dateEnd: string;
+  dateStart: string; // ISO: YYYY-MM-DD
+  dateEnd: string;   // ISO: YYYY-MM-DD
 };
 
 type MetaState = {
@@ -30,23 +32,13 @@ type DuplicateDetailRow = {
   alamat: string | null;
   statusKtp: string | null;
   tglRekam: string | null;
-  wilayah: {
-    prop: string | null;
-    kab: string | null;
-    kec: string | null;
-    kel: string | null;
-  };
+  wilayah: { prop: string | null; kab: string | null; kec: string | null; kel: string | null };
   nikSingle: string | null;
   namaSingle: string | null;
   alamatSingle: string | null;
   statusKtpSingle: string | null;
   tglRekamSingle: string | null;
-  wilayahSingle: {
-    prop: string | null;
-    kab: string | null;
-    kec: string | null;
-    kel: string | null;
-  };
+  wilayahSingle: { prop: string | null; kab: string | null; kec: string | null; kel: string | null };
 };
 
 type DuplicateListRow = {
@@ -68,21 +60,14 @@ type DuplicateListRow = {
   statusKtp: string | null;
 };
 
-type MetaResponse = {
+type MetaResponse = { success: boolean; data?: MetaState; message?: string };
+type SearchResponse = {
   success: boolean;
-  data?: MetaState;
+  data?: { mode: DuplicateMode; total: number; rows: (DuplicateDetailRow | DuplicateListRow)[] };
   message?: string;
 };
 
-type SearchResponse = {
-  success: boolean;
-  data?: {
-    mode: DuplicateMode;
-    total: number;
-    rows: (DuplicateDetailRow | DuplicateListRow)[];
-  };
-  message?: string;
-};
+/* ======================== Helpers ======================== */
 
 function formatDateInput(date: Date) {
   const year = date.getFullYear();
@@ -91,8 +76,8 @@ function formatDateInput(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
-function convertWilayahCode(raw: string | null | undefined) {
-  const value = (raw ?? "").trim();
+function convertWilayahCode(raw: string | number | null | undefined) {
+  const value = String(raw ?? "").trim();
   if (!value) return "0";
   const digits = value.replace(/[^\d]/g, "");
   if (!digits || digits === "0" || digits === "000") return "0";
@@ -109,16 +94,134 @@ function toDisplay(value: string | null | undefined, fallback = "-") {
 }
 
 function formatLeadingComma(value: string | null | undefined) {
-  const clean = (value ?? "").toString().trim();
-  return clean ? `,${clean}` : "";
+  const clean = (value ?? "").trim();
+  if (!/^\d+$/.test(clean)) return ""; // hanya untuk angka murni
+  return `,${clean}`;
 }
 
-function mapWilayahOptions(options: WilayahOption[]) {
-  return options.map((opt) => ({
-    value: convertWilayahCode(opt.value),
-    label: opt.label,
-  }));
+function mapWilayahOptions(options: Array<{ value: string | number; label: string }>) {
+  return (options || [])
+    .map((opt) => ({ value: convertWilayahCode(opt?.value), label: String(opt?.label ?? "").trim() }))
+    .filter((o) => o.label);
 }
+
+/* ==== Date formatting helpers (DD-MM-YYYY <-> ISO) ==== */
+
+function maskToDDMMYYYY(raw: string) {
+  const digits = raw.replace(/\D/g, "").slice(0, 8);
+  const dd = digits.slice(0, 2);
+  const mm = digits.slice(2, 4);
+  const yyyy = digits.slice(4, 8);
+  return [dd, mm, yyyy].filter(Boolean).join("-");
+}
+
+function isValidDDMMYYYY(text: string) {
+  if (!/^\d{2}-\d{2}-\d{4}$/.test(text)) return false;
+  const [d, m, y] = text.split("-").map(Number);
+  if (m < 1 || m > 12) return false;
+  if (d < 1 || d > 31) return false;
+  const dt = new Date(y, m - 1, d);
+  return dt.getFullYear() === y && dt.getMonth() === m - 1 && dt.getDate() === d;
+}
+
+function ddmmyyyyToISO(text: string) {
+  const [d, m, y] = text.split("-");
+  return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+}
+
+function isoToDDMMYYYY(iso: string) {
+  const m = iso?.match?.(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return "";
+  return `${m[3]}-${m[2]}-${m[1]}`;
+}
+
+/* ======================== DatePickerInput ======================== */
+/** Teks bertopeng DD-MM-YYYY + tombol yang memanggil native date picker.
+ *  Tidak ada overlay input tanggal transparan yang menutupi komponen.
+ */
+type DatePickerInputProps = {
+  id?: string;
+  value: string; // ISO (YYYY-MM-DD) atau "" (kosong)
+  onChange: (value: string) => void;
+  disabled?: boolean;
+};
+
+function DatePickerInput({ id, value, onChange, disabled }: DatePickerInputProps) {
+  const nativeRef = useRef<HTMLInputElement | null>(null);
+  const [text, setText] = useState<string>(() => isoToDDMMYYYY(value));
+
+  useEffect(() => {
+    setText(isoToDDMMYYYY(value));
+  }, [value]);
+
+  function commit() {
+    const masked = maskToDDMMYYYY(text);
+    setText(masked);
+    if (!masked) {
+      onChange("");
+      return;
+    }
+    if (isValidDDMMYYYY(masked)) {
+      onChange(ddmmyyyyToISO(masked));
+    }
+  }
+
+  function openPicker() {
+    if (disabled) return;
+    const el = nativeRef.current as HTMLInputElement & { showPicker?: () => void };
+    el?.showPicker?.();
+  }
+
+  function onNativeChange(e: ChangeEvent<HTMLInputElement>) {
+    const nextISO = e.target.value || "";
+    onChange(nextISO);
+  }
+
+  return (
+    <div className="relative w-full">
+      <input
+        id={id}
+        type="text"
+        inputMode="numeric"
+        value={text}
+        placeholder="DD-MM-YYYY"
+        onChange={(e) => setText(maskToDDMMYYYY(e.target.value))}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            commit();
+          }
+        }}
+        disabled={disabled}
+        className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 pr-10 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
+      />
+
+      <button
+        type="button"
+        onClick={openPicker}
+        disabled={disabled}
+        className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-md border border-cyan-700/50 bg-cyan-500/10 text-cyan-100/80 transition hover:bg-cyan-500/20 focus:outline-none focus:ring-1 focus:ring-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <Calendar className="h-4 w-4" />
+      </button>
+
+      {/* Native picker disembunyikan kecil, tidak menutupi UI */}
+      <input
+        ref={nativeRef}
+        type="date"
+        value={value || ""}
+        onChange={onNativeChange}
+        className="absolute w-0 h-0 opacity-0 pointer-events-none"
+        tabIndex={-1}
+        aria-hidden="true"
+        disabled={disabled}
+      />
+    </div>
+  );
+}
+
+/* ======================== Page ======================== */
 
 export default function DuplicatePage() {
   const { user } = useSession();
@@ -146,8 +249,10 @@ export default function DuplicatePage() {
   const [listRows, setListRows] = useState<DuplicateListRow[]>([]);
   const [totalRows, setTotalRows] = useState(0);
 
+  /* ---- load meta ---- */
   useEffect(() => {
     let cancelled = false;
+
     async function loadMeta() {
       setMetaLoading(true);
       setMetaError(null);
@@ -155,9 +260,7 @@ export default function DuplicatePage() {
         const res = await fetch("/api/check/duplicate/meta", { cache: "no-store", credentials: "include" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const payload: MetaResponse = await res.json();
-        if (!payload.success || !payload.data) {
-          throw new Error(payload.message || "Metadata tidak valid");
-        }
+        if (!payload.success || !payload.data) throw new Error(payload.message || "Metadata tidak valid");
         if (cancelled) return;
 
         const data = payload.data;
@@ -179,13 +282,10 @@ export default function DuplicatePage() {
         setKecamatanOptions(mappedKec);
 
         if (defaultNoKec !== "0" && (data?.wilayah?.kelurahan?.length ?? 0) > 0) {
-          setKelurahanCache({
-            [defaultNoKec]: mapWilayahOptions(data.wilayah.kelurahan ?? []),
-          });
+          setKelurahanCache({ [defaultNoKec]: mapWilayahOptions(data.wilayah.kelurahan ?? []) });
         }
-      } catch (error: any) {
-        if (cancelled) return;
-        setMetaError(error?.message || "Gagal memuat metadata duplicate");
+      } catch (err: any) {
+        if (!cancelled) setMetaError(err?.message || "Gagal memuat metadata duplicate");
       } finally {
         if (!cancelled) setMetaLoading(false);
       }
@@ -197,6 +297,43 @@ export default function DuplicatePage() {
     };
   }, []);
 
+  /* ---- ensure kecamatan options via API ---- */
+  useEffect(() => {
+    if (!meta) return;
+    if (kecamatanOptions.length > 0) return;
+
+    const noProp = (meta?.defaults?.noProp ?? "").trim();
+    const noKab = (meta?.defaults?.noKab ?? "").trim();
+    let cancelled = false;
+
+    async function ensureKecamatanOptions() {
+      try {
+        const haveParams = !!(noProp && noKab);
+        const url = haveParams
+          ? `/api/check/ktpel/kecamatan?${new URLSearchParams({ no_prop: noProp, no_kab: noKab }).toString()}`
+          : `/api/check/ktpel/kecamatan`;
+
+        const res = await fetch(url, { cache: "no-store", credentials: "include" });
+        if (!res.ok) return;
+
+        const json = await res.json();
+        if (cancelled) return;
+
+        const arr = json?.data?.kecamatan ?? json?.kecamatan ?? [];
+        const list = mapWilayahOptions(arr);
+        if (list.length) setKecamatanOptions(list);
+      } catch (err) {
+        console.error("Gagal memuat kecamatan:", err);
+      }
+    }
+
+    ensureKecamatanOptions();
+    return () => {
+      cancelled = true;
+    };
+  }, [meta, kecamatanOptions.length]);
+
+  /* ---- memoized options ---- */
   const currentKelurahanOptions = useMemo(() => {
     const key = filters.noKec;
     return kelurahanCache[key] ?? [];
@@ -222,7 +359,6 @@ export default function DuplicatePage() {
     updateFilter({ noKec: value, noKel: "0" });
     if (value === "0") return;
     if (kelurahanCache[value]) return;
-
     if (!meta) return;
 
     setKelurahanLoadingKey(value);
@@ -274,6 +410,7 @@ export default function DuplicatePage() {
     setSearchError(null);
   }
 
+  /* ---- Search ---- */
   async function handleSearch() {
     setSearchError(null);
     setSearchLoading(true);
@@ -293,22 +430,30 @@ export default function DuplicatePage() {
         body: JSON.stringify(payload),
         credentials: "include",
       });
-      const json: SearchResponse = await res.json();
-      if (!res.ok || !json.success || !json.data) {
-        throw new Error(json.message || `HTTP ${res.status}`);
+
+      const json: SearchResponse | any = await res.json();
+      const core = json?.data?.data ?? json?.data;
+
+      if (!res.ok || !json?.success || !core) {
+        throw new Error(json?.message || `HTTP ${res.status}`);
       }
 
-      setResultMode(json.data.mode);
-      setTotalRows(json.data.total);
+      const mode: DuplicateMode = core.mode === "nik" ? "nik" : "wilayah";
+      const rows = Array.isArray(core.rows) ? core.rows : [];
+      const total = Number(core.total ?? rows.length) || 0;
 
-      if (json.data.mode === "nik") {
-        setDetailRows(json.data.rows as DuplicateDetailRow[]);
+      setResultMode(mode);
+      setTotalRows(total);
+
+      if (mode === "nik") {
+        setDetailRows(rows as DuplicateDetailRow[]);
         setListRows([]);
       } else {
-        setListRows(json.data.rows as DuplicateListRow[]);
+        setListRows(rows as DuplicateListRow[]);
         setDetailRows([]);
       }
     } catch (error: any) {
+      console.error("Error handleSearch:", error);
       setSearchError(error?.message || "Gagal memuat data duplicate");
       setDetailRows([]);
       setListRows([]);
@@ -317,6 +462,8 @@ export default function DuplicatePage() {
       setSearchLoading(false);
     }
   }
+
+  /* ======================== CSV ======================== */
 
   function handleExportCsv() {
     if (totalRows === 0) return;
@@ -340,9 +487,7 @@ export default function DuplicatePage() {
       const rows = detailRows.map((row) => {
         const dupNik = formatLeadingComma(row.nik);
         const singleNik = formatLeadingComma(row.nikSingle);
-        const wilayahDup = [row.wilayah.prop, row.wilayah.kab, row.wilayah.kec, row.wilayah.kel]
-          .filter(Boolean)
-          .join(" / ");
+        const wilayahDup = [row.wilayah.prop, row.wilayah.kab, row.wilayah.kec, row.wilayah.kel].filter(Boolean).join(" / ");
         const wilayahSingle = [row.wilayahSingle.prop, row.wilayahSingle.kab, row.wilayahSingle.kec, row.wilayahSingle.kel]
           .filter(Boolean)
           .join(" / ");
@@ -429,6 +574,8 @@ export default function DuplicatePage() {
     URL.revokeObjectURL(url);
   }
 
+  /* ======================== Render ======================== */
+
   function renderFilters() {
     if (!meta) return null;
 
@@ -436,27 +583,24 @@ export default function DuplicatePage() {
       <div className="space-y-4">
         <div className="grid gap-4 md:grid-cols-4">
           <div className="space-y-1">
-            <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
-              NIK Duplicate
-            </label>
+            <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">NIK Duplicate</label>
             <input
               value={filters.nik}
-              onChange={(event) => updateFilter({ nik: sanitizeNikInput(event.target.value) })}
+              onChange={(e) => updateFilter({ nik: sanitizeNikInput(e.target.value) })}
               className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
               placeholder="3273..., boleh banyak dengan koma"
             />
           </div>
+
           <div className="space-y-1">
-            <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
-              Kecamatan
-            </label>
+            <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">Kecamatan</label>
             <select
               value={filters.noKec}
-              onChange={(event) => handleKecamatanChange(event.target.value)}
+              onChange={(e) => handleKecamatanChange(e.target.value)}
               disabled={metaLoading || !allowSelectKecamatan}
               className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <option value="0">-- Pilih Kecamatan --</option>
+                          <option value="0">-- Pilih Kecamatan --</option>
               {kecamatanOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
@@ -464,13 +608,14 @@ export default function DuplicatePage() {
               ))}
             </select>
           </div>
+
           <div className="space-y-1">
             <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
               Kelurahan
             </label>
             <select
               value={filters.noKel}
-              onChange={(event) => updateFilter({ noKel: event.target.value })}
+              onChange={(e) => updateFilter({ noKel: e.target.value })}
               disabled={
                 filters.noKec === "0" ||
                 kelurahanLoadingKey === filters.noKec ||
@@ -486,26 +631,26 @@ export default function DuplicatePage() {
               ))}
             </select>
           </div>
+
           <div className="space-y-1">
             <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
               Rentang Tanggal Rekam
             </label>
+
             <div className="grid grid-cols-2 gap-2">
-              <input
-                type="date"
+              <DatePickerInput
                 value={filters.dateStart}
-                onChange={(event) => updateFilter({ dateStart: event.target.value })}
-                className="rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                onChange={(next) => updateFilter({ dateStart: next })}
               />
-              <input
-                type="date"
+              <DatePickerInput
                 value={filters.dateEnd}
-                onChange={(event) => updateFilter({ dateEnd: event.target.value })}
-                className="rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                onChange={(next) => updateFilter({ dateEnd: next })}
               />
             </div>
-            <p className="text-[11px] text-cyan-200/60">
-              Kosongkan NIK untuk memakai filter wilayah + tanggal.
+
+            <p className="kdp-hint text-[11px] text-cyan-200/70">
+              Ketik angka saja, sistem memformat ke <b>DD-MM-YYYY</b>. Tekan <b>Enter</b> untuk mencari.
+              Bisa juga pakai ikon kalender.
             </p>
           </div>
         </div>
@@ -513,17 +658,17 @@ export default function DuplicatePage() {
     );
   }
 
+  /* ---------- Panduan ---------- */
   function renderInstructions() {
     if (!meta?.instructions?.length) return null;
-
     return (
       <div className="rounded-2xl border border-cyan-800/40 bg-black/20 p-4 text-sm text-cyan-100/80">
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-cyan-400">Panduan</h3>
         <ol className="space-y-2 text-sm">
-          {meta.instructions.map((step, index) => (
-            <li key={index} className="flex items-start gap-3">
+          {meta.instructions.map((step, i) => (
+            <li key={i} className="flex items-start gap-3">
               <span className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full border border-cyan-600/50 bg-cyan-500/10 text-[11px] font-semibold text-cyan-200">
-                {index + 1}
+                {i + 1}
               </span>
               <span>{step}</span>
             </li>
@@ -533,6 +678,7 @@ export default function DuplicatePage() {
     );
   }
 
+  /* ---------- Tabel Hasil ---------- */
   function renderResultTable() {
     if (searchLoading && totalRows === 0) {
       return (
@@ -603,9 +749,7 @@ export default function DuplicatePage() {
                       <td className="px-3 py-3 text-xs text-cyan-100/80">{toDisplay(row.nama)}</td>
                       <td className="px-3 py-3 text-xs text-cyan-100/80">{toDisplay(row.statusKtp)}</td>
                       <td className="px-3 py-3 text-xs text-cyan-100/80">{toDisplay(row.tglRekam)}</td>
-                      <td className="px-3 py-3 text-xs text-cyan-100/70">
-                        {wilayahDup || "-"}
-                      </td>
+                      <td className="px-3 py-3 text-xs text-cyan-100/70">{wilayahDup || "-"}</td>
                       <td className="px-3 py-3 text-sm font-semibold text-emerald-200">
                         <span className="ktpel-soft-leading-comma">{singleCom.slice(0, 1)}</span>
                         <span>{singleCom.slice(1) || "-"}</span>
@@ -614,9 +758,7 @@ export default function DuplicatePage() {
                       <td className="px-3 py-3 text-xs text-cyan-100/80">{toDisplay(row.namaSingle)}</td>
                       <td className="px-3 py-3 text-xs text-cyan-100/80">{toDisplay(row.statusKtpSingle)}</td>
                       <td className="px-3 py-3 text-xs text-cyan-100/80">{toDisplay(row.tglRekamSingle)}</td>
-                      <td className="px-3 py-3 text-xs text-cyan-100/70">
-                        {wilayahSingle || "-"}
-                      </td>
+                      <td className="px-3 py-3 text-xs text-cyan-100/70">{wilayahSingle || "-"}</td>
                     </tr>
                   );
                 })}
@@ -627,6 +769,7 @@ export default function DuplicatePage() {
       );
     }
 
+    /* --- mode: daftar wilayah --- */
     return (
       <div className="overflow-hidden rounded-xl border border-cyan-800/40 bg-black/30">
         <div className="overflow-x-auto">
@@ -685,6 +828,7 @@ export default function DuplicatePage() {
     );
   }
 
+  /* ---------- Return (dibungkus FORM agar Enter memicu Search) ---------- */
   return (
     <div className="relative mt-5 space-y-8 px-4 pb-10 pt-6 text-gray-100 sm:px-6 md:px-8 md:pt-8">
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -720,7 +864,15 @@ export default function DuplicatePage() {
           </div>
         </header>
 
-        <div className="space-y-8 p-6">
+        {/* FORM: Enter di input mana pun akan submit -> handleSearch */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!searchLoading) handleSearch();
+          }}
+          className="space-y-8 p-6"
+          noValidate
+        >
           {renderFilters()}
 
           {metaError ? (
@@ -741,9 +893,10 @@ export default function DuplicatePage() {
               <Trash2 className="h-4 w-4" />
               Clear
             </button>
+
+            {/* type="submit" agar Enter memicu tombol ini */}
             <button
-              type="button"
-              onClick={handleSearch}
+              type="submit"
               disabled={searchLoading}
               className="inline-flex items-center gap-2 rounded-lg border border-transparent bg-gradient-to-r from-cyan-400 to-blue-500 px-4 py-2 text-sm font-semibold text-black shadow-lg transition hover:from-cyan-300 hover:to-blue-400 disabled:cursor-not-allowed disabled:opacity-60"
             >
@@ -769,16 +922,16 @@ export default function DuplicatePage() {
               </span>
               {totalRows > 0 ? (
                 <>
-                  {" "}
-                  | Menampilkan <span className="font-semibold text-cyan-100">{totalRows}</span> data
+                  {" "} | Menampilkan <span className="font-semibold text-cyan-100">{totalRows}</span> data
                 </>
               ) : null}
             </div>
           </div>
 
           {renderResultTable()}
-        </div>
+        </form>
       </section>
     </div>
   );
 }
+

@@ -1,3 +1,4 @@
+// 📄 src/app/Activity/setting/mainlayout.tsx
 "use client";
 
 import ResponsiveAppShell from "@/components/layout/ResponsiveAppShell";

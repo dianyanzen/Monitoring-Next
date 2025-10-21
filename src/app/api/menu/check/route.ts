@@ -39,7 +39,7 @@ async function fetchFlat(userLevel: number): Promise<Row[]> {
            MENU_LEVEL, IS_NEXT, LEVEL_HEAD, LEVEL_SUB, LEVEL_CONTENT
     FROM VW_SIAK_MENU
     WHERE USER_LEVEL = :b_user_level
-      AND ACTIVE_MENU = 1
+      AND ACTIVE_MENU = 1 AND IS_NEXT = 1
     ORDER BY LEVEL_HEAD, LEVEL_SUB, LEVEL_CONTENT, TITLE
   `;
   return execRows<Row>(sql, { b_user_level: userLevel }, {}, "DB");

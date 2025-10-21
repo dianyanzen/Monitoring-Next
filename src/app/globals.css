@@ -3312,3 +3312,56 @@ html[data-theme="light"] .ktpel-tab--active {
 html[data-theme="light"] .ktpel-tab--active:hover {
   box-shadow: 0 18px 36px rgba(210, 182, 138, 0.45);
 }
+
+
+/* FILE: src/app/globals.css */
+
+/* ——— KTPel Date Input (kdp = KTPel Date Picker) ——— */
+.kdp-input { position: relative; width: 100%; }
+
+.kdp-input > input[type="text"] {
+  height: 40px;                /* konsisten */
+  border-radius: 10px;         /* rounded */
+  border: 1px solid rgba(21,94,117,.5);  /* cyan-800/50 */
+  background: rgba(0,0,0,.30);
+  color: #d1faff;              /* cyan-100-ish */
+  padding: 8px 40px 8px 12px;  /* beri ruang ikon di kanan */
+  outline: none;
+  transition: border-color .2s, box-shadow .25s, background-color .25s;
+}
+
+.kdp-input > input[type="text"]:focus {
+  border-color: #22d3ee;       /* cyan-400 */
+  box-shadow: 0 0 0 1px #22d3ee55;
+}
+
+.kdp-input > button.kdp-icon {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(21,94,117,.5);
+  background: rgba(34,211,238,.10); /* cyan-500/10 */
+  color: rgba(209,250,250,.8);
+}
+
+.kdp-input > button.kdp-icon:hover { background: rgba(34,211,238,.20); }
+
+/* Hint kecil di bawah field (rapi dan konsisten) */
+.kdp-hint {
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.25rem;
+  color: rgba(165, 243, 252, .65); /* cyan-200/65 */
+}
+
+/* State error (bila dipakai) */
+.kdp-input input.is-error {
+  border-color: #ef4444;       /* red-500 */
+  background: rgba(239,68,68,.06);
+  color: #ffecec;
+}
+.kdp-hint.is-error { color: #fecaca; } /* red-200 */
