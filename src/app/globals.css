@@ -15,4 +15,7 @@ html, body { overflow-x: hidden; }
     box-shadow .25s ease;
   scroll-behavior: smooth;
 }
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
 ::selection{ background:#fee8b0; color:#1a1d21; }

@@ -16,6 +16,9 @@
   --radius-lg: 16px;
   --radius-md: 12px;
   --radius-sm: 10px;
+  --gold-300: #ecd9b8;
+  --gold-400: #d2b68a;
+  --gold-500: #b98532;
 
   /* —— Default (dark) tokens —— */
   --bg: radial-gradient(circle at top, #0d0d10 0%, #0a0a0c 100%);
@@ -34,4 +37,7 @@
   --lux-gold-3: #caa85a;
   --lux-ink: #1c1a16;
   --lux-gold-grad: linear-gradient(90deg, var(--lux-gold-2), var(--lux-gold-1) 40%, var(--lux-gold-3));
+  --lux-surface: #ffffff;             /* dipakai di aside.w-80 (light) */
+  --lux-border: rgba(210,182,138,.28);/* garis elegan netral */
+  --lux-shadow: 0 10px 24px rgba(48,39,21,.08); /* shadow lembut di light */
 }

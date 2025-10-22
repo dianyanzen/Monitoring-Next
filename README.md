@@ -228,11 +228,27 @@ Semua handler mengikuti pola:
 - **Activity & Template**  
   Contoh layout lain dan halaman pengaturan (Activity Setting). Menggunakan `ResponsiveAppShell`.
 
-- **Stylesheets**  
-  - `src/app/globals.css` sangat panjang (3k+ baris) berisi token tema, styling neon + light theme, styling modul (master card, chat, dsb).
-  - `src/styles/` berisi stylesheet tambahan untuk DataTables (dark/light) dan legacy chat.
+## 5. Styling & Theming
 
----
+Proyek ini memakai **Tailwind v3** + CSS modular.
+
+- **Entry Tailwind:** `src/app/globals.css` (satu-satunya file yang berisi `@tailwind base/components/utilities`).
+- **Modular CSS:** `src/styles/**` berisi:
+  - `tokens.css` — CSS variables global (palet, radii, shadow).
+  - `theme-dark.css` — animasi & dekorasi neon dark.
+  - `theme-light.css` — baseline variabel mode light (ink, surface, border, shadow).
+  - `layout.css`, `overlays.css` — penyesuaian header/aside/footer/overlay (termasuk selector untuk utilitas Tailwind tertentu).
+  - `components/*.css` — gaya komponen khusus (mis. salaman-card).
+- **Kebijakan Tailwind:** jangan pakai `@layer` di file modular untuk menghindari error urutan build; tulis CSS biasa. Jika perlu `@apply`, hindari di dalam nesting.
+
+### Urutan impor (App Router)
+Urutan impor di `src/app/layout.tsx`:
+1. `./globals.css`
+2. `../styles/tokens.css` → `theme-dark.css` → `theme-light.css`
+3. `layout.css`, `overlays.css`, `utilities.css`, `components/**`
+
+> Catatan: kami menggunakan `@tailwindcss/postcss` (lihat `postcss.config.mjs`) agar kompatibel dengan Next.js 15 + Turbopack.
+
 
 ## API internal
 
