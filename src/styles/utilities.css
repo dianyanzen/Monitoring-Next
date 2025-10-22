@@ -1,0 +1,10 @@
+/* Utilitas ringan */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-theme="light"] .pointer-events-none { opacity: .08 !important; }
+}
+
+/* Placeholder/inputs pada popover date-range (dark default, focus di light ada di overlays) */
+[data-drp-popover] .drp-input { background:#0e0e1c; border:1px solid rgba(148,163,184,.35); color:#f1f5f9;
+  transition: border-color .2s ease, box-shadow .2s ease; }
+[data-drp-popover] .drp-input:focus { border-color: rgba(34,211,238,.75); box-shadow: 0 0 0 2px rgba(34,211,238,.18); outline:none; }
+[data-drp-popover] .drp-input::placeholder { color: rgba(148,163,184,.6); }

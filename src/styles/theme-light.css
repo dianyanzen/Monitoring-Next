@@ -1,0 +1,133 @@
+/* =====================================================================
+   LIGHT THEME — Luxe & Elegant (aktif saat <html data-theme="light">)
+   ===================================================================== */
+
+/* 0) Palet & token dasar (HSL untuk shadcn/oklab mix) */
+html[data-theme="light"] {
+  color-scheme: light;
+
+  /* surfaces & text */
+  --lux-bg: #eee5d9;      /* silk */
+  --lux-surface: #fdfeff; /* pearl */
+  --lux-surface-soft: color-mix(in oklab, var(--lux-surface), #fff 12%);
+  --lux-ink: #141821;     /* readable ink */
+  --lux-ink-subtle: color-mix(in oklab, var(--lux-ink), #50607a 32%);
+  --lux-muted: #5b6677;
+
+  /* borders & shadows */
+  --lux-border: rgba(20, 24, 33, 0.14);
+  --lux-shadow: 0 10px 28px rgba(20, 32, 51, 0.08);
+
+  /* accents (gold) */
+  --gold-50:  #fff8e9;
+  --gold-100: #f3e6c5;
+  --gold-200: #edd9a2;
+  --gold-300: #d7b773;
+  --gold-400: #d2b68a;
+  --gold-500: #b88a3d;
+
+  --gold-grad: linear-gradient(135deg, var(--gold-50), var(--gold-100) 40%, var(--gold-300) 68%, var(--gold-400));
+  --gold-grad-soft: linear-gradient(150deg,
+    color-mix(in oklab, var(--gold-50), #fff 25%),
+    color-mix(in oklab, var(--gold-100), #fff 10%),
+    color-mix(in oklab, var(--gold-300), #fff 5%),
+    rgba(210,182,138,.78)
+  );
+  --lux-line-soft: linear-gradient(90deg,
+    rgba(210, 182, 138, 0.15),
+    rgba(210, 182, 138, 0.58),
+    rgba(210, 182, 138, 0.05)
+  );
+  --lux-line-strong: linear-gradient(90deg,
+    rgba(210, 182, 138, 0.65),
+    rgba(245, 231, 200, 0.95),
+    rgba(210, 182, 138, 0.35)
+  );
+
+  /* shadcn-style tokens (HSL) */
+  --background: 38 42% 98%;
+  --foreground: 40 12% 14%;
+  --card: 0 0% 100%;
+  --card-foreground: 40 12% 20%;
+  --muted-foreground: 221 12% 42%;
+
+  /* legacy remaps supaya global tokens ikut luxe palette */
+  --bg: var(--lux-bg);
+  --surface: var(--lux-surface);
+  --surface-alt: var(--lux-surface-soft);
+  --ink: var(--lux-ink);
+  --muted: var(--lux-muted);
+  --border: var(--lux-border);
+  --ring: 0 0 0 3px rgba(210, 182, 138, 0.28);
+
+  --accent-grad: var(--gold-grad);
+  --accent-grad-soft: var(--gold-grad-soft);
+  --accent-grad-strong: linear-gradient(96deg, var(--gold-400) 0%, var(--gold-500) 45%, var(--gold-200) 78%, var(--gold-50) 100%);
+  --accent-line: var(--lux-line-soft);
+  --accent-line-strong: var(--lux-line-strong);
+  --accent-ink: #2a1e05;
+  --accent-muted: color-mix(in oklab, var(--gold-100), #fff 60%);
+  --heading-glow-color: color-mix(in oklab, var(--gold-400), #fff 30%);
+  --heading-glow-shadow: 0 0 22px rgba(210, 182, 138, 0.38), 0 0 42px rgba(210, 182, 138, 0.24);
+}
+
+/* 1) Base & tipografi */
+html[data-theme="light"] body {
+  background: radial-gradient(1200px 600px at 18% -10%, #fff8ec 0%, #ffffff 42%, transparent 70%),
+              radial-gradient(900px 480px at 85% 8%, #fff4d4 0%, transparent 60%),
+              var(--lux-bg) !important;
+  color: var(--lux-ink) !important;
+}
+html[data-theme="light"] :where(p, span, small, strong, em, li, dd, dt, td, th, code, button, a, label, div, h1, h2, h3, h4, h5, h6) {
+  color: var(--lux-ink) !important;
+}
+
+/* Ganti aksen cyan/indigo jadi elegan */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 :is(
+  [class*="text-cyan-"], [class*="text-sky-"], [class*="text-blue-"], [class*="text-indigo-"],
+  .text-cyan-200\/80, .text-cyan-300, .text-cyan-400, .text-cyan-600\/70, .text-blue-300, .text-blue-400, .text-indigo-400
+) { color: var(--lux-ink) !important; }
+html[data-theme="light"] main.flex-1 > .relative.mt-5 :is([class*="border-cyan-"], [class*="border-sky-"], [class*="border-blue-"]) {
+  border-color: var(--lux-border) !important;
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 :is([class*="bg-cyan-"], [class*="bg-sky-"], [class*="bg-blue-"]) {
+  background: #fff !important;
+}
+
+/* Gradient/conic conversion */
+html[data-theme="light"] :is(
+  [class*="bg-gradient-to-"][class*="from-cyan-"],
+  [class*="bg-gradient-to-"][class*="via-cyan-"],
+  [class*="bg-gradient-to-"][class*="via-pink-"],
+  [class*="bg-gradient-to-"][class*="to-cyan-"]
+):not([class*="to-transparent"]) {
+  background-image: var(--accent-grad-soft) !important;
+  color: var(--accent-ink) !important;
+}
+html[data-theme="light"] :is(
+  [class*="bg-gradient-to-"][class*="from-cyan-"][class*="to-transparent"],
+  [class*="bg-gradient-to-"][class*="via-pink-"][class*="to-transparent"],
+  [class*="bg-gradient-to-r"][class*="via-cyan-"][class*="to-transparent"]
+) { background-image: var(--accent-line) !important; }
+html[data-theme="light"] [class*="bg-clip-text"][class*="bg-gradient-to-"][class*="from-cyan-"] {
+  background-image: var(--accent-grad) !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+html[data-theme="light"] :is(h1, h2)[class*="bg-clip-text"][class*="bg-gradient-to-"][class*="from-cyan-"] {
+  font-weight: 800 !important; letter-spacing: .01em !important;
+  text-shadow: 0 6px 18px rgba(210, 182, 138, .32) !important;
+  background-image: var(--accent-grad-strong) !important; color: transparent !important;
+}
+
+/* Link */
+html[data-theme="light"] a { color: var(--lux-ink) !important; text-decoration: none; }
+html[data-theme="light"] a:hover { color: #1f2937 !important; text-decoration: underline; }
+
+/* Matikan efek neon/animasi berat di light */
+html[data-theme="light"] :is(.glow, .glitch, .glitchy, .holo-panel, [class*="drop-shadow"], [class*="shadow-[0_0_"], [class*="animate-"], [style*="animation"]) {
+  filter: none !important; text-shadow: none !important; animation: none !important; box-shadow: var(--lux-shadow) !important;
+}
+
+/* Sembunyikan overlay dekoratif global (aria-hidden) saat light */
+html[data-theme="light"] :is(header, aside, footer, main) > .absolute[aria-hidden="true"] { display: none !important; }

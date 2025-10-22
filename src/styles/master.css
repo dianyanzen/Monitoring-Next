@@ -1,0 +1,16 @@
+/* FILE: src/styles/master.css */
+
+/* Sama seperti dashboard, tapi scope di master */
+html[data-theme="light"] .master-root :is([class*="text-cyan-"], [class*="text-blue-"], [class*="text-indigo-"]){
+  color: var(--lux-ink) !important;
+}
+html[data-theme="light"] .master-root :is([class*="border-cyan-"], [class*="border-blue-"]){
+  border-color: var(--lux-border) !important;
+}
+html[data-theme="light"] .master-root :is([class*="bg-cyan-"], [class*="bg-blue-"]){
+  background: #fff !important;
+}
+html[data-theme="light"] .master-root [class~="h-[1px]"],
+html[data-theme="light"] .master-root [class~="h-[2px]"]{
+  background: var(--gold-grad) !important;
+}

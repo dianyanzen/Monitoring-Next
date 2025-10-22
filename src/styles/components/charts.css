@@ -1,0 +1,12 @@
+/* FILE: src/styles/components/charts.css */
+
+.chart-card{
+  border-radius: 16px; padding: 1rem; border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04); box-shadow: 0 10px 26px rgba(0,0,0,.18);
+}
+.chart-title{ font-weight:600; font-size:1rem; margin-bottom:.5rem; opacity:.9; }
+
+html[data-theme="light"] .chart-card{
+  background:#fff; border:1px solid var(--lux-border); box-shadow: 0 12px 28px rgba(20,32,51,.08);
+}
+html[data-theme="light"] .chart-title{ color: var(--lux-ink); }

@@ -1,0 +1,10 @@
+:where(html[data-theme="light"], body.light) {
+  --ink: #151823; --muted: #636b78; --border: rgba(20, 24, 33, .14);
+  --gold-50:#fff8ea; --gold-100:#f5e7c8; --gold-300:#d7b773; --gold-400:#caa860;
+  --gold-grad: linear-gradient(90deg, var(--gold-50), var(--gold-100) 35%, var(--gold-300) 72%, var(--gold-400));
+}
+main.flex-1 > .relative.mt-5 :is([class*="drop-shadow-"], [class*="shadow-[0_0_"], [class*="shadow-[]"], [class*="animate-"], [class*="text-cyan-"], [class*="bg-cyan-"], [class*="border-cyan-"]) {
+  box-shadow:none !important; text-shadow:none !important; animation:none !important;
+}
+main.flex-1 > .relative.mt-5 :is([class*="bg-[linear-gradient"], [class*="bg-[radial-gradient"]) { background:none !important; }
+body { background:#f7f4ee !important; color: var(--ink) !important; }

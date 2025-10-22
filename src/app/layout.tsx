@@ -1,5 +1,39 @@
 // FILE: src/app/layout.tsx
 import "./globals.css"; // <- sebelumnya "../globals.css" (salah path)
+// ⬇️ Global CSS modular (urutkan dari tokens → themes → layout → overlays → util → halaman/komponen)
+import "../styles/tokens.css";
+import "../styles/theme-dark.css";
+import "../styles/theme-light.css";
+import "../styles/layout.css";
+import "../styles/overlays.css";
+import "../styles/utilities.css";
+import "../styles/ktpel.css";
+import "../styles/components/salaman-card.css";
+import "../styles/components/chat-cp.css";
+
+/* ⬇️ Batch-2 */
+import "../styles/components/tables.css";
+import "../styles/components/forms.css";
+import "../styles/dashboard.css";
+import "../styles/master.css";
+
+// Batch 3
+import "../styles/components/cards-kpi.css";
+import "../styles/components/charts.css";
+import "../styles/components/sticky-table.css";
+import "../styles/components/badges.css";
+import "../styles/components/progress.css";
+
+// Batch 4
+import "../styles/components/topbar.css";
+import "../styles/components/sidebar.css";
+import "../styles/print.css"; // global agar semua halaman punya mode cetak
+
+// Batch 5
+import "../styles/components/modal.css";
+import "../styles/components/toast.css";
+import "../styles/components/forms-states.css";
+
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

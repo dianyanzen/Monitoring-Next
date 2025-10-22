@@ -1,0 +1,35 @@
+/* =====================================================================
+   DARK (default) — neon vibe
+   ===================================================================== */
+body {
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: var(--bg);
+  background-attachment: fixed;
+  color: var(--ink);
+}
+
+aside {
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  border-right: 1px solid var(--border);
+}
+
+header {
+  background: rgba(25, 25, 30, 0.6);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Decorative (dark) */
+.glow { text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff88, 0 0 40px #00ffff44; }
+.holo-panel {
+  backdrop-filter: blur(10px) saturate(1.5);
+  background: linear-gradient(150deg, rgba(255,255,255,.9), rgba(240,240,255,.1));
+  border: 1px solid rgba(255,255,255,.25);
+  box-shadow: 0 0 60px rgba(0,255,255,.15), 0 0 100px rgba(255,0,255,.1);
+}
+.glitchy { animation: rgbshift 2s infinite linear; }
+.glitch { position: relative; text-shadow: 0 0 4px #00ffff, 0 0 8px #00ffff; }
+.glitch::before, .glitch::after { content: attr(data-text); position: absolute; left:0; width:100%; clip: rect(0, 0, 0, 0); }
+.glitch::before { animation: glitchTop 2s infinite linear alternate-reverse; color:#ff00ff; }
+.glitch::after  { animation: glitchBottom 2s infinite linear alternate-reverse; color:#00ffff; }

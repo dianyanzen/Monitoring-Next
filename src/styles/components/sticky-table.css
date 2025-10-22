@@ -1,0 +1,22 @@
+/* FILE: src/styles/components/sticky-table.css */
+
+.sticky-table{ position: relative; overflow:auto; max-height: 480px; border-radius: 14px; }
+.sticky-table table{ width:100%; border-collapse: collapse; }
+.sticky-table thead th{
+  position: sticky; top: 0; z-index: 2;
+  background: rgba(14,14,20,.96);
+  border-bottom: 1px solid rgba(255,255,255,.16);
+  backdrop-filter: blur(6px);
+}
+.sticky-table tbody td{ border-bottom:1px solid rgba(255,255,255,.08); }
+
+/* Shadow element */
+.sticky-table__shadow{ position:absolute; inset:0 auto auto 0; height:14px; width:100%; pointer-events:none; opacity:0; transition: opacity .18s ease; background: linear-gradient(180deg, rgba(0,0,0,.45), transparent); }
+.sticky-table[data-scrolled="1"] .sticky-table__shadow{ opacity:1; }
+
+/* Light */
+html[data-theme="light"] .sticky-table thead th{
+  background:#ffffffea; border-bottom:1px solid var(--lux-border);
+}
+html[data-theme="light"] .sticky-table tbody td{ border-bottom:1px solid var(--lux-border); }
+html[data-theme="light"] .sticky-table__shadow{ background: linear-gradient(180deg, rgba(210,182,138,.42), transparent); }

@@ -1,0 +1,38 @@
+/* FILE: src/styles/components/cards-kpi.css */
+
+.kpi-card{
+  position: relative;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  padding: 1rem 1.25rem;
+  box-shadow: 0 10px 26px rgba(0,0,0,.18);
+}
+.kpi-card__title{ font-size:.9rem; opacity:.85; margin-bottom:.25rem; }
+.kpi-card__value{ font-size:1.75rem; font-weight:700; line-height:1.1; }
+.kpi-card__delta{ display:inline-flex; align-items:center; gap:.4rem; margin-top:.35rem; font-size:.9rem; }
+.kpi-card__delta--up{ color:#22c55e; }
+.kpi-card__delta--down{ color:#ef4444; }
+.kpi-card__hint{ font-size:.8rem; opacity:.7; margin-top:.4rem; }
+
+/* Accent varian */
+.kpi-card--accent{
+  background: radial-gradient(600px 240px at 10% 0%, rgba(34,211,238,.18), transparent 60%),
+              radial-gradient(600px 240px at 90% 0%, rgba(168,85,247,.12), transparent 60%),
+              rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.2);
+}
+
+/* Light (Luxe) */
+html[data-theme="light"] .kpi-card{
+  background:#fff; border:1px solid var(--lux-border); color: var(--lux-ink);
+  box-shadow: 0 12px 28px rgba(20,32,51,.08);
+}
+html[data-theme="light"] .kpi-card--accent{
+  background: linear-gradient(180deg, #ffffff, #fff8ec);
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 28%);
+}
+html[data-theme="light"] .kpi-card__title{ color: color-mix(in oklab, var(--lux-ink), #5b6677 34%); }
+html[data-theme="light"] .kpi-card__value{ color: var(--lux-ink); text-shadow: 0 10px 22px rgba(210,182,138,.16); }
+html[data-theme="light"] .kpi-card__delta--up{ color:#0f9d58; }
+html[data-theme="light"] .kpi-card__delta--down{ color:#b91c1c; }

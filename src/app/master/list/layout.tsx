@@ -17,9 +17,11 @@ export default async function RootLayout({
   const s = await readServerSession();
 
   return (
-    <SessionProvider initialUser={s ?? null}>
-      {/* Semua styling/scroll di-handle oleh client layout */}
-      <MainLayout>{children}</MainLayout>
-    </SessionProvider>
+    <main className="master-root">
+      <SessionProvider initialUser={s ?? null}>
+        {/* Semua styling/scroll di-handle oleh client layout */}
+        <MainLayout>{children}</MainLayout>
+      </SessionProvider>
+    </main>
   );
-}
+} 

@@ -1,0 +1,29 @@
+/* FILE: src/styles/components/forms-states.css */
+
+
+.field{ display:flex; flex-direction:column; gap:.35rem; }
+.field__label{ font-size:.9rem; opacity:.85; }
+.field__control{ position:relative; }
+.field__hint{ font-size:.8rem; opacity:.75; }
+.field__hint--error{ color:#ef4444; }
+.field__hint--success{ color:#22c55e; }
+
+
+/* Input states using ARIA */
+input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="true"]{
+border-color: rgba(239,68,68,.65) !important;
+box-shadow: 0 0 0 4px rgba(239,68,68,.15) !important;
+}
+input[data-valid="true"], textarea[data-valid="true"], select[data-valid="true"]{
+border-color: rgba(34,197,94,.65) !important;
+box-shadow: 0 0 0 4px rgba(34,197,94,.15) !important;
+}
+
+
+/* Light */
+html[data-theme="light"] input[aria-invalid="true"],
+html[data-theme="light"] textarea[aria-invalid="true"],
+html[data-theme="light"] select[aria-invalid="true"]{ border-color: #ef4444 !important; box-shadow: 0 0 0 4px rgba(255,120,120,.18) !important; }
+html[data-theme="light"] input[data-valid="true"],
+html[data-theme="light"] textarea[data-valid="true"],
+html[data-theme="light"] select[data-valid="true"]{ border-color: #0f9d58 !important; box-shadow: 0 0 0 4px rgba(15,157,88,.18) !important; }

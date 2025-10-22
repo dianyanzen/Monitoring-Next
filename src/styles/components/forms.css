@@ -1,0 +1,97 @@
+/* FILE: src/styles/components/forms.css */
+
+/* === Inputs === */
+.input, .select, .textarea{
+  width:100%;
+  border-radius: 12px;
+  border:1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  color: inherit;
+  padding: .6rem .9rem;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+.input::placeholder, .textarea::placeholder{ opacity:.65; }
+.input:focus, .select:focus, .textarea:focus{
+  border-color: rgba(34,211,238,.6);
+  box-shadow: 0 0 0 4px rgba(34,211,238,.16);
+}
+.input[disabled], .select[disabled], .textarea[disabled]{
+  opacity:.65; cursor:not-allowed;
+}
+
+/* Sizes */
+.input--sm, .select--sm, .textarea--sm{ padding:.5rem .75rem; border-radius:10px; }
+.input--lg, .select--lg, .textarea--lg{ padding:.75rem 1rem; border-radius:14px; }
+
+/* === Buttons === */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:.5rem;
+  padding:.6rem 1rem;
+  border-radius: 12px;
+  border:1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  color: inherit;
+  cursor:pointer;
+  transition: transform .08s ease, background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.btn:hover{ transform: translateY(-1px); }
+.btn:active{ transform: translateY(0); }
+.btn[disabled]{ opacity:.6; cursor:not-allowed; }
+
+/* Variants */
+.btn--primary{
+  border-color: transparent;
+  background: linear-gradient(96deg, #22d3ee, #3b82f6);
+  color:#0b1020;
+}
+.btn--ghost{
+  background: transparent;
+  border-color: rgba(255,255,255,.22);
+}
+.btn--danger{
+  background: linear-gradient(96deg, #ef4444, #dc2626);
+  border-color: transparent;
+  color:#fff;
+}
+
+/* Light (Luxe) */
+html[data-theme="light"] .input,
+html[data-theme="light"] .select,
+html[data-theme="light"] .textarea{
+  background:#fff;
+  border-color: var(--lux-border);
+  color: var(--lux-ink);
+}
+html[data-theme="light"] .input:focus,
+html[data-theme="light"] .select:focus,
+html[data-theme="light"] .textarea:focus{
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 28%);
+  box-shadow: 0 0 0 4px rgba(210,182,138,.16);
+}
+
+/* Buttons — Luxe conversions */
+html[data-theme="light"] .btn{
+  background:#fff;
+  border-color: var(--lux-border);
+  color: var(--lux-ink);
+  box-shadow: 0 8px 20px rgba(20,32,51,.06);
+}
+html[data-theme="light"] .btn--primary{
+  background: var(--gold-grad);
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 40%);
+  color:#2a1e05;
+  box-shadow: 0 12px 26px rgba(210,182,138,.22);
+}
+html[data-theme="light"] .btn--ghost{
+  background:#fff;
+  border-color: var(--lux-border);
+  color: var(--lux-ink);
+}
+html[data-theme="light"] .btn--danger{
+  background: linear-gradient(96deg, #ffb3a7, #ff6a6a);
+  border-color: transparent;
+  color:#2a1e05;
+  box-shadow: 0 12px 26px rgba(255,120,120,.18);
+}

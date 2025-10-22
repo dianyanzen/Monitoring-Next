@@ -1,0 +1,42 @@
+/* FILE: src/styles/print.css */
+
+
+@media print {
+/* Bersihkan latar dan dekorasi */
+*{ box-shadow:none !important; text-shadow:none !important; animation:none !important; }
+html, body{ background:#fff !important; }
+header, aside, nav, .no-print, .btn, .btn-icon, .cp-fab, [data-print-hide]{ display:none !important; }
+main{ padding:0 !important; }
+
+
+/* Tipografi & warna */
+body{ color:#000 !important; font: 12pt/1.45 "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+a{ color:#000 !important; text-decoration: none; }
+
+
+/* Ukuran kertas & margin */
+@page { size: A4; margin: 12mm 12mm 14mm 12mm; }
+
+
+/* Tabel menjadi hitam-putih dengan garis jelas */
+table{ width:100% !important; border-collapse: collapse !important; }
+thead th, tbody td{ border:1px solid #000 !important; padding: 6px 8px !important; }
+thead th{ background:#f3f3f3 !important; }
+
+
+/* DataTables → matikan kontrol dan tampilkan semua baris */
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate{ display:none !important; }
+table.dataTable{ border:1px solid #000 !important; }
+
+
+/* Break control */
+.page-break{ break-before: page; }
+.avoid-break{ break-inside: avoid; }
+
+
+/* Gambar & chart scaling */
+img, canvas{ max-width:100% !important; height:auto !important; }
+}

@@ -1,0 +1,47 @@
+/* FILE: src/styles/components/topbar.css */
+
+
+/* Kontainer topbar umum */
+.topbar{
+position: sticky; top: 0; z-index: 50;
+background: rgba(25,25,30,.6);
+backdrop-filter: blur(10px);
+border-bottom: 1px solid rgba(255,255,255,.12);
+}
+.topbar__inner{ display:flex; align-items:center; gap:.75rem; padding:.6rem .85rem; }
+.topbar__brand{ display:flex; align-items:center; gap:.5rem; font-weight:600; }
+
+
+/* Input pencarian */
+.topbar__search{ flex:1 1 auto; max-width: 560px; }
+.topbar__search input{
+width:100%; height:38px; border-radius:10px;
+background: rgba(255,255,255,.06);
+border:1px solid rgba(255,255,255,.18);
+color: inherit; padding: .5rem .75rem; outline:none;
+transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+.topbar__search input:focus{
+border-color: rgba(34,211,238,.6);
+box-shadow: 0 0 0 3px rgba(34,211,238,.18);
+}
+
+
+/* Tombol ikon di topbar */
+.btn-icon{ display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.06); color: inherit; cursor:pointer; transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .08s ease; }
+.btn-icon:hover{ transform: translateY(-1px); }
+.btn-icon:active{ transform: translateY(0); }
+.btn-icon:focus-visible{ outline: none; box-shadow: 0 0 0 3px rgba(34,211,238,.18); border-color: rgba(34,211,238,.6); }
+
+
+/* Garis aksen tipis di bagian atas topbar */
+.topbar__accent{ position:absolute; inset:0 0 auto 0; height:2px; background: linear-gradient(90deg, #22d3ee, #a855f7); opacity:.85; }
+
+
+/* Light (Luxe) */
+html[data-theme="light"] .topbar{ background:#fff; border-bottom: 1px solid var(--lux-border); box-shadow: var(--lux-shadow); }
+html[data-theme="light"] .topbar__accent{ background: var(--gold-grad); }
+html[data-theme="light"] .topbar__search input{ background:#fff; border-color: var(--lux-border); color: var(--lux-ink); }
+html[data-theme="light"] .topbar__search input:focus{ border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 28%); box-shadow: 0 0 0 3px rgba(210,182,138,.22); }
+html[data-theme="light"] .btn-icon{ background:#fff; border-color: var(--lux-border); color: var(--lux-ink); box-shadow: 0 8px 20px rgba(20,32,51,.06); }
+html[data-theme="light"] .btn-icon:focus-visible{ box-shadow: 0 0 0 3px rgba(210,182,138,.22); border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 35%); }

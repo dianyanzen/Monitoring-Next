@@ -1,0 +1,7 @@
+/* FILE: src/styles/components/progress.css */
+
+.progress{ height:10px; border-radius:999px; background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); overflow:hidden; }
+.progress__bar{ height:100%; width:0; background: linear-gradient(90deg, #22d3ee, #3b82f6); }
+
+html[data-theme="light"] .progress{ background:#f6f8fb; border-color: var(--lux-border); }
+html[data-theme="light"] .progress__bar{ background: var(--gold-grad); box-shadow: 0 0 14px rgba(210,182,138,.35); }

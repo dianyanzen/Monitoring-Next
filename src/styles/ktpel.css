@@ -1,0 +1,26 @@
+/* Khusus KTP-el Monitoring — token & efek */
+:root {
+  --ktpel-status-gradient: linear-gradient(135deg, #fff9de 0%, #f4d7a4 55%, #e1ba72 100%);
+  --ktpel-status-border: rgba(217, 119, 6, 0.28);
+  --ktpel-status-shadow: 0 34px 80px -46px rgba(217, 119, 6, 0.45);
+  --ktpel-status-text: #2f1f10;
+  --ktpel-status-title: #b7791f;
+  --ktpel-status-header-bg: rgba(255, 255, 255, 0.82);
+  --ktpel-status-header-text: #b7791f;
+  --ktpel-status-row-divider: rgba(217, 119, 6, 0.18);
+  --ktpel-status-row-highlight: rgba(255, 246, 214, 0.85);
+  --ktpel-status-row-alt: rgba(255, 255, 255, 0.6);
+  --ktpel-status-highlight-text: #9a5c10;
+  --ktpel-status-highlight-glow: 0 0 18px rgba(217, 119, 6, 0.38);
+  --ktpel-status-index-text: rgba(183, 121, 31, 0.85);
+  --ktpel-status-glow-1: rgba(250, 204, 21, 0.35);
+  --ktpel-status-glow-2: rgba(251, 191, 36, 0.24);
+  --ktpel-status-table-surface: rgba(255, 255, 255, 0.82);
+  --ktpel-empty-gradient: linear-gradient(90deg, #fef3c7 0%, #fcd34d 45%, #f59e0b 100%);
+  --ktpel-empty-border: rgba(217, 119, 6, 0.35);
+  --ktpel-empty-text: #92400e;
+  --ktpel-empty-shadow: 0 18px 48px -32px rgba(217, 119, 6, 0.5);
+  --ktpel-row-success-border: rgba(34, 118, 84, 0.55);
+  --ktpel-row-success-glow: 0 9px 24px rgba(26, 109, 74, 0.22);
+  --ktpel-row-success-glow-strong: 0 14px 34px rgba(34, 118, 84, 0.32);
+}
