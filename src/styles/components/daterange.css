@@ -1,0 +1,66 @@
+/* ==========================================================
+   DATE RANGE POPUP
+   ========================================================== */
+html[data-theme="light"] button[aria-haspopup="dialog"][class*="w-[360px]"] {
+background: #fff !important;
+color: var(--lux-ink) !important;
+border: 1px solid var(--lux-border) !important;
+box-shadow: var(--lux-shadow) !important;
+}
+html[data-theme="light"]
+[data-drp-popover]
+[class*="rounded-xl"][class*="border"][class*="bg-[#0b0b1a]"] {
+background: #fff !important;
+border: 1px solid var(--lux-border) !important;
+box-shadow: 0 20px 38px rgba(15, 23, 42, 0.1) !important;
+}
+
+html[data-theme="light"] [data-drp-popover] .drp-input {
+  background: #fff !important;
+  border: 1px solid #e4d3b1 !important;
+  border: 1px solid color-mix(in oklab, var(--gold-300), #fff 45%) !important;
+  color: var(--lux-ink) !important;
+}
+html[data-theme="light"] [data-drp-popover] .drp-input:focus {
+  border-color: color-mix(in oklab, var(--gold-300), #fff 30%) !important;
+  box-shadow: 0 0 0 2px rgba(210, 182, 138, 0.25) !important;
+}
+html[data-theme="light"] [data-drp-popover] .drp-input::placeholder {
+  color: color-mix(in oklab, var(--lux-muted), #a0a8b5 28%) !important;
+}
+html[data-theme="light"] [data-drp-popover] button {
+color: var(--lux-ink) !important;
+}
+html[data-theme="light"] [data-drp-popover] button:nth-child(1) {
+background: #fff !important;
+border: 1px solid var(--lux-border) !important;
+}
+html[data-theme="light"] [data-drp-popover] button:nth-child(2) {
+background: var(--gold-grad) !important;
+color: #2a1e05 !important;
+border: 1px solid rgba(210, 182, 138, 0.5) !important;
+}
+
+/* ==========================================================
+   react-date-range
+   ========================================================== */
+html[data-theme="light"] .rdrCalendarWrapper {
+color: var(--lux-ink) !important;
+}
+html[data-theme="light"] .rdrDayToday .rdrDayNumber span {
+border-color: var(--gold-300) !important;
+}
+html[data-theme="light"] :is(.rdrInRange, .rdrStartEdge, .rdrEndEdge) {
+background: var(--gold-100) !important;
+}
+html[data-theme="light"] .rdrStartEdge,
+html[data-theme="light"] .rdrEndEdge {
+box-shadow: none !important;
+}
+html[data-theme="light"] .rdrSelected,
+html[data-theme="light"] .rdrDayHovered {
+border-color: var(--gold-300) !important;
+}
+html[data-theme="light"] .rdrDayNumber span {
+color: var(--lux-ink) !important;
+}

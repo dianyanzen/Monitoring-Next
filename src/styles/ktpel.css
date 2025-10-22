@@ -24,3 +24,421 @@
   --ktpel-row-success-glow: 0 9px 24px rgba(26, 109, 74, 0.22);
   --ktpel-row-success-glow-strong: 0 14px 34px rgba(34, 118, 84, 0.32);
 }
+
+/* ==========================================================================
+KTP-el Monitoring: Luxe Light vs Cyberpunk Dark styling
+========================================================================== */
+:root {
+  --ktpel-status-gradient: linear-gradient(135deg, #fff9de 0%, #f4d7a4 55%, #e1ba72 100%);
+  --ktpel-status-border: rgba(217, 119, 6, 0.28);
+  --ktpel-status-shadow: 0 34px 80px -46px rgba(217, 119, 6, 0.45);
+  --ktpel-status-text: #2f1f10;
+  --ktpel-status-title: #b7791f;
+  --ktpel-status-header-bg: rgba(255, 255, 255, 0.82);
+  --ktpel-status-header-text: #b7791f;
+  --ktpel-status-row-divider: rgba(217, 119, 6, 0.18);
+  --ktpel-status-row-highlight: rgba(255, 246, 214, 0.85);
+  --ktpel-status-row-alt: rgba(255, 255, 255, 0.6);
+  --ktpel-status-highlight-text: #9a5c10;
+  --ktpel-status-highlight-glow: 0 0 18px rgba(217, 119, 6, 0.38);
+  --ktpel-status-index-text: rgba(183, 121, 31, 0.85);
+  --ktpel-status-glow-1: rgba(250, 204, 21, 0.35);
+  --ktpel-status-glow-2: rgba(251, 191, 36, 0.24);
+  --ktpel-status-table-surface: rgba(255, 255, 255, 0.82);
+  --ktpel-empty-gradient: linear-gradient(90deg, #fef3c7 0%, #fcd34d 45%, #f59e0b 100%);
+  --ktpel-empty-border: rgba(217, 119, 6, 0.35);
+  --ktpel-empty-text: #92400e;
+  --ktpel-empty-shadow: 0 18px 48px -32px rgba(217, 119, 6, 0.5);
+  --ktpel-row-success-border: rgba(34, 118, 84, 0.55);
+  --ktpel-row-success-glow: 0 9px 24px rgba(26, 109, 74, 0.22);
+  --ktpel-row-success-glow-strong: 0 14px 34px rgba(34, 118, 84, 0.32);
+  --ktpel-row-success-animation: none;
+  --ktpel-row-danger-border: rgba(176, 50, 50, 0.55);
+  --ktpel-row-danger-glow: 0 10px 26px rgba(176, 50, 50, 0.22);
+  --ktpel-row-danger-glow-strong: 0 16px 36px rgba(176, 50, 50, 0.3);
+  --ktpel-row-danger-animation: none;
+}
+
+.dark {
+  --ktpel-status-gradient: linear-gradient(135deg, #070018 0%, #16003b 52%, #2d0060 100%);
+  --ktpel-status-border: rgba(236, 72, 153, 0.42);
+  --ktpel-status-shadow: 0 26px 64px -38px rgba(255, 0, 170, 0.55);
+  --ktpel-status-text: #f8e9ff;
+  --ktpel-status-title: #ffd5ff;
+  --ktpel-status-header-bg: linear-gradient(135deg, rgba(255, 0, 170, 0.35), rgba(24, 1, 52, 0.92));
+  --ktpel-status-header-text: #ffd5ff;
+  --ktpel-status-row-divider: rgba(255, 0, 170, 0.18);
+  --ktpel-status-row-highlight: rgba(255, 0, 180, 0.14);
+  --ktpel-status-row-alt: rgba(86, 5, 120, 0.22);
+  --ktpel-status-highlight-text: #ff9bff;
+  --ktpel-status-highlight-glow: 0 0 26px rgba(255, 0, 200, 0.55);
+  --ktpel-status-index-text: rgba(255, 190, 255, 0.82);
+  --ktpel-status-glow-1: rgba(255, 0, 184, 0.55);
+  --ktpel-status-glow-2: rgba(99, 102, 241, 0.38);
+  --ktpel-status-table-surface: rgba(17, 0, 38, 0.72);
+  --ktpel-empty-gradient: linear-gradient(90deg, rgba(6, 182, 212, 0.1) 0%, rgba(10, 44, 75, 0.65) 55%, rgba(10, 84, 78, 0.55) 100%);
+  --ktpel-empty-border: rgba(34, 211, 238, 0.48);
+  --ktpel-empty-text: #a5f3fc;
+  --ktpel-empty-shadow: 0 0 42px rgba(34, 211, 238, 0.4);
+  --ktpel-row-success-border: rgba(34, 197, 94, 0.82);
+  --ktpel-row-success-glow: 0 0 26px rgba(34, 197, 94, 0.55), 0 0 58px rgba(74, 222, 128, 0.32);
+  --ktpel-row-success-glow-strong: 0 0 32px rgba(52, 211, 153, 0.75), 0 0 74px rgba(110, 231, 183, 0.45);
+  --ktpel-row-success-animation: ktpelNeonPulseGreen 3s ease-in-out infinite;
+  --ktpel-row-danger-border: rgba(248, 113, 113, 0.85);
+  --ktpel-row-danger-glow: 0 0 24px rgba(248, 113, 113, 0.55), 0 0 52px rgba(255, 99, 132, 0.32);
+  --ktpel-row-danger-glow-strong: 0 0 32px rgba(252, 165, 165, 0.75), 0 0 70px rgba(248, 113, 113, 0.48);
+  --ktpel-row-danger-animation: ktpelNeonPulseRed 3.1s ease-in-out infinite;
+}
+
+.ktpel-status-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px;
+  padding: 1.5rem;
+  border: 1px solid var(--ktpel-status-border);
+  background: var(--ktpel-status-gradient);
+  color: var(--ktpel-status-text);
+  box-shadow: var(--ktpel-status-shadow);
+  backdrop-filter: blur(22px);
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+}
+
+.ktpel-status-card::before,
+.ktpel-status-card::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(70px);
+  opacity: 0.75;
+  transition: opacity 0.3s ease;
+}
+
+.ktpel-status-card::before {
+  top: -55%;
+  right: -18%;
+  width: 46%;
+  height: 58%;
+  background: var(--ktpel-status-glow-1);
+}
+
+.ktpel-status-card::after {
+  bottom: -52%;
+  left: -20%;
+  width: 55%;
+  height: 60%;
+  background: var(--ktpel-status-glow-2);
+}
+
+.ktpel-status-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.ktpel-status-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 36px 90px -42px rgba(217, 119, 6, 0.6);
+}
+
+.dark .ktpel-status-card:hover {
+  box-shadow: 0 0 75px rgba(255, 0, 170, 0.75);
+}
+
+.ktpel-status-card__title {
+  margin-bottom: 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ktpel-status-title);
+}
+
+.ktpel-status-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.85rem;
+  color: var(--ktpel-status-text);
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--ktpel-status-table-surface);
+  backdrop-filter: blur(16px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.ktpel-status-table thead {
+  background: var(--ktpel-status-header-bg);
+  color: var(--ktpel-status-header-text);
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  font-size: 0.7rem;
+  border-bottom: 1px solid var(--ktpel-status-border);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.ktpel-status-table th {
+  text-align: center;
+  padding: 0.55rem 0.85rem;
+  font-weight: 600;
+}
+
+.ktpel-status-table th:first-child,
+.ktpel-status-table td:first-child {
+  width: 80px;
+  max-width: 80px;
+  min-width: 80px;
+}
+
+.ktpel-status-table th:last-child,
+.ktpel-status-table td:last-child {
+  width: calc(100% - 80px);
+}
+
+.ktpel-status-table td {
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid var(--ktpel-status-row-divider);
+  text-align: center;
+}
+
+.ktpel-status-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.ktpel-status-table tbody tr {
+  transition: background-color 0.25s ease;
+}
+
+.ktpel-status-table tbody tr:hover {
+  background: var(--ktpel-status-row-highlight);
+}
+
+.ktpel-status-table tbody tr:nth-child(even) {
+  background: var(--ktpel-status-row-alt);
+}
+
+.ktpel-status-index {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--ktpel-status-index-text);
+  width: 10%;
+  text-align: center;
+}
+
+.ktpel-status-value {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ktpel-status-text);
+  width: 90%;
+}
+
+.ktpel-status-highlight {
+  color: var(--ktpel-status-highlight-text);
+  font-weight: 700;
+  text-transform: uppercase;
+  text-shadow: var(--ktpel-status-highlight-glow);
+}
+
+.ktpel-empty-state {
+  margin-top: 0.75rem;
+  border-radius: 20px;
+  border: 1px solid var(--ktpel-empty-border);
+  background: var(--ktpel-empty-gradient);
+  box-shadow: var(--ktpel-empty-shadow);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ktpel-empty-text);
+  backdrop-filter: blur(18px);
+}
+
+.ktpel-soft-leading-comma {
+  color: rgba(255, 63, 173, 0.02);
+  display: inline-block;
+}
+
+html[data-theme="light"] .ktpel-soft-leading-comma {
+  color: #fff !important;
+}
+
+@keyframes ktpelNeonPulseGreen {
+  0%,
+  100% {
+    box-shadow: 0 0 24px rgba(34, 197, 94, 0.6), 0 0 60px rgba(74, 222, 128, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 42px rgba(52, 211, 153, 0.9), 0 0 96px rgba(110, 231, 183, 0.5);
+  }
+}
+
+@keyframes ktpelNeonPulseRed {
+  0%,
+  100% {
+    box-shadow: 0 0 24px rgba(248, 113, 113, 0.6), 0 0 60px rgba(252, 165, 165, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 42px rgba(251, 113, 133, 0.92), 0 0 94px rgba(248, 150, 150, 0.55);
+  }
+}
+
+.ktpel-row-accent {
+  position: relative;
+  isolation: isolate;
+}
+
+.ktpel-row-accent > td {
+  position: relative;
+  z-index: 1;
+}
+
+.ktpel-row-accent::after {
+  content: "";
+  position: absolute;
+  inset: 4px 6px;
+  border-radius: 16px;
+  pointer-events: none;
+  opacity: 0.85;
+  z-index: 0;
+  transition: opacity 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.ktpel-row-accent-success::after {
+  border: 1px solid var(--ktpel-row-success-border);
+  box-shadow: var(--ktpel-row-success-glow);
+  animation: var(--ktpel-row-success-animation);
+}
+
+.ktpel-row-accent-danger::after {
+  border: 1px solid var(--ktpel-row-danger-border);
+  box-shadow: var(--ktpel-row-danger-glow);
+  animation: var(--ktpel-row-danger-animation);
+}
+
+.ktpel-row-accent:hover::after {
+  opacity: 1;
+}
+
+.ktpel-row-accent-success:hover::after {
+  box-shadow: var(--ktpel-row-success-glow-strong);
+}
+
+.ktpel-row-accent-danger:hover::after {
+  box-shadow: var(--ktpel-row-danger-glow-strong);
+}
+
+.ktpel-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.ktpel-tab {
+  position: relative;
+  border-radius: 999px;
+  padding: 0.45rem 1.15rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: 1px solid rgba(34, 211, 238, 0.22);
+  background: rgba(14, 165, 233, 0.16);
+  color: rgba(224, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease,
+    box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.ktpel-tab:hover {
+  color: #f0fdff;
+  border-color: rgba(56, 189, 248, 0.45);
+  background: rgba(59, 130, 246, 0.24);
+}
+
+.ktpel-tab--active {
+  color: #ecfeff;
+  border-color: rgba(165, 243, 252, 0.72);
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.32), rgba(59, 130, 246, 0.22));
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.35);
+}
+
+.ktpel-tab--active:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 26px rgba(34, 211, 238, 0.45);
+}
+
+html[data-theme="light"] .ktpel-tab {
+  color: rgba(120, 90, 48, 0.78);
+  border-color: rgba(202, 168, 96, 0.42);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 10px 24px rgba(20, 24, 33, 0.05);
+}
+
+html[data-theme="light"] .ktpel-tab:hover {
+  color: var(--lux-ink);
+  border-color: rgba(202, 168, 96, 0.62);
+  background: rgba(255, 248, 233, 0.85);
+}
+
+html[data-theme="light"] .ktpel-tab--active {
+  color: var(--lux-ink);
+  border-color: rgba(202, 168, 96, 0.82);
+  background: var(--lux-gold-grad);
+  box-shadow: 0 14px 30px rgba(210, 182, 138, 0.34);
+}
+
+html[data-theme="light"] .ktpel-tab--active:hover {
+  box-shadow: 0 18px 36px rgba(210, 182, 138, 0.45);
+}
+
+
+/* FILE: src/app/globals.css */
+
+/* ——— KTPel Date Input (kdp = KTPel Date Picker) ——— */
+.kdp-input { position: relative; width: 100%; }
+
+.kdp-input > input[type="text"] {
+  height: 40px;                /* konsisten */
+  border-radius: 10px;         /* rounded */
+  border: 1px solid rgba(21,94,117,.5);  /* cyan-800/50 */
+  background: rgba(0,0,0,.30);
+  color: #d1faff;              /* cyan-100-ish */
+  padding: 8px 40px 8px 12px;  /* beri ruang ikon di kanan */
+  outline: none;
+  transition: border-color .2s, box-shadow .25s, background-color .25s;
+}
+
+.kdp-input > input[type="text"]:focus {
+  border-color: #22d3ee;       /* cyan-400 */
+  box-shadow: 0 0 0 1px #22d3ee55;
+}
+
+.kdp-input > button.kdp-icon {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(21,94,117,.5);
+  background: rgba(34,211,238,.10); /* cyan-500/10 */
+  color: rgba(209,250,250,.8);
+}
+
+.kdp-input > button.kdp-icon:hover { background: rgba(34,211,238,.20); }
+
+/* Hint kecil di bawah field (rapi dan konsisten) */
+.kdp-hint {
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.25rem;
+  color: rgba(165, 243, 252, .65); /* cyan-200/65 */
+}
+
+/* State error (bila dipakai) */
+.kdp-input input.is-error {
+  border-color: #ef4444;       /* red-500 */
+  background: rgba(239,68,68,.06);
+  color: #ffecec;
+}
+.kdp-hint.is-error { color: #fecaca; } /* red-200 */

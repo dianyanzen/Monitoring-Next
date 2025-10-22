@@ -95,3 +95,22 @@ html[data-theme="light"] .btn--danger{
   color:#2a1e05;
   box-shadow: 0 12px 26px rgba(255,120,120,.18);
 }
+
+
+html[data-theme="light"] :is(input, textarea, select) {
+background: #fff !important;
+color: var(--lux-ink) !important;
+border: 1px solid var(--lux-border) !important;
+border-radius: 12px !important;
+padding: 10px 12px !important;
+box-shadow: 0 1px 0 #fff inset;
+}
+html[data-theme="light"] ::placeholder {
+color: #98a2b3;
+opacity: 1;
+}
+html[data-theme="light"] :is(input, textarea, select):focus {
+outline: none !important;
+box-shadow: 0 0 0 3px rgba(210, 182, 138, 0.28) !important;
+border-color: #e6d39a !important;
+}

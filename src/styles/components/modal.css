@@ -31,3 +31,47 @@ html[data-theme="light"] .modal__panel{ background:#fff; color: var(--lux-ink); 
 html[data-theme="light"] .modal__header{ border-bottom:1px solid var(--lux-border); }
 html[data-theme="light"] .modal__footer{ border-top:1px solid var(--lux-border); }
 html[data-theme="light"] .modal-backdrop::before{ background: radial-gradient(120% 120% at 50% -10%, rgba(210,182,138,.22), rgba(0,0,0,.35)); }
+
+html[data-theme="light"] [class~="z-[200]"] > .absolute.inset-0 {
+background: rgba(0, 0, 0, 0.38) !important;
+}
+html[data-theme="light"] [class~="z-[200]"] > .pointer-events-none {
+display: none !important;
+}
+html[data-theme="light"] [class~="z-[200]"] [class*="bg-[conic-gradient("] {
+background: conic-gradient(
+from 0deg at 50% 50%,
+var(--gold-50),
+var(--gold-100),
+var(--gold-300),
+var(--gold-400),
+var(--gold-50)
+) !important;
+}
+html[data-theme="light"]
+[class~="z-[200]"]
+[class*="border-cyan-400/20"][class*="bg-[#0b0f14]/90"] {
+background: #fff !important;
+border: 1px solid var(--lux-border) !important;
+box-shadow: var(--lux-shadow) !important;
+}
+html[data-theme="light"]
+[class~="z-[200]"]
+:is(.text-cyan-200, .text-cyan-100, .text-cyan-100\/85) {
+color: var(--lux-ink) !important;
+}
+html[data-theme="light"] [class~="z-[200]"] button {
+color: var(--lux-ink) !important;
+border: 1px solid var(--lux-border) !important;
+background: #fff !important;
+}
+html[data-theme="light"] [class~="z-[200]"] [class*="border-cyan-400/30"] {
+border-color: var(--lux-border) !important;
+}
+html[data-theme="light"]
+[class~="z-[200]"]
+[class*="border-cyan-400/40"][class*="bg-cyan-500/15"] {
+background: var(--gold-grad) !important;
+border-color: rgba(210, 182, 138, 0.5) !important;
+color: #2a1e05 !important;
+}

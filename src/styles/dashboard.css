@@ -1,0 +1,18 @@
+/* FILE: src/styles/dashboard.css */
+
+/* Ubah aksen cyan/blue → gold hanya di dashboard */
+html[data-theme="light"] .dashboard-root :is([class*="text-cyan-"], [class*="text-blue-"], [class*="text-indigo-"]){
+  color: var(--lux-ink) !important;
+}
+html[data-theme="light"] .dashboard-root :is([class*="border-cyan-"], [class*="border-blue-"]){
+  border-color: var(--lux-border) !important;
+}
+html[data-theme="light"] .dashboard-root :is([class*="bg-cyan-"], [class*="bg-blue-"]){
+  background: #fff !important;
+}
+
+/* garis dekoratif, progress bar, dsb. */
+html[data-theme="light"] .dashboard-root [class~="h-[1px]"],
+html[data-theme="light"] .dashboard-root [class~="h-[2px]"]{
+  background: var(--gold-grad) !important;
+}

@@ -20,16 +20,294 @@ header {
   border-bottom: 1px solid var(--border);
 }
 
-/* Decorative (dark) */
-.glow { text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff88, 0 0 40px #00ffff44; }
-.holo-panel {
-  backdrop-filter: blur(10px) saturate(1.5);
-  background: linear-gradient(150deg, rgba(255,255,255,.9), rgba(240,240,255,.1));
-  border: 1px solid rgba(255,255,255,.25);
-  box-shadow: 0 0 60px rgba(0,255,255,.15), 0 0 100px rgba(255,0,255,.1);
+/* Scrollbar (dark) */
+::-webkit-scrollbar {
+width: 8px;
 }
-.glitchy { animation: rgbshift 2s infinite linear; }
-.glitch { position: relative; text-shadow: 0 0 4px #00ffff, 0 0 8px #00ffff; }
-.glitch::before, .glitch::after { content: attr(data-text); position: absolute; left:0; width:100%; clip: rect(0, 0, 0, 0); }
-.glitch::before { animation: glitchTop 2s infinite linear alternate-reverse; color:#ff00ff; }
-.glitch::after  { animation: glitchBottom 2s infinite linear alternate-reverse; color:#00ffff; }
+::-webkit-scrollbar-thumb {
+background: linear-gradient(180deg, #00b3ff, #b600ff);
+border-radius: 10px;
+}
+
+/* Decorative (dark) */
+@keyframes movegrid {
+from {
+background-position: 0 0;
+}
+to {
+background-position: 42px 42px;
+}
+}
+
+@keyframes sweep {
+0% {
+background-position: 0 -250px;
+}
+100% {
+background-position: 0 250px;
+}
+}
+
+@keyframes glitch {
+0%,
+100% {
+transform: translate(0, 0);
+opacity: 0.4;
+}
+20% {
+transform: translate(-2px, 2px);
+opacity: 0.6;
+}
+40% {
+transform: translate(2px, -2px);
+opacity: 0.3;
+}
+60% {
+transform: translate(-1px, 1px);
+opacity: 0.5;
+}
+80% {
+transform: translate(1px, -1px);
+opacity: 0.4;
+}
+}
+
+@keyframes scanmove {
+0% {
+background-position: 0 0;
+}
+100% {
+background-position: 0 100%;
+}
+}
+
+@keyframes pulse {
+0%,
+100% {
+opacity: 0;
+transform: scaleY(0.8);
+}
+50% {
+opacity: 1;
+transform: scaleY(1.2);
+}
+}
+
+@keyframes pulse_delay {
+0%,
+100% {
+opacity: 0;
+}
+25% {
+opacity: 1;
+}
+75% {
+opacity: 0.8;
+}
+}
+
+@keyframes gradientShift {
+0% {
+background-position: 0% 50%;
+}
+50% {
+background-position: 100% 50%;
+}
+100% {
+background-position: 0% 50%;
+}
+}
+
+@keyframes pulse-slow {
+0%,
+100% {
+opacity: 0.6;
+}
+50% {
+opacity: 0.9;
+}
+}
+
+@keyframes holo {
+from {
+filter: hue-rotate(0deg);
+}
+to {
+filter: hue-rotate(360deg);
+}
+}
+
+@keyframes cyanchange {
+0%,
+100% {
+background-position: 0% 50%;
+}
+50% {
+background-position: 100% 50%;
+}
+}
+
+@keyframes borderGlow {
+0%,
+100% {
+box-shadow: inset 0 0 12px rgba(0, 255, 255, 0.15),
+0 0 25px rgba(0, 255, 255, 0.2), 0 0 40px rgba(0, 255, 255, 0.15);
+}
+50% {
+box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.25),
+0 0 35px rgba(0, 255, 255, 0.3), 0 0 60px rgba(0, 255, 255, 0.25);
+}
+}
+
+@keyframes rgbshift {
+0%,
+100% {
+filter: none;
+}
+33% {
+filter: drop-shadow(2px 0 red);
+}
+66% {
+filter: drop-shadow(-2px 0 cyan);
+}
+}
+
+@keyframes shimmer {
+0% {
+background-position: -200% 0;
+}
+100% {
+background-position: 200% 0;
+}
+}
+
+@keyframes glitchTop {
+0%,
+100% {
+clip: rect(0, 9999px, 0, 0);
+}
+20% {
+clip: rect(0, 9999px, 10px, 0);
+}
+40% {
+clip: rect(0, 9999px, 5px, 0);
+}
+60% {
+clip: rect(0, 9999px, 8px, 0);
+}
+80% {
+clip: rect(0, 9999px, 3px, 0);
+}
+}
+
+@keyframes glitchBottom {
+0%,
+100% {
+clip: rect(0, 9999px, 0, 0);
+}
+20% {
+clip: rect(5px, 9999px, 10px, 0);
+}
+40% {
+clip: rect(3px, 9999px, 8px, 0);
+}
+60% {
+clip: rect(4px, 9999px, 6px, 0);
+}
+80% {
+clip: rect(2px, 9999px, 4px, 0);
+}
+}
+
+@keyframes borderSpin {
+to {
+transform: rotate(360deg);
+}
+}
+
+@keyframes float {
+0%,
+100% {
+transform: translate3d(0, 0, 0);
+}
+50% {
+transform: translate3d(0, -6px, 0);
+}
+}
+
+@keyframes scanlines {
+0% {
+background-position: 0 0;
+}
+100% {
+background-position: 0 100%;
+}
+}
+
+@keyframes glowline {
+0%,
+100% {
+background-position: 0% 50%;
+}
+50% {
+background-position: 100% 50%;
+}
+}
+
+/* Utility animation classes */
+.animate-pulse-slow {
+animation: pulse-slow 6s ease-in-out infinite;
+}
+
+/* Decorative (dark) */
+
+/* Text/Panel khusus (dark) */
+.glow {
+text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff88, 0 0 40px #00ffff44;
+}
+
+.holo-panel {
+backdrop-filter: blur(10px) saturate(1.5);
+background: linear-gradient(
+150deg,
+rgba(255, 255, 255, 0.9),
+rgba(240, 240, 255, 0.1)
+);
+border: 1px solid rgba(255, 255, 255, 0.25);
+box-shadow: 0 0 60px rgba(0, 255, 255, 0.15), 0 0 100px rgba(255, 0, 255, 0.1);
+}
+
+.glitchy {
+animation: rgbshift 2s infinite linear;
+}
+
+.shimmer {
+background: linear-gradient(90deg, #00ffff33 25%, #ffffff55 50%, #ff00ff33 75%);
+background-size: 200% 100%;
+-webkit-background-clip: text;
+background-clip: text;
+color: transparent;
+animation: shimmer 5s linear infinite;
+}
+
+.glitch {
+position: relative;
+text-shadow: 0 0 4px #00ffff, 0 0 8px #00ffff;
+}
+.glitch::before,
+.glitch::after {
+content: attr(data-text);
+position: absolute;
+left: 0;
+width: 100%;
+color: #00ffff;
+clip: rect(0, 0, 0, 0);
+}
+.glitch::before {
+animation: glitchTop 2s infinite linear alternate-reverse;
+color: #ff00ff;
+}
+.glitch::after {
+animation: glitchBottom 2s infinite linear alternate-reverse;
+color: #00ffff;
+}

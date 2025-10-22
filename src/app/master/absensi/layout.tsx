@@ -16,8 +16,8 @@ export default async function RootLayout({
   const s = await readServerSession();
 
   return (
-    <SessionProvider initialUser={s ?? null}>
-      <MainLayout>{children}</MainLayout>
-    </SessionProvider>
+      <SessionProvider initialUser={s ?? null}>
+        <MainLayout>{children}</MainLayout>
+      </SessionProvider>
   );
 }

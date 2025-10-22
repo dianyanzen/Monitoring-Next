@@ -1,10 +1,488 @@
 /* Utilitas ringan */
 @media (prefers-reduced-motion: no-preference) {
-  html[data-theme="light"] .pointer-events-none { opacity: .08 !important; }
+html[data-theme="light"] .pointer-events-none {
+opacity: 0.08 !important;
+}
 }
 
 /* Placeholder/inputs pada popover date-range (dark default, focus di light ada di overlays) */
-[data-drp-popover] .drp-input { background:#0e0e1c; border:1px solid rgba(148,163,184,.35); color:#f1f5f9;
-  transition: border-color .2s ease, box-shadow .2s ease; }
-[data-drp-popover] .drp-input:focus { border-color: rgba(34,211,238,.75); box-shadow: 0 0 0 2px rgba(34,211,238,.18); outline:none; }
-[data-drp-popover] .drp-input::placeholder { color: rgba(148,163,184,.6); }
+html[data-theme="light"] {
+--border: var(--lux-border);
+--shadow: var(--lux-shadow);
+}
+
+[data-drp-popover] .drp-input {
+  background: #0e0e1c;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  color: #f1f5f9;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+[data-drp-popover] .drp-input:focus {
+  border-color: rgba(34, 211, 238, 0.75);
+  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.18);
+  outline: none;
+}
+[data-drp-popover] .drp-input::placeholder {
+  color: rgba(148, 163, 184, 0.6);
+}
+
+
+/* ==========================================================
+   MONALISA â€” LIGHT HARD OVERRIDES
+   ========================================================== */
+:where(html[data-theme="light"], body.light) {
+--ink: #151823;
+--muted: #636b78;
+--border: rgba(20, 24, 33, 0.14);
+--gold-50: #fff8ea;
+--gold-100: #f5e7c8;
+--gold-300: #d7b773;
+--gold-400: #caa860;
+--gold-grad: linear-gradient(
+90deg,
+var(--gold-50),
+var(--gold-100) 35%,
+var(--gold-300) 72%,
+var(--gold-400)
+);
+
+main.flex-1
+> .relative.mt-5
+:is(
+[class*="drop-shadow-"],
+[class*="shadow-[0_0_"],
+[class*="shadow-["],
+[class*="animate-"],
+[class*="text-cyan-"],
+[class*="bg-cyan-"],
+[class*="border-cyan-"]
+) {
+box-shadow: none !important;
+text-shadow: none !important;
+animation: none !important;
+}
+
+main.flex-1
+> .relative.mt-5
+:is([class*="bg-[linear-gradient"], [class*="bg-[radial-gradient"]) {
+background: none !important;
+}
+
+body {
+background: #f7f4ee !important;
+color: var(--ink) !important;
+}
+
+main.flex-1 > .relative.mt-5 > .absolute.inset-0 {
+pointer-events: none;
+}
+
+main.flex-1 > .relative.mt-5 > .absolute.inset-0 > .absolute {
+background: radial-gradient(
+closest-side,
+rgba(210, 182, 138, 0.18),
+transparent
+) !important;
+filter: none !important;
+animation: none !important;
+}
+
+h1.text-3xl {
+color: var(--ink) !important;
+position: relative;
+}
+h1.text-3xl::after {
+content: "";
+position: absolute;
+left: 0;
+bottom: -8px;
+height: 3px;
+width: 220px;
+background: var(--gold-grad);
+border-radius: 999px;
+box-shadow: 0 4px 14px rgba(210, 182, 138, 0.25);
+}
+
+p.text-gray-400 {
+color: var(--muted) !important;
+}
+
+section.relative {
+background: #fff !important;
+color: var(--ink) !important;
+border: 1px solid var(--border) !important;
+box-shadow: 0 10px 28px rgba(20, 32, 51, 0.08) !important;
+}
+
+section.relative > .absolute[aria-hidden="true"],
+section.relative > .absolute.pointer-events-none {
+display: none !important;
+}
+
+[class*="bg-[#0a0f14]"],
+[class*="bg-[#0d151b]"],
+[class*="bg-[#0f1720]"],
+[class*="bg-[#0a1116]"] {
+background: #fff !important;
+border-color: var(--border) !important;
+}
+
+:is(.text-white, .text-cyan-50, .text-cyan-100, .text-cyan-200) {
+color: var(--ink) !important;
+}
+
+h2,
+h3,
+h4 {
+color: var(--ink) !important;
+}
+
+:is(.text-xs, .text-sm) {
+color: var(--muted) !important;
+}
+
+main.flex-1 i,
+main.flex-1 svg {
+color: var(--gold-300) !important;
+}
+
+html[data-theme="light"]
+[class*="h-2.5"][class*="w-full"][class*="rounded-full"] {
+background: #f3f5f8 !important;
+border: 1px solid var(--border) !important;
+}
+
+html[data-theme="light"]
+[class*="h-2.5"][class*="w-full"][class*="rounded-full"]
+> [class*="h-full"] {
+background: var(--gold-grad) !important;
+box-shadow: none !important;
+filter: none !important;
+}
+
+.rounded-xl.p-4,
+.rounded-xl.p-5 {
+background: #fff !important;
+border: 1px solid var(--border) !important;
+box-shadow: 0 6px 18px rgba(20, 32, 51, 0.06) !important;
+}
+
+.text-3xl.font-extrabold,
+.text-2xl.font-bold {
+color: var(--lux-ink) !important;
+}
+
+table {
+background: #fff !important;
+border: 1px solid var(--border) !important;
+box-shadow: 0 8px 22px rgba(20, 32, 51, 0.06) !important;
+}
+
+thead {
+background: linear-gradient(180deg, #fffdf6, #fff8e6) !important;
+color: var(--ink) !important;
+border-bottom: 1px solid var(--border) !important;
+}
+
+tbody tr:hover {
+background: #fff8ec !important;
+}
+
+td,
+th {
+color: var(--ink) !important;
+}
+
+:is(h5, .text-cyan-300\/90, .text-cyan-200) {
+color: var(--muted) !important;
+}
+
+main.flex-1
+> .relative.mt-5
+section.relative
+.relative.overflow-hidden.rounded-xl.border {
+position: relative;
+z-index: 0;
+background: #fff !important;
+border-color: var(--border) !important;
+box-shadow: 0 10px 28px rgba(20, 32, 51, 0.08) !important;
+}
+
+main.flex-1
+> .relative.mt-5
+section.relative
+.relative.overflow-hidden.rounded-xl.border
+> .absolute.inset-0
+img {
+opacity: 0.45 !important;
+filter: grayscale(10%) contrast(95%);
+}
+
+main.flex-1
+> .relative.mt-5
+section.relative
+.relative.overflow-hidden.rounded-xl.border::after {
+content: "";
+position: absolute;
+inset: 0;
+z-index: 1;
+background: linear-gradient(
+180deg,
+rgba(255, 255, 255, 0.08) 0%,
+rgba(255, 255, 255, 0.45) 58%,
+rgba(255, 255, 255, 0.68) 100%
+);
+backdrop-filter: blur(1px);
+}
+
+main.flex-1
+> .relative.mt-5
+section.relative
+.relative.overflow-hidden.rounded-xl.border
+> .relative.p-6.text-center {
+position: relative;
+z-index: 2;
+color: var(--ink) !important;
+}
+
+main.flex-1
+> .relative.mt-5
+section.relative
+.relative.overflow-hidden.rounded-xl.border
+code {
+background: #fff4dc !important;
+border: 1px solid #ead9b4 !important;
+color: #6b5200 !important;
+}
+}
+
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section.relative {
+  position: relative;
+  background: #ffffff !important;
+  border: 1px solid #e8d9b8 !important;
+  border: 1px solid color-mix(in oklab, var(--gold-300), #fff 50%) !important;
+  box-shadow: 0 12px 28px rgba(20, 32, 51, 0.1) !important;
+}
+
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section.relative::before {
+  content: none;
+}
+
+html[data-theme="light"] main.flex-1
+> .relative.mt-5
+section.relative
+:is(.rounded-xl.border, .rounded-2xl.border) {
+  position: relative;
+  background: #ffffff !important;
+  border-color: #e8d9b8 !important;
+  border-color: color-mix(in oklab, var(--gold-300), #fff 55%) !important;
+  box-shadow: 0 10px 26px rgba(210, 182, 138, 0.15) !important;
+  color: var(--ink) !important;
+}
+
+html[data-theme="light"] main.flex-1
+> .relative.mt-5
+section.relative
+:is(.rounded-xl.border, .rounded-2xl.border)::after {
+  content: none;
+}
+
+html[data-theme="light"] main.flex-1
+> .relative.mt-5
+section.relative
+:is(.rounded-xl.border, .rounded-2xl.border)
+:is(h3, h4, h5, .font-semibold) {
+  color: var(--lux-ink) !important;
+  font-weight: 700 !important;
+}
+
+html[data-theme="light"] main.flex-1
+> .relative.mt-5
+section.relative
+[class*="text-cyan-"] {
+  color: #3f475d !important;
+  color: color-mix(in oklab, var(--lux-ink), #8793a5 24%) !important;
+}
+
+html[data-theme="light"] main.flex-1
+> .relative.mt-5
+section.relative
+b {
+  color: var(--lux-ink) !important;
+  font-weight: 700 !important;
+}
+
+html[data-theme="light"] main.flex-1
+> .relative.mt-5
+section.relative
+span.text-xs {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #5b6476 !important;
+  color: color-mix(in oklab, var(--lux-ink), #8b97a9 30%) !important;
+}
+
+html[data-theme="light"] main.flex-1
+> .relative.mt-5
+section.relative
+[class*="h-2.5"][class*="w-full"][class*="rounded-full"] {
+  background: #f0f3f7 !important;
+  border: 1px solid #eddcb9 !important;
+  border: 1px solid color-mix(in oklab, var(--gold-300), #fff 65%) !important;
+}
+
+html[data-theme="light"] main.flex-1
+> .relative.mt-5
+section.relative
+[class*="h-2.5"][class*="w-full"][class*="rounded-full"]
+> [class*="h-full"] {
+  background: var(--accent-grad-strong) !important;
+  box-shadow: 0 8px 20px rgba(210, 182, 138, 0.28) !important;
+  filter: none !important;
+}
+
+/* ===== Sidebar (LIGHT) â€“ ganti cyan/pink â†’ emas ===== */
+
+/* Leaf (link) default */
+html[data-theme="light"] aside.w-80 a[class*="px-3"] {
+  background: #fff !important;
+  color: var(--lux-muted) !important;
+  border: 1px solid color-mix(in oklab, var(--gold-300), #fff 58%) !important;
+  box-shadow: none !important;
+}
+
+/* Leaf (link) hover */
+html[data-theme="light"] aside.w-80 a[class*="px-3"]:hover {
+  background: #fff8ec !important;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
+  color: var(--lux-ink) !important;
+}
+
+/* Leaf (AKTIF) â€“ emas menyala */
+html[data-theme="light"] aside.w-80 a[aria-current="page"] {
+  background: var(--gold-grad) !important;
+  color: #2a1e05 !important; /* readable on gold */
+  border-color: color-mix(in oklab, var(--gold-400), #fff 35%) !important;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--gold-400), #fff 30%),
+    0 10px 22px rgba(201, 164, 92, 0.22) !important;
+}
+
+/* Leaf disabled (#) */
+html[data-theme="light"] aside.w-80 div[aria-disabled="true"][class*="px-3"] {
+  background: #fff !important;
+  color: color-mix(in oklab, var(--lux-muted), #999 15%) !important;
+  border: 1px solid color-mix(in oklab, var(--gold-300), #fff 55%) !important;
+}
+
+/* Parent button (default) */
+html[data-theme="light"] aside.w-80 button[aria-expanded] {
+  background: #fff !important;
+  color: var(--lux-ink) !important;
+  border: 1px solid color-mix(in oklab, var(--gold-300), #fff 50%) !important;
+  box-shadow: var(--lux-shadow) !important;
+}
+
+/* Parent button hover */
+html[data-theme="light"] aside.w-80 button[aria-expanded]:hover {
+  background: #fff8ec !important;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
+}
+
+/* Parent button (OPEN) â€“ aksen emas */
+html[data-theme="light"] aside.w-80 button[aria-expanded="true"] {
+  background: #fffdf6 !important;
+  border-color: color-mix(in oklab, var(--gold-400), #fff 40%) !important;
+  box-shadow:
+    inset 3px 0 0 0 color-mix(in oklab, var(--gold-400), #fff 28%),
+    0 10px 22px rgba(201, 164, 92, 0.16) !important;
+}
+
+/* Dot indikator kanan pada parent (OPEN/CLOSE) */
+html[data-theme="light"] aside.w-80 button[aria-expanded] .w-2.h-2 {
+  background: color-mix(in oklab, var(--gold-400), #fff 25%) !important;
+  box-shadow: 0 0 6px rgba(210, 182, 138, 0.55) !important;
+}
+html[data-theme="light"] aside.w-80 button[aria-expanded="true"] .w-2.h-2 {
+  background: var(--gold-300) !important;
+  box-shadow: 0 0 10px rgba(210, 182, 138, 0.75) !important;
+}
+
+/* Warna ikon ikut emas saat aktif/expanded */
+html[data-theme="light"] aside.w-80 a[aria-current="page"] i,
+html[data-theme="light"] aside.w-80 button[aria-expanded="true"] i {
+  color: #223254 !important; /* sedikit lebih gelap agar kontras */
+  stroke: #223254 !important;
+}
+
+/* ==== NiceAlert (hanya saat light theme) ==== */
+html[data-theme="light"] [class~="z-[200000]"] [role="dialog"]{
+  /* kartu putih + bayangan elegan + border netral */
+  background: #fff !important;
+  color: #1a1d21 !important;
+  border: 1px solid var(--lux-border, rgba(20,24,33,.14)) !important;
+  box-shadow: 0 10px 40px rgba(0,0,0,.08) !important;
+}
+
+/* garis neon di atas -> emas */
+html[data-theme="light"] [class~="z-[200000]"]
+.absolute.inset-x-0.-top-px.h-\[2px\]{
+  background: var(--gold-grad,
+    linear-gradient(135deg,#fff8e9,#f3e6c5 40%,#d7b773 68%,#d2b68a)) !important;
+  opacity: 1 !important;
+}
+
+/* backdrop sedikit lebih terang */
+html[data-theme="light"] [class~="z-[200000]"] .absolute.inset-0.bg-black\/60{
+  background: rgba(0,0,0,.35) !important;
+}
+
+/* tombol -> gradasi emas */
+html[data-theme="light"] [class~="z-[200000]"] button{
+  background: var(--gold-grad,
+    linear-gradient(135deg,#fff8e9,#f3e6c5 40%,#d7b773 68%,#d2b68a)) !important;
+  color: #2a1e05 !important;
+  border: 1px solid rgba(210,182,138,.50) !important;
+  box-shadow: 0 10px 22px rgba(210,182,138,.20) !important;
+}
+
+/* warna ikon default (supaya kebaca di putih) */
+html[data-theme="light"] [class~="z-[200000]"] svg.lucide{
+  color: #223254 !important;              /* stroke mengikuti color */
+  stroke: currentColor !important;
+  filter: none !important;                 /* matikan drop-shadow neon */
+}
+
+/* mapping warna ikon berdasarkan ring di card (tanpa ubah TSX) */
+html[data-theme="light"] [class~="z-[200000]"] [role="dialog"][class*="border-amber-"] svg.lucide{
+  color: #b45309 !important;               /* warning */
+}
+html[data-theme="light"] [class~="z-[200000]"] [role="dialog"][class*="border-rose-"] svg.lucide{
+  color: #b91c1c !important;               /* error */
+}
+html[data-theme="light"] [class~="z-[200000]"] [role="dialog"][class*="border-cyan-"] svg.lucide{
+  color: #059669 !important;               /* success -> hijau elegan */
+}
+
+/* (opsional) â€œbubbleâ€ lembut di belakang ikon TANPA ubah markup */
+html[data-theme="light"] [class~="z-[200000]"] [role="dialog"] .flex.flex-col.items-center.text-center{
+  position: relative;
+}
+html[data-theme="light"] [class~="z-[200000]"] [role="dialog"] .flex.flex-col.items-center.text-center::before{
+  content:"";
+  position:absolute;
+  left:50%; top:22px;                      /* posisikan tepat di belakang ikon */
+  width:56px; height:56px;
+  transform:translateX(-50%);
+  border-radius:9999px;
+  background: var(--gold-grad,
+    linear-gradient(135deg,#fff8e9,#f3e6c5 40%,#d7b773 68%,#d2b68a));
+  filter: blur(10px);
+  opacity:.7;
+  pointer-events:none;
+  z-index:0;
+}
+html[data-theme="light"] [class~="z-[200000]"] [role="dialog"] svg.lucide{
+  position: relative; z-index:1;           /* ikon di atas bubble */
+}

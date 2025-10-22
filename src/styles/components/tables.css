@@ -137,3 +137,31 @@ html[data-theme="light"] .dataTables_wrapper .dataTables_paginate .paginate_butt
   color:#2a1e05 !important;
   box-shadow: 0 10px 22px rgba(210,182,138,.18);
 }
+
+
+html[data-theme="light"] table {
+width: 100%;
+border-collapse: separate;
+border-spacing: 0;
+background: #fff !important;
+color: var(--lux-ink) !important;
+border: 1px solid var(--lux-border) !important;
+border-radius: 14px;
+overflow: hidden;
+box-shadow: var(--lux-shadow);
+}
+html[data-theme="light"] thead {
+background: linear-gradient(180deg, #fffdf6, #fff9e8) !important;
+color: #111827 !important;
+border-bottom: 1px solid var(--lux-border) !important;
+}
+html[data-theme="light"] tbody tr:hover {
+background: #fff8ec !important;
+}
+html[data-theme="light"] tfoot {
+background: #fffdfa !important;
+border-top: 1px solid var(--lux-border) !important;
+}
+html[data-theme="light"] table :is(th, td) {
+color: var(--lux-ink) !important;
+}

@@ -23,6 +23,7 @@ import "../styles/components/charts.css";
 import "../styles/components/sticky-table.css";
 import "../styles/components/badges.css";
 import "../styles/components/progress.css";
+import "../styles/components/daterange.css";
 
 // Batch 4
 import "../styles/components/topbar.css";

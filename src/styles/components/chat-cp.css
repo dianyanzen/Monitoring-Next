@@ -10,19 +10,305 @@ html[data-theme="light"] .cp > .pointer-events-none [class*="bg-blue-"] {
   background: linear-gradient(180deg, rgba(210,182,138,.24), transparent 68%) !important; opacity: .45 !important;
 }
 
+/* --------------------------------------------------------------------------
+13) Panel Setting (kanan) â€“ khusus halaman Setting
+-------------------------------------------------------------------------- */
+html[data-theme="light"]
+section.rounded-2xl.border[class*="border-cyan-"][class*="shadow-[0_0_16px_#ff00ff22_inset]"] {
+background: var(--lux-surface) !important;
+border-color: var(--lux-border) !important;
+box-shadow: var(--lux-shadow) !important;
+}
+html[data-theme="light"]
+section.rounded-2xl.border[class*="border-cyan-"][class*="shadow-[0_0_16px_#ff00ff22_inset]"]
+:is(h2, .lucide, svg) {
+color: var(--lux-ink) !important;
+stroke: var(--lux-ink) !important;
+}
+html[data-theme="light"]
+section.rounded-2xl.border[class*="border-cyan-"][class*="shadow-[0_0_16px_#ff00ff22_inset]"]
+.my-3.h-px {
+background: var(--lux-border) !important;
+}
+
+html[data-theme="light"]
+section.rounded-2xl.border[class*="border-cyan-"][class*="shadow-[0_0_16px_#ff00ff22_inset]"]
+input[type="password"] {
+background: #fff !important;
+color: var(--lux-ink) !important;
+border: 1px solid var(--lux-border) !important;
+border-radius: 12px !important;
+box-shadow: 0 1px 0 #fff inset;
+}
+html[data-theme="light"]
+section.rounded-2xl.border[class*="border-cyan-"][class*="shadow-[0_0_16px_#ff00ff22_inset]"]
+input[type="password"]:focus {
+outline: none !important;
+box-shadow: 0 0 0 3px rgba(210, 182, 138, 0.28) !important;
+border-color: #e6d39a !important;
+}
+html[data-theme="light"]
+section.rounded-2xl.border[class*="border-cyan-"][class*="shadow-[0_0_16px_#ff00ff22_inset]"]
+.pt-4
+> button {
+background: var(--gold-grad) !important;
+color: #2a1e05 !important;
+border: 1px solid color-mix(in oklab, var(--gold-400), #fff 25%) !important;
+border-radius: 0.75rem !important;
+box-shadow: 0 8px 24px rgba(201, 164, 92, 0.18) !important;
+}
+
+/* --------------------------------------------------------------------------
+15) Chat (cp) â€“ Luxe conversation suite
+-------------------------------------------------------------------------- */
+html[data-theme="light"] .cp {
+  color: var(--lux-ink) !important;
+  --cp-rail: var(--lux-line-strong) !important;
+  --cp-rail-v: linear-gradient(
+    180deg,
+    rgba(210, 182, 138, 0.58),
+    rgba(210, 182, 138, 0.12),
+    transparent
+  ) !important;
+  --cp-ring: radial-gradient(
+    circle at 40% 40%,
+    rgba(210, 182, 138, 0.6),
+    rgba(210, 182, 138, 0.08)
+  ) !important;
+}
+
+html[data-theme="light"] .cp > .pointer-events-none [class*="bg-cyan-"],
+html[data-theme="light"] .cp > .pointer-events-none [class*="bg-fuchsia-"] {
+  background: radial-gradient(
+    circle,
+    rgba(210, 182, 138, 0.24),
+    transparent 68%
+  ) !important;
+  opacity: 0.45 !important;
+}
+
 html[data-theme="light"] .cp section.rounded-2xl.border[class*="border-cyan-"][class*="shadow-"] {
-  background: var(--lux-surface) !important; border:1px solid var(--lux-border) !important; box-shadow: var(--lux-shadow) !important;
+  background: var(--lux-surface) !important;
+  border: 1px solid var(--lux-border) !important;
+  box-shadow: var(--lux-shadow) !important;
 }
+
 html[data-theme="light"] .cp :is(aside.rounded-xl, section.rounded-xl)[class*="border-cyan-"] {
-  background:#fff !important; border:1px solid color-mix(in oklab, var(--lux-border), #d6dfeb 18%) !important; box-shadow: var(--lux-shadow) !important; color: var(--lux-ink) !important;
+  background: #fff !important;
+  border: 1px solid color-mix(in oklab, var(--lux-border), #d6dfeb 18%) !important;
+  box-shadow: var(--lux-shadow) !important;
+  color: var(--lux-ink) !important;
 }
+
 html[data-theme="light"] .cp section > header {
   background: color-mix(in oklab, var(--lux-surface), #fff 12%) !important;
   border-bottom: 1px solid color-mix(in oklab, var(--lux-border), var(--gold-300) 22%) !important;
   box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.6) !important;
 }
-html[data-theme="light"] .cp section > header::after { background: var(--lux-line-strong) !important; filter: drop-shadow(0 0 14px rgba(210,182,138,.45)) !important; }
-html[data-theme="light"] .cp section > header.energize::after { filter: drop-shadow(0 0 18px rgba(210,182,138,.6)) !important; }
 
-/* FAB */
-html[data-theme="light"] .cp .cp-fab { background: var(--accent-grad) !important; color: var(--accent-ink) !important; box-shadow: 0 16px 36px rgba(210,182,138,.26) !important; }
+html[data-theme="light"] .cp section > header::after {
+  background: var(--lux-line-strong) !important;
+  filter: drop-shadow(0 0 14px rgba(210, 182, 138, 0.45)) !important;
+}
+
+html[data-theme="light"] .cp section > header.energize::after {
+  filter: drop-shadow(0 0 18px rgba(210, 182, 138, 0.6)) !important;
+}
+
+html[data-theme="light"] .cp section > header :is(h1, h3, p, span, svg) {
+  color: var(--lux-ink) !important;
+  stroke: currentColor !important;
+}
+
+html[data-theme="light"] .cp section > header span[class*="bg-cyan-"] {
+  background: color-mix(in oklab, var(--gold-300), #fff 30%) !important;
+  box-shadow: 0 0 14px rgba(210, 182, 138, 0.45) !important;
+}
+
+html[data-theme="light"] .cp .cp-scroll {
+  scrollbar-color: rgba(210, 182, 138, 0.45) transparent !important;
+}
+html[data-theme="light"] .cp .cp-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--gold-200), #fff 18%),
+    color-mix(in oklab, var(--gold-400), #fff 10%)
+  ) !important;
+  border-radius: 999px !important;
+  border: 2px solid transparent !important;
+  background-clip: padding-box !important;
+}
+
+html[data-theme="light"] #chat-search {
+  background: #ffffff !important;
+  border: 1px solid #e4d3b1 !important;
+  border: 1px solid color-mix(in oklab, var(--gold-300), #fff 55%) !important;
+  color: var(--lux-ink) !important;
+  padding-left: 2.75rem !important;
+  box-shadow: 0 1px 0 #fff inset !important;
+}
+html[data-theme="light"] #chat-search::placeholder {
+  color: color-mix(in oklab, var(--lux-muted), #a0a8b5 28%) !important;
+}
+html[data-theme="light"] #chat-search + svg {
+  color: #8f98ac !important;
+  stroke: currentColor !important;
+  opacity: 0.8 !important;
+}
+
+html[data-theme="light"] .cp .avatar-ring {
+  padding: 3px !important;
+  border-radius: 9999px !important;
+  background: linear-gradient(135deg, var(--gold-50), var(--gold-300)) !important;
+}
+html[data-theme="light"] .cp .avatar-ring img {
+  border-color: color-mix(in oklab, var(--lux-border), #fff 55%) !important;
+  box-shadow: 0 4px 12px rgba(20, 32, 51, 0.08) !important;
+}
+
+html[data-theme="light"] .cp .notiv_mini {
+  background: color-mix(in oklab, var(--gold-300), #fff 22%) !important;
+  color: var(--accent-ink) !important;
+  box-shadow: 0 0 12px rgba(210, 182, 138, 0.32) !important;
+}
+
+html[data-theme="light"] .cp aside button {
+  color: var(--lux-ink) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 0.75rem !important;
+  min-height: 56px !important;
+  border-radius: 14px !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  line-height: 1.3 !important;
+}
+html[data-theme="light"] .cp aside button:hover {
+  background: #fdf6e9 !important;
+  background: color-mix(in oklab, var(--gold-50), #fff 72%) !important;
+  border-color: #e8d7b3 !important;
+  border-color: color-mix(in oklab, var(--gold-300), #fff 58%) !important;
+  box-shadow: 0 12px 26px rgba(20, 32, 51, 0.12) !important;
+}
+html[data-theme="light"] .cp .contact-selected {
+  background: #fdf5ea !important;
+  background: color-mix(in oklab, var(--gold-50), #fff 55%) !important;
+  border-color: #e6d4ae !important;
+  border-color: color-mix(in oklab, var(--gold-300), #fff 45%) !important;
+  box-shadow: 0 12px 30px rgba(210, 182, 138, 0.26) !important;
+}
+html[data-theme="light"] .cp .contact-selected::after {
+  background: var(--lux-line-strong) !important;
+  filter: drop-shadow(0 0 16px rgba(210, 182, 138, 0.35)) !important;
+}
+
+html[data-theme="light"] .cp .cp-input {
+  background: #fff !important;
+  color: var(--lux-ink) !important;
+  border: 1px solid #e4d3b1 !important;
+  border: 1px solid color-mix(in oklab, var(--lux-border), var(--gold-300) 18%) !important;
+  box-shadow: 0 1px 0 #fff inset !important;
+}
+html[data-theme="light"] .cp .cp-input:focus {
+  box-shadow: 0 0 0 3px rgba(210, 182, 138, 0.24) !important;
+  border-color: #e4d3b1 !important;
+  border-color: color-mix(in oklab, var(--gold-300), #fff 15%) !important;
+}
+html[data-theme="light"] .cp .cp-input::placeholder {
+  color: color-mix(in oklab, var(--lux-muted), #a0a8b5 26%) !important;
+}
+
+html[data-theme="light"] .cp .cp-btn {
+  background: var(--accent-grad) !important;
+  color: var(--accent-ink) !important;
+  border: 1px solid #e3cfa4 !important;
+  border: 1px solid color-mix(in oklab, var(--gold-300), #fff 42%) !important;
+  box-shadow: 0 14px 32px rgba(210, 182, 138, 0.24) !important;
+}
+html[data-theme="light"] .cp .cp-btn::after {
+  box-shadow: 0 0 24px rgba(210, 182, 138, 0.32),
+    0 0 0 1px rgba(255, 255, 255, 0.55) inset !important;
+}
+html[data-theme="light"] .cp .cp-btn:not(:disabled):hover {
+  filter: saturate(1.06) brightness(1.05) !important;
+}
+
+html[data-theme="light"] .cp .msg-bubble {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(247, 244, 238, 0.92)
+  ) !important;
+  border: 1px solid color-mix(in oklab, var(--lux-border), #fff 18%) !important;
+  box-shadow: 0 12px 30px rgba(20, 32, 51, 0.1) !important;
+}
+
+html[data-theme="light"] .cp .bubble-me {
+  background: linear-gradient(
+    180deg,
+    rgba(234, 210, 160, 0.75),
+    rgba(223, 189, 122, 0.55)
+  ) !important;
+  border-color: color-mix(in oklab, var(--gold-300), #fff 35%) !important;
+  box-shadow: 0 12px 32px rgba(210, 182, 138, 0.28) !important;
+}
+
+html[data-theme="light"] .cp .bubble-you {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(248, 246, 240, 0.9)
+  ) !important;
+  border-color: color-mix(in oklab, var(--lux-border), #fff 32%) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6) !important;
+}
+
+html[data-theme="light"] .cp .bubble-pulse {
+  animation: pulse-slow 2.6s ease-in-out infinite !important;
+  box-shadow: 0 0 26px rgba(210, 182, 138, 0.24) !important;
+}
+
+html[data-theme="light"] .cp .cp-fab {
+  background: var(--accent-grad) !important;
+  color: var(--accent-ink) !important;
+  box-shadow: 0 16px 36px rgba(210, 182, 138, 0.26) !important;
+}
+
+/* === NiceAlert @ light theme: jadikan ikon emas + bubble/coin === */
+html[data-theme="light"] [class~="z-[200000]"] svg.lucide {
+  color: #caa860 !important;          /* emas */
+  stroke: currentColor !important;     /* lucide pakai currentColor */
+  position: relative;
+  z-index: 0;
+  filter: none !important;             /* hilangkan glow cyan */
+  text-shadow: none !important;
+}
+
+/* bubble glow emas di belakang ikon */
+html[data-theme="light"] [class~="z-[200000]"] svg.lucide::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg,#fff8e9,#f3e6c5 40%,#d7b773 68%,#d2b68a);
+  filter: blur(8px);
+  opacity: .7;
+  z-index: -1;
+}
+
+/* coin putih agar ikon kontras */
+html[data-theme="light"] [class~="z-[200000]"] svg.lucide::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 1px solid rgba(20,24,33,.14); /* var(--lux-border) */
+  box-shadow: 0 10px 22px rgba(20,32,51,.08);
+  z-index: -1;
+}
+/* garis neon di atas kartu â†’ emas juga */
+html[data-theme="light"] [class~="z-[200000]"] [class~="-top-px"][class~="h-[2px]"] {
+  background: linear-gradient(135deg,#fff8e9,#f3e6c5 40%,#d7b773 68%,#d2b68a) !important;
+}

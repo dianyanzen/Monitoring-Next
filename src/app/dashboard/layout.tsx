@@ -17,11 +17,9 @@ export default async function DashboardLayout({
   const s = await readServerSession();
 
   return (
-    <main className="dashboard-root">
     <SessionProvider initialUser={s ?? null}>
       {/* Semua styling/scroll di-handle oleh client layout */}
       <DashboardLayoutClient>{children}</DashboardLayoutClient>
     </SessionProvider>
-    </main>
   );
 }

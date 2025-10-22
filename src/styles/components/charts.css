@@ -10,3 +10,9 @@ html[data-theme="light"] .chart-card{
   background:#fff; border:1px solid var(--lux-border); box-shadow: 0 12px 28px rgba(20,32,51,.08);
 }
 html[data-theme="light"] .chart-title{ color: var(--lux-ink); }
+
+html[data-theme="light"]
+:is(svg.lucide, .lucide, i, [class^="ti-"], [class*="fa-"]) {
+color: var(--lux-ink) !important;
+stroke: var(--lux-ink) !important;
+}
