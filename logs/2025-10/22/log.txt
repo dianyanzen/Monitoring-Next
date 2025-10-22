@@ -933,3 +933,30 @@
 [2025-10-22 16:01:19.818] [INFO] [DB] SELECT ok {"at":"DB","tookMs":15,"sql":"SELECT NVL(SUM(VAL),0) AS JML FROM VW_SIAK_DASHBOARD WHERE UPPER(ID) = 'GET_BLANGKO_OUT'","binds":{}}
 [2025-10-22 16:01:19.838] [INFO] [DB] SELECT ok {"at":"DB","tookMs":22,"sql":"SELECT TO_CHAR(MAX(CREATED_DT),'DD-MM-YYYY') AS DASHBOARD_DATE, TO_CHAR(MAX(CREATED_DT),'HH24:MI:SS') AS DASHBOARD_TIME, ROUND((SYSDATE - MAX(CREATED_DT)) * 24 * 60) AS DIFF_MINUTES FROM SIAK_DASHBOARD","binds":{}}
 [2025-10-22 16:01:19.842] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":63,"extra":{"count":0}}
+[2025-10-22 16:07:05.232] [INFO] [DB] SELECT ok {"at":"DB","tookMs":83,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-10-22 16:07:05.236] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":93,"extra":{"count":0}}
+[2025-10-22 16:07:05.755] [INFO] [DB] SELECT ok {"at":"DB","tookMs":7,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-10-22 16:07:05.760] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":30,"extra":{"count":0}}
+[2025-10-22 16:07:06.631] [INFO] [DB] SELECT ok {"at":"DB","tookMs":3,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-10-22 16:07:06.640] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":17,"extra":{"count":0}}
+[2025-10-22 16:07:06.921] [INFO] [DB] SELECT ok {"at":"DB","tookMs":5,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-10-22 16:07:06.929] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":15,"extra":{"count":0}}
+[2025-10-22 16:07:07.638] [INFO] [DB] SELECT ok {"at":"DB","tookMs":2,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-10-22 16:07:07.641] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":18,"extra":{"count":0}}
+[2025-10-22 16:07:08.619] [INFO] [DB] SELECT ok {"at":"DB","tookMs":9,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-10-22 16:07:08.627] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":19,"extra":{"count":0}}
+[2025-10-22 16:07:08.947] [INFO] [DB] SELECT ok {"at":"DB","tookMs":3,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-10-22 16:07:08.975] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":34,"extra":{"count":0}}
+[2025-10-22 16:07:09.349] [INFO] [DB] SELECT ok {"at":"DB","tookMs":17,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-10-22 16:07:09.386] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":62,"extra":{"count":0}}
+[2025-10-22 16:07:10.119] [INFO] [DB] SELECT ok {"at":"DB","tookMs":8,"sql":"SELECT NVL(SUM(VAL),0) AS JML FROM VW_SIAK_DASHBOARD WHERE UPPER(ID) = 'GET_PEREKAMAN'","binds":{}}
+[2025-10-22 16:07:10.142] [INFO] [DB] SELECT ok {"at":"DB","tookMs":7,"sql":"SELECT NVL(SUM(VAL),0) AS JML FROM VW_SIAK_DASHBOARD WHERE UPPER(ID) = 'GET_SISA_SUKET'","binds":{}}
+[2025-10-22 16:07:10.189] [INFO] [DB] SELECT ok {"at":"DB","tookMs":6,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-10-22 16:07:10.195] [INFO] [DB] SELECT ok {"at":"DB","tookMs":79,"sql":"WITH LUDO AS ( SELECT (AMBIL - RUSAK - PENGEMBALIAN) AS CETAK_LUDO FROM SIAK_MONEV_BLANGKO_LUDO WHERE TRUNC(TANGGAL) = TRUNC(SYSDATE) FETCH FIRST 1 ROWS ONLY ) SELECT NVL(B.VAL,0) + NVL((SELECT CETAK_LUDO FROM LUDO),0) AS JML FROM VW_SIAK_DASHBOARD B WHERE UPPER(B.ID) = 'GET_PENCETAKAN_KTP'","binds":{}}
+[2025-10-22 16:07:10.214] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":35,"extra":{"count":0}}
+[2025-10-22 16:07:10.409] [INFO] [DB] SELECT ok {"at":"DB","tookMs":268,"sql":"SELECT NVL(SUM(VAL),0) AS JML FROM VW_SIAK_DASHBOARD WHERE UPPER(ID) = 'GET_PRR'","binds":{}}
+[2025-10-22 16:07:10.632] [INFO] [DB] SELECT ok {"at":"DB","tookMs":485,"sql":"SELECT NVL(SUM(VAL),0) AS JML FROM VW_SIAK_DASHBOARD WHERE UPPER(ID) = 'GET_SFE'","binds":{}}
+[2025-10-22 16:07:10.912] [INFO] [DB] SELECT ok {"at":"DB","tookMs":9,"sql":"SELECT NVL(SUM(VAL),0) AS JML FROM VW_SIAK_DASHBOARD WHERE UPPER(ID) = 'GET_BLANGKO_SISA'","binds":{}}
+[2025-10-22 16:07:10.913] [INFO] [DB] SELECT ok {"at":"DB","tookMs":7,"sql":"SELECT NVL(SUM(VAL),0) AS JML FROM VW_SIAK_DASHBOARD WHERE UPPER(ID) = 'GET_DUPLICATE'","binds":{}}
+[2025-10-22 16:07:10.922] [INFO] [DB] SELECT ok {"at":"DB","tookMs":10,"sql":"SELECT NVL(SUM(VAL),0) AS JML FROM VW_SIAK_DASHBOARD WHERE UPPER(ID) = 'GET_BLANGKO_OUT'","binds":{}}
+[2025-10-22 16:07:10.934] [INFO] [DB] SELECT ok {"at":"DB","tookMs":6,"sql":"SELECT TO_CHAR(MAX(CREATED_DT),'DD-MM-YYYY') AS DASHBOARD_DATE, TO_CHAR(MAX(CREATED_DT),'HH24:MI:SS') AS DASHBOARD_TIME, ROUND((SYSDATE - MAX(CREATED_DT)) * 24 * 60) AS DIFF_MINUTES FROM SIAK_DASHBOARD","binds":{}}
