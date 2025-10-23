@@ -1,0 +1,62 @@
+/* FILE: src/styles/components/select-dark.css */
+
+/* Berlaku hanya di dark (default). Light tidak kena. */
+html:not([data-theme="light"]) select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  background:
+    linear-gradient(180deg, #121523 0%, #0b0f1a 100%); /* panel gelap glossy */
+  color: #e6f6ff;                                       /* cyan-100-ish */
+  border: 1px solid rgba(56, 189, 248, .35);            /* cyan-400/35 */
+  border-radius: 12px;
+  padding: .625rem .875rem;
+  padding-right: 2.25rem;                                /* ruang icon */
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 6px 20px rgba(0,0,0,.35);
+  outline: none;
+  transition: border-color .2s ease, box-shadow .25s ease, background-color .25s ease;
+
+  /* Icon caret emas (inline SVG) */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='%23d2b68a' viewBox='0 0 20 20'><path d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z'/></svg>");
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  background-position: right .7rem center;
+}
+
+/* Hover/Focus glow ringan supaya terasa “neon” */
+html:not([data-theme="light"]) select:hover {
+  border-color: rgba(56, 189, 248, .55);
+}
+html:not([data-theme="light"]) select:focus {
+  border-color: #22d3ee;                                 /* cyan-300 */
+  box-shadow:
+    0 0 0 3px rgba(34, 211, 238, .20),
+    0 10px 28px rgba(0, 255, 204, .10);
+}
+
+/* Placeholder/option “-- Pilih … --” biasanya value kosong */
+html:not([data-theme="light"]) select:has(option[value=""]:checked) {
+  color: rgba(230, 246, 255, .70);
+}
+
+/* Panel options (dukungan tergantung browser, Chrome oke) */
+html:not([data-theme="light"]) select option {
+  background: #0f1422;           /* panel daftar */
+  color: #e2e8f0;
+}
+html:not([data-theme="light"]) select option:checked {
+  background: #0b1020;           /* item aktif */
+  color: #fee8b0;                 /* sentuhan gold */
+}
+
+/* Disabled */
+html:not([data-theme="light"]) select:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+/* Hilangkan chevron default IE lama (kalau ada) */
+html:not([data-theme="light"]) select::-ms-expand { display: none; }

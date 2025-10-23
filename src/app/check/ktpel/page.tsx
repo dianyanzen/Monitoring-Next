@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { KeyboardEvent, ClipboardEvent } from "react";
 import { AlertTriangle, Download, ExternalLink, Loader2, RefreshCcw, Search, Trash2 } from "lucide-react";
 import { useSession } from "@/contexts/session";
+import SelectDark from "@/components/ui/SelectDark";
 
 type Mode = "rekam" | "hist" | "wktp";
 
@@ -718,42 +719,41 @@ export default function KtpelPage() {
   function renderCommonFilters(mode: Mode) {
     const kecOptions = mergeOptions(kecamatanOptions, allowSelectKecamatan, "-- Pilih Kecamatan --");
     const kelOptions = mergeOptions(currentKelurahanOptions, allowSelectKelurahan, "-- Pilih Kelurahan --");
+    const kecId = `select-kec-${mode}`;
+    const kelId = `select-kel-${mode}`;
     return (
       <div className="space-y-4" onKeyDown={(event) => handleFilterEnter(event, mode)}>
         <div className="grid gap-4 md:grid-cols-4">
           <div className="space-y-1">
-            <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
+            <label htmlFor={kecId} className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
               Kecamatan
             </label>
-            <select
+            <SelectDark
+              id={kecId}
               value={filters[mode].noKec}
-              onChange={(event) => handleKecamatanChange(mode, event.target.value)}
+              onChange={(e) => handleKecamatanChange(mode, e.target.value)}
               disabled={!allowSelectKecamatan || metaLoading}
-              className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {kecOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
-            </select>
+            </SelectDark>
           </div>
+
           <div className="space-y-1">
-            <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
+            <label htmlFor={kelId} className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
               Kelurahan
             </label>
-            <select
+            <SelectDark
+              id={kelId}
               value={filters[mode].noKel}
-              onChange={(event) => updateFilter(mode, { noKel: event.target.value })}
+              onChange={(e) => updateFilter(mode, { noKel: e.target.value })}
               disabled={!allowSelectKelurahan || filters[mode].noKec === "0" || kelurahanLoadingKey === filters[mode].noKec}
-              className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {kelOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
-            </select>
+            </SelectDark>
           </div>
           <div className="space-y-1">
             <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
@@ -823,38 +823,35 @@ export default function KtpelPage() {
       <div className="space-y-4" onKeyDown={(event) => handleFilterEnter(event, "wktp")}>
         <div className="grid gap-4 md:grid-cols-4">
           <div className="space-y-1">
-            <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
+            <label htmlFor="select-kec-wktp" className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
               Kecamatan
             </label>
-            <select
+            <SelectDark
+              id="select-kec-wktp"
               value={filters.wktp.noKec}
-              onChange={(event) => handleKecamatanChange("wktp", event.target.value)}
+              onChange={(e) => handleKecamatanChange("wktp", e.target.value)}
               disabled={metaLoading}
-              className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
             >
               {kecOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
-            </select>
+            </SelectDark>
           </div>
+
           <div className="space-y-1">
-            <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
+            <label htmlFor="select-kel-wktp" className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
               Kelurahan
             </label>
-            <select
+            <SelectDark
+              id="select-kel-wktp"
               value={filters.wktp.noKel}
-              onChange={(event) => updateFilter("wktp", { noKel: event.target.value })}
+              onChange={(e) => updateFilter("wktp", { noKel: e.target.value })}
               disabled={filters.wktp.noKec === "0" || kelurahanLoadingKey === filters.wktp.noKec}
-              className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
             >
               {kelOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
-            </select>
+            </SelectDark>
           </div>
           <div className="space-y-1">
             <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">

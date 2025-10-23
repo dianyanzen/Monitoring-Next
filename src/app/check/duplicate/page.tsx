@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { AlertTriangle, Calendar, Download, Loader2, RefreshCcw, Search, Trash2 } from "lucide-react";
 import { useSession } from "@/contexts/session";
+import SelectDark from "@/components/ui/SelectDark";
 
 /* ======================== Types ======================== */
 
@@ -593,27 +594,36 @@ export default function DuplicatePage() {
           </div>
 
           <div className="space-y-1">
-            <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">Kecamatan</label>
-            <select
+            <label
+              htmlFor="select-kecamatan"
+              className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70"
+            >
+              Kecamatan
+            </label>
+            <SelectDark
+              id="select-kecamatan"
               value={filters.noKec}
               onChange={(e) => handleKecamatanChange(e.target.value)}
               disabled={metaLoading || !allowSelectKecamatan}
-              className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
             >
-                          <option value="0">-- Pilih Kecamatan --</option>
+              <option value="0">-- Pilih Kecamatan --</option>
               {kecamatanOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
                 </option>
               ))}
-            </select>
+            </SelectDark>
           </div>
 
           <div className="space-y-1">
-            <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
+            <label
+              htmlFor="select-kelurahan"
+              className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70"
+            >
               Kelurahan
             </label>
-            <select
+            <SelectDark
+              id="select-kelurahan"
               value={filters.noKel}
               onChange={(e) => updateFilter({ noKel: e.target.value })}
               disabled={
@@ -621,7 +631,6 @@ export default function DuplicatePage() {
                 kelurahanLoadingKey === filters.noKec ||
                 !allowSelectKelurahan
               }
-              className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <option value="0">-- Pilih Kelurahan --</option>
               {currentKelurahanOptions.map((opt) => (
@@ -629,7 +638,7 @@ export default function DuplicatePage() {
                   {opt.label}
                 </option>
               ))}
-            </select>
+            </SelectDark>
           </div>
 
           <div className="space-y-1">

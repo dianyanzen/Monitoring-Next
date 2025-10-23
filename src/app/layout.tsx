@@ -34,6 +34,8 @@ import "../styles/print.css"; // global agar semua halaman punya mode cetak
 import "../styles/components/modal.css";
 import "../styles/components/toast.css";
 import "../styles/components/forms-states.css";
+import "../styles/components/select-dark.css"; // setelah theme-dark.css & sebelum theme-light.css tidak masalah, tapi idealnya setelah keduanya
+
 
 import type { Metadata } from "next";
 
