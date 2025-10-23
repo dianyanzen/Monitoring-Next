@@ -101,7 +101,7 @@ export default function userrekamPage() {
         {/* Toolbar */}
         <div className="px-5 pt-4 pb-2">
           <div className="flex flex-col gap-3 lg:grid lg:grid-cols-[auto_1fr_auto] lg:items-center">
-            <label className="inline-flex items-center gap-2 text-sm text-cyan-200/90">
+            <label className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#0c1220]/70 hover:bg-[#0c1220]/90 border border-cyan-400/25 text-sm text-cyan-100 transition-colors">
               <input type="checkbox" checked readOnly className="accent-cyan-500" />
               Tanggal Cetak
             </label>

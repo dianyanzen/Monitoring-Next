@@ -1,0 +1,100 @@
+/* FILE: src/styles/components/date-range-dark.css */
+
+/* ==== ROOT PANEL (react-day-picker & react-date-range) ==== */
+html:not([data-theme="light"]) :is(.rdp, .rdrCalendarWrapper) {
+  background: linear-gradient(180deg, #121523 0%, #0b0f1a 100%) !important;
+  border: 1px solid rgba(56,189,248,.28) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 10px 40px rgba(0,0,0,.55) !important;
+  color: #c7f3ff !important;
+}
+
+/* ==== HEADER / CAPTION ==== */
+/* rdp */
+html:not([data-theme="light"]) .rdp-caption_label {
+  padding: .25rem .75rem; border-radius: 9999px;
+  background: rgba(34,211,238,.10) !important;
+  border: 1px solid rgba(34,211,238,.35) !important;
+  color: #60a5fa !important; font-weight: 600;
+}
+html:not([data-theme="light"]) .rdp-nav_button { color:#c7f3ff !important; border-radius:10px; }
+html:not([data-theme="light"]) .rdp-nav_button:hover { background: rgba(34,211,238,.14) !important; }
+
+/* rdr */
+html:not([data-theme="light"]) .rdrMonthAndYearWrapper { background: transparent !important; }
+html:not([data-theme="light"]) .rdrMonthAndYearPickers select,
+html:not([data-theme="light"]) .rdrMonthAndYearPickers .rdrSelect {
+  background: rgba(34,211,238,.10) !important;
+  border: 1px solid rgba(34,211,238,.35) !important;
+  color: #60a5fa !important; border-radius: 9999px !important; font-weight: 600;
+}
+html:not([data-theme="light"]) .rdrNextPrevButton { background: transparent !important; }
+html:not([data-theme="light"]) .rdrNextPrevButton:hover { background: rgba(34,211,238,.14) !important; }
+
+/* ==== HEAD (nama hari) ==== */
+html:not([data-theme="light"]) .rdp-head_cell,
+html:not([data-theme="light"]) .rdrWeekDay {
+  color: rgba(199,243,255,.65) !important; font-weight: 600 !important;
+}
+
+/* ==== HARI DEFAULT + HOVER ==== */
+/* rdp */
+html:not([data-theme="light"]) .rdp-day { color:#bfdbfe !important; border-radius:10px !important; }
+html:not([data-theme="light"]) .rdp-day:hover { background: rgba(34,211,238,.12) !important; }
+
+/* rdr */
+html:not([data-theme="light"]) .rdrDayNumber span { color:#bfdbfe !important; }
+html:not([data-theme="light"]) .rdrDay:hover .rdrDayNumber span { color:#dbeafe !important; }
+
+/* ==== TODAY ==== */
+html:not([data-theme="light"]) .rdp-day_today { outline:2px dashed rgba(255, 112, 212) !important; outline-offset:2px; }
+html:not([data-theme="light"]) .rdrDayToday .rdrDayNumber span { border-bottom:2px dashed rgb(255, 112, 212) !important; }
+
+/* ==== SELECTED (ujung range) ==== */
+/* rdp */
+html:not([data-theme="light"]) .rdp-day_selected {
+  background: linear-gradient(180deg,#22d3ee 0%,#60a5fa 100%) !important;
+  color:#061019 !important;
+  box-shadow: inset 0 0 0 2px rgba(34,211,238,.35), 0 0 0 3px rgba(34,211,238,.20) !important;
+}
+/* rdr */
+html:not([data-theme="light"]) .rdrDaySelected,
+html:not([data-theme="light"]) .rdrDayStartPreview,
+html:not([data-theme="light"]) .rdrDayEndPreview {
+  background: linear-gradient(180deg,#22d3ee 0%,#60a5fa 100%) !important;
+}
+html:not([data-theme="light"]) .rdrDaySelected .rdrDayNumber span { color:#061019 !important; }
+
+/* ==== RANGE MIDDLE ==== */
+html:not([data-theme="light"]) .rdp-day_range_middle { background: rgba(34,211,238,.12) !important; color:#dbeafe !important; }
+html:not([data-theme="light"]) .rdrInRange,
+html:not([data-theme="light"]) .rdrDayInPreview { background: rgba(34,211,238,.12) !important; }
+
+/* ==== INPUT MANUAL & ACTIONS (bawah panel) ==== */
+html:not([data-theme="light"]) .drp-input,
+html:not([data-theme="light"]) .rdp input[type="text"],
+html:not([data-theme="light"]) .rdp input[type="date"],
+html:not([data-theme="light"]) .rdrDateDisplayWrapper,
+html:not([data-theme="light"]) .rdrDateInput input {
+  background: rgba(6,12,20,.60) !important;
+  color: #c7f3ff !important;
+  border: 1px solid rgba(56,189,248,.35) !important;
+  border-radius: 12px !important;
+}
+html:not([data-theme="light"]) .rdrDateDisplayWrapper { border: none !important; }
+
+/* Buttons (Cancel/Apply) */
+html:not([data-theme="light"]) .drp-actions .btn-cancel,
+html:not([data-theme="light"]) .rdp .btn-cancel,
+html:not([data-theme="light"]) .rdrDefinedRangesWrapper .rdrStaticRange {
+  background: rgba(13,16,26,.75) !important;
+  border: 1px solid rgba(34,211,238,.22) !important;
+  color: #c7f3ff !important; border-radius:12px !important;
+}
+html:not([data-theme="light"]) .drp-actions .btn-apply,
+html:not([data-theme="light"]) .rdp .btn-apply,
+html:not([data-theme="light"]) .rdrButtons .rdrButton {
+  background: linear-gradient(180deg,#22d3ee 0%,#60a5fa 100%) !important;
+  color:#061019 !important; border:1px solid rgba(34,211,238,.45) !important;
+  border-radius:12px !important; box-shadow:0 0 14px #00ffff55 !important;
+}

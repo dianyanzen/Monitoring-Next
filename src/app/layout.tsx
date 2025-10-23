@@ -35,6 +35,7 @@ import "../styles/components/modal.css";
 import "../styles/components/toast.css";
 import "../styles/components/forms-states.css";
 import "../styles/components/select-dark.css"; // setelah theme-dark.css & sebelum theme-light.css tidak masalah, tapi idealnya setelah keduanya
+import "../styles/components/date-range-dark.css";
 
 
 import type { Metadata } from "next";
