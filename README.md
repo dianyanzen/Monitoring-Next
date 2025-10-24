@@ -644,76 +644,126 @@ build:
 ```mermaid
 erDiagram
 
-  SIAK_USER_PLUS ||--o{ SIAK_SESSION_PLUS : "has many"
   SIAK_USER_PLUS {
-    varchar USER_ID PK
-    varchar NAMA
-    int     USER_LEVEL
-    varchar KANTOR
-    varchar PASSWORD_MD5
-    timestamp CREATED_AT
+    string USER_ID PK
+    string NAMA
+    int    USER_LEVEL
+    string KANTOR
+    string PASSWORD_MD5
+    date   CREATED_AT
   }
 
   SIAK_SESSION_PLUS {
-    varchar SESSION_ID PK
-    varchar USER_ID FK
-    varchar IP_ADDRESS
-    varchar USER_AGENT
-    timestamp LAST_ACTIVITY
-    boolean IS_ACTIVE
-    timestamp CREATED_AT
+    string SESSION_ID PK
+    string USER_ID
+    string IP_ADDRESS
+    string USER_AGENT
+    date   LAST_ACTIVITY
+    string IS_ACTIVE
+    date   CREATED_AT
   }
 
   VW_SIAK_MENU {
-    number  MENU_ID
-    number  PARENT_ID
-    varchar LABEL
-    varchar HREF
-    number  ORDERING
-    number  MIN_LEVEL
+    int    MENU_ID PK
+    int    PARENT_ID
+    string LABEL
+    string HREF
+    int    ORDERING
+    int    MIN_LEVEL
   }
 
-  REF_KABUPATEN ||--o{ REF_KECAMATAN : contains
-  REF_KECAMATAN ||--o{ REF_KELURAHAN : contains
+  REF_KABUPATEN {
+    string KAB_ID PK
+    string NAMA
+  }
 
-  REF_KABUPATEN { varchar KAB_ID PK, varchar NAMA }
-  REF_KECAMATAN  { varchar KEC_ID PK, varchar KAB_ID FK, varchar NAMA }
-  REF_KELURAHAN  { varchar KEL_ID PK, varchar KEC_ID FK, varchar NAMA }
+  REF_KECAMATAN {
+    string KEC_ID PK
+    string KAB_ID
+    string NAMA
+  }
+
+  REF_KELURAHAN {
+    string KEL_ID PK
+    string KEC_ID
+    string NAMA
+  }
 
   KTP_EL_STATUS_LOG {
-    varchar ID PK
-    varchar NIK
-    varchar STATUS
-    varchar KAB_ID FK
-    varchar KEC_ID FK
-    varchar KEL_ID FK
-    date    TANGGAL
-    timestamp UPDATED_AT
+    string ID PK
+    string NIK
+    string KAB_ID
+    string KEC_ID
+    string KEL_ID
+    string STATUS
+    date   TANGGAL
+    date   UPDATED_AT
   }
 
-  MASTER_LIST   { number ID PK, varchar TITLE, varchar OWNER, timestamp CREATED_AT }
-  MASTER_REQUEST{ number ID PK, varchar TITLE, varchar STATUS, timestamp CREATED_AT }
-  MASTER_CONTACT{ number ID PK, varchar NAMA, varchar TELEPON }
-  ABSENSI_LOG   { number ID PK, varchar NIP, timestamp CHECK_IN, timestamp CHECK_OUT }
-  SALAMAN_LOG   { number ID PK, varchar USER_ID, varchar TEXT, timestamp CREATED_AT }
+  MASTER_LIST {
+    int    ID PK
+    string TITLE
+    string OWNER
+    date   CREATED_AT
+  }
 
-  CHAT_CONTACTS { varchar USER_ID PK, varchar DISPLAY_NAME, varchar AVATAR_URL }
+  MASTER_REQUEST {
+    int    ID PK
+    string TITLE
+    string STATUS
+    date   CREATED_AT
+  }
+
+  MASTER_CONTACT {
+    int    ID PK
+    string NAMA
+    string TELEPON
+  }
+
+  ABSENSI_LOG {
+    int    ID PK
+    string NIP
+    date   CHECK_IN
+    date   CHECK_OUT
+  }
+
+  SALAMAN_LOG {
+    int    ID PK
+    string USER_ID
+    string TEXT
+    date   CREATED_AT
+  }
+
+  CHAT_CONTACTS {
+    string USER_ID PK
+    string DISPLAY_NAME
+    string AVATAR_URL
+  }
+
   MESSAGES {
-    varchar MESSAGE_ID PK
-    varchar SENDER_ID
-    varchar RECEIVER_ID
-    clob   TEXT
-    timestamp CREATED_AT
-    timestamp READ_AT
+    string MESSAGE_ID PK
+    string SENDER_ID
+    string RECEIVER_ID
+    string TEXT
+    date   CREATED_AT
+    date   READ_AT
   }
 
   ACTIVITY_LOG {
-    number ID PK
-    varchar USER_ID
-    varchar ACTION
-    clob   META_JSON
-    timestamp CREATED_AT
+    int    ID PK
+    string USER_ID
+    string ACTION
+    string META_JSON
+    date   CREATED_AT
   }
+
+  %% ====== Relationships (letakkan DI BAWAH definisi entitas) ======
+  SIAK_USER_PLUS     ||--o{ SIAK_SESSION_PLUS : has
+  REF_KABUPATEN      ||--o{ REF_KECAMATAN    : contains
+  REF_KECAMATAN      ||--o{ REF_KELURAHAN    : contains
+  CHAT_CONTACTS      ||--o{ MESSAGES         : sends
+  SIAK_USER_PLUS     ||--o{ ACTIVITY_LOG     : acts
+
 ````
 
 ---
