@@ -105,7 +105,6 @@ Semua sudah dirapikan dan siap langsung ditempel ke GitLab.
 
 ---
 
-````markdown
 ## 🎨 Filosofi Desain & Tema Visual
 
 - **Angka besar untuk status utama**, teks pendukung hemat dan informatif.  
@@ -166,17 +165,19 @@ html[data-theme="light"] {
 ### Diagram Konteks (C4)
 
 ```mermaid
-C4Context
-title Konteks Sistem
+flowchart LR
+  %% ===== Nodes =====
+  user["Petugas / Administrator"]
 
-Person(user, "Petugas / Administrator")
-System_Boundary(web, "Monalisa (Next.js)") {
-  System_UI(ui, "UI + API Routes", "Next.js", "Dashboard, Master, Check KTP-el, Chat, Activity")
-}
-SystemDb(oracle, "Oracle SIAK", "oracledb")
+  subgraph web["Monalisa (Next.js)"]
+    ui["UI + API Routes<br/>(Next.js)<br/><small>Dashboard · Master · Check KTP-el · Chat · Activity</small>"]
+  end
 
-Rel(user, ui, "Operasi harian")
-Rel(ui, oracle, "SQL bind variabel, pool multi-alias")
+  oracle["Oracle SIAK<br/>(oracledb)"]
+
+  %% ===== Relations =====
+  user -->|Operasi harian| ui
+  ui -->|"SQL (bind variabel, pool multi-alias)"| oracle
 ```
 
 ---
@@ -184,17 +185,21 @@ Rel(ui, oracle, "SQL bind variabel, pool multi-alias")
 ### Diagram Kontainer
 
 ```mermaid
-flowchart LR
-  user[Petugas / Administrator]
-
-  subgraph web[Monalisa (Next.js)]
-    ui[UI + API Routes<br/>Next.js<br/><small>Dashboard, Master, Check KTP-el, Chat, Activity</small>]
+flowchart TB
+  %% ===== App Boundary =====
+  subgraph nextjs["Next.js App"]
+    ui["UI React (App Router)<br/>(komponen server & client)"]
+    api["API Routes (Node 20)<br/>login, session, menu, dashboard*, ktpel*"]
+    log["Logger<br/>logs/YYYY-MM/DD/log.txt"]
   end
 
-  oracle[(Oracle SIAK<br/>oracledb)]
+  %% ===== External DB =====
+  db["Oracle — SIAK schema<br/>SIAK_USER_PLUS, SIAK_SESSION_PLUS, VW_SIAK_MENU, ..."]
 
-  user -->|Operasi harian| ui
-  ui -->|SQL bind variabel,<br/>pool multi-alias| oracle
+  %% ===== Relations =====
+  ui -->|"fetch JSON (credentials: include)"| api
+  api -->|"oracledb: pool & bind"| db
+  api -->|"write log"| log
 
 ```
 
@@ -204,18 +209,20 @@ flowchart LR
 
 ```mermaid
 sequenceDiagram
+  autonumber
   participant U as User
   participant UI as UI Login
   participant API as POST /api/login
   participant DB as Oracle
   participant CK as Cookies
 
-  U->>UI: user_id, pass  
-  UI->>API: POST JSON  
-  API->>DB: SELECT SIAK_USER_PLUS (validasi)  
-  API->>DB: UPDATE SIAK_SESSION_PLUS (buat / refresh sesi)  
-  API->>CK: Set session_user + session_sig (HMAC, 8 jam)  
-  API-->>UI: { ok:true, message_type:1 }
+  U->>UI: user_id, pass
+  UI->>API: POST JSON
+  API->>DB: SELECT SIAK_USER_PLUS (validasi)
+  API->>DB: UPDATE SIAK_SESSION_PLUS (buat / refresh sesi)
+  API->>CK: Set-Cookie session_user & session_sig (HMAC, 8 jam)
+  API-->>UI: { ok: true, message_type: 1 }
+
 ```
 
 ---
@@ -224,26 +231,33 @@ sequenceDiagram
 
 ```mermaid
 flowchart TB
-  %% ===== Nodes =====
+  %% ===== Client =====
   subgraph Client ["Client"]
     B["Browser"]
   end
 
+  %% ===== Infra =====
   subgraph Infra ["Infra"]
     RP["Reverse Proxy (HTTPS)"]
     FS[/"Logs storage"/]
   end
 
+  %% ===== App Server =====
   subgraph Server ["App Server"]
     N["Next.js Runtime (UI + API Routes)"]
     P["Oracle Instant Client 19c+"]
   end
 
+  %% ===== External DB =====
+  DB["Oracle SIAK"]
+
   %% ===== Flows =====
-  B -- "HTTPS 443" --> RP
-  RP -- "proxy_pass →" --> N
-  N -- "oracledb (native driver)" --> P
-  N -- "write logs →" --> FS
+  B -->|"HTTPS 443"| RP
+  RP -->|"proxy_pass"| N
+  N -->|"oracledb (native driver)"| P
+  P -->|"TCP 1521/1522"| DB
+  N -->|"write logs"| FS
+
 
 ```
 
@@ -303,9 +317,7 @@ import "../styles/theme-dark.css"
 import "../styles/theme-light.css"
 ```
 
-```
 
-````markdown
 ## 🔌 Kontrak API & Konvensi
 
 ### 📄 Konvensi URL & Verba
@@ -555,9 +567,7 @@ build:
 
 ---
 
----
 
-````markdown
 ## 🔄 Perbandingan & Strategi Migrasi (Laravel → Next.js)
 
 ### ⚙️ Legacy (Laravel 6)
@@ -1129,5 +1139,3 @@ Segala kode sumber, dokumentasi, dan aset visual merupakan bagian dari inisiatif
 > — *Dian Septian, S.Tr.Kom., M.M.*  
 > Administrator Database Kependudukan Ahli Pertama  
 > Disdukcapil Kota Bandung
-
-```
