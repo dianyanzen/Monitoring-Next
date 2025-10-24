@@ -311,3 +311,51 @@ color: #ff00ff;
 animation: glitchBottom 2s infinite linear alternate-reverse;
 color: #00ffff;
 }
+
+html:not([data-theme="light"]) {
+  /* Surfaces & Ink */
+  --surface-0: #0a0a0c;
+  --surface-1: #0e0e14;
+  --surface-2: #111118;
+  --ink: #e5e7eb;
+  --ink-muted: #a6adbb;
+
+  /* Accents (neon) */
+  --accent:   #00e6c3; /* neon-1 */
+  --accent-2: #36bffa; /* neon-2 */
+  --success:  #1ad19a;
+  --warning:  #f5c26b;
+  --error:    #ff5d73;
+
+  /* Borders & Shadows */
+  --border-subtle: rgba(255,255,255,.08);
+  --border-strong: rgba(255,255,255,.16);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.35);
+  --shadow-md: 0 8px 22px rgba(0,0,0,.45);
+  --shadow-lg: 0 22px 60px rgba(0,0,0,.55);
+
+  /* Focus ring: cyan-ish */
+  --focus-ring: 0 0 0 3px rgba(0,230,195,.45);
+
+  /* Gold (tetap tersedia untuk elemen “prestige”) */
+  --gold-1: #d4af37;
+  --gold-2: #f6d365;
+  --gold-3: #ffe8a3;
+  --lux-gold-grad: linear-gradient(90deg, var(--gold-1), var(--gold-2) 60%, var(--gold-3));
+
+  /* Scrollbar */
+  --scrollbar-track: rgba(255,255,255,.06);
+  --scrollbar-thumb: rgba(255,255,255,.18);
+}
+
+/* Dekorasi opsional: backdrop glassy untuk aside/header di dark */
+html:not([data-theme="light"]) aside {
+  background: rgba(20,20,26,.7);
+  backdrop-filter: blur(12px);
+  border-right: 1px solid var(--border-subtle);
+}
+html:not([data-theme="light"]) header {
+  background: rgba(25,25,32,.6);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-subtle);
+}

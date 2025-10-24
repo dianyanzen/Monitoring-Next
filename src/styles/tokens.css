@@ -41,3 +41,80 @@
   --lux-border: rgba(210,182,138,.28);/* garis elegan netral */
   --lux-shadow: 0 10px 24px rgba(48,39,21,.08); /* shadow lembut di light */
 }
+
+/* FILE: src/styles/tokens.css
+   ------------------------------------------------------------------
+   Global Design Tokens (semantic variables + scale)
+   - Beri nilai default aman (mendekati dark) → dioverride oleh theme.
+   - Jangan pakai @apply di sini, cukup variable-level.
+   ------------------------------------------------------------------ */
+
+:root {
+  /* ---------- Semantic Surfaces & Ink ---------- */
+  --surface-0: #0a0a0c;    /* canvas */
+  --surface-1: #0e0e14;    /* panel */
+  --surface-2: #111118;    /* raised */
+  --ink: #e5e7eb;          /* teks utama */
+  --ink-muted: #a6adbb;    /* teks sekunder */
+
+  /* ---------- Accents & States ---------- */
+  --accent: #00e6c3;       /* primary accent (dark: neon-1 / light: gold line) */
+  --accent-2: #36bffa;     /* secondary accent */
+  --success: #22c55e;
+  --warning: #f5c26b;
+  --error:   #ff5d73;
+
+  /* ---------- Borders & Shadows ---------- */
+  --border-subtle: rgba(255,255,255,.08);
+  --border-strong: rgba(255,255,255,.16);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.25);
+  --shadow-md: 0 6px 18px rgba(0,0,0,.28);
+  --shadow-lg: 0 18px 45px rgba(0,0,0,.35);
+
+  /* ---------- Radii ---------- */
+  --radius-sm: .375rem;
+  --radius-md: .5rem;
+  --radius-lg: .75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+
+  /* ---------- Motions ---------- */
+  --easing-std: cubic-bezier(.2,.6,.2,1);
+  --duration-fast: 150ms;
+  --duration-std: 240ms;
+  --duration-slow: 360ms;
+
+  /* ---------- Focus ---------- */
+  --focus-ring: 0 0 0 3px rgba(54,191,250,.45); /* dioverride per tema */
+
+  /* ---------- Special (overriden in themes) ---------- */
+  --gold-1: #d4af37;
+  --gold-2: #f6d365;
+  --gold-3: #ffe8a3;
+  --lux-gold-grad: linear-gradient(90deg, var(--gold-1), var(--gold-2) 60%, var(--gold-3));
+
+  /* Scrollbar (fallback) */
+  --scrollbar-track: rgba(255,255,255,.06);
+  --scrollbar-thumb: rgba(255,255,255,.16);
+}
+
+/* ---------- Generic helpers (boleh dipakai di Tailwind mix) ---------- */
+.token-card {
+  background: var(--surface-1);
+  color: var(--ink);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.token-underline-prestige {
+  display: block;
+  height: 2px;
+  background: var(--lux-gold-grad);
+  opacity: .9;
+}
+
+/* Scrollbar */
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+*::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }

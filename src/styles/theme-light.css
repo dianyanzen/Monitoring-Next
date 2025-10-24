@@ -503,3 +503,56 @@ border-color: var(--lux-border) !important;
 box-shadow: var(--lux-shadow) !important;
 color: var(--lux-ink) !important;
 }
+
+html[data-theme="light"] {
+  /* Palet dasar */
+  --pal-silk:      #EEE5D9;  /* base hangat */
+  --pal-marble:    #EBEAE0;  /* abu-beige lembut */
+  --pal-champagne: #F6E7C9;  /* highlight hangat */
+
+  /* Surfaces & Ink */
+  --surface-0: var(--pal-marble);
+  --surface-1: #F4EFE7;     /* panel lembut */
+  --surface-2: #FFF9F0;     /* raised lebih terang */
+  --ink:       #1A1D21;     /* teks utama */
+  --ink-muted: #4b5563;     /* teks sekunder */
+
+  /* Accents (emas elegan; accent bukan fill besar) */
+  --gold-1: #d4af37;
+  --gold-2: #f6d365;
+  --gold-3: #ffe8a3;
+  --lux-gold-grad: linear-gradient(90deg, var(--gold-1), var(--gold-2) 60%, var(--gold-3));
+
+  /* Di Light, “accent” dipakai hemat (garis/ikon) */
+  --accent:   var(--gold-1);
+  --accent-2: #8f7a3e; /* bayangan emas */
+  --success:  #2e7d32;
+  --warning:  #b88315;
+  --error:    #b3261e;
+
+  /* Borders & Shadows (lebih halus) */
+  --lux-border: rgba(26,29,33,.12);
+  --border-subtle: var(--lux-border);
+  --border-strong: rgba(26,29,33,.2);
+  --shadow-sm: 0 1px 2px rgba(26,29,33,.06);
+  --shadow-md: 0 8px 22px rgba(26,29,33,.10);
+  --shadow-lg: 0 22px 60px rgba(26,29,33,.14);
+
+  /* Focus ring: gold glow lembut */
+  --focus-ring: 0 0 0 3px rgba(212,175,55,.35);
+
+  /* Scrollbar */
+  --scrollbar-track: rgba(26,29,33,.06);
+  --scrollbar-thumb: rgba(26,29,33,.18);
+}
+
+/* Contoh pemakaian khusus untuk kartu bergaris emas tipis */
+html[data-theme="light"] .card.prestige {
+  border-color: var(--lux-border);
+  box-shadow: var(--shadow-sm);
+}
+html[data-theme="light"] .card.prestige > .gold-underline {
+  background: var(--lux-gold-grad);
+  height: 2px;
+  opacity: .9;
+}
