@@ -184,19 +184,18 @@ Rel(ui, oracle, "SQL bind variabel, pool multi-alias")
 ### Diagram Kontainer
 
 ```mermaid
-C4Container
-title Kontainer
+flowchart LR
+  user[Petugas / Administrator]
 
-Container_Boundary(nextjs, "Next.js App") {
-  Container(ui, "UI React (App Router)", "React 19", "Komponen server / client")
-  Container(api, "API Routes", "Node 20", "login, session, menu, dashboard*, ktpel*")
-  Container(log, "Logger", "FS", "logs/YYYY-MM/DD/log.txt")
-}
-ContainerDb(db, "Oracle", "SIAK schema", "SIAK_USER_PLUS, SIAK_SESSION_PLUS, VW_SIAK_MENU, ...")
+  subgraph web[Monalisa (Next.js)]
+    ui[UI + API Routes<br/>Next.js<br/><small>Dashboard, Master, Check KTP-el, Chat, Activity</small>]
+  end
 
-Rel(ui, api, "fetch JSON (credentials: include)")
-Rel(api, db, "oracledb: pool & bind")
-Rel(api, log, "write log")
+  oracle[(Oracle SIAK<br/>oracledb)]
+
+  user -->|Operasi harian| ui
+  ui -->|SQL bind variabel,<br/>pool multi-alias| oracle
+
 ```
 
 ---
@@ -225,20 +224,27 @@ sequenceDiagram
 
 ```mermaid
 flowchart TB
-  subgraph Client
-   B[Browser]
+  %% ===== Nodes =====
+  subgraph Client ["Client"]
+    B["Browser"]
   end
-  subgraph Server
-   N[Next.js Runtime]
-   P[(Oracle Instant Client 19c+)]
+
+  subgraph Infra ["Infra"]
+    RP["Reverse Proxy (HTTPS)"]
+    FS[/"Logs storage"/]
   end
-  subgraph Infra
-   RP[Reverse Proxy (HTTPS)]
-   FS[/logs storage/]
+
+  subgraph Server ["App Server"]
+    N["Next.js Runtime (UI + API Routes)"]
+    P["Oracle Instant Client 19c+"]
   end
-  B -- HTTPS --> RP -- proxy_pass --> N
-  N -- oracledb/native --> P
-  N -- write --> FS
+
+  %% ===== Flows =====
+  B -- "HTTPS 443" --> RP
+  RP -- "proxy_pass →" --> N
+  N -- "oracledb (native driver)" --> P
+  N -- "write logs →" --> FS
+
 ```
 
 ---
@@ -744,7 +750,6 @@ DELETE FROM SIAK_SESSION_PLUS
 
 ---
 
-````markdown
 ## 🎨 Design Tokens & Dua Tema (Kode Penuh)
 
 ```css
@@ -989,9 +994,6 @@ async function flatten(items:any[], parent:any=null, acc:any[]=[]){
 
 ---
 
-```
-
-```markdown
 ## 🧭 Roadmap Produk
 
 ### 🗓️ Tahap I — Core Modernization (✅)
