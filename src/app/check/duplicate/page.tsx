@@ -584,12 +584,14 @@ export default function DuplicatePage() {
       <div className="space-y-4">
         <div className="grid gap-4 md:grid-cols-4">
           <div className="space-y-1">
-            <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">NIK Duplicate</label>
+            <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">NIK Duplicate
+            <span className="ml-1 text-[10px] font-normal opacity-60">(boleh banyak, pisahkan dengan koma)</span>
+            </label>
             <input
               value={filters.nik}
               onChange={(e) => updateFilter({ nik: sanitizeNikInput(e.target.value) })}
               className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
-              placeholder="3273..., boleh banyak dengan koma"
+              placeholder="Masukan Nik Duplicate"
             />
           </div>
 

@@ -2,7 +2,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, Trash2, Loader2, Download } from "lucide-react";
+import { Search, Trash2, Loader2, Download, RefreshCcw } from "lucide-react";
+import { useSession } from "@/contexts/session";
 
 type Row = {
   NIK: string;
@@ -25,6 +26,7 @@ const softLeadingComma = (v?: string | null) => {
 };
 
 export default function HistoryPage() {
+  const { user } = useSession();
   const [nik, setNik] = useState("");
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(false);
@@ -163,6 +165,19 @@ export default function HistoryPage() {
             <h1 className="text-base font-semibold tracking-wide text-cyan-200">
               Ktp-el Cek History Cetak
             </h1>
+             <div className="ml-auto flex items-center gap-2">
+              <div className="rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100/80">
+                User: {(user as any)?.S_NAMA_LGKP ?? (user as any)?.S_USER_ID ?? "-"}
+              </div>
+              <button
+                type="button"
+                onClick={()=>window.location.reload()}
+                className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-[11px] font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
+              >
+                <RefreshCcw className="h-3.5 w-3.5" />
+                Refresh
+              </button>
+            </div>
             {total > 0 ? (
               <span className="ml-auto text-xs text-cyan-200/80">
                 Total: <span className="font-semibold text-cyan-100">{total}</span> data
@@ -176,7 +191,7 @@ export default function HistoryPage() {
           <div className="flex flex-wrap items-center gap-3">
             <label className="inline-flex items-center gap-2 rounded-lg border border-cyan-400/25 bg-[#0c1220]/70 px-4 py-2 text-sm text-cyan-100">
               <input type="checkbox" checked readOnly className="accent-cyan-500" />
-              Nik
+              NIK
             </label>
 
             <input
