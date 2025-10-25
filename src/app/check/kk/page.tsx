@@ -158,7 +158,7 @@ export default function KKStatusPage(){
         <header className="border-b border-cyan-900/50 px-5 py-4">
           <div className="flex items-center gap-3">
             <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee]" />
-            <h1 className="text-base font-semibold tracking-wide text-cyan-200">Monitoring KK</h1>
+            <h1 className="text-base font-semibold tracking-wide text-cyan-200">Monitoring — Status KK Siak Terdistribusi</h1>
             <div className="ml-auto flex items-center gap-2">
               <div className="rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100/80">
                 User: {(user as any)?.S_NAMA_LGKP ?? (user as any)?.S_USER_ID ?? "-"}

@@ -1,3 +1,4 @@
+// FILE: src/app/api/check/duplicate/route.ts
 import { NextRequest } from "next/server";
 import { badRequest, err, ok, unauthorized } from "@/lib/http";
 import { readServerSession } from "@/lib/session";
@@ -36,7 +37,7 @@ function normalizeWilayahCode(raw?: string | null) {
 function normalizeDate(value?: string | null) {
   const trimmed = (value ?? "").trim();
   if (!trimmed) return null;
-  if (/^\d{2}-\d{2}-\d{4}$/.test(trimmed)) return trimmed;
+  if (/^\d{2}-\d{2}-\d{4}$/.test(trimmed)) return trimmed; // DD-MM-YYYY
   if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
     const [y, m, d] = trimmed.split("-");
     return `${d}-${m}-${y}`;
@@ -123,7 +124,9 @@ function buildDetailSql(placeholders: string) {
         TO_CHAR(A.TGL_REKAM_SINGLE,'DD-MM-YYYY') AS TGL_REKAM_SINGLE
       FROM SIAK_DUPLICATE_FULL A
       WHERE A.NIK IN (${placeholders})
+
       UNION ALL
+
       SELECT
         B.NIK,
         B.NO_PROP,
@@ -218,7 +221,10 @@ export async function POST(req: NextRequest) {
   const session = await readServerSession().catch(() => null);
   if (!session) return unauthorized("Sesi tidak ditemukan");
 
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || undefined;
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    undefined;
   const ua = req.headers.get("user-agent") || undefined;
 
   let payload: DuplicateRequest | null = null;
@@ -247,6 +253,7 @@ export async function POST(req: NextRequest) {
 
   try {
     let response: { mode: DuplicateMode; total: number; rows: DuplicateDetailRow[] | DuplicateListRow[] };
+
     if (mode === "nik") {
       const binds: Record<string, any> = {};
       const placeholders = buildInClause(nikList, binds, "nik");
@@ -255,13 +262,12 @@ export async function POST(req: NextRequest) {
       const mapped = rows.map(mapDuplicateDetailRow);
       response = { mode, total: mapped.length, rows: mapped };
     } else {
-      const binds: Record<string, any> = {};
-      binds.date_start = dateStart;
-      binds.date_end = dateEnd;
+      const binds: Record<string, any> = { date_start: dateStart, date_end: dateEnd };
       const includeKec = !!noKec && noKec !== "0";
       const includeKel = !!noKel && noKel !== "0";
       if (includeKec) binds.no_kec = noKec;
       if (includeKel) binds.no_kel = noKel;
+
       const sql = buildListSql(includeKec, includeKel);
       const rows = await execDuplicateRows<Record<string, any>>(sql, binds);
       const mapped = rows.map(mapDuplicateListRow);
@@ -292,7 +298,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return ok({ success: true, data: response });
+    // ✅ cukup ok(response). Helper ok() akan membungkus {success:true, data: response}
+    return ok(response);
   } catch (e: any) {
     await Log.error({
       scope: "API",
@@ -307,9 +314,7 @@ export async function POST(req: NextRequest) {
         message: e?.message || String(e),
         stack: e?.stack,
       },
-      extra: {
-        mode,
-      },
+      extra: { mode },
     });
     return err(e?.message || "Gagal memuat data duplicate", 500);
   }

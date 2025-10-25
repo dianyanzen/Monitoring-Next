@@ -8,6 +8,10 @@ import { execRows } from "@/lib/db";
 import { Log } from "@/lib/log";
 import { readServerSession } from "@/lib/session";
 
+const ORACLE_IN_LIMIT = 999;
+const ORACLE_ALIAS = process.env.DB_ALIAS_HISTORY ?? "DB5CETAK";
+
+/** keep only primitive for response safety */
 function toPlain(obj: any) {
   if (!obj) return obj;
   if (Array.isArray(obj)) return obj.map((x) => toPlain(x));
@@ -50,10 +54,7 @@ function buildInClause(values: string[]) {
   return { clause: names.join(","), binds };
 }
 
-const ORACLE_IN_LIMIT = 999;
-
 function historySql(clause: string) {
-  // Perbaikan: NVL pada STAT_KWN + NULLS LAST di ORDER BY
   return `
     SELECT A.NIK, A.NO_KK, A.NAMA_LGKP, B.CHIP_ID,
            TO_CHAR(B.PERSONALIZED_DATE,'DD-MM-YYYY') AS KTP_DT,
@@ -83,7 +84,7 @@ export async function POST(req: NextRequest) {
     const nikList = parseNikList(body?.nik);
     const no_kec = Number(s.S_NO_KEC ?? 0) || 0;
 
-    // chunk antisipasi batas IN Oracle (999)
+    // pecah sesuai limit IN Oracle (999)
     const chunks: string[][] = [];
     for (let i = 0; i < nikList.length; i += ORACLE_IN_LIMIT) {
       chunks.push(nikList.slice(i, i + ORACLE_IN_LIMIT));
@@ -94,8 +95,7 @@ export async function POST(req: NextRequest) {
       const { clause, binds: nikBinds } = buildInClause(group);
       const sql = historySql(clause);
       const binds = { no_kec, ...nikBinds };
-      // GANTI alias ini bila perlu (contoh: "DB")
-      const raw = await execRows(sql, binds, {}, "DB5CETAK");
+      const raw = await execRows(sql, binds, {}, ORACLE_ALIAS);
       const rows = Array.isArray(raw) ? toPlain(raw) : [];
       allRows.push(...rows);
     }
@@ -108,7 +108,8 @@ export async function POST(req: NextRequest) {
       extra: { total: allRows.length, no_kec, nikCount: nikList.length, chunkCount: chunks.length },
     });
 
-    return ok({ success: true, data: { rows: allRows, total: allRows.length } });
+    // kalau mau cache tipis: ok({ rows: allRows, total: allRows.length }, 15)
+    return ok({ rows: allRows, total: allRows.length });
   } catch (e: any) {
     await Log.error({
       scope: "API",

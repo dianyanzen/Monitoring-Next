@@ -163,7 +163,7 @@ export default function HistoryPage() {
           <div className="flex items-center gap-3">
             <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_12px_#22d3ee]" />
             <h1 className="text-base font-semibold tracking-wide text-cyan-200">
-              Ktp-el Cek History Cetak
+               Monitoring — History Cetak KTP-El
             </h1>
              <div className="ml-auto flex items-center gap-2">
               <div className="rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100/80">

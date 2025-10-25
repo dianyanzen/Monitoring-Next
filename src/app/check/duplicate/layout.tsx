@@ -4,8 +4,8 @@ import { SessionProvider } from "@/contexts/session";
 import { readServerSession } from "@/lib/session";
 
 export const metadata = {
-  title: "Monalisa System - Duplicate Monitoring",
-  description: "Monitoring duplicate NIK KTP-el",
+  title: "Monalisa System - Monitoring Duplicate Record KTP-El",
+  description: "Disdukcapil Kota Bandung | AI-powered System",
 };
 
 export default async function DuplicateLayout({ children }: { children: React.ReactNode }) {

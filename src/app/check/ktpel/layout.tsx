@@ -5,7 +5,7 @@ import { SessionProvider } from "@/contexts/session";
 import { readServerSession } from "@/lib/session";
 
 export const metadata = {
-  title: "Monalisa System - Template",
+  title: "Monalisa System - Monitoring KTP-El Status Code",
   description: "Disdukcapil Kota Bandung | AI-powered System",
 };
 

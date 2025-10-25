@@ -41,7 +41,7 @@ import "../styles/components/date-range-dark.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: { default: "Monalisa System", template: "%s — Monalisa System" },
+  title: { default: "Monalisa System", template: "%s — Disdukcapil Kota Bandung" },
   description: "Disdukcapil Kota Bandung | AI-powered System",
 };
 

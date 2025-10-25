@@ -1,11 +1,11 @@
-// FILE: src/app/check/kk/layout.tsx
+// FILE: src/app/check/akte/layout.tsx
 import "../../globals.css";
 import MainLayoutClient from "./mainlayout";
 import { SessionProvider } from "@/contexts/session";
 import { readServerSession } from "@/lib/session";
 
 export const metadata = {
-  title: "Monalisa System - Template",
+  title: "Monalisa System - Monitoring KK Siak Terdistribusi",
   description: "Disdukcapil Kota Bandung | AI-powered System",
 };
 
@@ -18,9 +18,7 @@ export default async function RootLayout({
 
   return (
     <SessionProvider initialUser={s ?? null}>
-      {/* Semua styling/scroll di-handle oleh client layout */}
       <MainLayoutClient>{children}</MainLayoutClient>
     </SessionProvider>
   );
 }
-

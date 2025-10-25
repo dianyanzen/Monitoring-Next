@@ -1,38 +1,70 @@
 // FILE: src/app/api/check/kk/status/route.ts
+import { NextRequest } from "next/server";
 import { ok, err, badRequest } from "@/lib/http";
 import { execRows } from "@/lib/db";
+import { Log } from "@/lib/log";
+import { readServerSession } from "@/lib/session";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-/**
- * Replikasi legacy: scr_cek_kk($no_kk, $no_kec)
- * - Input:
- *   - noKk  : string (boleh 1 KK atau CSV "kk1,kk2,..."; leading/trailing comma akan dibersihkan)
- *   - noKec : string/number opsional (default: null) → filter A.NO_KEC
- *
- * Catatan:
- * - Tidak ada konversi Number() untuk KK (biarkan string).
- * - Pakai teknik CSV → REGEXP_SUBSTR untuk IN-list aman (single bind).
- */
-export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const rawNoKk = (url.searchParams.get("noKk") || "").trim();
-  const noKec = (url.searchParams.get("noKec") || "").trim() || null;
+// ganti sesuai alias koneksi Oracle kamu (boleh pakai ENV)
+const ORACLE_ALIAS = process.env.DB_ALIAS_KK ?? "DB222";
 
-  // jika kosong → sama seperti legacy: view awal tanpa data
-  if (!rawNoKk) return ok({ items: [], count: 0 });
+/** Sanitasi CSV KK → hanya digit & koma, rapikan, dan buang duplikat */
+function parseKkCsv(raw: unknown) {
+  const s = String(raw ?? "")
+    .trim()
+    .replace(/^[,\s]+/, "")
+    .replace(/[^\d,]/g, "")
+    .replace(/,+/g, ",")
+    .replace(/(^,|,$)/g, "");
+  if (!s) return [];
+  const list = s.split(",").map((v) => v.trim()).filter(Boolean);
 
-  // normalisasi: hilangkan koma di awal/akhir dan koma ganda
-  const noKkNorm = rawNoKk.replace(/^\s*,+/, "").replace(/,+\s*$/, "").replace(/,{2,}/g, ",");
+  const seen = new Set<string>();
+  return list.filter((v) => (seen.has(v) ? false : (seen.add(v), true)));
+}
 
-  // jika tanpa koma dan panjang ≤ 17 → anggap single KK (mengikuti legacy)
-  const isSingle = !noKkNorm.includes(",") && noKkNorm.length <= 17;
-  const b_no_kk = isSingle ? noKkNorm : null;
-  const b_no_kk_csv = isSingle ? null : noKkNorm;
+/** Bangun IN clause dinamis + binds aman */
+function buildInClause(values: string[], prefix = "kk") {
+  const names: string[] = [];
+  const binds: Record<string, any> = {};
+  values.forEach((v, i) => {
+    const key = `${prefix}${i}`;
+    names.push(`:${key}`);
+    binds[key] = v;
+  });
+  return { clause: names.join(","), binds };
+}
+
+export async function GET(req: NextRequest) {
+  const t0 = Date.now();
 
   try {
-    const sql = `
+    // (opsional) jika butuh validasi sesi seperti legacy
+    const session = await readServerSession();
+    if (!session?.S_USER_ID) return badRequest("Sesi tidak valid.");
+
+    const url = new URL(req.url);
+    const rawNoKk = (url.searchParams.get("noKk") || "").trim();
+    const rawNoKec = (url.searchParams.get("noKec") || "").trim();
+
+    // tanpa input KK → sama seperti legacy: view awal kosong
+    if (!rawNoKk) {
+      return ok({ items: [], count: 0 });
+    }
+
+    const kkList = parseKkCsv(rawNoKk);
+    const isSingle = kkList.length === 1 && kkList[0].length <= 17;
+
+    // filter kecamatan opsional
+    const no_kec =
+      rawNoKec === "" || rawNoKec === "0" || rawNoKec === "null"
+        ? null
+        : Number(rawNoKec) || null;
+
+    const baseSql = `
       SELECT
         A.NO_KK,
         A.NAMA_KEP,
@@ -41,11 +73,11 @@ export async function GET(req: Request) {
         A.NO_KAB,
         A.NO_KEC,
         A.NO_KEL,
-        F5_GET_BSRE_KK_JML(A.NO_KK)         AS JML_PENGAJUAN,
+        F5_GET_BSRE_KK_JML(A.NO_KK)                                   AS JML_PENGAJUAN,
         F5_GET_NAMA_KECAMATAN(A.NO_PROP,A.NO_KAB,A.NO_KEC)            AS NAMA_KEC,
         F5_GET_NAMA_KELURAHAN(A.NO_PROP,A.NO_KAB,A.NO_KEC,A.NO_KEL)   AS NAMA_KEL,
-        LPAD(TO_CHAR(A.NO_RT), 3, '0')       AS NO_RT,
-        LPAD(TO_CHAR(A.NO_RW), 3, '0')       AS NO_RW,
+        LPAD(TO_CHAR(A.NO_RT), 3, '0') AS NO_RT,
+        LPAD(TO_CHAR(A.NO_RW), 3, '0') AS NO_RW,
         CASE WHEN A.KODE_POS IS NULL THEN '-' ELSE TO_CHAR(A.KODE_POS) END AS KODE_POS,
         A.COUNT_KK,
         CASE WHEN B.CERT_STATUS IS NULL THEN '-' ELSE TO_CHAR(B.CERT_STATUS) END AS CERT_STATUS,
@@ -55,7 +87,9 @@ export async function GET(req: Request) {
         CASE WHEN B.URL_DOKUMEN IS NULL THEN '-' ELSE SUBSTR(B.URL_DOKUMEN,20) END AS URL_KK,
         CASE WHEN B.URL_DOKUMEN IS NULL THEN '-' ELSE SUBSTR(B.URL_DOKUMEN,11,8) END AS URL_DATE,
         CASE WHEN B.URL_DOKUMEN IS NULL THEN '-'
-             ELSE 'http://10.32.73.7:8080/monitoring/pengajuan/tmpcetak/' || SUBSTR(B.URL_DOKUMEN,11,8) || '/' || SUBSTR(B.URL_DOKUMEN,20) || '.pdf'
+             ELSE 'http://10.32.73.7:8080/monitoring/pengajuan/tmpcetak/'
+               || SUBSTR(B.URL_DOKUMEN,11,8) || '/'
+               || SUBSTR(B.URL_DOKUMEN,20) || '.pdf'
         END AS URL_DOWNLOAD,
         CASE WHEN B.PEJABAT_PROCESS_DATE IS NULL THEN '-' ELSE TO_CHAR(B.PEJABAT_PROCESS_DATE,'DD-MM-YYYY') END AS APROVE_DATE,
         CASE WHEN C.PRINTED_DATE IS NULL THEN '-' ELSE TO_CHAR(C.PRINTED_DATE,'DD-MM-YYYY') END AS PRINTED_DATE,
@@ -83,30 +117,46 @@ export async function GET(req: Request) {
       ) C ON A.NO_KK = C.NO_KK
       WHERE 1=1
         AND ( :b_no_kec IS NULL OR A.NO_KEC = :b_no_kec )
-        AND (
-          :b_no_kk IS NULL OR A.NO_KK = :b_no_kk
-          OR (
-            :b_no_kk_csv IS NOT NULL AND TO_CHAR(A.NO_KK) IN (
-              SELECT TRIM(REGEXP_SUBSTR(:b_no_kk_csv, '[^,]+', 1, LEVEL))
-              FROM DUAL
-              CONNECT BY REGEXP_SUBSTR(:b_no_kk_csv, '[^,]+', 1, LEVEL) IS NOT NULL
-            )
-          )
-        )
-      ORDER BY A.NO_KEC, A.NO_KEL, A.NO_RW, A.NO_RT, A.NO_KK
     `;
 
-    const rows = await execRows(sql, {
-      b_no_kec: noKec,
-      b_no_kk: b_no_kk,
-      b_no_kk_csv: b_no_kk_csv,
+    let sql = baseSql;
+    let binds: Record<string, any> = { b_no_kec: no_kec };
+
+    if (isSingle) {
+      sql += ` AND TO_CHAR(A.NO_KK) = :b_no_kk `;
+      binds.b_no_kk = kkList[0];
+    } else {
+      const { clause, binds: kkBinds } = buildInClause(kkList, "kk");
+      sql += ` AND TO_CHAR(A.NO_KK) IN (${clause}) `;
+      binds = { ...binds, ...kkBinds };
+    }
+
+    sql += ` ORDER BY A.NO_KEC, A.NO_KEL, A.NO_RW, A.NO_RT, A.NO_KK `;
+
+    const rows = await execRows(sql, binds, {}, ORACLE_ALIAS);
+    const items = Array.isArray(rows) ? rows : [];
+
+    await Log.info({
+      scope: "API",
+      msg: "kk status served",
+      at: "/api/check/kk/status",
+      tookMs: Date.now() - t0,
+      extra: { count: items.length, isSingle, no_kec: no_kec ?? "-" },
     });
 
-    return ok({ items: rows, count: rows.length });
+    // kalau mau cache 30 detik: ok({ items, count: items.length }, 30)
+    return ok({ items, count: items.length });
   } catch (e: any) {
-    if (String(e?.message || "").includes("ORA-")) {
-      return badRequest("Query KK gagal dieksekusi. Cek parameter atau hak akses DB.");
-    }
-    return err(e?.message || "Gagal memuat status KK", { scope: "API/CHECK_KK_STATUS" });
+    await Log.error({
+      scope: "API",
+      msg: "kk status error",
+      at: "/api/check/kk/status",
+      tookMs: Date.now() - t0,
+      err: { name: e?.name || "Error", message: e?.message || String(e) },
+    });
+
+    const m = e?.message || "Gagal memuat status KK";
+    if (/ORA-/i.test(m)) return badRequest("Query KK gagal dieksekusi. Cek parameter atau hak akses DB.");
+    return err(m, 500);
   }
 }
