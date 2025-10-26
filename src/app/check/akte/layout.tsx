@@ -1,4 +1,4 @@
-// FILE: src/app/check/kk/layout.tsx
+// FILE: src/app/check/akte/layout.tsx
 import "../../globals.css";
 import MainLayoutClient from "./mainlayout";
 import { SessionProvider } from "@/contexts/session";

@@ -415,3 +415,184 @@ html[data-theme="light"] div.dt-button-info > div { color:#475569; font-size:.8r
   @page { margin: 10mm; }
 }
 
+/* === Custom top/bottom bar & pager (dipakai JQDataTable baru) ================= */
+
+.dt-top-bar{
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:10px; margin-bottom:12px;
+}
+.dt-top-bar .dt-left{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.dt-top-bar .dt-right{ margin-left:auto; }
+.dt-top-bar .dt-right .dataTables_filter{ margin:0; }
+.dt-top-bar .dt-right .dataTables_filter label{ margin:0; }
+.dt-top-bar .dt-right .dataTables_filter input{ min-width:220px; }
+
+/* bottom bar container + custom pager */
+.dt-bottom{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px; margin-top:12px;
+}
+.dt-pager{
+  display:flex; align-items:center; flex-wrap:wrap; gap:6px;
+}
+
+/* dark buttons for custom pager */
+.dt-pager button{
+  border:1px solid rgba(39,243,255,.25);
+  background:linear-gradient(180deg,#0f1022,#0c0d1c);
+  color:var(--cp-text);
+  border-radius:8px; padding:5px 10px; font-size:12px;
+  box-shadow:var(--cp-soft-glow);
+  transition:transform .15s ease, border-color .15s ease;
+}
+.dt-pager button:hover{ transform:translateY(-1px); border-color:var(--cp-primary); }
+.dt-pager button.is-active{
+  border-color:var(--cp-primary);
+  box-shadow:0 0 0 3px rgba(39,243,255,.12), var(--cp-soft-glow);
+}
+.dt-pager button.is-disabled{ opacity:.4; cursor:not-allowed; }
+
+/* Light theme overrides ------------------------------------------------------ */
+html[data-theme="light"] .dt-top-bar{ gap:10px; }
+html[data-theme="light"] .dt-pager button{
+  border:1px solid #e7d6a1;
+  background:#fff; color:var(--dtL-text);
+  box-shadow:0 2px 10px rgba(15,23,42,.06);
+}
+html[data-theme="light"] .dt-pager button:hover{
+  border-color:var(--dtL-gold); transform:translateY(-1px);
+}
+html[data-theme="light"] .dt-pager button.is-active{
+  border-color:var(--dtL-gold);
+  box-shadow:0 0 0 3px rgba(201,164,92,.18), 0 2px 10px rgba(15,23,42,.06);
+}
+
+/* === Fix: Style length menu <select> + dropdown options =================== */
+/* container label + select */
+.dataTables_wrapper .dataTables_length {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* SELECT (dark) */
+.dataTables_wrapper .dataTables_length select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: linear-gradient(180deg, #0f1022, #0c0d1c);
+  color: var(--cp-text);
+  border: 1px solid rgba(39,243,255,.25);
+  border-radius: 10px;
+  padding: 6px 30px 6px 10px;   /* ruang untuk ikon panah */
+  line-height: 1.2;
+  outline: 0;
+  box-shadow: var(--cp-soft-glow);
+  cursor: pointer;
+  min-width: 80px;
+}
+.dataTables_wrapper .dataTables_length select:focus {
+  border-color: var(--cp-primary);
+  box-shadow: 0 0 0 3px rgba(39,243,255,.12), var(--cp-soft-glow);
+}
+.dataTables_wrapper .dataTables_length select::-ms-expand { display: none; } /* IE */
+
+/* opsi dropdown (didukung Chrome/Edge/Firefox modern) */
+.dataTables_wrapper .dataTables_length select option {
+  background: #0c0d1c;
+  color: var(--cp-text);
+}
+
+/* panah kustom di sisi kanan select */
+.dataTables_wrapper .dataTables_length {
+  position: relative;
+}
+.dataTables_wrapper .dataTables_length::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  width: 10px;
+  height: 6px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: 10px 6px;
+  /* panah cyan */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 8'><path fill='%2327f3ff' d='M7 8L0 0h14z'/></svg>");
+  opacity: .9;
+}
+
+/* LIGHT THEME OVERRIDES */
+html[data-theme="light"] .dataTables_wrapper .dataTables_length select {
+  background: #fff;
+  color: var(--dtL-text);
+  border: 1px solid var(--dtL-border);
+  box-shadow: 0 2px 10px rgba(15,23,42,.06);
+}
+html[data-theme="light"] .dataTables_wrapper .dataTables_length select:focus {
+  border-color: var(--dtL-gold);
+  box-shadow: 0 0 0 3px rgba(201,164,92,.18);
+}
+html[data-theme="light"] .dataTables_wrapper .dataTables_length select option {
+  background: #fff;
+  color: var(--dtL-text);
+}
+html[data-theme="light"] .dataTables_wrapper .dataTables_length::after {
+  /* panah gold */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 8'><path fill='%23c9a45c' d='M7 8L0 0h14z'/></svg>");
+}
+
+/* === DataTables Length Menu (Tampilkan _MENU_ data) ======================= */
+/* Kompatibel v1 (.dataTables_wrapper) & v2 (.dt-container) */
+
+/* Layout label + select */
+.dataTables_wrapper .dataTables_length,
+.dt-container .dt-length {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* WARNA TEKS LABEL (dark) */
+.dataTables_wrapper .dataTables_length label,
+.dt-container .dt-length label {
+  color: var(--cp-muted); /* tetap terbaca di dark */
+}
+
+/* == DARK =============================================================== */
+/* Select di dark: gradient, cyan borders, chevron cyan di dalam select */
+.dataTables_wrapper .dataTables_length select,
+.dt-container .dt-length select.dt-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: linear-gradient(180deg, #0f1022, #0c0d1c);
+  color: var(--cp-text);
+  border: 1px solid rgba(39,243,255,.25);
+  border-radius: 10px;
+  padding: 6px 30px 6px 10px;   /* ruang untuk chevron di kanan */
+  line-height: 1.2;
+  outline: 0;
+  box-shadow: var(--cp-soft-glow);
+  cursor: pointer;
+  min-width: 88px;
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 6px;
+  /* chevron cyan */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 8'><path fill='%2327f3ff' d='M7 8L0 0h14z'/></svg>");
+}
+
+.dataTables_wrapper .dataTables_length select:focus,
+.dt-container .dt-length select.dt-input:focus {
+  border-color: var(--cp-primary);
+  box-shadow: 0 0 0 3px rgba(39,243,255,.12), var(--cp-soft-glow);
+}
+
+/* Warna opsi dropdown di dark agar tetap terbaca */
+.dataTables_wrapper .dataTables_length select option,
+.dt-container .dt-length select.dt-input option {
+  background: #0c0d1c;
+  color: var(--cp-text);
+}

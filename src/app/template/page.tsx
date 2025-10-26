@@ -1,23 +1,43 @@
 // FILE: src/app/template/page.tsx
 "use client";
+import { RefreshCcw } from "lucide-react";
+import { useSession } from "@/contexts/session";
 
 export default function TemplatePage() {
+  const { user } = useSession();
+  const total = 0;
   return (
-    <div className="relative px-8 pb-8 pt-6 md:pt-8 text-gray-200 space-y-8 mt-5">
-      {/* Ambient glow */}
+    <div className="relative mt-5 space-y-8 px-4 pb-10 pt-6 text-gray-100 sm:px-6 md:px-8 md:pt-8">
+      {/* glow kecil */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute top-[-15%] left-[15%] w-[1100px] h-[1100px] bg-cyan-500/15 blur-[220px] rounded-full" />
-        <div className="absolute bottom-[-20%] right-[18%] w-[1000px] h-[1000px] bg-fuchsia-600/12 blur-[190px] rounded-full" />
+        <div className="absolute left-[15%] top-[-15%] h-[1100px] w-[1100px] rounded-full bg-cyan-500/15 blur-[220px]" />
+        <div className="absolute right-[18%] bottom-[-20%] h-[1000px] w-[1000px] rounded-full bg-fuchsia-600/12 blur-[190px]" />
       </div>
 
-      <section className="rounded-2xl border border-cyan-800/40 bg-[#0b0b1a]/80 backdrop-blur-xl shadow-[0_0_34px_#00ffff22] overflow-hidden">
-        <header className="px-5 py-4 border-b border-cyan-900/50">
+      <section className="rounded-3xl border border-cyan-800/40 bg-[#0b0b1a]/80 shadow-[0_0_34px_#00ffff22] backdrop-blur-xl overflow-hidden">
+        {/* header lebih ringkas */}
+        <header className="border-b border-cyan-900/50 px-5 py-4">
           <div className="flex items-center gap-3">
-            <span className="inline-block w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_12px_#22d3ee]" />
-            <h1 className="text-base font-semibold tracking-wide text-cyan-200">
-              Template
-            </h1>
-            <div className="ml-auto h-[2px] w-48 bg-gradient-to-r from-cyan-400 via-pink-400 to-transparent opacity-70" />
+            <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee]" />
+            <h1 className="text-base font-semibold tracking-wide text-cyan-200">Monitoring — Template Untuk Menu Baru</h1>
+            <div className="ml-auto flex items-center gap-2">
+              {total > 0 ? (
+                <span className="ml-auto text-xs text-cyan-200/80">
+                  Total: <span className="font-semibold text-cyan-100">{total}</span> data
+                </span>
+              ) : null}
+              <div className="rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100/80">
+                User: {(user as any)?.S_NAMA_LGKP ?? (user as any)?.S_USER_ID ?? "-"}
+              </div>
+              <button
+                type="button"
+                onClick={()=>window.location.reload()}
+                className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-[11px] font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
+              >
+                <RefreshCcw className="h-3.5 w-3.5" />
+                Refresh
+              </button>
+            </div>
           </div>
         </header>
 

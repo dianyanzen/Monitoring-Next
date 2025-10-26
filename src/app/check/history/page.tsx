@@ -1,4 +1,4 @@
-// FILE: src/app/(routes)/check/history/page.tsx
+// FILE: src/app/check/history/page.tsx
 "use client";
 
 import { useMemo, useState } from "react";

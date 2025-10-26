@@ -1,3 +1,4 @@
+// FILE: src/app/check/duplicate/page.tsx
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
