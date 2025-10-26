@@ -166,6 +166,11 @@ export default function HistoryPage() {
                Monitoring — History Cetak KTP-El
             </h1>
              <div className="ml-auto flex items-center gap-2">
+              {total > 0 ? (
+              <span className="ml-auto text-xs text-cyan-200/80">
+                Total: <span className="font-semibold text-cyan-100">{total}</span> data
+              </span>
+            ) : null}
               <div className="rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100/80">
                 User: {(user as any)?.S_NAMA_LGKP ?? (user as any)?.S_USER_ID ?? "-"}
               </div>
@@ -178,11 +183,7 @@ export default function HistoryPage() {
                 Refresh
               </button>
             </div>
-            {total > 0 ? (
-              <span className="ml-auto text-xs text-cyan-200/80">
-                Total: <span className="font-semibold text-cyan-100">{total}</span> data
-              </span>
-            ) : null}
+            
           </div>
         </header>
 
@@ -190,7 +191,7 @@ export default function HistoryPage() {
         <div className="px-5 pb-2 pt-4">
           <div className="flex flex-wrap items-center gap-3">
             <label className="inline-flex items-center gap-2 rounded-lg border border-cyan-400/25 bg-[#0c1220]/70 px-4 py-2 text-sm text-cyan-100">
-              <input type="checkbox" checked readOnly className="accent-cyan-500" />
+              <input type="checkbox" checked readOnly className="lux-checkbox" />
               NIK
             </label>
 

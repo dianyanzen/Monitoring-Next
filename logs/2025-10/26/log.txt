@@ -1,0 +1,2 @@
+[2025-10-26 10:25:22.459] [INFO] [SYSTEM] Oracle pool created {"extra":{"alias":"DB"}}
+[2025-10-26 10:25:22.684] [INFO] [SYSTEM] Oracle pool created {"extra":{"alias":"WEBDB"}}

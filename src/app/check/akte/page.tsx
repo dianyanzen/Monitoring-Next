@@ -35,7 +35,7 @@ const statusLabel = (code?: string) => {
   }
 };
 
-// fallback icon
+// fallback icon (untuk “SUDAH DIPUBLISH”)
 function CheckBadge(props: any){
   return (
     <svg viewBox="0 0 24 24" width={14} height={14} {...props}>
@@ -45,16 +45,9 @@ function CheckBadge(props: any){
   );
 }
 
-/** Bersihkan UI text:
- * - UPPERCASE
- * - hapus seluruh spasi/tab
- * - ijinkan -, /, ., koma, serta newline
- */
+/** Bersihkan UI text (UPPERCASE, hapus spasi/tab, izinkan -, /, ., koma, newline) */
 function cleanUIText(s: string) {
-  return s
-    .toUpperCase()
-    .replace(/[ \t]+/g, "")
-    .replace(/[^A-Z0-9\-\/\.,\r\n]/g, "");
+  return s.toUpperCase().replace(/[ \t]+/g, "").replace(/[^A-Z0-9\-\/\.,\r\n]/g, "");
 }
 
 /** Ubah isi textarea → querystring untuk API */
@@ -80,7 +73,7 @@ function bucketStatus(code?: string): StatusBucket {
   return "PUBLISH";
 }
 
-/** Semua jenis yang didukung (harus match dengan API) */
+/** Semua jenis yang didukung (match API / map) */
 const ALL_JENIS = [
   "BAKAK",
   "KELAHIRAN",
@@ -102,6 +95,7 @@ export default function AkteStatusPage(){
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  
   // FILTER STATES
   const [only3273, setOnly3273] = useState(false);
   const [jenisOn, setJenisOn] = useState<Record<Jenis, boolean>>(
@@ -141,19 +135,16 @@ export default function AkteStatusPage(){
   // FILTERED ROWS
   const filteredRows = useMemo(()=>{
     return rows.filter(r => {
-      // 1) 3273- only?
       if (only3273 && !String(r.NO_DOC || "").startsWith("3273-")) return false;
 
-      // 2) Jenis on/off
       const j = (r.JNS_AKTA || "").toUpperCase() as Jenis;
       if (ALL_JENIS.includes(j as Jenis)) {
         if (!jenisOn[j as Jenis]) return false;
       } else {
-        // Jika ada jenis tak terduga, treat sebagai BAKAK (paling longgar)
+        // jenis tak terduga → treat sebagai BAKAK (paling longgar)
         if (!jenisOn["BAKAK"]) return false;
       }
 
-      // 3) Status on/off
       const b = bucketStatus(r.CERT_STATUS);
       if (!statusOn[b]) return false;
 
@@ -176,41 +167,49 @@ export default function AkteStatusPage(){
   }
   function toggleStatus(s: StatusBucket){ setStatusOn(prev => ({ ...prev, [s]: !prev[s] })); }
 
-  // Placeholder & legend
+  // Placeholder (menjelaskan jenis akta yang bisa dimasukkan)
   const placeholder = [
     "Masukkan banyak nomor akta (pisah baris atau koma).",
-    "Didukung (sesuai data BSRE):",
-    "- AKTA KELAHIRAN / BAKAK :",
-    "- AKTA KEMATIAN / LAHIR MATI:",
-    "- TANPA ASAL USUL (TAU) :",
-    "- PENGAKUAN / PENGESAHAN :",
-    "- PERCERAIAN / PERKAWINAN :"
+    "Diterima (sesuai data BSRE):",
+    "• AKTA KELAHIRAN / BAKAK",
+    "• AKTA KEMATIAN / LAHIR MATI",
+    "• AKTA TANPA ASAL USUL (TAU)",
+    "• AKTA PENGAKUAN / PENGESAHAN ANAK (PGK/PGS)",
+    "• AKTA PERCERAIAN / PERKAWINAN",
+    "",
+    "Contoh:",
+    "3273-LT-06052019-0051",
+    "474.1/374/464.11/1985",
+    "56.773/TAMBAHAN/1988",
   ].join("\n");
 
   return (
     <div className="relative mt-5 space-y-8 px-4 pb-10 pt-6 text-gray-100 sm:px-6 md:px-8 md:pt-8">
-      {/* glow kecil */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-[15%] top-[-15%] h-[1100px] w-[1100px] rounded-full bg-cyan-500/15 blur-[220px]" />
         <div className="absolute right-[18%] bottom-[-20%] h-[1000px] w-[1000px] rounded-full bg-fuchsia-600/12 blur-[190px]" />
       </div>
 
-      <section className="rounded-3xl border border-cyan-800/40 bg-[#0b0b1a]/80 shadow-[0_0_34px_#00ffff22] backdrop-blur-xl overflow-hidden">
-        {/* Header */}
+      <section className="rounded-3xl border border-cyan-800/40 bg-[#0b0b1a]/80 shadow-[0_0_34px_#00ffff22] backdrop-blur-xl">
         <header className="border-b border-cyan-900/50 px-5 py-4">
           <div className="flex items-center gap-3">
-            <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee]" />
+            <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_12px_#22d3ee]" />
             <h1 className="text-base font-semibold tracking-wide text-cyan-200">
               Monitoring — Status Akta Terdistribusi
             </h1>
             <div className="ml-auto flex items-center gap-2">
+              {total > 0 ? (
+              <span className="ml-auto text-xs text-cyan-200/80">
+                Total: <span className="font-semibold text-cyan-100">{total}</span> data
+              </span>
+            ) : null}
               <div className="rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100/80">
                 User: {(user as any)?.S_NAMA_LGKP ?? (user as any)?.S_USER_ID ?? "-"}
               </div>
               <button
                 type="button"
                 onClick={()=>window.location.reload()}
-                className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-[11px] font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
+                className="lux-btn inline-flex items-center gap-2 border-cyan-500/40 bg-cyan-500/10 text-[11px] font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
               >
                 <RefreshCcw className="h-3.5 w-3.5" />
                 Refresh
@@ -223,8 +222,8 @@ export default function AkteStatusPage(){
         <div className="px-5 pb-2 pt-4 space-y-4">
           {/* Input */}
           <div className="flex flex-wrap items-start gap-3">
-            <label className="inline-flex items-center gap-2 rounded-lg border border-cyan-400/25 bg-[#0c1220]/70 px-4 py-2 text-sm text-cyan-100">
-              <input type="checkbox" checked readOnly className="accent-cyan-500" />
+            <label className="lux-label inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm">
+              <input type="checkbox" checked readOnly className="lux-checkbox" />
               No Akta
             </label>
 
@@ -241,10 +240,12 @@ export default function AkteStatusPage(){
                 }}
                 onKeyUp={(e)=>{ if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) search(); }}
                 placeholder={placeholder}
-                className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                className="lux-textarea w-full rounded-lg border px-3 py-2 text-sm outline-none transition
+                           dark:border-cyan-800/50 dark:bg-black/30 dark:text-cyan-100 dark:focus:border-cyan-400 dark:focus:ring-1 dark:focus:ring-cyan-400"
               />
               <p className="mt-2 text-[11px] text-cyan-200/70">
-                Tips: Tempel langsung dari Excel/Word. Spasi akan otomatis dihilangkan. Tekan <kbd className="rounded bg-cyan-500/20 px-1">Ctrl/⌘</kbd>+<kbd className="rounded bg-cyan-500/20 px-1">Enter</kbd> untuk mencari.
+                Tips: Tempel dari Excel/Word. Spasi akan dihapus otomatis. Tekan{" "}
+                <kbd className="rounded bg-cyan-500/20 px-1">Ctrl/⌘</kbd>+<kbd className="rounded bg-cyan-500/20 px-1">Enter</kbd> untuk mencari.
               </p>
             </div>
 
@@ -253,7 +254,8 @@ export default function AkteStatusPage(){
                 type="button"
                 onClick={search}
                 disabled={loading || !toQuery(noAkte)}
-                className="inline-flex items-center gap-2 rounded-lg border border-cyan-400/40 bg-cyan-600/25 px-4 py-2 text-sm shadow-[0_0_14px_#00ffff55] transition-colors hover:bg-cyan-600/40 disabled:cursor-not-allowed disabled:opacity-60"
+                className="lux-btn inline-flex items-center gap-2 text-sm disabled:cursor-not-allowed disabled:opacity-60
+                           dark:border-cyan-400/40 dark:bg-cyan-600/25 dark:shadow-[0_0_14px_#00ffff55] dark:hover:bg-cyan-600/40"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
                 {loading ? "Loading…" : "Search"}
@@ -261,7 +263,8 @@ export default function AkteStatusPage(){
               <button
                 type="button"
                 onClick={clearAll}
-                className="inline-flex items-center gap-2 rounded-lg border border-cyan-400/25 bg-[#0c1220]/70 px-4 py-2 text-sm text-cyan-100 transition-colors hover:bg-[#0c1220]/90"
+                className="lux-btn inline-flex items-center gap-2 text-sm
+                           dark:border-cyan-400/25 dark:bg-[#0c1220]/70 dark:text-cyan-100 dark:hover:bg-[#0c1220]/90"
               >
                 <Trash2 className="h-4 w-4" />
                 Clear
@@ -270,13 +273,15 @@ export default function AkteStatusPage(){
           </div>
 
           {/* Filters */}
-          <div className="rounded-xl border border-cyan-800/40 bg-black/20 p-3">
+          <div className="akte-toolbar rounded-xl border border-cyan-800/40 bg-black/20 p-3">
             <div className="flex flex-wrap items-center gap-3">
               {/* 3273-only */}
               <button
                 type="button"
                 onClick={()=>setOnly3273(v => !v)}
-                className={`px-3 py-1.5 rounded-lg text-xs border ${only3273 ? "border-cyan-400 bg-cyan-500/20 text-cyan-100" : "border-cyan-800/50 text-cyan-200 hover:bg-cyan-500/10"}`}
+                className={`lux-chip ${only3273 ? "is-on" : ""} text-xs
+                  dark:${only3273 ? "border-cyan-400 bg-cyan-500/20 text-cyan-100" : "border-cyan-800/50 text-cyan-200 hover:bg-cyan-500/10"}`}
+                title="Filter prefix 3273-"
               >
                 {only3273 ? "✓ " : ""}Hanya 3273-
               </button>
@@ -284,28 +289,32 @@ export default function AkteStatusPage(){
               {/* Jenis chips */}
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-[11px] text-cyan-200/70">Jenis:</span>
-                {ALL_JENIS.map(j => (
-                  <button
-                    key={j}
-                    type="button"
-                    onClick={()=>toggleJenis(j)}
-                    className={`px-3 py-1.5 rounded-lg text-xs border ${jenisOn[j] ? "border-cyan-400 bg-cyan-500/20 text-cyan-100" : "border-cyan-800/50 text-cyan-200 hover:bg-cyan-500/10"}`}
-                    title={j}
-                  >
-                    {jenisOn[j] ? "✓ " : ""}{j}
-                  </button>
-                ))}
+                {ALL_JENIS.map(j => {
+                  const on = !!jenisOn[j];
+                  return (
+                    <button
+                      key={j}
+                      type="button"
+                      onClick={()=>toggleJenis(j)}
+                      className={`lux-chip ${on ? "is-on" : ""} text-xs
+                        dark:${on ? "border-cyan-400 bg-cyan-500/20 text-cyan-100" : "border-cyan-800/50 text-cyan-200 hover:bg-cyan-500/10"}`}
+                      title={j}
+                    >
+                      {on ? "✓ " : ""}{j}
+                    </button>
+                  );
+                })}
                 <button
                   type="button"
                   onClick={()=>setAllJenis(true)}
-                  className="px-3 py-1.5 rounded-lg text-xs border border-cyan-800/50 text-cyan-200 hover:bg-cyan-500/10"
+                  className="lux-chip text-xs dark:border-cyan-800/50 dark:text-cyan-200 dark:hover:bg-cyan-500/10"
                 >
                   Semua
                 </button>
                 <button
                   type="button"
                   onClick={()=>setAllJenis(false)}
-                  className="px-3 py-1.5 rounded-lg text-xs border border-cyan-800/50 text-cyan-200 hover:bg-cyan-500/10"
+                  className="lux-chip text-xs dark:border-cyan-800/50 dark:text-cyan-200 dark:hover:bg-cyan-500/10"
                 >
                   Kosongkan
                 </button>
@@ -314,23 +323,27 @@ export default function AkteStatusPage(){
               {/* Status chips */}
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-[11px] text-cyan-200/70">Status:</span>
-                {(["NF","BELUM","PROSES","PUBLISH"] as StatusBucket[]).map(s => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={()=>toggleStatus(s)}
-                    className={`px-3 py-1.5 rounded-lg text-xs border ${statusOn[s] ? "border-cyan-400 bg-cyan-500/20 text-cyan-100" : "border-cyan-800/50 text-cyan-200 hover:bg-cyan-500/10"}`}
-                    title={s}
-                  >
-                    {statusOn[s] ? "✓ " : ""}{s}
-                  </button>
-                ))}
+                {(["NF","BELUM","PROSES","PUBLISH"] as StatusBucket[]).map(s => {
+                  const on = !!statusOn[s];
+                  return (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={()=>toggleStatus(s)}
+                      className={`lux-chip ${on ? "is-on" : ""} text-xs
+                        dark:${on ? "border-cyan-400 bg-cyan-500/20 text-cyan-100" : "border-cyan-800/50 text-cyan-200 hover:bg-cyan-500/10"}`}
+                      title={s}
+                    >
+                      {on ? "✓ " : ""}{s}
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Summary */}
-              <div className="ml-auto text-[11px] text-cyan-200/80">
-                Total: <span className="font-semibold text-cyan-100">{total}</span> •
-                NF: <span className="font-semibold text-cyan-100">{nfCount}</span> •
+              <div className="akte-summary ml-auto text-[11px] text-cyan-200/80">
+                Total: <span className="font-semibold text-cyan-100">{total}</span> •{" "}
+                NF: <span className="font-semibold text-cyan-100">{nfCount}</span> •{" "}
                 Tersaring: <span className="font-semibold text-cyan-100">{filteredRows.length}</span>
               </div>
             </div>
@@ -340,7 +353,7 @@ export default function AkteStatusPage(){
         {/* Table */}
         <div className="p-4">
           <div className="overflow-hidden rounded-xl border border-cyan-800/40 bg-black/30">
-            <div className="overflow-x-auto" aria-busy={loading} aria-live="polite">
+            <div className="overflow-x-auto akte-table" aria-busy={loading} aria-live="polite">
               <table className="min-w-full divide-y divide-cyan-800/60 text-[13px] text-cyan-100/90">
                 <thead className="bg-cyan-500/10 text-[11px] uppercase tracking-wide text-cyan-200">
                   <tr>
@@ -386,7 +399,7 @@ export default function AkteStatusPage(){
 
                           {/* STATUS */}
                           <td className="px-3 py-2 text-center">
-                            <div className="inline-flex items-center gap-2 text-[11px] px-2 py-0.5 rounded-full bg-cyan-500/10">
+                            <div className="akte-status inline-flex items-center gap-2 text-[11px] px-2 py-0.5 rounded-full bg-cyan-500/10">
                               <StatusIcon className="opacity-80" size={12} />
                               <span className="font-semibold text-cyan-200">{S.text}</span>
                             </div>
@@ -409,14 +422,16 @@ export default function AkteStatusPage(){
                             {canDownload ? (
                               <div className="flex flex-col items-center gap-1">
                                 <button
-                                  className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-lg border border-cyan-800/40"
+                                  className="lux-btn inline-flex items-center gap-1 text-[11px] px-2 py-0.5
+                                             dark:border-cyan-800/40"
                                   onClick={()=>window.open(r.URL_DOWNLOAD,"_blank")}
                                 >
                                   <Download size={12}/> KUTIPAN
                                 </button>
                                 {r.URL_REGISTER !== "-" ? (
                                   <button
-                                    className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-lg border border-cyan-800/40"
+                                    className="lux-btn inline-flex items-center gap-1 text-[11px] px-2 py-0.5
+                                               dark:border-cyan-800/40"
                                     onClick={()=>window.open(r.URL_REGISTER,"_blank")}
                                   >
                                     <Download size={12}/> REGISTER
@@ -435,6 +450,13 @@ export default function AkteStatusPage(){
           </div>
         </div>
       </section>
+
+      {/* Error banner */}
+      {error ? (
+        <div className="mx-5 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+          {error}
+        </div>
+      ) : null}
     </div>
   );
 }

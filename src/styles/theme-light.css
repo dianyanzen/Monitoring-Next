@@ -556,3 +556,343 @@ html[data-theme="light"] .card.prestige > .gold-underline {
   height: 2px;
   opacity: .9;
 }
+
+/* ==============================
+   Luxe Light – component classes
+   ============================== */
+
+/* Label filter (chip) */
+html[data-theme="light"] .lux-label {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem 1rem;
+  border: 1px solid var(--lux-border);
+  border-radius: .75rem;
+  background: var(--surface);
+  color: var(--lux-ink);
+  box-shadow: var(--shadow-sm);
+  transition: background .2s, border-color .2s, box-shadow .2s;
+}
+html[data-theme="light"] .lux-label:hover {
+  background: var(--surface-alt);
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%);
+}
+html[data-theme="light"] .lux-label:has(input:focus-visible) {
+  box-shadow: var(--focus-ring);
+}
+
+/* Checkbox & radio */
+html[data-theme="light"] .lux-checkbox,
+html[data-theme="light"] .lux-radio {
+  accent-color: var(--gold-1);
+  outline: none;
+}
+
+/* Input & Textarea */
+html[data-theme="light"] .lux-input,
+html[data-theme="light"] .lux-textarea {
+  background: var(--surface);
+  color: var(--lux-ink);
+  border: 1px solid var(--lux-border);
+  border-radius: .75rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+html[data-theme="light"] .lux-input::placeholder,
+html[data-theme="light"] .lux-textarea::placeholder {
+  color: var(--ink-muted);
+}
+html[data-theme="light"] .lux-input:focus,
+html[data-theme="light"] .lux-textarea:focus {
+  outline: none;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%);
+  box-shadow: var(--focus-ring);
+}
+
+/* Button (netral elegan) */
+html[data-theme="light"] .lux-btn {
+  background: #fff;
+  color: var(--lux-ink);
+  border: 1px solid var(--lux-border);
+  border-radius: .75rem;
+  padding: .5rem 1rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  transition: background .2s, border-color .2s, box-shadow .2s, transform .05s;
+}
+html[data-theme="light"] .lux-btn:hover {
+  background: var(--surface-alt);
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%);
+}
+html[data-theme="light"] .lux-btn:active {
+  transform: translateY(1px);
+}
+
+/* Badge/pill status */
+html[data-theme="light"] .lux-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .125rem .5rem;
+  border-radius: 999px;
+  font-size: 11px;
+  background: var(--accent-muted);
+  color: var(--accent-ink);
+  border: 1px solid color-mix(in oklab, var(--gold-300), #000 10%);
+}
+
+/* Panel/kartu */
+html[data-theme="light"] .lux-card {
+  background: #fff;
+  border: 1px solid var(--lux-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+}
+
+/* ---------- Dark fallback agar tetap match tema lama ---------- */
+html[data-theme="dark"] .lux-label {
+  background: #0c1220b3;
+  color: #e6fbff;
+  border: 1px solid rgba(34,211,238,.25);
+}
+html[data-theme="dark"] .lux-checkbox,
+html[data-theme="dark"] .lux-radio {
+  accent-color: #22d3ee;
+}
+html[data-theme="dark"] .lux-input,
+html[data-theme="dark"] .lux-textarea {
+  background: rgba(0,0,0,.3);
+  color: #d9fbff;
+  border: 1px solid rgba(8,145,178,.4);
+}
+html[data-theme="dark"] .lux-btn {
+  background: rgba(8,145,178,.15);
+  color: #d9fbff;
+  border: 1px solid rgba(34,211,238,.25);
+}
+
+/* =========================================================
+   LIGHT – Patch khusus halaman /check/akte (tanpa ubah JSX)
+   ========================================================= */
+
+/* Panel utama yang semula gelap → putih elegan */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section.rounded-3xl.border {
+  background: #fff !important;
+  border: 1px solid var(--lux-border) !important;
+  box-shadow: var(--lux-shadow) !important;
+  backdrop-filter: blur(10px);
+}
+
+/* Header panel: garis emas tipis */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section header {
+  background: #fff !important;
+  border-bottom: 1px solid var(--lux-border) !important;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section header h1 {
+  color: var(--lux-ink) !important;
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section header .inline-block.h-2.w-2.rounded-full {
+  background: color-mix(in oklab, var(--gold-400), #fff 12%) !important;
+  box-shadow: 0 0 10px rgba(210,182,138,.35);
+}
+
+/* Badge user (semula cyan) → soft gold */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section header .rounded-full[class*="border-cyan-"][class*="bg-cyan-"] {
+  border-color: color-mix(in oklab, var(--gold-300), #000 15%) !important;
+  background: var(--gold-50) !important;
+  color: var(--accent-ink) !important;
+}
+
+/* Tombol Refresh: netral elegan */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section header button[class*="bg-cyan-"] {
+  background: #fff !important;
+  color: var(--lux-ink) !important;
+  border: 1px solid var(--lux-border) !important;
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section header button[class*="bg-cyan-"]:hover {
+  background: var(--surface-alt) !important;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
+}
+
+/* Toolbar container */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .px-5.pb-2.pt-4 > .rounded-xl {
+  background: #fff !important;
+  border: 1px solid var(--lux-border) !important;
+  box-shadow: var(--lux-shadow) !important;
+}
+
+/* Label “No Akta” → pakai komponen luxe */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section label.inline-flex[class*="bg-[#0c1220]"] {
+  background: var(--surface) !important;
+  color: var(--lux-ink) !important;
+  border: 1px solid var(--lux-border) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+/* Textarea input */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section textarea[class*="bg-black/30"] {
+  background: #fff !important;
+  color: var(--lux-ink) !important;
+  border: 1px solid var(--lux-border) !important;
+  box-shadow: var(--shadow-sm);
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section textarea[class*="bg-black/30"]::placeholder {
+  color: var(--ink-muted) !important;
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section textarea[class*="focus:border-cyan-400"] {
+  outline: none !important;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
+  box-shadow: var(--focus-ring) !important;
+}
+
+/* Tips kbd */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section kbd {
+  background: var(--surface-2) !important;
+  border: 1px solid var(--lux-border);
+  box-shadow: var(--shadow-sm);
+  color: var(--lux-ink);
+}
+
+/* Tombol Search (semula cyan) → primary gold */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="bg-cyan-600/25"] {
+  background: var(--gold-grad) !important;
+  color: var(--accent-ink) !important;
+  border-color: color-mix(in oklab, var(--gold-400), #000 18%) !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,.25);
+  box-shadow: 0 8px 22px rgba(210,182,138,.22) !important;
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="bg-cyan-600/25"]:hover {
+  filter: saturate(1.02) brightness(1.02);
+}
+
+/* Tombol Clear (gelap) → netral */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="bg-[#0c1220]"] {
+  background: #fff !important;
+  color: var(--lux-ink) !important;
+  border: 1px solid var(--lux-border) !important;
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="bg-[#0c1220]"]:hover {
+  background: var(--surface-alt) !important;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
+}
+
+/* CHIP FILTER — deteksi “ON” dari util cyan → gold */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .px-3.py-1\.5.text-xs.border[class*="border-cyan-400"][class*="bg-cyan-500/20"],
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="border-cyan-400"][class*="bg-cyan-500/20"] {
+  background: var(--gold-50) !important;
+  color: var(--accent-ink) !important;
+  border-color: color-mix(in oklab, var(--gold-300), #000 18%) !important;
+  box-shadow: 0 6px 18px rgba(210,182,138,.18);
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .px-3.py-1\.5.text-xs.border[class*="border-cyan-800/50"],
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="border-cyan-800/50"] {
+  background: #fff !important;
+  color: var(--lux-ink) !important;
+  border-color: var(--lux-border) !important;
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="border-cyan-800/50"]:hover {
+  background: var(--surface-alt) !important;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
+}
+
+/* Ringkasan angka (Total/NF/Tersaring) */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .ml-auto.text-\[11px\] {
+  color: var(--lux-ink) !important;
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .ml-auto .font-semibold {
+  color: #1f2937 !important;
+}
+
+/* Tabel: header & zebra */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .overflow-hidden.rounded-xl.border[class*="bg-black/30"] {
+  background: #fff !important;
+  border: 1px solid var(--lux-border) !important;
+  box-shadow: var(--lux-shadow) !important;
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section thead[class*="bg-cyan-500/10"] {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--gold-50), #fff 40%), #fff) !important;
+  color: var(--lux-ink) !important;
+  border-bottom: 1px solid var(--lux-border);
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section thead th {
+  color: var(--ink-muted) !important;
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section tbody tr:nth-child(even) {
+  background: #fffdfa;
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section tbody tr:hover {
+  background: color-mix(in oklab, var(--gold-50), #fff 70%) !important;
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section table {
+  color: var(--lux-ink) !important;
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section tbody td,
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section thead th {
+  border-color: var(--lux-border) !important;
+}
+
+/* Status pill (semula bg-cyan-500/10) → accent muted + border */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section td .inline-flex.rounded-full[class*="bg-cyan-500/10"] {
+  background: var(--accent-muted) !important;
+  color: var(--accent-ink) !important;
+  border: 1px solid color-mix(in oklab, var(--gold-300), #000 12%) !important;
+  padding-top: .2rem; padding-bottom: .2rem;
+}
+
+/* Sel request TTE: teks default */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section td[class*="text-cyan-100/80"],
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section td [class*="text-cyan-100/80"] {
+  color: var(--lux-ink) !important;
+}
+
+/* Tombol download kecil (REGISTER/KUTIPAN) */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section td button[class*="border-cyan-800/40"] {
+  background: #fff !important;
+  color: var(--lux-ink) !important;
+  border: 1px solid var(--lux-border) !important;
+  box-shadow: var(--shadow-sm);
+}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section td button[class*="border-cyan-800/40"]:hover {
+  background: var(--surface-alt) !important;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
+}
+
+/* Empty state / loading */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .text-cyan-200\/80,
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .text-cyan-200\/70,
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .text-cyan-100\/70 {
+  color: var(--ink-muted) !important;
+}
+
+/* Matikan glow background dekoratif */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 > .pointer-events-none.absolute {
+  display: none !important;
+}
+
+/* Ikon lucide kembali ke tinta gelap */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section :is(svg.lucide, .lucide, i) {
+  color: var(--lux-ink) !important;
+  stroke: var(--lux-ink) !important;
+}
+
+/* Checkbox gold yang sudah kamu buat — paksa ukuran di toolbar chip/label */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .lux-checkbox {
+  width: 16px; height: 16px;
+}
+
+/* =========================================================
+   DARK fallback tambahan untuk elemen baru di atas
+   ========================================================= */
+html:not([data-theme="light"]) main.flex-1 > .relative.mt-5 section thead[class*="bg-cyan-500/10"] {
+  background: rgba(34,211,238,.08) !important;
+}
+html:not([data-theme="light"]) main.flex-1 > .relative.mt-5 section tbody tr:nth-child(even) {
+  background: rgba(0,0,0,.15);
+}
+html:not([data-theme="light"]) main.flex-1 > .relative.mt-5 section td .inline-flex.rounded-full[class*="bg-cyan-500/10"] {
+  background: rgba(34,211,238,.12) !important;
+  color: #cffafe !important;
+  border: 1px solid rgba(34,211,238,.25) !important;
+}

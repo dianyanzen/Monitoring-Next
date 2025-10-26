@@ -855,6 +855,11 @@ export default function DuplicatePage() {
                Monitoring — Duplicate Record KTP-El
             </h1>
              <div className="ml-auto flex items-center gap-2">
+              {totalRows > 0 ? (
+              <span className="ml-auto text-xs text-cyan-200/80">
+                Total: <span className="font-semibold text-cyan-100">{totalRows}</span> data
+              </span>
+            ) : null}
               <div className="rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100/80">
                 User: {(user as any)?.S_NAMA_LGKP ?? (user as any)?.S_USER_ID ?? "-"}
               </div>

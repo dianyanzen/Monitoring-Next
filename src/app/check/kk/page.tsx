@@ -95,6 +95,7 @@ export default function KKStatusPage(){
   const [rows, setRows]     = useState<Row[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState<string | null>(null);
+  const total = rows.length;
 
   const noKecDefault = (user as any)?.S_NO_KEC ? String((user as any).S_NO_KEC) : "";
   const inputRef = useRef<HTMLInputElement>(null);
@@ -160,6 +161,11 @@ export default function KKStatusPage(){
             <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee]" />
             <h1 className="text-base font-semibold tracking-wide text-cyan-200">Monitoring — Status KK Siak Terdistribusi</h1>
             <div className="ml-auto flex items-center gap-2">
+              {total > 0 ? (
+                <span className="ml-auto text-xs text-cyan-200/80">
+                  Total: <span className="font-semibold text-cyan-100">{total}</span> data
+                </span>
+              ) : null}
               <div className="rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100/80">
                 User: {(user as any)?.S_NAMA_LGKP ?? (user as any)?.S_USER_ID ?? "-"}
               </div>
@@ -179,7 +185,7 @@ export default function KKStatusPage(){
         <div className="px-5 pb-2 pt-4">
           <div className="flex flex-wrap items-center gap-3">
             <label className="inline-flex items-center gap-2 rounded-lg border border-cyan-400/25 bg-[#0c1220]/70 px-4 py-2 text-sm text-cyan-100">
-              <input type="checkbox" checked readOnly className="accent-cyan-500" />
+              <input type="checkbox" checked readOnly className="lux-checkbox" />
               NO KK
             </label>
 

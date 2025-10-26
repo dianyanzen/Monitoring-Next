@@ -359,3 +359,100 @@ html:not([data-theme="light"]) header {
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-subtle);
 }
+
+/* ==============================
+   Luxe Dark – component classes
+   ============================== */
+
+html:not([data-theme="light"]) .lux-label {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem 1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: .75rem;
+  background: var(--surface-1);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+  transition: background .2s, border-color .2s, box-shadow .2s;
+}
+html:not([data-theme="light"]) .lux-label:hover {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+}
+html:not([data-theme="light"]) .lux-label:has(input:focus-visible) {
+  box-shadow: var(--focus-ring);
+}
+
+/* Checkbox & radio */
+html:not([data-theme="light"]) .lux-checkbox,
+html:not([data-theme="light"]) .lux-radio {
+  accent-color: #22d3ee;
+  outline: none;
+}
+
+/* Input & Textarea */
+html:not([data-theme="light"]) .lux-input,
+html:not([data-theme="light"]) .lux-textarea {
+  background: var(--surface-1);
+  color: var(--ink);
+  border: 1px solid var(--border-subtle);
+  border-radius: .75rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+html:not([data-theme="light"]) .lux-input::placeholder,
+html:not([data-theme="light"]) .lux-textarea::placeholder {
+  color: var(--ink-muted);
+}
+html:not([data-theme="light"]) .lux-input:focus,
+html:not([data-theme="light"]) .lux-textarea:focus {
+  outline: none;
+  border-color: var(--accent-2);
+  box-shadow: var(--focus-ring);
+}
+
+/* Button (neon-soft) */
+html:not([data-theme="light"]) .lux-btn {
+  background: var(--surface-1);
+  color: var(--ink);
+  border: 1px solid var(--border-subtle);
+  border-radius: .75rem;
+  padding: .5rem 1rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  transition: background .2s, border-color .2s, box-shadow .2s, transform .05s;
+}
+html:not([data-theme="light"]) .lux-btn:hover {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm), 0 0 0 1px color-mix(in oklab, var(--accent) 40%, #0000);
+}
+html:not([data-theme="light"]) .lux-btn:active {
+  transform: translateY(1px);
+}
+
+/* Badge/pill status */
+html:not([data-theme="light"]) .lux-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .125rem .5rem;
+  border-radius: 999px;
+  font-size: 11px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--accent) 18%, #0000),
+    color-mix(in oklab, var(--accent-2) 18%, #0000)
+  );
+  color: #dff;
+  border: 1px solid var(--border-strong);
+}
+
+/* Panel/kartu */
+html:not([data-theme="light"]) .lux-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+}
