@@ -1,0 +1,88 @@
+/* FILE: src/styles/date-range-cyber.css */
+
+/* container */
+.drp-trigger{ transition: background-color .2s,border-color .2s,box-shadow .2s; }
+.drp-trigger:hover{ background-color: rgba(34,211,238,.08); border-color: rgba(34,211,238,.5); }
+
+/* base react-date-range */
+.rdrCalendarWrapper{
+  background: transparent !important;
+  color: #d1e8ff !important;
+}
+.rdrMonth{
+  background: transparent !important;
+}
+.rdrMonths{
+  gap: .75rem !important;
+}
+.rdrMonthAndYearPickers select{
+  background: #0b1424 !important;
+  color: #c3f0ff !important;
+  border: 1px solid rgba(34,211,238,.25) !important;
+  border-radius: .5rem;
+}
+
+/* weekday & day cells */
+.rdrWeekDay{
+  color: rgba(168, 227, 255, .7) !important;
+  font-size: 11px !important;
+}
+.rdrDayNumber span{
+  color: #dff9ff !important;
+}
+.rdrDayDisabled{
+  opacity: .35 !important;
+}
+.rdrDayPassive .rdrDayNumber span{
+  color: rgba(210,230,255,.35) !important;
+}
+
+/* selected range highlight cyan */
+.rdrDayStartPreview, .rdrDayEndPreview, .rdrDayInPreview{
+  border-color: rgba(34,211,238,.55) !important;
+}
+.rdrDayStartPreview, .rdrDayEndPreview{
+  box-shadow: 0 0 0 1px rgba(34,211,238,.55) inset !important;
+}
+.rdrSelected, .rdrInRange{
+  background: linear-gradient(135deg, rgba(34,211,238,.22), rgba(217,70,239,.18)) !important;
+  border-radius: .5rem !important;
+}
+.rdrStartEdge, .rdrEndEdge{
+  background: linear-gradient(135deg, rgba(34,211,238,.35), rgba(217,70,239,.28)) !important;
+}
+
+/* nav buttons */
+.rdrNextPrevButton{
+  background: #0b1424 !important;
+  border: 1px solid rgba(34,211,238,.25) !important;
+}
+.rdrNextPrevButton:hover{
+  background: rgba(34,211,238,.12) !important;
+  border-color: rgba(34,211,238,.5) !important;
+}
+
+/* inputs + actions */
+.drp-input{
+  background: #0b1424;
+  color: #e6fbff;
+  border: 1px solid rgba(34,211,238,.25);
+}
+.drp-input:focus{
+  outline: none;
+  border-color: rgba(34,211,238,.6);
+  box-shadow: 0 0 0 2px rgba(34,211,238,.25);
+}
+.btn-cancel{
+  background: transparent;
+  color: #cdeaff;
+  border: 1px solid rgba(255,255,255,.15);
+}
+.btn-cancel:hover{ background: rgba(255,255,255,.07); }
+.btn-apply{
+  background: rgba(34,211,238,.25);
+  color: #dfffff;
+  border: 1px solid rgba(34,211,238,.4);
+  box-shadow: 0 0 12px rgba(0,255,255,.35);
+}
+.btn-apply:hover{ background: rgba(34,211,238,.42); }

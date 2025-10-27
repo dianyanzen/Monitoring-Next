@@ -96,6 +96,11 @@ function ensureFooter(api: any, html: string): HTMLTableSectionElement {
 
 // ====== Export helpers ======
 const stripHtml = (d: any) => String(d ?? "").replace(/<[^>]*>/g, "");
+const NIK_COL = 2;
+const bodyXlsxWithComma = (data: any, _row: number, col: number) => {
+  const t = stripHtml(data);
+  return col === NIK_COL ? "\u200B" + t : t;
+};
 const isSensitiveCol = (col: number) => col === 2 || col === 5 || col === 9; // 2=NIK, 5=Tgl Lahir, 9=Tgl Rekam
 
 // CSV -> gunakan ="..." supaya Excel tidak memformat sebagai angka/tanggal
@@ -494,11 +499,12 @@ export default function PRRPage() {
                       bom: true,
                       exportOptions: { format: { body: bodyCsv } },
                     },
-                    {
+                    { 
                       extend: "excelHtml5",
                       text: "Excel",
-                      exportOptions: { format: { body: bodyXlsx } },
-                      customize: excelCustomize,
+                      exportOptions: {
+                        format: { body: bodyXlsxWithComma } // ⟵ hanya Excel yang ditambah koma
+                      }
                     },
                     {
                       extend: "print",
@@ -509,6 +515,7 @@ export default function PRRPage() {
 
                   order: [
                     [9, "asc"],
+                    [3, "asc"],
                     [11, "asc"],
                     [12, "asc"],
                   ],

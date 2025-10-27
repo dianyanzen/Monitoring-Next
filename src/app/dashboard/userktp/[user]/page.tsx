@@ -147,7 +147,7 @@ export default function UserKtpDetailPage() {
         <div className="px-5 pt-4 pb-2">
           <div className="flex flex-col gap-3 lg:grid lg:grid-cols-[1fr_auto] lg:items-center">
             <div className="flex flex-wrap items-center gap-3">
-              <DateRangePopup start={start} end={end} onChange={(s,e)=>{setStart(s); setEnd(e);}}/>
+              <DateRangePopup start={start} end={end} onChange={(s,e)=>{setStart(s); setEnd(e);}} minWidth={700} months={2}/>
               <span className="text-xs text-cyan-200/70">{label}</span>
               <div className="flex items-center gap-2">
                 <Chip onClick={() => { const t=todayISO(); setStart(t); setEnd(t); }}>Today</Chip>

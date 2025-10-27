@@ -114,6 +114,8 @@ export default function UserKtpPage() {
                   setStart(s);
                   setEnd(e);
                 }}
+                minWidth={700}
+                months={2}
               />
               <span className="text-xs text-cyan-200/70">{label}</span>
 
