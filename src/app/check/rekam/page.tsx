@@ -8,6 +8,7 @@ import { Loader2, Search, RefreshCcw, Trash2 } from "lucide-react";
 import { useSession } from "@/contexts/session";
 import SelectDark from "@/components/ui/SelectDark";
 import DateRangePopup from "@/components/ui/DateRangePopup"; // ⟵ NEW
+import { DataShell, LoadingBlank } from "@/components/ui/LoadingOverlay";
 
 // Penting untuk excelHtml5
 import JSZip from "jszip";
@@ -15,7 +16,7 @@ if (typeof window !== "undefined") (window as any).JSZip = JSZip;
 
 const JQDataTable = dynamic(() => import("@/components/datatable/JQDataTable"), {
   ssr: false,
-  loading: () => <div className="px-2 py-6 text-sm text-cyan-200/80">Memuat tabel…</div>,
+  loading: () => <LoadingBlank message="Menyiapkan tabel" subtext="harap tunggu" />,
 });
 
 type Row = {
@@ -522,7 +523,7 @@ export default function RekamPage() {
 
           {/* Panel Data */}
           <Panel title="DATA REKAM">
-            {rows.length ? (
+            <DataShell loading={loading} hasData={rows.length > 0}>
               <JQDataTable
                 id="dt-rekam"
                 data={rows as any[]}
@@ -591,9 +592,7 @@ export default function RekamPage() {
                   }
                 }}
               />
-            ) : (
-              <div className="px-2 py-6 text-sm text-cyan-200/80">{loading ? "Memuat…" : "Tidak ada data. Tentukan filter lalu tekan Search."}</div>
-            )}
+            </DataShell>
           </Panel>
         </div>
       </section>

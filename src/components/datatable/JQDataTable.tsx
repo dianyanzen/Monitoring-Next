@@ -34,6 +34,7 @@ type Props = {
   columns?: ColumnDef[];
   options?: Record<string, any>;
   tableClassName?: string;
+  onApiReady?: (api: any | null) => void;
 };
 
 /** Render pager custom ke dalam host dan hubungkan ke API DT */
@@ -88,10 +89,16 @@ export default function JQDataTable({
   columns,
   options,
   tableClassName = "dt-cyberpunk",
+  onApiReady,
 }: Props) {
   const tableRef = useRef<HTMLTableElement>(null);
   const dtRef = useRef<any>(null);
   const [ready, setReady] = useState(false);
+  const onApiReadyRef = useRef<typeof onApiReady>();
+
+  useEffect(() => {
+    onApiReadyRef.current = onApiReady;
+  }, [onApiReady]);
 
   const autoColumns = useMemo<ColumnDef[]>(() => {
     if (columns?.length) return columns;
@@ -192,12 +199,16 @@ export default function JQDataTable({
         "dt-cyberpunk"
       );
       setReady(true);
+      onApiReadyRef.current?.(dtRef.current);
     }
 
     boot();
 
     return () => {
       destroyed = true;
+      if (dtRef.current) {
+        onApiReadyRef.current?.(null);
+      }
       if (dtRef.current) {
         dtRef.current.destroy(true);
         dtRef.current = null;

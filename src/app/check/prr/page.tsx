@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Loader2, Search, RefreshCcw, Trash2 } from "lucide-react";
 import { useSession } from "@/contexts/session";
 import SelectDark from "@/components/ui/SelectDark";
+import { DataShell, LoadingBlank } from "@/components/ui/LoadingOverlay";
 
 // ==== Penting untuk Excel export (excelHtml5) ====
 import JSZip from "jszip";
@@ -16,7 +17,7 @@ if (typeof window !== "undefined") {
 
 const JQDataTable = dynamic(() => import("@/components/datatable/JQDataTable"), {
   ssr: false,
-  loading: () => <div className="px-2 py-6 text-sm text-cyan-200/80">Memuat tabel…</div>,
+  loading: () => <LoadingBlank message="Menyiapkan tabel" subtext="harap tunggu" />,
 });
 
 type Row = {
@@ -304,7 +305,7 @@ export default function PRRPage() {
           <div className="flex items-center gap-3">
             <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_12px_#22d3ee]" />
             <h1 className="text-base font-semibold tracking-wide text-cyan-200">
-              Monitoring — Chexk List Print Ready Record (PRR) KTP-El
+              Monitoring — Check List Print Ready Record (PRR) KTP-El
             </h1>
             <div className="ml-auto flex items-center gap-2">
               {total > 0 ? (
@@ -414,7 +415,7 @@ export default function PRRPage() {
 
           {/* DATA PRR */}
           <Panel title="DATA PRR">
-            {rows.length ? (
+            <DataShell loading={loading} hasData={rows.length > 0}>
               <JQDataTable
                 id="dt-prr"
                 data={rows as any[]}
@@ -553,11 +554,7 @@ export default function PRRPage() {
                   },
                 }}
               />
-            ) : (
-              <div className="px-2 py-6 text-sm text-cyan-200/80">
-                {loading ? "Memuat…" : "Tidak ada data. Tentukan filter lalu tekan Search."}
-              </div>
-            )}
+            </DataShell>
           </Panel>
         </div>
       </section>

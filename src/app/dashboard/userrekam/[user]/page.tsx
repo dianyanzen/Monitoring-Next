@@ -5,7 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useParams, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Download, Search, Trash2 } from "lucide-react";
+import { ArrowLeft, FileSpreadsheet, FileText, Search, Trash2 } from "lucide-react";
 import DateRangePopup from "@/components/ui/DateRangePopup";
 
 const JQDataTable = dynamic(() => import("@/components/datatable/JQDataTable"), {
@@ -44,6 +44,63 @@ function ensureFooter(api: any, html: string): HTMLTableSectionElement {
   return foot;
 }
 
+type ExportBodyFormatter = (data: any, row: number, col: number) => string;
+
+const stripHtml = (input: any) => String(input ?? "").replace(/<[^>]+>/g, "");
+
+const createCsvFormatter = (stringCols: number[] = []): ExportBodyFormatter => {
+  const targets = new Set(stringCols);
+  return (data, _row, col) => {
+    const text = stripHtml(data).replace(/^[,\s]+/, "");
+    if (!text) return "";
+    if (!targets.has(col)) return text;
+    return '="' + text.replace(/"/g, '""') + '"';
+  };
+};
+
+const createExcelFormatter = (stringCols: number[] = [], prefix = "\u200B"): ExportBodyFormatter => {
+  const targets = new Set(stringCols);
+  return (data, _row, col) => {
+    const text = stripHtml(data).replace(/^[,\s]+/, "");
+    if (!text) return "";
+    return targets.has(col) ? `${prefix}${text}` : text;
+  };
+};
+
+const defaultExportFormatter: ExportBodyFormatter = (data) => stripHtml(data).replace(/^[,\s]+/, "");
+
+const buildButtons = (
+  filename: string | (() => string),
+  formatters?: Partial<Record<"copy" | "csv" | "excel" | "print", ExportBodyFormatter>>,
+) => {
+  const getName = typeof filename === "function" ? filename : () => filename;
+  return [
+    {
+      extend: "copyHtml5",
+      text: "Copy",
+      exportOptions: { format: { body: formatters?.copy ?? defaultExportFormatter } },
+    },
+    {
+      extend: "csvHtml5",
+      text: "CSV",
+      bom: true,
+      filename: () => getName(),
+      exportOptions: { format: { body: formatters?.csv ?? defaultExportFormatter } },
+    },
+    {
+      extend: "excelHtml5",
+      text: "Excel",
+      filename: () => getName(),
+      exportOptions: { format: { body: formatters?.excel ?? defaultExportFormatter } },
+    },
+    {
+      extend: "print",
+      text: "Print",
+      exportOptions: { format: { body: formatters?.print ?? defaultExportFormatter } },
+    },
+  ];
+};
+
 export default function userrekamDetailPage() {
   const { user } = useParams<{ user: string }>();
   const searchParams = useSearchParams();
@@ -55,6 +112,30 @@ export default function userrekamDetailPage() {
   const [loading, setLoading] = useState(false);
   const [firstLoad, setFirstLoad] = useState(true);
   const abortRef = useRef<AbortController | null>(null);
+  const detailTableApiRef = useRef<any | null>(null);
+  const exportMetaRef = useRef({ user, start, end });
+
+  useEffect(() => {
+    exportMetaRef.current = { user, start, end };
+  }, [user, start, end]);
+
+  const onDetailTableReady = useCallback((api: any | null) => {
+    detailTableApiRef.current = api;
+  }, []);
+
+  const triggerExport = useCallback(
+    (type: "csv" | "excel") => {
+      if (!rows.length) return;
+      const api = detailTableApiRef.current;
+      if (!api || typeof api.button !== "function") return;
+      const target = type === "csv" ? ".buttons-csv" : ".buttons-excel";
+      const button = api.button(target);
+      if (button && typeof button.trigger === "function") {
+        button.trigger();
+      }
+    },
+    [rows.length],
+  );
 
   const label = useMemo(() => `(${toDisp(start)} - ${toDisp(end)})`, [start, end]);
 
@@ -89,22 +170,53 @@ export default function userrekamDetailPage() {
 
   function onClear() { const t = todayISO(); setStart(t); setEnd(t); }
 
-  function exportCSV() {
-    if (!rows.length) return;
-    const headers = Object.keys(rows[0]);
-    const csv = [
-      headers.join(","),
-      ...rows.map(r => headers.map(h => {
-        const v = (r as any)[h]; const s = v == null ? "" : String(v);
-        return `"${s.replace(/"/g,'""')}"`;
-      }).join(",")),
-    ].join("\n");
-    const blob = new Blob([csv], { type:"text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = `detail_${user}_${start}_${end}.csv`; a.click();
-    URL.revokeObjectURL(url);
-  }
+  const csvFormatter = useMemo(() => createCsvFormatter([1, 2]), []);
+  const excelFormatter = useMemo(() => createExcelFormatter([1, 2]), []);
+  const detailButtons = useMemo(
+    () =>
+      buildButtons(
+        () => {
+          const meta = exportMetaRef.current;
+          return `detail_${meta.user}_${meta.start}_${meta.end}`;
+        },
+        {
+          csv: csvFormatter,
+          excel: excelFormatter,
+        },
+      ),
+    [csvFormatter, excelFormatter],
+  );
+  const detailOptions = useMemo(
+    () => ({
+      deferRender: true,
+      order: [],
+      buttons: detailButtons,
+      initComplete: function () {
+        const api = this.api();
+        ensureFooter(
+          api,
+          `<tr>
+            <th width="80%" colspan="20" style="text-align:center">Jumlah</th>
+            <th width="20%" style="text-align:right"></th>
+          </tr>`,
+        );
+      },
+      footerCallback: function (_row: any, data: any) {
+        const total = data.length;
+        const api = this.api();
+        const foot = ensureFooter(
+          api,
+          `<tr>
+            <th width="80%" colspan="20" style="text-align:center">Jumlah</th>
+            <th width="20%" style="text-align:right"></th>
+          </tr>`,
+        );
+        const last = foot.querySelector("th:last-child");
+        if (last) last.textContent = total.toLocaleString("id-ID");
+      },
+    }),
+    [detailButtons],
+  );
 
   return (
     <div className="relative px-8 pb-8 pt-6 md:pt-8 text-gray-200 space-y-8 mt-5">
@@ -149,8 +261,11 @@ export default function userrekamDetailPage() {
               <button onClick={onClear} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/20 text-sm transition-colors">
                 <Trash2 className="w-4 h-4" /> Clear
               </button>
-              <button onClick={exportCSV} disabled={!rows.length} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-cyan-400/30 text-sm transition-colors disabled:opacity-50">
-                <Download className="w-4 h-4" /> Export
+              <button onClick={() => triggerExport("csv")} disabled={!rows.length} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-cyan-400/30 text-sm transition-colors disabled:opacity-50">
+                <FileText className="w-4 h-4" /> Export CSV
+              </button>
+              <button onClick={() => triggerExport("excel")} disabled={!rows.length} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-cyan-400/30 text-sm transition-colors disabled:opacity-50">
+                <FileSpreadsheet className="w-4 h-4" /> Export Excel
               </button>
             </div>
           </div>
@@ -337,29 +452,8 @@ export default function userrekamDetailPage() {
                   { data: (r:any)=>r.STAT_KWN ?? r.stat_kwn, title:"Status Kawin", className:"dt-body-center" },
                   { data: (r:any)=>r.JENIS_PKRJN ?? r.jenis_pkrjn, title:"Jenis Pekerjaan", className:"dt-body-center" },
                 ]}
-                options={{
-                  deferRender: true,
-                  order: [],
-                  initComplete: function () {
-                    const api = this.api();
-                    ensureFooter(api,
-                      `<tr>
-                        <th width="80%" colspan="20" style="text-align:center">Jumlah</th>
-                        <th width="20%" style="text-align:right"></th>
-                      </tr>`);
-                  },
-                  footerCallback: function (_row:any, data:any) {
-                    const total = data.length;
-                    const api = this.api();
-                    const foot = ensureFooter(api,
-                      `<tr>
-                        <th width="80%" colspan="20" style="text-align:center">Jumlah</th>
-                        <th width="20%" style="text-align:right"></th>
-                      </tr>`);
-                    const last = foot.querySelector("th:last-child");
-                    if (last) last.textContent = total.toLocaleString("id-ID");
-                  },
-                }}
+                options={detailOptions}
+                onApiReady={onDetailTableReady}
               />
             ) : (
               <div className="px-2 py-6 text-sm text-cyan-200/80">
