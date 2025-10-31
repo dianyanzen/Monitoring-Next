@@ -1056,21 +1056,24 @@ async function flatten(items:any[], parent:any=null, acc:any[]=[]){
 
 ## 🧭 Roadmap Produk
 
+> **Progress Update (Oktober 2025):** Tahap II selesai (chat, activity log, dashboard supervisor, dan latency monitor telah dirilis) dan fokus berpindah ke orkestrasi integrasi Tahap III.
+
 ### 🗓️ Tahap I — Core Modernization (✅)
 - Migrasi Login, Session, Dashboard, Menu, dan Check KTP-el ke Next.js.
 - Implementasi pool Oracle multi-alias dengan binding ketat.
 - Logging harian + error telemetry.
 - Desain sistem dark–light mode konsisten (Cyberpunk / Lux).
 
-### 🚀 Tahap II — Operasional & Observabilitas (🟡 Berjalan)
+### 🚀 Tahap II — Operasional & Observabilitas (✅ Selesai · Oktober 2025)
 - Aktivasi chat & messages (socket fallback → polling teroptimasi).
 - Audit activity log dengan filter & search.
 - Dashboard supervisor interaktif (wilayah, capaian, anomaly trend).
 - Monitoring API latency (middleware internal).
 - Build modular: `/components/layout`, `/components/system`.
+- Release note: modul chat, activity log, dashboard supervisor, dan latency monitor sudah stabil di staging.
 
-### 🧩 Tahap III — Integrasi & Automasi (🟠 Rencana)
-- Integrasi **E-Punten API** (mutasi keluar/datang online).
+### 🧩 Tahap III — Integrasi & Automasi (🟡 Berjalan)
+- Integrasi **E-Punten API** (mutasi keluar/datang online) — kickoff, mapping payload, dan persiapan auth token berlangsung.
 - Integrasi **TTE** (KK, Akta, Surat Pernyataan) dengan BSrE & eSign.
 - Rekonsiliasi database **DEMOGRAPHICS@DB5** vs **FINGERS@DB5**.
 - Sinkronisasi warehouse PDIP (via view Oracle).
