@@ -94,10 +94,10 @@ export default function JQDataTable({
   const tableRef = useRef<HTMLTableElement>(null);
   const dtRef = useRef<any>(null);
   const [ready, setReady] = useState(false);
-  const onApiReadyRef = useRef<typeof onApiReady>();
+  const onApiReadyRef = useRef<typeof onApiReady | null>(null);
 
   useEffect(() => {
-    onApiReadyRef.current = onApiReady;
+    onApiReadyRef.current = onApiReady ?? null;
   }, [onApiReady]);
 
   const autoColumns = useMemo<ColumnDef[]>(() => {

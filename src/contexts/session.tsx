@@ -8,6 +8,12 @@ export type SessionUser = {
   S_USER_ID?: string; S_NAMA_DPN?: string; S_NAMA_LGKP?: string;
   S_NIK?: string | number; S_JENIS_KLMIN?: string; S_TGL_LHR?: string;
   S_ALAMAT_RUMAH?: string; S_TELP?: string; S_NAMA_KANTOR?: string; S_USER_LEVEL?: number;
+  S_NO_PROP?: string | number;
+  S_NO_KAB?: string | number;
+  S_NO_KEC?: string | number;
+  S_NO_KEL?: string | number;
+  S_NO_RW?: string | number;
+  S_NO_RT?: string | number;
 };
 
 type State = {

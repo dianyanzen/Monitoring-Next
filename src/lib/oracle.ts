@@ -21,6 +21,8 @@ type Pool = InstanceType<typeof oracledb.Pool>;
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 // Jangan set autoCommit global; tentukan di execute({ autoCommit: true }) saat DML
 oracledb.autoCommit = false;
+// Convert kolom BLOB langsung menjadi Buffer (dibutuhkan untuk foto)
+oracledb.fetchAsBuffer = [oracledb.BLOB];
 
 // ─────────────────────────────────────────────
 // 🌐 Global pool map (aman untuk hot-reload Next.js)
