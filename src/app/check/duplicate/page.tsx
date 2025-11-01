@@ -1,6 +1,6 @@
 // FILE: src/app/check/duplicate/page.tsx
 "use client";
-
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { AlertTriangle, Calendar, Download, Loader2, RefreshCcw, Search, Trash2 } from "lucide-react";
 import { useSession } from "@/contexts/session";
@@ -69,8 +69,21 @@ type SearchResponse = {
   message?: string;
 };
 
-/* ======================== Helpers ======================== */
+function useIsDarkTheme() {
+  const [isDark, setIsDark] = useState(true);
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+    const syncTheme = () => setIsDark((root.getAttribute("data-theme") || "dark") !== "light");
+    syncTheme();
+    const ob = new MutationObserver(syncTheme);
+    ob.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => ob.disconnect();
+  }, []);
+  return isDark;
+}
 
+/* ======================== Helpers ======================== */
 function formatDateInput(date: Date) {
   const year = date.getFullYear();
   const month = `${date.getMonth() + 1}`.padStart(2, "0");
@@ -227,7 +240,7 @@ function DatePickerInput({ id, value, onChange, disabled }: DatePickerInputProps
 
 export default function DuplicatePage() {
   const { user } = useSession();
-
+  const isDark = useIsDarkTheme();
   const [meta, setMeta] = useState<MetaState | null>(null);
   const [metaLoading, setMetaLoading] = useState(true);
   const [metaError, setMetaError] = useState<string | null>(null);
@@ -694,11 +707,21 @@ export default function DuplicatePage() {
   function renderResultTable() {
     if (searchLoading && totalRows === 0) {
       return (
-        <div className="flex items-center justify-center rounded-xl border border-cyan-800/40 bg-black/30 py-12">
-          <div className="flex items-center gap-3 text-sm text-cyan-100/80">
-            <Loader2 className="h-5 w-5 animate-spin" />
-            Mengambil data duplicate...
-          </div>
+        <div
+          className={
+            isDark
+              ? "flex items-center justify-center gap-3 rounded-2xl border border-cyan-800/50 bg-slate-950/40 p-6 text-sm text-cyan-50"
+              : "flex items-center justify-center gap-3 rounded-2xl border border-[color-mix(in_oklab,var(--gold-200),#000_14%)] bg-[color-mix(in_oklab,#fff,#f8efe2_45%)] p-6 text-sm text-[color-mix(in_oklab,#1a1d21,#000_8%)] shadow-[0_16px_34px_rgba(222,198,156,0.35)]"
+          }
+        >
+          <Loader2
+            className={
+              isDark
+                ? "h-4 w-4 animate-spin text-cyan-300"
+                : "h-4 w-4 animate-spin text-[color-mix(in_oklab,var(--gold-400),#000_8%)]"
+            }
+          />
+          <span>Mengambil data KTP-el…</span>
         </div>
       );
     }
@@ -712,7 +735,15 @@ export default function DuplicatePage() {
     }
 
     if (totalRows === 0) {
-      return <div className="ktpel-empty-state">Belum ada data yang ditampilkan.</div>;
+      return isDark ? (
+        <div className="ktpel-empty-state rounded-2xl border border-cyan-800/40 bg-slate-950/20 p-6 text-center text-sm text-cyan-100/70">
+          Belum ada data yang ditampilkan.
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-[color-mix(in_oklab,var(--gold-200),#000_12%)] bg-[color-mix(in_oklab,#fff,#f4ebde_55%)] p-6 text-center text-sm text-[color-mix(in_oklab,#1a1d21,#000_10%)]">
+          Belum ada data yang ditampilkan.
+        </div>
+      );
     }
 
     if (resultMode === "nik") {

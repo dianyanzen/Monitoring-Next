@@ -1,9 +1,17 @@
-// FILE: src/app/check/ktpel/pages.tsx
+// FILE: src/app/check/ktpel/page.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
 import type { KeyboardEvent, ClipboardEvent } from "react";
-import { AlertTriangle, Download, ExternalLink, Loader2, RefreshCcw, Search, Trash2 } from "lucide-react";
+import {
+  AlertTriangle,
+  Download,
+  ExternalLink,
+  Loader2,
+  RefreshCcw,
+  Search,
+  Trash2,
+} from "lucide-react";
 import { useSession } from "@/contexts/session";
 import SelectDark from "@/components/ui/SelectDark";
 
@@ -178,7 +186,6 @@ function buildLegacyUrl(base: string | null, nik: string) {
 }
 
 function formatLeadingComma(value: string | null | undefined) {
-  // Always prefix sensitive IDs with a soft comma so Excel keeps leading zeros.
   const clean = (value ?? "").toString().trim();
   return clean ? `,${clean}` : "";
 }
@@ -224,10 +231,7 @@ function mergeOptions(options: WilayahOption[], includeDefault: boolean, default
   return merged;
 }
 
-function handleNumberKeyDown(
-  event: KeyboardEvent<HTMLInputElement>,
-  allowComma = false
-) {
+function handleNumberKeyDown(event: KeyboardEvent<HTMLInputElement>, allowComma = false) {
   const { key, ctrlKey, metaKey } = event;
   if (ctrlKey || metaKey) return;
   const navigationKeys = [
@@ -267,10 +271,7 @@ function handleNumericPaste(
   });
 }
 
-function handleNamePaste(
-  event: ClipboardEvent<HTMLInputElement>,
-  setter: (value: string) => void
-) {
+function handleNamePaste(event: ClipboardEvent<HTMLInputElement>, setter: (value: string) => void) {
   const clipboard = event.clipboardData?.getData("text") ?? "";
   const sanitized = sanitizeTextInput(clipboard);
   const input = event.currentTarget;
@@ -309,6 +310,21 @@ export default function KtpelPage() {
   const [searchLoading, setSearchLoading] = useState<Mode | null>(null);
   const [pushLoadingNik, setPushLoadingNik] = useState<string | null>(null);
   const [actionNotice, setActionNotice] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+  // ⬇️ theme detector agar loading/empty mengikuti light/luxe juga
+  const [isDark, setIsDark] = useState(true);
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+    const syncTheme = () => {
+      const t = root.getAttribute("data-theme") || "dark";
+      setIsDark(t !== "light");
+    };
+    syncTheme();
+    const ob = new MutationObserver(syncTheme);
+    ob.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => ob.disconnect();
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -478,10 +494,10 @@ export default function KtpelPage() {
       setRows([]);
       setResultMode(mode);
       setSearchError(error?.message || "Pencarian gagal");
-  } finally {
-    setSearchLoading(null);
+    } finally {
+      setSearchLoading(null);
+    }
   }
-}
 
   async function handlePush(nik: string) {
     const cleanNik = sanitizeNumber(nik);
@@ -506,7 +522,9 @@ export default function KtpelPage() {
 
       const message =
         json.data.message ||
-        `Status ${Array.isArray(json.data.nik) && json.data.nik.length > 1 ? "beberapa NIK" : "NIK"} berhasil diperbarui.`;
+        `Status ${
+          Array.isArray(json.data.nik) && json.data.nik.length > 1 ? "beberapa NIK" : "NIK"
+        } berhasil diperbarui.`;
       setActionNotice({ type: "success", message });
       await handleSearch(resultMode);
     } catch (error: any) {
@@ -630,12 +648,16 @@ export default function KtpelPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `ktpel-${resultMode}-${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute(
+      "download",
+      `ktpel-${resultMode}-${new Date().toISOString().slice(0, 10)}.csv`
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   }
+
   function renderTabButton(mode: Mode) {
     const active = activeTab === mode;
     return (
@@ -658,22 +680,17 @@ export default function KtpelPage() {
     const retry = statuses.pushRetry ?? [];
     if (!primary.length && !retry.length) return null;
 
-    // FILE: src/app/(routes)/check/ktpel/page.tsx  (atau file tempat komponen KtpelPage berada)
-
-// ...di dalam KtpelPage()
-
     const renderStatusTable = (title: string, items: string[], startIndex: number) => (
       <div className="ktpel-status-card">
         <h3 className="ktpel-status-card__title">{title}</h3>
         <table className="ktpel-status-table">
-          {/* ⬇️ colgroup memastikan proporsi 20% : 80% */}
           <colgroup>
             <col style={{ width: "10%" }} />
             <col style={{ width: "90%" }} />
           </colgroup>
           <thead>
             <tr>
-              <th className="ktpel-status-index" >#</th>
+              <th className="ktpel-status-index">#</th>
               <th className="ktpel-status-value">Status Code</th>
             </tr>
           </thead>
@@ -704,7 +721,6 @@ export default function KtpelPage() {
       </div>
     );
 
-
     return (
       <div className="grid gap-6 lg:grid-cols-2">
         {renderStatusTable("Statuses Eligible for Monitoring Re-Push", primary, 1)}
@@ -718,15 +734,29 @@ export default function KtpelPage() {
   }
 
   function renderCommonFilters(mode: Mode) {
-    const kecOptions = mergeOptions(kecamatanOptions, allowSelectKecamatan, "-- Pilih Kecamatan --");
-    const kelOptions = mergeOptions(currentKelurahanOptions, allowSelectKelurahan, "-- Pilih Kelurahan --");
+    const kecOptions = mergeOptions(
+      kecamatanOptions,
+      allowSelectKecamatan,
+      "-- Pilih Kecamatan --"
+    );
+    const kelOptions = mergeOptions(
+      currentKelurahanOptions,
+      allowSelectKelurahan,
+      "-- Pilih Kelurahan --"
+    );
     const kecId = `select-kec-${mode}`;
     const kelId = `select-kel-${mode}`;
     return (
-      <div className="space-y-4" onKeyDown={(event) => handleFilterEnter(event, mode)}>
+      <div
+        className="space-y-4"
+        onKeyDown={(event) => handleFilterEnter(event, mode)}
+      >
         <div className="grid gap-4 md:grid-cols-4">
           <div className="space-y-1">
-            <label htmlFor={kecId} className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
+            <label
+              htmlFor={kecId}
+              className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70"
+            >
               Kecamatan
             </label>
             <SelectDark
@@ -736,23 +766,34 @@ export default function KtpelPage() {
               disabled={!allowSelectKecamatan || metaLoading}
             >
               {kecOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
               ))}
             </SelectDark>
           </div>
 
           <div className="space-y-1">
-            <label htmlFor={kelId} className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
+            <label
+              htmlFor={kelId}
+              className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70"
+            >
               Kelurahan
             </label>
             <SelectDark
               id={kelId}
               value={filters[mode].noKel}
               onChange={(e) => updateFilter(mode, { noKel: e.target.value })}
-              disabled={!allowSelectKelurahan || filters[mode].noKec === "0" || kelurahanLoadingKey === filters[mode].noKec}
+              disabled={
+                !allowSelectKelurahan ||
+                filters[mode].noKec === "0" ||
+                kelurahanLoadingKey === filters[mode].noKec
+              }
             >
               {kelOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
               ))}
             </SelectDark>
           </div>
@@ -762,10 +803,14 @@ export default function KtpelPage() {
             </label>
             <input
               value={filters[mode].nik}
-              onChange={(event) => updateFilter(mode, { nik: sanitizeNikInput(event.target.value) })}
+              onChange={(event) =>
+                updateFilter(mode, { nik: sanitizeNikInput(event.target.value) })
+              }
               onKeyDown={(event) => handleNumberKeyDown(event, true)}
               onPaste={(event) =>
-                handleNumericPaste(event, true, (value) => updateFilter(mode, { nik: value }))
+                handleNumericPaste(event, true, (value) =>
+                  updateFilter(mode, { nik: value })
+                )
               }
               placeholder="Pisahkan dengan koma"
               className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
@@ -777,10 +822,14 @@ export default function KtpelPage() {
             </label>
             <input
               value={filters[mode].noKk}
-              onChange={(event) => updateFilter(mode, { noKk: sanitizeNikInput(event.target.value) })}
+              onChange={(event) =>
+                updateFilter(mode, { noKk: sanitizeNikInput(event.target.value) })
+              }
               onKeyDown={(event) => handleNumberKeyDown(event, true)}
               onPaste={(event) =>
-                handleNumericPaste(event, true, (value) => updateFilter(mode, { noKk: value }))
+                handleNumericPaste(event, true, (value) =>
+                  updateFilter(mode, { noKk: value })
+                )
               }
               placeholder="Pisahkan dengan koma"
               className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
@@ -794,9 +843,13 @@ export default function KtpelPage() {
             </label>
             <input
               value={filters[mode].nama}
-              onChange={(event) => updateFilter(mode, { nama: sanitizeTextInput(event.target.value) })}
+              onChange={(event) =>
+                updateFilter(mode, { nama: sanitizeTextInput(event.target.value) })
+              }
               onPaste={(event) =>
-                handleNamePaste(event, (value) => updateFilter(mode, { nama: value }))
+                handleNamePaste(event, (value) =>
+                  updateFilter(mode, { nama: value })
+                )
               }
               className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
             />
@@ -808,7 +861,9 @@ export default function KtpelPage() {
             <input
               type="date"
               value={toDateInput(filters[mode].tglLhr)}
-              onChange={(event) => updateFilter(mode, { tglLhr: event.target.value })}
+              onChange={(event) =>
+                updateFilter(mode, { tglLhr: event.target.value })
+              }
               className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
             />
           </div>
@@ -821,10 +876,16 @@ export default function KtpelPage() {
     const kecOptions = mergeOptions(kecamatanOptions, true, "-- Pilih Kecamatan --");
     const kelOptions = mergeOptions(currentKelurahanOptions, true, "-- Pilih Kelurahan --");
     return (
-      <div className="space-y-4" onKeyDown={(event) => handleFilterEnter(event, "wktp")}>
+      <div
+        className="space-y-4"
+        onKeyDown={(event) => handleFilterEnter(event, "wktp")}
+      >
         <div className="grid gap-4 md:grid-cols-4">
           <div className="space-y-1">
-            <label htmlFor="select-kec-wktp" className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
+            <label
+              htmlFor="select-kec-wktp"
+              className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70"
+            >
               Kecamatan
             </label>
             <SelectDark
@@ -834,23 +895,33 @@ export default function KtpelPage() {
               disabled={metaLoading}
             >
               {kecOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
               ))}
             </SelectDark>
           </div>
 
           <div className="space-y-1">
-            <label htmlFor="select-kel-wktp" className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
+            <label
+              htmlFor="select-kel-wktp"
+              className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70"
+            >
               Kelurahan
             </label>
             <SelectDark
               id="select-kel-wktp"
               value={filters.wktp.noKel}
               onChange={(e) => updateFilter("wktp", { noKel: e.target.value })}
-              disabled={filters.wktp.noKec === "0" || kelurahanLoadingKey === filters.wktp.noKec}
+              disabled={
+                filters.wktp.noKec === "0" ||
+                kelurahanLoadingKey === filters.wktp.noKec
+              }
             >
               {kelOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
               ))}
             </SelectDark>
           </div>
@@ -860,10 +931,14 @@ export default function KtpelPage() {
             </label>
             <input
               value={filters.wktp.noRw}
-              onChange={(event) => updateFilter("wktp", { noRw: sanitizeNumber(event.target.value) })}
+              onChange={(event) =>
+                updateFilter("wktp", { noRw: sanitizeNumber(event.target.value) })
+              }
               onKeyDown={(event) => handleNumberKeyDown(event, false)}
               onPaste={(event) =>
-                handleNumericPaste(event, false, (value) => updateFilter("wktp", { noRw: value }))
+                handleNumericPaste(event, false, (value) =>
+                  updateFilter("wktp", { noRw: value })
+                )
               }
               className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
             />
@@ -874,10 +949,14 @@ export default function KtpelPage() {
             </label>
             <input
               value={filters.wktp.noRt}
-              onChange={(event) => updateFilter("wktp", { noRt: sanitizeNumber(event.target.value) })}
+              onChange={(event) =>
+                updateFilter("wktp", { noRt: sanitizeNumber(event.target.value) })
+              }
               onKeyDown={(event) => handleNumberKeyDown(event, false)}
               onPaste={(event) =>
-                handleNumericPaste(event, false, (value) => updateFilter("wktp", { noRt: value }))
+                handleNumericPaste(event, false, (value) =>
+                  updateFilter("wktp", { noRt: value })
+                )
               }
               className="w-full rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
             />
@@ -916,14 +995,26 @@ export default function KtpelPage() {
       </div>
     );
   }
+
   function renderTable() {
+    // ⬇️ loading-nya disamakan seperti di menu restore: dark = neon, light = emas-putih
     if (searchLoading && rows.length === 0) {
       return (
-        <div className="flex items-center justify-center rounded-xl border border-cyan-800/40 bg-black/30 py-12">
-          <div className="flex items-center gap-3 text-sm text-cyan-100/80">
-            <Loader2 className="h-5 w-5 animate-spin" />
-            Mengambil data...
-          </div>
+        <div
+          className={
+            isDark
+              ? "flex items-center justify-center gap-3 rounded-2xl border border-cyan-800/50 bg-slate-950/40 p-6 text-sm text-cyan-50"
+              : "flex items-center justify-center gap-3 rounded-2xl border border-[color-mix(in_oklab,var(--gold-200),#000_14%)] bg-[color-mix(in_oklab,#fff,#f8efe2_45%)] p-6 text-sm text-[color-mix(in_oklab,#1a1d21,#000_8%)] shadow-[0_16px_34px_rgba(222,198,156,0.35)]"
+          }
+        >
+          <Loader2
+            className={
+              isDark
+                ? "h-4 w-4 animate-spin text-cyan-300"
+                : "h-4 w-4 animate-spin text-[color-mix(in_oklab,var(--gold-400),#000_8%)]"
+            }
+          />
+          <span>Mengambil data KTP-el…</span>
         </div>
       );
     }
@@ -937,7 +1028,15 @@ export default function KtpelPage() {
     }
 
     if (!rows.length) {
-      return <div className="ktpel-empty-state">Belum ada data yang ditampilkan.</div>;
+      return isDark ? (
+        <div className="ktpel-empty-state rounded-2xl border border-cyan-800/40 bg-slate-950/20 p-6 text-center text-sm text-cyan-100/70">
+          Belum ada data yang ditampilkan.
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-[color-mix(in_oklab,var(--gold-200),#000_12%)] bg-[color-mix(in_oklab,#fff,#f4ebde_55%)] p-6 text-center text-sm text-[color-mix(in_oklab,#1a1d21,#000_10%)]">
+          Belum ada data yang ditampilkan.
+        </div>
+      );
     }
 
     if (resultMode === "wktp") {
@@ -967,14 +1066,20 @@ export default function KtpelPage() {
                   const rowClass = `transition hover:bg-cyan-500/10 ktpel-row-accent ktpel-row-accent-${accent}`;
                   return (
                     <tr key={`${row.nik}-${index}`} className={rowClass}>
-                      <td className="px-3 py-3 text-center text-xs font-medium text-cyan-100/70">{index + 1}</td>
+                      <td className="px-3 py-3 text-center text-xs font-medium text-cyan-100/70">
+                        {index + 1}
+                      </td>
                       <td className="px-3 py-3">
-                        <span className="font-semibold text-cyan-50">{toDisplay(row.nama)}</span>
+                        <span className="font-semibold text-cyan-50">
+                          {toDisplay(row.nama)}
+                        </span>
                       </td>
                       <td className="px-3 py-3 text-center">
                         {formattedNik ? (
                           <span className="font-medium tracking-wide">
-                            <span className="ktpel-soft-leading-comma">{formattedNik.slice(0, 1)}</span>
+                            <span className="ktpel-soft-leading-comma">
+                              {formattedNik.slice(0, 1)}
+                            </span>
                             <span>{formattedNik.slice(1)}</span>
                           </span>
                         ) : (
@@ -984,27 +1089,39 @@ export default function KtpelPage() {
                       <td className="px-3 py-3 text-center text-xs text-cyan-100/80">
                         {row.umur ? `${row.umur} th` : "-"}
                       </td>
-                      <td className="px-3 py-3 text-xs text-cyan-100/80">{formatStatusLabel(row.currentStatus)}</td>
-                      <td className="px-3 py-3 text-xs text-cyan-100/80">{toDisplay(row.keterangan)}</td>
+                      <td className="px-3 py-3 text-xs text-cyan-100/80">
+                        {formatStatusLabel(row.currentStatus)}
+                      </td>
+                      <td className="px-3 py-3 text-xs text-cyan-100/80">
+                        {toDisplay(row.keterangan)}
+                      </td>
                       <td className="px-3 py-3 text-center text-xs font-medium text-cyan-100/80">
                         {formattedNoKk ? (
                           <>
-                            <span className="ktpel-soft-leading-comma">{formattedNoKk.slice(0, 1)}</span>
+                            <span className="ktpel-soft-leading-comma">
+                              {formattedNoKk.slice(0, 1)}
+                            </span>
                             <span>{formattedNoKk.slice(1)}</span>
                           </>
                         ) : (
                           <span>{toDisplay(row.noKk)}</span>
                         )}
                       </td>
-                      <td className="px-3 py-3 text-xs text-cyan-100/80">{toDisplay(row.namaKecamatan)}</td>
-                      <td className="px-3 py-3 text-xs text-cyan-100/80">{toDisplay(row.namaKelurahan)}</td>
+                      <td className="px-3 py-3 text-xs text-cyan-100/80">
+                        {toDisplay(row.namaKecamatan)}
+                      </td>
+                      <td className="px-3 py-3 text-xs text-cyan-100/80">
+                        {toDisplay(row.namaKelurahan)}
+                      </td>
                       <td className="px-3 py-3 text-xs text-cyan-100/80">
                         <div>{toDisplay(row.alamat)}</div>
                         <div className="text-cyan-200/60">
                           RT {toDisplay(row.rt)} / RW {toDisplay(row.rw)}
                         </div>
                         {row.kodePos ? (
-                          <div className="text-cyan-200/60">Kode Pos: {toDisplay(row.kodePos)}</div>
+                          <div className="text-cyan-200/60">
+                            Kode Pos: {toDisplay(row.kodePos)}
+                          </div>
                         ) : null}
                       </td>
                     </tr>
@@ -1048,17 +1165,25 @@ export default function KtpelPage() {
                 const rowClass = `transition hover:bg-cyan-500/10 ktpel-row-accent ktpel-row-accent-${accent}`;
                 return (
                   <tr key={`${row.nik}-${index}`} className={rowClass}>
-                    <td className="px-3 py-3 text-center text-xs font-medium text-cyan-100/70">{index + 1}</td>
+                    <td className="px-3 py-3 text-center text-xs font-medium text-cyan-100/70">
+                      {index + 1}
+                    </td>
                     <td className="px-3 py-3">
                       <div className="flex flex-col">
-                        <span className="font-semibold text-cyan-50">{toDisplay(row.nama)}</span>
-                        <span className="text-xs text-cyan-200/60">{toDisplay(row.jenisKelamin)}</span>
+                        <span className="font-semibold text-cyan-50">
+                          {toDisplay(row.nama)}
+                        </span>
+                        <span className="text-xs text-cyan-200/60">
+                          {toDisplay(row.jenisKelamin)}
+                        </span>
                       </div>
                     </td>
                     <td className="px-3 py-3 text-center">
                       <div className="flex flex-col items-center gap-2">
                         <span className="font-medium tracking-wide">
-                          <span className="ktpel-soft-leading-comma">{formattedNik.slice(0, 1)}</span>
+                          <span className="ktpel-soft-leading-comma">
+                            {formattedNik.slice(0, 1)}
+                          </span>
                           <span>{formattedNik.slice(1) || "-"}</span>
                         </span>
                         {historyUrl && (
@@ -1128,9 +1253,13 @@ export default function KtpelPage() {
                         <span className="inline-flex h-1.5 w-1.5 rounded-full bg-cyan-400" />
                         {toDisplay(row.ktpOleh)}
                       </div>
-                      <div className="ml-3 text-cyan-200/60">{toDisplay(row.ktpTanggal)}</div>
+                      <div className="ml-3 text-cyan-200/60">
+                        {toDisplay(row.ktpTanggal)}
+                      </div>
                       {row.jumlahCetak > 0 && (
-                        <div className="ml-3 text-emerald-300/80">Dicetak {row.jumlahCetak}x</div>
+                        <div className="ml-3 text-emerald-300/80">
+                          Dicetak {row.jumlahCetak}x
+                        </div>
                       )}
                     </td>
                     <td className="px-3 py-3 text-xs text-cyan-100/80">
@@ -1138,35 +1267,51 @@ export default function KtpelPage() {
                         <span className="inline-flex h-1.5 w-1.5 rounded-full bg-cyan-400" />
                         {toDisplay(row.distribusiOleh)}
                       </div>
-                      <div className="ml-3 text-cyan-200/60">{toDisplay(row.distribusiTanggal)}</div>
+                      <div className="ml-3 text-cyan-200/60">
+                        {toDisplay(row.distribusiTanggal)}
+                      </div>
                     </td>
                     <td className="px-3 py-3 text-xs text-cyan-100/80">
                       <div className="flex items-center gap-1 text-cyan-200/80">
                         <span className="inline-flex h-1.5 w-1.5 rounded-full bg-cyan-400" />
                         {toDisplay(row.pengajuanOleh)}
                       </div>
-                      <div className="ml-3 text-cyan-200/60">{toDisplay(row.pengajuanTanggal)}</div>
-                      <div className="ml-3 text-cyan-200/60">{toDisplay(row.pengajuanDiprosesOleh)}</div>
-                      <div className="ml-3 text-emerald-300/80">{toDisplay(row.pengajuanStatus)}</div>
+                      <div className="ml-3 text-cyan-200/60">
+                        {toDisplay(row.pengajuanTanggal)}
+                      </div>
+                      <div className="ml-3 text-cyan-200/60">
+                        {toDisplay(row.pengajuanDiprosesOleh)}
+                      </div>
+                      <div className="ml-3 text-emerald-300/80">
+                        {toDisplay(row.pengajuanStatus)}
+                      </div>
                     </td>
                     <td className="px-3 py-3 text-center text-xs font-medium text-cyan-100/80">
                       {formattedNoKk ? (
                         <>
-                          <span className="ktpel-soft-leading-comma">{formattedNoKk.slice(0, 1)}</span>
+                          <span className="ktpel-soft-leading-comma">
+                            {formattedNoKk.slice(0, 1)}
+                          </span>
                           <span>{formattedNoKk.slice(1)}</span>
                         </>
                       ) : (
                         <span>{toDisplay(row.noKk)}</span>
                       )}
                     </td>
-                    <td className="px-3 py-3 text-xs text-cyan-100/80">{toDisplay(row.namaKecamatan)}</td>
-                    <td className="px-3 py-3 text-xs text-cyan-100/80">{toDisplay(row.namaKelurahan)}</td>
+                    <td className="px-3 py-3 text-xs text-cyan-100/80">
+                      {toDisplay(row.namaKecamatan)}
+                    </td>
+                    <td className="px-3 py-3 text-xs text-cyan-100/80">
+                      {toDisplay(row.namaKelurahan)}
+                    </td>
                     <td className="px-3 py-3 text-xs text-cyan-100/80">
                       <div>{toDisplay(row.alamat)}</div>
                       <div className="text-cyan-200/60">
                         RT {toDisplay(row.rt)} / RW {toDisplay(row.rw)}
                       </div>
-                      <div className="text-cyan-200/60">Kode Pos: {toDisplay(row.kodePos)}</div>
+                      <div className="text-cyan-200/60">
+                        Kode Pos: {toDisplay(row.kodePos)}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -1177,6 +1322,7 @@ export default function KtpelPage() {
       </div>
     );
   }
+
   return (
     <div className="relative mt-5 space-y-8 px-4 pb-10 pt-6 text-gray-100 sm:px-6 md:px-8 md:pt-8">
       {/* glow */}
@@ -1185,7 +1331,6 @@ export default function KtpelPage() {
         <div className="absolute right-[18%] bottom-[-20%] h-[1000px] w-[1000px] rounded-full bg-fuchsia-600/12 blur-[190px]" />
       </div>
 
-
       <section className="rounded-3xl border border-cyan-800/40 bg-[#0b0b1a]/80 shadow-[0_0_34px_#00ffff22] backdrop-blur-xl">
         <header className="border-b border-cyan-900/50 px-5 py-4">
           <div className="flex items-center gap-3">
@@ -1193,13 +1338,13 @@ export default function KtpelPage() {
             <h1 className="text-base font-semibold tracking-wide text-cyan-200">
               Monitoring — Current Status Code KTP-El
             </h1>
-             <div className="ml-auto flex items-center gap-2">
+            <div className="ml-auto flex items-center gap-2">
               <div className="rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100/80">
                 User: {(user as any)?.S_NAMA_LGKP ?? (user as any)?.S_USER_ID ?? "-"}
               </div>
               <button
                 type="button"
-                onClick={()=>window.location.reload()}
+                onClick={() => window.location.reload()}
                 className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-[11px] font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
               >
                 <RefreshCcw className="h-3.5 w-3.5" />
@@ -1210,7 +1355,9 @@ export default function KtpelPage() {
         </header>
 
         <div className="space-y-8 p-6">
-          <div className="ktpel-tabs">{(["rekam", "hist", "wktp"] as Mode[]).map(renderTabButton)}</div>
+          <div className="ktpel-tabs">
+            {(["rekam", "hist", "wktp"] as Mode[]).map(renderTabButton)}
+          </div>
 
           {metaError ? (
             <div className="flex items-center gap-3 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-100">
@@ -1219,7 +1366,27 @@ export default function KtpelPage() {
             </div>
           ) : null}
 
-          {renderFilters()}
+          {/* Meta loading pakai style baru juga */}
+          {metaLoading ? (
+            <div
+              className={
+                isDark
+                  ? "flex items-center gap-3 rounded-2xl border border-cyan-800/40 bg-slate-950/50 px-4 py-3 text-sm text-cyan-50"
+                  : "flex items-center gap-3 rounded-2xl border border-[color-mix(in_oklab,var(--gold-200),#000_12%)] bg-[color-mix(in_oklab,#fff,#f6efe3_45%)] px-4 py-3 text-sm text-[color-mix(in_oklab,#1b1c20,#000_8%)] shadow-[0_12px_30px_rgba(222,198,156,.25)]"
+              }
+            >
+              <Loader2
+                className={
+                  isDark
+                    ? "h-4 w-4 animate-spin text-cyan-300"
+                    : "h-4 w-4 animate-spin text-[color-mix(in_oklab,var(--gold-400),#000_6%)]"
+                }
+              />
+              <span>Sedang memuat metadata wilayah & status push…</span>
+            </div>
+          ) : (
+            renderFilters()
+          )}
 
           {renderActionButtons()}
 
@@ -1249,7 +1416,10 @@ export default function KtpelPage() {
               Mode aktif: <span className="font-semibold text-cyan-100">{activeModeLabel}</span>
               {rows.length > 0 ? (
                 <>
-                  {" "}| Menampilkan <span className="font-semibold text-cyan-100">{totalRows}</span> data ({resultModeLabel})
+                  {" "}
+                  | Menampilkan{" "}
+                  <span className="font-semibold text-cyan-100">{totalRows}</span> data (
+                  {resultModeLabel})
                 </>
               ) : null}
             </div>
@@ -1263,5 +1433,3 @@ export default function KtpelPage() {
     </div>
   );
 }
-
-

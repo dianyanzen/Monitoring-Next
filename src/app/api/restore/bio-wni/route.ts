@@ -59,6 +59,8 @@ type RestorePerson = {
   descAlasan?: string | null;
   deletedBy?: string | null;
   deletedAt?: string | null;
+  tglEntri?: string | null;
+  tglUbah?: string | null;
 };
 
 type RestoreFamily = {
@@ -128,7 +130,9 @@ const SQL_PERSON_ACTIVE = (withKec: boolean) => `
     CASE WHEN A.JENIS_KLMIN = 1 THEN 'LAKI-LAKI' ELSE 'PEREMPUAN' END AS JENIS_KLMIN,
     CASE WHEN B.CURRENT_STATUS_CODE IS NULL THEN 'BELUM REKAM' ELSE B.CURRENT_STATUS_CODE END AS CURRENT_STATUS_CODE,
     'AKTIF DI SIAK' AS KET,
-    CASE WHEN E.PATH IS NULL THEN '-' ELSE E.PATH END AS PATH
+    CASE WHEN E.PATH IS NULL THEN '-' ELSE E.PATH END AS PATH,
+    A.TGL_ENTRI,
+    A.TGL_UBAH
   FROM BIODATA_WNI A
   LEFT JOIN DATA_KELUARGA D ON A.NO_KK = D.NO_KK
   LEFT JOIN DEMOGRAPHICS_ALL@DB5CETAK B ON A.NIK = B.NIK
@@ -166,7 +170,9 @@ const SQL_PERSON_DELETE = (withKec: boolean) => `
     CASE WHEN Y.ALASAN IS NULL THEN '-' ELSE Y.ALASAN END AS ALASAN,
     CASE WHEN Y.DESC_ALASAN IS NULL THEN '-' ELSE Y.DESC_ALASAN END AS DESC_ALASAN,
     CASE WHEN Y.CREATED_BY IS NULL THEN '-' ELSE UPPER(Y.CREATED_BY) END AS CREATED_BY,
-    CASE WHEN Y.TGL_DELETE IS NULL THEN TO_CHAR(A.DELETED_DATE,'DD-MM-YYYY') ELSE Y.TGL_DELETE END AS DELETE_DT
+    CASE WHEN Y.TGL_DELETE IS NULL THEN TO_CHAR(A.DELETED_DATE,'DD-MM-YYYY') ELSE Y.TGL_DELETE END AS DELETE_DT,
+    A.TGL_ENTRI,
+    A.TGL_UBAH
   FROM BIODATA_WNI_DELETE A
   LEFT JOIN DATA_KELUARGA_MASTER D ON A.NO_KK = D.NO_KK
   LEFT JOIN DATA_KELUARGA_DELETE C ON A.NO_KK = C.NO_KK
@@ -218,7 +224,9 @@ const SQL_PERSON_DEMOGRAPHICS = `
     CASE WHEN F.BAYI_NIK IS NOT NULL THEN F.ADM_AKTA_NO ELSE A.NO_AKTA_LHR END AS NO_AKTA_LHR,
     A.FLAG_STATUS,
     A.STAT_HBKEL,
-    UPPER(F5_GET_REF_WNI(A.STAT_HBKEL, 301)) AS STAT_HUBKEL
+    UPPER(F5_GET_REF_WNI(A.STAT_HBKEL, 301)) AS STAT_HUBKEL,
+    A.TGL_ENTRI,
+    A.TGL_UBAH
   FROM BMUSER.DEMOGRAPHICS_ALL@DB5CETAK A
   LEFT JOIN SIAK_BNBA_AKTA_LAHIR F ON A.NIK = F.BAYI_NIK
   WHERE A.NIK = :b_nik
@@ -413,6 +421,9 @@ const SQL_FACE_BY_NIK = `
 /* =========================================================
    Helpers
    ========================================================= */
+
+const toIso = (v: any): string | null => (v ? new Date(v).toISOString() : null);
+
 function normalizeDigits(input?: string | number | null): string {
   if (input === undefined || input === null) return "";
   return String(input).replace(/\D/g, "");
@@ -646,6 +657,8 @@ async function fetchPersonActive(nik: string, noKec: number | null): Promise<Res
     currentStatusCode: r.CURRENT_STATUS_CODE,
     ket: r.KET,
     path: r.PATH,
+    tglEntri: toIso(r.TGL_ENTRI),
+    tglUbah : toIso(r.TGL_UBAH),
   };
 
   const face = await fetchFaceFromDb5Direct(person.nik);

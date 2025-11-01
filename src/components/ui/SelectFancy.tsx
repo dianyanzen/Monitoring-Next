@@ -1,8 +1,13 @@
+// FILE: src/components/ui/SelectFancy.tsx
 "use client";
 
-import { useMemo } from "react";
-import Select, { GroupBase, Props as RSProps, StylesConfig, ThemeConfig } from "react-select";
+import { useEffect, useMemo, useState, useId } from "react";
+import dynamic from "next/dynamic";
+import type { GroupBase, Props as RSProps, StylesConfig, ThemeConfig } from "react-select";
 import chroma from "chroma-js";
+
+// ⬇️ React Select dimuat hanya di client (no SSR)
+const Select = dynamic(() => import("react-select"), { ssr: false });
 
 type Option = { value: string; label: string };
 
@@ -18,6 +23,7 @@ export type SelectFancyProps = {
   className?: string;
 };
 
+// (semua baseStyles & theme kamu tetap — dipersingkat di sini)
 const baseStyles: StylesConfig<Option, false> = {
   control: (provided, state) => ({
     ...provided,
@@ -28,44 +34,16 @@ const baseStyles: StylesConfig<Option, false> = {
     boxShadow: state.isFocused ? "0 0 0 3px rgba(45,211,254,0.25)" : "inset 0 1px 0 rgba(255,255,255,0.06)",
     transition: "all 0.18s ease",
     cursor: "pointer",
-    "&:hover": {
-      borderColor: "#38bdf8",
-    },
+    "&:hover": { borderColor: "#38bdf8" },
   }),
-  valueContainer: (provided) => ({
-    ...provided,
-    paddingInline: 12,
-    color: "#e0f2fe",
-    fontSize: 13,
-    fontWeight: 500,
-  }),
-  input: (provided) => ({
-    ...provided,
-    color: "#e0f2fe",
-  }),
-  placeholder: (provided) => ({
-    ...provided,
-    color: "rgba(190,242,255,0.55)",
-    fontWeight: 400,
-  }),
-  singleValue: (provided) => ({
-    ...provided,
-    color: "#e0f2fe",
-    fontWeight: 600,
-  }),
-  indicatorSeparator: () => ({
-    display: "none",
-  }),
-  dropdownIndicator: (provided, state) => ({
-    ...provided,
-    color: state.isFocused ? "#22d3ee" : "#94a3b8",
-    transition: "all 0.2s ease",
-    "&:hover": {
-      color: "#38bdf8",
-    },
-  }),
-  menu: (provided) => ({
-    ...provided,
+  valueContainer: (p) => ({ ...p, paddingInline: 12, color: "#e0f2fe", fontSize: 13, fontWeight: 500 }),
+  input: (p) => ({ ...p, color: "#e0f2fe" }),
+  placeholder: (p) => ({ ...p, color: "rgba(190,242,255,0.55)", fontWeight: 400 }),
+  singleValue: (p) => ({ ...p, color: "#e0f2fe", fontWeight: 600 }),
+  indicatorSeparator: () => ({ display: "none" }),
+  dropdownIndicator: (p, s) => ({ ...p, color: s.isFocused ? "#22d3ee" : "#94a3b8", "&:hover": { color: "#38bdf8" } }),
+  menu: (p) => ({
+    ...p,
     background: "#0f1729",
     borderRadius: 12,
     border: "1px solid rgba(56,189,248,0.35)",
@@ -73,38 +51,24 @@ const baseStyles: StylesConfig<Option, false> = {
     overflow: "hidden",
     zIndex: 30,
   }),
-  menuList: (provided) => ({
-    ...provided,
-    paddingBlock: 4,
-    maxHeight: 240,
-  }),
-  option: (provided, state) => {
-    const bg = state.isSelected ? chroma("#22d3ee").alpha(0.22).css() : "transparent";
-    const color = state.isSelected ? "#f8fafc" : state.isFocused ? "#e0f2fe" : "#cbd5f5";
+  menuList: (p) => ({ ...p, paddingBlock: 4, maxHeight: 240 }),
+  option: (p, s) => {
+    const bg = s.isSelected ? chroma("#22d3ee").alpha(0.22).css() : "transparent";
+    const color = s.isSelected ? "#f8fafc" : s.isFocused ? "#e0f2fe" : "#cbd5f5";
     return {
-      ...provided,
-      backgroundColor: state.isFocused ? chroma("#0ea5e9").alpha(0.25).css() : bg,
+      ...p,
+      backgroundColor: s.isFocused ? chroma("#0ea5e9").alpha(0.25).css() : bg,
       color,
       cursor: "pointer",
       fontSize: 13,
-      fontWeight: state.isSelected ? 700 : 500,
+      fontWeight: s.isSelected ? 700 : 500,
       paddingBlock: 8,
       paddingInline: 14,
       transition: "all 0.15s ease",
     };
   },
-  noOptionsMessage: (provided) => ({
-    ...provided,
-    color: "rgba(190,242,255,0.6)",
-    fontSize: 12,
-  }),
-  clearIndicator: (provided) => ({
-    ...provided,
-    color: "#f87171",
-    "&:hover": {
-      color: "#fca5a5",
-    },
-  }),
+  noOptionsMessage: (p) => ({ ...p, color: "rgba(190,242,255,0.6)", fontSize: 12 }),
+  clearIndicator: (p) => ({ ...p, color: "#f87171", "&:hover": { color: "#fca5a5" } }),
 };
 
 const theme: ThemeConfig = (base) => ({
@@ -127,11 +91,7 @@ const theme: ThemeConfig = (base) => ({
     neutral80: "#f8fafc",
     neutral90: "#f1f5f9",
   },
-  spacing: {
-    ...base.spacing,
-    controlHeight: 40,
-    baseUnit: 4,
-  },
+  spacing: { ...base.spacing, controlHeight: 40, baseUnit: 4 },
 });
 
 export default function SelectFancy({
@@ -145,29 +105,44 @@ export default function SelectFancy({
   menuPlacement = "auto",
   className,
 }: SelectFancyProps) {
+  // guard supaya server tidak merender <react-select> sama sekali
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  // id stabil hanya untuk aria (kalau nanti dipakai)
+  const reactId = useId();
   const current = useMemo(() => options.find((opt) => opt.value === value) ?? null, [options, value]);
 
+  if (!mounted) {
+    // placeholder skeleton agar layout tidak loncat saat mount
+    return <div className={`min-w-[220px] h-10 rounded-lg border border-cyan-800/50 bg-black/30 ${className || ""}`} />;
+  }
+
+  // FILE: src/components/ui/SelectFancy.tsx
+// ... (bagian atas tetap)
+
   return (
-    <div className={className}>
-      <Select<Option, false, GroupBase<Option>>
-        instanceId={placeholder || "select"}
+    <div className={className} suppressHydrationWarning>
+      {/* Note: komponen hasil dynamic() bukan generic; jangan beri type args di JSX */}
+      <Select
+        classNamePrefix="rs"
+        instanceId={placeholder || reactId}
         options={options}
         value={current}
-        isDisabled={isDisabled}
+        isDisabled={!!isDisabled}
         isClearable={isClearable}
         placeholder={placeholder}
-        isLoading={isLoading}
-        onChange={(opt) => onValueChange(opt?.value ?? "")}
+        isLoading={!!isLoading}
+        onChange={(opt: any) => onValueChange(opt?.value ?? "")}
         styles={baseStyles}
         theme={theme}
         menuPlacement={menuPlacement}
-        classNames={{
-          container: () => "!text-[13px]",
-        }}
+        classNames={{ container: () => "!text-[13px]" }}
         noOptionsMessage={() => "Tidak ada pilihan"}
       />
     </div>
   );
+
 }
 
 export type { Option };

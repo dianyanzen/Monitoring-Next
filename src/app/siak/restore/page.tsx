@@ -58,6 +58,8 @@ type RestorePerson = {
   descAlasan?: string | null;
   deletedBy?: string | null;
   deletedAt?: string | null;
+  tglEntri?: string | null;
+  tglUbah?: string | null;
 };
 
 type RestoreFamily = {
@@ -147,6 +149,23 @@ function buildFaceDataUrl(person: RestorePerson | null): string | null {
   if (!person?.faceBase64) return null;
   const mime = person.faceMime || "image/jpeg";
   return `data:${mime};base64,${person.faceBase64}`;
+}
+
+function fmtLocal(ts?: string | null): string | null {
+  if (!ts) return null;
+  // jika ISO/YYYY-MM-DD...
+  const mIso = ts.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (mIso) return `${mIso[3]}-${mIso[2]}-${mIso[1]}`;
+  // jika sudah DD-MM-YYYY, pakai apa adanya (trim 10 char)
+  const mDmy = ts.match(/^(\d{2})-(\d{2})-(\d{4})/);
+  if (mDmy) return ts.slice(0, 10);
+  // fallback via Date (antisipasi string lain)
+  const d = new Date(ts);
+  if (isNaN(d.getTime())) return ts;
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yy = d.getFullYear();
+  return `${dd}-${mm}-${yy}`;
 }
 
 function useThemeDark(): boolean {
@@ -535,9 +554,23 @@ export default function RestorePage() {
 
       {/* loading */}
       {loading && (
-        <div className="flex items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white/90 p-6 text-sm text-slate-600 shadow-lg shadow-slate-500/10 dark:border-white/5 dark:bg-slate-900/30 dark:text-slate-300">
-          <Loader2 className="h-4 w-4 animate-spin text-sky-500 dark:text-cyan-300" />
-          <span>Menyiapkan data biodata dan keluarga…</span>
+        <div
+          className={
+            isDark
+              ? "flex items-center justify-center gap-3 rounded-2xl border border-white/5 bg-slate-900/30 p-6 text-sm text-slate-200"
+              : "flex items-center justify-center gap-3 rounded-2xl border border-[color-mix(in_oklab,var(--gold-200),#000_14%)] bg-[color-mix(in_oklab,var(--lux-surface),#fff_10%)] p-6 text-sm text-[color-mix(in_oklab,#1a1d21,#000_8%)] shadow-[0_12px_30px_rgba(210,182,138,0.25)]"
+          }
+        >
+          <Loader2
+            className={
+              isDark
+                ? "h-4 w-4 animate-spin text-cyan-300"
+                : "h-4 w-4 animate-spin text-[color-mix(in_oklab,var(--gold-400),#000_5%)]"
+            }
+          />
+          <span>
+            Menyiapkan data biodata dan keluarga…
+          </span>
         </div>
       )}
 
@@ -634,6 +667,8 @@ export default function RestorePage() {
                     <DataRow label="Kelurahan" value={person.namaKel} />
                     <DataRow label="Nama Kepala Keluarga" value={person.namaKep} />
                     <DataRow label="Status Perekaman" value={person.currentStatusCode} />
+                    <DataRow label="Tgl Entri" value={fmtLocal(person.tglEntri)} />
+                    <DataRow label="Tgl Ubah"  value={fmtLocal(person.tglUbah)} />
                     <DataRow label="Nama Ibu" value={person.namaIbu} />
                     <DataRow label="Nama Ayah" value={person.namaAyah} />
                     <DataRow

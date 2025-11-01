@@ -327,9 +327,9 @@ export default function Page() {
 
   const modeOptions = useMemo<SelectOption[]>(
     () => [
-      { value: "1", label: "Data Dapodik - Sekolah" },
-      { value: "2", label: "Data Dapodik - Kewilayahan" },
-      { value: "3", label: "Data Non Dapodik - Kewilayahan" },
+      { value: "1", label: "-- Data Dapodik - Sekolah --" },
+      { value: "2", label: "-- Data Dapodik - Kewilayahan --" },
+      { value: "3", label: "-- Data Non Dapodik - Kewilayahan --" },
     ],
     [],
   );
@@ -516,7 +516,7 @@ export default function Page() {
      UI
      ========================================================= */
   return (
-    <div className="relative mt-5 space-y-8 px-4 pb-10 pt-6 text-gray-100 sm:px-6 md:px-8 md:pt-8">
+    <div className="page-notrecord relative mt-5 space-y-8 px-4 pb-10 pt-6 text-gray-100 sm:px-6 md:px-8 md:pt-8">
       {/* glow kecil */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-[15%] top-[-15%] h-[1100px] w-[1100px] rounded-full bg-cyan-500/15 blur-[220px]" />
@@ -641,7 +641,7 @@ export default function Page() {
                     options={modeOptions}
                     isDisabled={metaPending}
                     className="min-w-[220px]"
-                    placeholder="Pilih data"
+                    placeholder="-- Pilih data --"
                   />
                 </div>
 
@@ -655,7 +655,7 @@ export default function Page() {
                     }}
                     options={statusOptions}
                     className="min-w-[220px]"
-                    placeholder="Pilih status"
+                    placeholder="-- Pilih status --"
                   />
                 </div>
 
@@ -669,7 +669,7 @@ export default function Page() {
                         options={kecOptions}
                         isDisabled={metaPending}
                         className="min-w-[220px]"
-                        placeholder="Pilih kecamatan"
+                        placeholder="-- Pilih kecamatan --"
                       />
                     </div>
                     <div>
@@ -681,7 +681,7 @@ export default function Page() {
                         isDisabled={kelLoading || metaPending}
                         isLoading={kelLoading}
                         className="min-w-[220px]"
-                        placeholder="Pilih kelurahan"
+                        placeholder="-- Pilih kelurahan --"
                       />
                     </div>
                   </>
@@ -695,7 +695,7 @@ export default function Page() {
                       onValueChange={(val) => setNamaSekolah(val || "0")}
                       options={sekolahOptions}
                       isLoading={sekolahPending}
-                      placeholder="Pilih sekolah"
+                      placeholder="-- Pilih sekolah --"
                     />
                   </div>
                 )}

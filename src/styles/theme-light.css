@@ -1060,3 +1060,164 @@ html[data-theme="light"] .restore-tab.restore-tab--active {
   box-shadow: 0 14px 32px rgba(210,182,138,0.32);
 }
 
+/* FILE: src/styles/components/select-light.css */
+
+/* Scope: hanya untuk halaman /check/notrecord di tema putih */
+html[data-theme="light"] .page-notrecord {
+  --sel-bg: #fff;
+  --sel-ink: var(--lux-ink, #1a1d21);
+  --sel-border: var(--lux-border, rgba(26,29,33,.12));
+  --sel-shadow: var(--shadow-sm, 0 1px 2px rgba(26,29,33,.06));
+  --sel-shadow-open: var(--shadow-md, 0 8px 22px rgba(26,29,33,.10));
+  --sel-hover: var(--surface-alt, #f6f2ea);
+  --sel-focus: var(--focus-ring, 0 0 0 3px rgba(212,175,55,.35));
+  --sel-accent: var(--gold-1, #d4af37);
+}
+
+/* ===== Trigger / Combobox ================================================= */
+html[data-theme="light"] .page-notrecord :is(
+  [role="combobox"],
+  button[aria-haspopup="listbox"],
+  .select-trigger,             /* jika SelectFancy memberi class ini */
+  .select-dark__trigger        /* fallback dari stylesheet lama */
+) {
+  background: var(--sel-bg) !important;
+  color: var(--sel-ink) !important;
+  border: 1px solid var(--sel-border) !important;
+  box-shadow: var(--sel-shadow) !important;
+}
+
+/* Hover/focus state */
+html[data-theme="light"] .page-notrecord :is(
+  [role="combobox"]:hover,
+  button[aria-haspopup="listbox"]:hover,
+  .select-trigger:hover,
+  .select-dark__trigger:hover
+) {
+  background: var(--sel-hover) !important;
+  border-color: color-mix(in oklab, var(--sel-border), var(--sel-accent) 25%) !important;
+}
+
+html[data-theme="light"] .page-notrecord :is(
+  [role="combobox"]:focus,
+  [role="combobox"]:focus-visible,
+  button[aria-haspopup="listbox"]:focus,
+  button[aria-haspopup="listbox"]:focus-visible,
+  .select-trigger:focus,
+  .select-trigger:focus-visible,
+  .select-dark__trigger:focus,
+  .select-dark__trigger:focus-visible
+) {
+  outline: none !important;
+  box-shadow: var(--sel-focus) !important;
+}
+
+/* Ikon chevron/indicator di dalam trigger */
+html[data-theme="light"] .page-notrecord :is(
+  [role="combobox"] svg,
+  button[aria-haspopup="listbox"] svg,
+  .select-trigger svg,
+  .select-dark__trigger svg
+) {
+  color: var(--sel-ink) !important;
+  stroke: var(--sel-ink) !important;
+  opacity: .9;
+}
+
+/* Placeholder/text redup */
+html[data-theme="light"] .page-notrecord :is(
+  [role="combobox"] [data-placeholder],
+  .select-trigger [data-placeholder]
+){
+  color: var(--ink-muted, #4b5563) !important;
+}
+
+/* ===== Dropdown / Content ================================================= */
+html[data-theme="light"] .page-notrecord :is(
+  [role="listbox"],
+  .select-content,
+  .select-dark__content
+){
+  background: var(--sel-bg) !important;
+  color: var(--sel-ink) !important;
+  border: 1px solid var(--sel-border) !important;
+  box-shadow: var(--sel-shadow-open) !important;
+}
+
+/* Item */
+html[data-theme="light"] .page-notrecord :is(
+  [role="option"],
+  .select-item,
+  .select-dark__item
+){
+  color: var(--sel-ink) !important;
+}
+
+html[data-theme="light"] .page-notrecord :is(
+  [role="option"]:hover,
+  .select-item:hover,
+  .select-dark__item:hover
+){
+  background: var(--sel-hover) !important;
+}
+
+/* Item terpilih */
+html[data-theme="light"] .page-notrecord :is(
+  [role="option"][data-state="checked"],
+  .select-item[data-state="checked"],
+  .select-dark__item[data-state="checked"]
+){
+  background: color-mix(in oklab, #fff, var(--sel-accent) 18%) !important;
+  color: var(--sel-ink) !important;
+}
+
+/* ===== Native <select> fallback (jaga-jaga) =============================== */
+html[data-theme="light"] .page-notrecord select {
+  background: var(--sel-bg) !important;
+  color: var(--sel-ink) !important;
+  border: 1px solid var(--sel-border) !important;
+  box-shadow: var(--sel-shadow) !important;
+}
+html[data-theme="light"] .page-notrecord select:focus {
+  outline: none !important;
+  box-shadow: var(--sel-focus) !important;
+}
+/* FILE: src/styles/components/select-light.css */
+/* ===== React-Select (halaman /check/notrecord – tema light) ===== */
+
+/* 1) Style control/menu dengan prefix 'rs' (BUKAN [role="combobox"]) */
+html[data-theme="light"] .page-notrecord .rs__control{
+  background:#fff !important;
+  color:var(--lux-ink,#1a1d21) !important;
+  border:1px solid var(--lux-border,rgba(26,29,33,.12)) !important;
+  border-radius:12px !important;
+  box-shadow:var(--shadow-sm,0 1px 2px rgba(26,29,33,.06)) !important;
+}
+html[data-theme="light"] .page-notrecord .rs__control--is-focused{
+  box-shadow:0 0 0 3px rgba(212,175,55,.35) !important;
+  border-color:color-mix(in oklab,var(--lux-border),var(--gold-400) 35%) !important;
+}
+html[data-theme="light"] .page-notrecord .rs__menu{
+  background:#fff !important;
+  border:1px solid var(--lux-border,rgba(26,29,33,.12)) !important;
+  border-radius:12px !important;
+  box-shadow:0 12px 28px rgba(26,29,33,.14) !important;
+}
+
+/* 2) RESET input internal supaya “pil putih” hilang */
+html[data-theme="light"] .page-notrecord .rs__input input,
+html[data-theme="light"] .page-notrecord [role="combobox"]{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  padding:0 !important;
+  border-radius:0 !important;
+}
+
+/* 3) Warna ikon indikator & hover item */
+html[data-theme="light"] .page-notrecord .rs__indicator svg{ color:var(--lux-ink,#1a1d21) !important; }
+html[data-theme="light"] .page-notrecord .rs__option--is-focused{ background:var(--surface-alt,#f4efe7) !important; }
+html[data-theme="light"] .page-notrecord .rs__option--is-selected{
+  background:color-mix(in oklab,#fff,var(--gold-400,#d2b68a) 18%) !important;
+  color:var(--lux-ink,#1a1d21) !important;
+}
