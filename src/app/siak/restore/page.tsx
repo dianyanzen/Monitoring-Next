@@ -417,19 +417,10 @@ export default function RestorePage() {
   }, [router]);
 
   return (
-    <div className="relative mt-5 space-y-6 px-4 pb-16 pt-6 text-slate-900 transition-colors duration-500 sm:px-6 md:mt-10 md:px-10 md:pt-10 dark:text-slate-100">
-      {/* light mode wash */}
-      <div className="pointer-events-none absolute inset-0 -z-30 bg-gradient-to-br from-sky-50 via-white to-rose-50 opacity-95 dark:hidden" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-20 h-80 rounded-b-[80px] bg-gradient-to-b from-white/80 via-white/40 to-transparent blur-3xl dark:hidden" />
-
-      {/* neon glow for dark */}
-      <div className="pointer-events-none absolute inset-0 -z-20 hidden dark:block">
-        <div className="absolute left-[12%] top-[-18%] h-[1100px] w-[1100px] rounded-full bg-cyan-500/25 blur-[220px]" />
-        <div className="absolute right-[18%] bottom-[-22%] h-[1050px] w-[1050px] rounded-full bg-fuchsia-600/20 blur-[200px]" />
-      </div>
+    <div className="siak-page relative mt-5 space-y-6 px-4 pb-16 pt-6 text-slate-900 transition-colors duration-500 sm:px-6 md:mt-10 md:px-10 md:pt-10 dark:text-slate-100">
 
       {/* header + search */}
-      <section className="restore-panel overflow-hidden rounded-3xl transition-all duration-500">
+      <section className="restore-panel overflow-hidden transition-all duration-500">
         <header className="restore-panel__header px-5 py-5 transition">
           <p className="text-xs uppercase tracking-[0.32em] text-slate-500/80 dark:text-slate-400/70">Restore</p>
           <div className="flex flex-wrap items-center gap-3">
@@ -438,13 +429,13 @@ export default function RestorePage() {
               Monitoring - Restore Biodata WNI
             </h1>
             <div className="ml-auto flex items-center gap-2">
-              <div className="restore-chip px-3 py-1 text-[11px]">
+              <div className="restore-chip">
                 User: {(user as any)?.S_NAMA_LGKP ?? (user as any)?.S_USER_ID ?? "-"}
               </div>
               <button
                 type="button"
                 onClick={() => window.location.reload()}
-                className="restore-button-subtle inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-[11px] font-semibold transition"
+                className="restore-button-subtle text-[11px]"
               >
                 <RefreshCcw className="h-3.5 w-3.5" />
                 Refresh
@@ -456,23 +447,19 @@ export default function RestorePage() {
           </p>
         </header>
 
-        <div className="restore-toolbar rounded-2xl p-6 transition-colors">
+        <div className="restore-toolbar p-6 transition-colors">
           <div className="restore-toolbar__tabbar flex flex-wrap items-center gap-3 pb-4">
             <button
               type="button"
               onClick={() => setMode("nik")}
-              className={`restore-tab rounded-full px-4 py-1.5 text-sm font-semibold shadow-sm transition ${
-                mode === "nik" ? "restore-tab--active" : ""
-              }`}
+              className={`restore-tab ${mode === "nik" ? "restore-tab--active" : ""}`}
             >
               Cari via NIK
             </button>
             <button
               type="button"
               onClick={() => setMode("kk")}
-              className={`restore-tab rounded-full px-4 py-1.5 text-sm font-semibold shadow-sm transition ${
-                mode === "kk" ? "restore-tab--active" : ""
-              }`}
+              className={`restore-tab ${mode === "kk" ? "restore-tab--active" : ""}`}
             >
               Cari via No KK
             </button>
@@ -526,7 +513,7 @@ export default function RestorePage() {
               <button
                 type="button"
                 onClick={onReset}
-                className="restore-button-subtle inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition"
+                className="restore-button-subtle"
               >
                 <RefreshCcw className="h-4 w-4" />
                 Reset
@@ -535,7 +522,7 @@ export default function RestorePage() {
                 type="button"
                 disabled={loading || !activeInput}
                 onClick={handleSubmit}
-                className="restore-button inline-flex items-center justify-center gap-2 rounded-xl px-6 py-2 text-sm font-semibold transition disabled:cursor-not-allowed"
+                className="restore-button"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
                 Telusuri
@@ -579,10 +566,10 @@ export default function RestorePage() {
         <div className="flex flex-col gap-6">
           {/* person */}
           {person ? (
-            <section className="restore-section grid gap-6 rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-lg shadow-slate-500/15 transition-colors md:grid-cols-[320px,1fr] dark:border-white/5 dark:bg-slate-900/40 dark:shadow-none">
+            <section className="restore-section grid gap-6 p-6 transition-colors md:grid-cols-[320px,1fr]">
               {/* kiri: foto */}
-              <div className="restore-photo relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-sky-50 via-white to-indigo-100 shadow-md dark:border-white/10 dark:bg-slate-900/40">
-                <div className="relative w-full aspect-[4/5] bg-gradient-to-br from-slate-200 via-white to-emerald-100 dark:bg-[#0f172a]">
+              <div className="restore-photo">
+                <div className="relative w-full" style={{ aspectRatio: "4 / 5" }}>
                   {forceFace ? (
                     person?.faceBase64 ? (
                       <FaceCard
@@ -591,16 +578,20 @@ export default function RestorePage() {
                         alt={person.namaLgkp}
                       />
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center text-slate-200/70">
+                      <div className="absolute inset-0 flex items-center justify-center text-slate-400">
                         Tidak ada foto
                       </div>
                     )
                   ) : photoUrlFromPath ? (
+                    // FOTO DARI PATH → isi penuh tanpa distorsi
                     <img
                       src={photoUrlFromPath}
                       alt={person.namaLgkp}
+                      width={480}
+                      height={600}
                       className="absolute inset-0 h-full w-full object-cover"
                       onError={() => setForceFace(true)}
+                      draggable={false}
                     />
                   ) : photoUrlFromFace ? (
                     <FaceCard
@@ -608,37 +599,44 @@ export default function RestorePage() {
                       mime={person.faceMime ?? "image/jpeg"}
                       alt={person.namaLgkp}
                     />
-                 ) : (
+                  ) : (
+                    // PLACEHOLDER → jangan stretch (contain + center)
                     (() => {
                       const female = (person?.jenisKelamin ?? "").toUpperCase() === "PEREMPUAN";
                       const placeholderSrc = female
                         ? (isDark ? PLACEHOLDER_FEMALE_DARK : PLACEHOLDER_FEMALE_LIGHT)
                         : (isDark ? PLACEHOLDER_MALE_DARK   : PLACEHOLDER_MALE_LIGHT);
 
+                      // warna wrapper mengikuti tema sekeliling
+                      const phWrapClass = isDark
+                        ? "bg-[color-mix(in_oklab,#0b1220,#fff_0%)] ring-1 ring-white/10"
+                        : "bg-[color-mix(in_oklab,var(--lux-surface),#000_6%)] ring-1 ring-[color-mix(in_oklab,var(--gold-400),#000_12%)]/35";
+
                       return (
-                        <img
-                          key={isDark ? "ph-dark" : "ph-light"} // force re-render saat toggle
-                          src={placeholderSrc}
-                          alt=""
-                          className="absolute inset-0 size-full object-fill select-none"
-                          draggable={false}
-                          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                        />
+                        <div className={`absolute inset-0 grid place-items-center ${phWrapClass}`}>
+                          <img
+                            key={isDark ? "ph-dark" : "ph-light"}
+                            src={placeholderSrc}
+                            alt=""
+                            width={480}
+                            height={600}
+                            className="max-h-[96%] max-w-[96%] select-none object-contain"
+                            draggable={false}
+                            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                          />
+                        </div>
                       );
                     })()
                   )}
 
-                  {/* badge sumber foto */}
-               
-
-                  {/* badge status */}
+                  {/* badge status tetap */}
                   {statusBadge && (
                     <div className="absolute bottom-3 left-3 flex flex-wrap gap-2">{statusBadge}</div>
                   )}
                 </div>
 
                 {/* identitas singkat */}
-                <div className="restore-info-card rounded-2xl p-4 text-sm">
+                <div className="restore-info-card p-4 text-sm">
                   <div className="flex items-center gap-2 text-xs uppercase tracking-[0.26em] text-slate-500/80 dark:text-slate-400/80">
                     <User className="h-3.5 w-3.5" />
                     Identitas
@@ -659,7 +657,7 @@ export default function RestorePage() {
 
               {/* kanan: detail */}
               <div className="space-y-6">
-                <div className="restore-info-card rounded-2xl p-5 text-sm">
+                <div className="restore-info-card p-5 text-sm">
                   <div className="grid gap-3 sm:grid-cols-2">
                     <DataRow label="Alamat" value={person.alamat} />
                     <DataRow label="RT / RW" value={`${person.rt ?? "-"} / ${person.rw ?? "-"}`} />
@@ -681,7 +679,7 @@ export default function RestorePage() {
 
                 {result.source === "DELETED" &&
                   (person.alasan !== "-" || person.deletedBy !== "-") && (
-                    <div className="restore-note rounded-2xl p-4 text-sm">
+                    <div className="restore-note p-4 text-sm">
                       <div className="flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-amber-600 dark:text-amber-200">
                         <History className="h-3.5 w-3.5" />
                         Catatan Penghapusan
@@ -713,7 +711,7 @@ export default function RestorePage() {
                 )}
 
                 {(result.historyKematian || result.historyPindah) && (
-                  <div className="restore-info-card rounded-2xl p-4 text-sm">
+                  <div className="restore-info-card p-4 text-sm">
                     <div className="mb-3 flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-slate-500/80 dark:text-slate-400/80">
                       <Activity className="h-3.5 w-3.5" />
                       Jejak Peristiwa (ditampilkan walau AKTIF)
@@ -779,7 +777,7 @@ export default function RestorePage() {
               </div>
             </section>
           ) : (
-            <section className="restore-section rounded-2xl p-6 text-sm">
+            <section className="restore-section p-6 text-sm">
               <div className="flex items-start gap-4">
                 <ShieldOff className="mt-1 h-5 w-5 text-amber-500 dark:text-amber-300/80" />
                 <div>
@@ -793,7 +791,7 @@ export default function RestorePage() {
           )}
 
           {/* family */}
-            <section className="restore-section rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-lg shadow-slate-500/10 transition dark:border-white/5 dark:bg-slate-900/30">
+            <section className="restore-section p-6 transition">
             <div className="mb-4 flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 text-lg font-semibold text-slate-800 dark:text-white">
                 <Users2 className="h-5 w-5 text-sky-500 dark:text-cyan-300" />
@@ -804,9 +802,9 @@ export default function RestorePage() {
               </div>
             </div>
             {result.family.length ? (
-              <div className="restore-table overflow-x-auto rounded-xl border border-slate-200 shadow-sm dark:border-white/5">
-                <table className="restore-table__inner min-w-full divide-y divide-slate-200 text-sm text-slate-700 dark:divide-white/5 dark:text-slate-200">
-                  <thead className="restore-table__head bg-slate-100/90 text-xs uppercase tracking-wide text-slate-500 dark:bg-white/5 dark:text-slate-300">
+              <div className="restore-table overflow-x-auto">
+                <table className="restore-table__inner min-w-full text-sm">
+                  <thead className="restore-table__head">
                     <tr>
                       <th className="px-3 py-3 text-left font-semibold">Nama</th>
                       <th className="px-3 py-3 text-left font-semibold">NIK</th>
@@ -819,7 +817,7 @@ export default function RestorePage() {
                       <th className="px-3 py-3 text-left font-semibold">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="restore-table__body divide-y divide-slate-200 dark:divide-white/5">
+                  <tbody className="restore-table__body">
                     {result.family.map((member) => (
                       <tr key={member.nik} className="restore-row transition">
                         <td className="px-3 py-2 font-semibold text-slate-900 dark:text-white">{member.namaLgkp}</td>
@@ -832,7 +830,7 @@ export default function RestorePage() {
                           {[member.namaKecamatan, member.namaKelurahan].filter(Boolean).join(" / ") || "-"}
                         </td>
                         <td className="px-3 py-2">
-                          <span className="restore-pill rounded-full px-2 py-1 text-xs">
+                          <span className="restore-pill">
                             {member.currentStatusCode ?? "-"}
                           </span>
                         </td>
@@ -853,7 +851,7 @@ export default function RestorePage() {
                           <button
                             type="button"
                             onClick={() => handleFamilyClick(member.nik)}
-                            className="restore-button inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-semibold transition hover:-translate-y-0.5 hover:shadow-md"
+                            className="restore-button restore-button--sm"
                             title="Telusuri NIK ini"
                           >
                             <Search className="h-3.5 w-3.5" />
@@ -866,7 +864,7 @@ export default function RestorePage() {
                 </table>
               </div>
             ) : (
-              <div className="restore-info-card flex items-center gap-3 rounded-xl p-4 text-sm">
+              <div className="restore-info-card flex items-center gap-3 p-4 text-sm">
                 <CheckCircle2 className="h-4 w-4 text-emerald-500 dark:text-cyan-300" />
                 Tidak ada anggota keluarga yang terdaftar pada referensi ini.
               </div>

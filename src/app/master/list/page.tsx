@@ -1,4 +1,4 @@
-﻿// FILE: src/app/master/list/page.tsx
+﻿﻿// FILE: src/app/master/list/page.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
