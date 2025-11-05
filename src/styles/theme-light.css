@@ -174,7 +174,7 @@ html[data-theme="light"] [class*="bg-clip-text"][class*="bg-gradient-to-"][class
 html[data-theme="light"] :is(h1, h2)[class*="bg-clip-text"][class*="bg-gradient-to-"][class*="from-cyan-"] {
   font-weight: 800 !important;
   letter-spacing: 0.01em !important;
-  text-shadow: 0 6px 18px rgba(224, 197, 143, 0.32) !important;
+  text-shadow: var(--accent-glow-shadow) !important;
   background-image: var(--accent-grad-strong) !important;
   color: transparent !important;
 }
@@ -1337,4 +1337,32 @@ html[data-theme="light"] .repair-btn--primary{
 html[data-theme="light"] .repair-toolbar .repair-btn--primary:focus-visible{
   /* Tailwind ring uses this var */
   --tw-ring-color: rgb(34 211 238 / 0.55); /* cyan-400 */
+}
+
+/* FILE: src/styles/theme-light.css */
+/* --- Darker Luxe (v2) — letakkan DI PALING BAWAH file --- */
+html[data-theme="light"]{
+  /* Surface & background lebih gelap/kontras tipis */
+  --lux-bg: #efe7dc;
+  --lux-surface: #fff8ee;
+  --lux-surface-soft: color-mix(in oklab, var(--lux-surface), #d9c8c2 26%);
+
+  /* Tinta utama & aksen emas dibuat 1–2 stop lebih dalam */
+  --lux-ink: #8a6a2f;                 /* teks utama (lebih gelap) */
+  --lux-ink-subtle: color-mix(in oklab, #8a6a2f, #f8edd6 20%);
+  --accent-ink: #7a521a;              /* warna judul/aksen */
+
+  /* Border & shadow sedikit ditebalkan supaya edge terasa */
+  --lux-border: #bea58e;
+  --border-strong: rgba(104, 71, 5, .42);
+  --lux-shadow: 0 16px 34px rgba(17,34,80,.12);
+
+  /* Gradien aksen dibuat lebih ‘rich’ (kurangi putihnya) */
+  --accent-grad-soft: linear-gradient(135deg, #f2e3c5, #c7a46e);
+  --accent-grad-strong: linear-gradient(120deg, #9a6c23 0%, #e1c287 48%, #cfa057 100%);
+  --accent-grad: linear-gradient(135deg, #b8893b, #e7d0a0);
+
+  /* Glow judul dibuat hangat tapi lebih pekat */
+  --heading-glow-color: #cda760;
+  --heading-glow-shadow: 0 0 18px rgba(224,197,143,.22), 0 0 8px rgba(60,80,125,.20);
 }
