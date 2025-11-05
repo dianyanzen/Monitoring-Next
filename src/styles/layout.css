@@ -29,7 +29,7 @@ html[data-theme="light"] aside.w-80 {
               radial-gradient(600px 320px at 100% 10%, #fff4d8 0%, transparent 55%), var(--lux-surface) !important;
   color: var(--lux-ink) !important;
   border-right: 1px solid color-mix(in oklab, var(--gold-300), #fff 40%) !important;
-  box-shadow: inset -2px 0 0 rgba(210, 182, 138, .12), 0 12px 28px rgba(210, 182, 138, .14);
+  box-shadow: inset -2px 0 0 rgba(224, 197, 143, .12), 0 12px 28px rgba(224, 197, 143, .14);
   outline: 1px solid color-mix(in oklab, var(--gold-300), #fff 55%); outline-offset: -1px;
 }
 html[data-theme="light"] aside.w-80 > [aria-hidden] { display:none !important; }
@@ -50,7 +50,7 @@ html[data-theme="light"] aside.w-80 :is(a[aria-current="page"], div[aria-disable
   background:#fffdf6 !important; color: var(--lux-ink) !important; border-color: color-mix(in oklab, var(--gold-400), #fff 40%) !important; box-shadow: inset 3px 0 0 0 color-mix(in oklab, var(--gold-400), #fff 28%), 0 10px 22px rgba(20, 32, 51, .06) !important;
 }
 html[data-theme="light"] aside.w-80 :is(a, div, button) i { color: color-mix(in oklab, var(--lux-ink), #8aa 35%) !important; }
-html[data-theme="light"] aside.w-80 :is(a[aria-current="page"], button[aria-expanded="true"]) i { color:#223254 !important; }
+html[data-theme="light"] aside.w-80 :is(a[aria-current="page"], button[aria-expanded="true"]) i { color:#a8844c !important; }
 
 /* Footer (light) */
 html[data-theme="light"] footer > .absolute.inset-x-0.top-0[class~="h-[2px]"] { background: var(--gold-grad) !important; opacity: 1 !important; }
@@ -61,5 +61,5 @@ html[data-theme="light"] footer > div.relative {
 }
 html[data-theme="light"] footer .text-cyan-400 {
   color: color-mix(in oklab, var(--gold-500), #fff 8%) !important;
-  text-shadow: 0 0 10px rgba(184, 138, 61, .24), 0 0 26px rgba(210, 182, 138, .24) !important;
+  text-shadow: 0 0 10px rgba(184, 138, 61, .24), 0 0 26px rgba(224, 197, 143, .24) !important;
 }

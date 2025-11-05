@@ -23,7 +23,7 @@ html[data-theme="light"] [data-drp-popover] .drp-input {
 }
 html[data-theme="light"] [data-drp-popover] .drp-input:focus {
   border-color: color-mix(in oklab, var(--gold-300), #fff 30%) !important;
-  box-shadow: 0 0 0 2px rgba(210, 182, 138, 0.25) !important;
+  box-shadow: 0 0 0 2px rgba(224, 197, 143, 0.25) !important;
 }
 html[data-theme="light"] [data-drp-popover] .drp-input::placeholder {
   color: color-mix(in oklab, var(--lux-muted), #a0a8b5 28%) !important;
@@ -37,8 +37,8 @@ border: 1px solid var(--lux-border) !important;
 }
 html[data-theme="light"] [data-drp-popover] button:nth-child(2) {
 background: var(--gold-grad) !important;
-color: #2a1e05 !important;
-border: 1px solid rgba(210, 182, 138, 0.5) !important;
+color: #a8844c !important;
+border: 1px solid rgba(224, 197, 143, 0.5) !important;
 }
 
 /* ==========================================================

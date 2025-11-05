@@ -1,96 +1,104 @@
 /* FILE: src/styles/components/tables.css */
 
-/* ===== Base table (non-DataTables) ===== */
+/* =========================================================================
+   0) BASE TABLES (non-DataTables) + LIGHT OVERRIDES
+   ========================================================================= */
 .table{
   width:100%;
-  border-collapse: collapse;
+  border-collapse:collapse;
   font-size:.95rem;
 }
 .table thead th{
-  text-align:left;
+  text-align:center;
   padding:.75rem 1rem;
   border-bottom:1px solid rgba(255,255,255,.12);
+  font-weight:600;
+  letter-spacing:.04em;
+  text-transform:uppercase;
 }
 .table tbody td{
   padding:.65rem 1rem;
   border-bottom:1px solid rgba(255,255,255,.08);
 }
-.table tbody tr:hover{ background: rgba(255,255,255,.03); }
+.table tbody tr:hover{
+  background:rgba(255,255,255,.03);
+}
 
 /* Light theme tweak */
 html[data-theme="light"] .table thead th,
 html[data-theme="light"] .table tbody td{
-  border-color: var(--lux-border);
-  color: var(--lux-ink);
+  border-color:var(--lux-border);
+  color:var(--lux-ink);
 }
-html[data-theme="light"] .table tbody tr:hover{ background: rgba(0,0,0,.04); }
+html[data-theme="light"] .table tbody tr:hover{
+  background:rgba(0,0,0,.04);
+}
 
-/* ===== DataTables (DT) ===== */
-.dataTables_wrapper{
-  width:100%;
-  color: inherit;
-}
+/* =========================================================================
+   1) DATATABLES (DT) – WRAPPER, CONTROLS, TABLE, PAGINATION, LIGHT OVERRIDES
+   ========================================================================= */
+.dataTables_wrapper{ width:100%; color:inherit; }
 
 /* Top controls */
 .dataTables_wrapper .dataTables_length,
-.dataTables_wrapper .dataTables_filter{
-  margin: .25rem 0 .75rem 0;
-}
+.dataTables_wrapper .dataTables_filter{ margin:.25rem 0 .75rem 0; }
 .dataTables_wrapper .dataTables_filter label{
-  display:flex; gap:.5rem; align-items:center;
-  color: inherit;
+  display:flex;
+  gap:.5rem;
+  align-items:center;
+  color:inherit;
 }
 .dataTables_wrapper .dataTables_filter input{
-  height: 36px;
-  padding: 0 .75rem;
-  border-radius: 10px;
+  height:36px;
+  padding:0 .75rem;
+  border-radius:10px;
   border:1px solid rgba(255,255,255,.18);
-  background: rgba(255,255,255,.05);
-  color: inherit;
-  outline: none;
+  background:rgba(255,255,255,.05);
+  color:inherit;
+  outline:none;
+  transition:border-color .18s ease, box-shadow .18s ease;
 }
 .dataTables_wrapper .dataTables_filter input:focus{
-  border-color: rgba(34,211,238,.6);
-  box-shadow: 0 0 0 3px rgba(34,211,238,.18);
+  border-color:rgba(34,211,238,.6);
+  box-shadow:0 0 0 3px rgba(34,211,238,.18);
 }
 
 /* Table visuals */
 table.dataTable{
-  border-collapse: collapse !important;
-  width:100% !important;
+  border-collapse:collapse!important;
+  width:100%!important;
 }
 table.dataTable thead th{
-  border-bottom:1px solid rgba(255,255,255,.18) !important;
-  padding:.75rem 1rem !important;
+  border-bottom:1px solid rgba(255,255,255,.18)!important;
+  padding:.75rem 1rem!important;
 }
 table.dataTable tbody td{
-  border-bottom:1px solid rgba(255,255,255,.08) !important;
-  padding:.6rem 1rem !important;
+  border-bottom:1px solid rgba(255,255,255,.08)!important;
+  padding:.6rem 1rem!important;
 }
 table.dataTable.stripe tbody tr:nth-child(even){
-  background: rgba(255,255,255,.03);
+  background:rgba(255,255,255,.03);
 }
-table.dataTable.hover tbody tr:hover{
-  background: rgba(255,255,255,.05);
+table.dataTable.hover  tbody tr:hover{
+  background:rgba(255,255,255,.05);
 }
 
 /* Paging */
-.dataTables_wrapper .dataTables_paginate{
-  margin-top:.5rem;
-}
+.dataTables_wrapper .dataTables_paginate{ margin-top:.5rem; }
 .dataTables_wrapper .dataTables_paginate .paginate_button{
   border:1px solid rgba(255,255,255,.16);
-  background: rgba(255,255,255,.06);
-  color: inherit !important;
-  border-radius: 10px;
+  background:rgba(255,255,255,.06);
+  color:inherit!important;
+  border-radius:10px;
   padding:.35rem .7rem;
-  margin: 0 .15rem;
+  margin:0 .15rem;
   cursor:pointer;
+  transition:all .18s ease;
 }
 .dataTables_wrapper .dataTables_paginate .paginate_button.current,
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover{
-  border-color: rgba(34,211,238,.45);
-  background: rgba(34,211,238,.15);
+  border-color:rgba(34,211,238,.45);
+  background:rgba(34,211,238,.15);
 }
 
 /* Info text */
@@ -99,69 +107,383 @@ table.dataTable.hover tbody tr:hover{
   opacity:.85;
 }
 
-/* Light mode overrides (Luxe) */
+/* Light overrides */
 html[data-theme="light"] .dataTables_wrapper .dataTables_filter input{
-  border-color: var(--lux-border);
+  border-color:var(--lux-border);
   background:#fff;
-  color: var(--lux-ink);
+  color:var(--lux-ink);
 }
 html[data-theme="light"] .dataTables_wrapper .dataTables_filter input:focus{
-  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 28%);
-  box-shadow: 0 0 0 3px rgba(210,182,138,.22);
+  border-color:color-mix(in oklab, var(--lux-border), var(--gold-400) 28%);
+  box-shadow:0 0 0 3px rgba(224,197,143,.22);
 }
-
 html[data-theme="light"] table.dataTable thead th{
-  border-color: var(--lux-border) !important;
-  color: var(--lux-ink);
+  border-color:var(--lux-border)!important;
+  color:var(--lux-ink);
 }
 html[data-theme="light"] table.dataTable tbody td{
-  border-color: var(--lux-border) !important;
-  color: var(--lux-ink);
+  border-color:var(--lux-border)!important;
+  color:var(--lux-ink);
 }
 html[data-theme="light"] table.dataTable.stripe tbody tr:nth-child(even){
-  background: rgba(0,0,0,.03);
+  background:rgba(0,0,0,.03);
 }
-html[data-theme="light"] table.dataTable.hover tbody tr:hover{
-  background: rgba(0,0,0,.05);
+html[data-theme="light"] table.dataTable.hover  tbody tr:hover{
+  background:rgba(0,0,0,.05);
 }
-
 html[data-theme="light"] .dataTables_wrapper .dataTables_paginate .paginate_button{
-  border-color: var(--lux-border);
+  border-color:var(--lux-border);
   background:#fff;
-  color: var(--lux-ink) !important;
+  color:var(--lux-ink)!important;
 }
 html[data-theme="light"] .dataTables_wrapper .dataTables_paginate .paginate_button.current,
 html[data-theme="light"] .dataTables_wrapper .dataTables_paginate .paginate_button:hover{
-  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 35%);
-  background: var(--gold-grad);
-  color:#2a1e05 !important;
-  box-shadow: 0 10px 22px rgba(210,182,138,.18);
+  border-color:color-mix(in oklab, var(--lux-border), var(--gold-400) 35%);
+  background:var(--gold-grad);
+  color:#a8844c!important;
+  box-shadow:0 10px 22px rgba(224,197,143,.18);
 }
 
+/* =========================================================================
+   2) RESTORE FAMILY TABLE (SIAK)
+   ========================================================================= */
+.restore-family-card{
+  --card-bg:rgba(7,12,21,.9);
+  --card-border:rgba(10,18,32,.92);
+  --card-shadow:0 0 0 1px rgba(7,14,26,.95), 0 0 36px rgba(1,8,16,.6), 0 26px 46px rgba(3,10,22,.58);
+  --card-divider:rgba(148,163,184,.22);
+  --head-color:rgba(224,247,255,.9);
+  --muted:#91a7c5;
+  --text-strong:#f5fbff;
+  --row-odd:rgba(6,18,32,.58);
+  --row-even:rgba(9,23,40,.72);
+  --row-hover:rgba(56,189,248,.16);
 
-html[data-theme="light"] table {
-width: 100%;
-border-collapse: separate;
-border-spacing: 0;
-background: #fff !important;
-color: var(--lux-ink) !important;
-border: 1px solid var(--lux-border) !important;
-border-radius: 14px;
-overflow: hidden;
-box-shadow: var(--lux-shadow);
+  position:relative;
+  padding:1.4rem;
+  border-radius:24px;
+  border:1px solid var(--card-border);
+  background:
+    radial-gradient(120% 160% at 20% 10%, rgba(56,189,248,.25), transparent 55%),
+    radial-gradient(110% 150% at 80% 0%, rgba(124,58,237,.24), transparent 52%),
+    var(--card-bg);
+  box-shadow:var(--card-shadow);
+  overflow:hidden;
 }
-html[data-theme="light"] thead {
-background: linear-gradient(180deg, #fffdf6, #fff9e8) !important;
-color: #111827 !important;
-border-bottom: 1px solid var(--lux-border) !important;
+.restore-family-card::after{
+  content:"";
+  position:absolute; inset:6px; border-radius:20px;
+  border:1px solid rgba(8,15,28,.65);
+  pointer-events:none;
 }
-html[data-theme="light"] tbody tr:hover {
-background: #fff8ec !important;
+.restore-family-card__header{
+  position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:1.5rem; padding-bottom:1.25rem; border-bottom:1px solid var(--card-divider);
 }
-html[data-theme="light"] tfoot {
-background: #fffdfa !important;
-border-top: 1px solid var(--lux-border) !important;
+.restore-family-card__title{ display:flex; align-items:center; gap:1rem; }
+.restore-family-card__heading{
+  font-size:1.05rem; font-weight:600; letter-spacing:.05em;
+  color:var(--text-strong); text-transform:uppercase;
 }
-html[data-theme="light"] table :is(th, td) {
-color: var(--lux-ink) !important;
+.restore-family-card__sub{
+  margin-top:.25rem; font-size:.8rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted);
 }
+
+/* Meta count — polos (tanpa glow) */
+.restore-family-card__meta{ display:flex; align-items:center; gap:.5rem; }
+.restore-family-card__count{
+  display:grid; place-items:center;
+  width:28px; height:28px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  color:rgba(226,232,240,.9);
+  font-weight:700; font-variant-numeric:tabular-nums; box-shadow:none;
+}
+.restore-family-card__count-label{ font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; opacity:.7; }
+
+/* ---- Table container & scroll ---- */
+.restore-family-table{ position:relative; margin-top:1.5rem; }
+.restore-family-table__scroll{
+  position:relative; overflow:auto; scrollbar-gutter:stable both-edges; padding-bottom:.5rem;
+  scrollbar-width:thin; scrollbar-color:rgba(56,189,248,.8) rgba(148,163,184,.18);
+}
+.restore-family-table__scroll::-webkit-scrollbar{ height:10px; }
+.restore-family-table__scroll::-webkit-scrollbar-track{ background:rgba(148,163,184,.15); border-radius:999px; }
+.restore-family-table__scroll::-webkit-scrollbar-thumb{
+  background:linear-gradient(120deg, rgba(56,189,248,.9), rgba(124,58,237,.7));
+  border-radius:999px;
+}
+
+/* ---- Table base ---- */
+.restore-family-table__inner{
+  width:100%; min-width:100%; border-collapse:separate; border-spacing:0;
+  color:var(--text-strong); font-size:.88rem; table-layout:auto;
+}
+.restore-family-table__inner col{ width:auto!important; }
+.restore-family-table__inner col.col-idx{ width:52px!important; }
+.restore-family-table col.col-hubkel{ width:170px!important; } /* cegah cepat wrap */
+
+/* ---- Minimal header + ALIGN CENTER + subtle glow ---- */
+.restore-family-table__head{
+  position:sticky; top:0; z-index:5;
+  /* glow halus di bawah header tanpa merusak “polos” */
+  filter: drop-shadow(0 12px 22px rgba(34,211,238,.16))
+          drop-shadow(0 6px 14px rgba(168,85,247,.10));
+}
+.restore-family-table__head th{
+  padding:.75rem 1rem;
+  text-transform:uppercase; letter-spacing:.18em;
+  font-size:.72rem; font-weight:600;
+  background:none; box-shadow:none;
+  border:0; border-bottom:1px solid rgba(255,255,255,.08);
+  color:rgba(226,232,240,.85);
+  white-space:nowrap;
+  text-align:center;                /* ← default center */
+}
+.restore-family-table__head th:first-child,
+.restore-family-table__head th:last-child{ padding-left:.75rem; padding-right:.75rem; }
+
+/* Kolom yang tetap kiri (Nama & Wilayah) */
+.restore-family-table__head th:nth-child(2),
+.restore-family-table__head th:nth-child(6),
+.restore-family-table__body td:nth-child(2),
+.restore-family-table__body td:nth-child(6){ text-align:center; }
+
+/* ---- Body cells (default center) ---- */
+.restore-family-table__body td{
+  padding:.65rem .75rem; border-bottom:1px solid rgba(148,163,184,.12);
+  vertical-align:middle; line-height:1.35; text-align:center;
+}
+.restore-family-row:nth-child(odd){ background:var(--row-odd); }
+.restore-family-row:nth-child(even){ background:var(--row-even); }
+.restore-family-row:hover{ background:var(--row-hover); transition:background .18s ease, transform .16s ease; }
+
+/* Index bubble */
+.restore-family-index span{
+  display:inline-grid; place-items:center;
+  width:34px; height:34px; border-radius:12px;
+  font-size:.82rem; font-weight:700; color:#0f172a;
+  background:linear-gradient(150deg, rgba(165,243,252,.95), rgba(56,189,248,.82));
+  box-shadow:0 8px 16px rgba(14,165,233,.35);
+  transition:transform .16s ease, box-shadow .16s ease;
+}
+.restore-family-row:hover .restore-family-index span{
+  transform:translateY(-1px); box-shadow:0 12px 20px rgba(37,211,217,.35);
+}
+
+/* Text cells */
+.restore-family-name{ font-weight:600; letter-spacing:.04em; text-transform:uppercase; white-space:nowrap; }
+.restore-family-nik{ font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace; letter-spacing:.14em; font-size:.78rem; color:rgba(165,243,252,.9); white-space:nowrap; }
+.restore-family-date,.restore-family-note{ font-size:.82rem; color:rgba(209,233,255,.8); }
+.restore-family-note{ display:inline-block; max-width:160px; overflow:hidden; text-overflow:ellipsis; }
+.restore-family-location{ display:inline-flex; align-items:center; gap:.45rem; color:rgba(214,233,255,.88); flex-wrap:wrap; white-space:normal; }
+.restore-family-location .icon{ width:15px; height:15px; opacity:.8; }
+
+/* ---- Unified pill/badge (no wrap, uniform height) ---- */
+.restore-tag{
+  display:inline-flex; align-items:center; gap:.35rem;
+  height:28px; padding:0 .75rem; border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  font-size:.72rem; font-weight:700; letter-spacing:.04em; line-height:1;
+  text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  color:rgba(226,232,240,.9); background:rgba(255,255,255,.05);
+}
+.restore-tag .icon{ width:14px; height:14px; }
+.restore-tag--soft{   border-color:rgba(255,255,255,.14); background:rgba(255,255,255,.05); color:rgba(226,232,240,.9); }
+.restore-tag--ok{     border-color:rgba(16,185,129,.35);  background:rgba(16,185,129,.12);  color:#34d399; }
+.restore-tag--warn{   border-color:rgba(234,179,8,.35);   background:rgba(245,158,11,.12);  color:#fde047; }
+.restore-tag--danger{ border-color:rgba(244,63,94,.35);   background:rgba(244,63,94,.12);  color:#fda4af; }
+
+/* ---- Action button ---- */
+.restore-family-action{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.38rem .8rem; border-radius:999px; font-size:.7rem; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase;
+  background:linear-gradient(135deg, rgba(56,189,248,.22), rgba(56,189,248,.08));
+  border:1px solid rgba(165,243,252,.42); color:rgba(226,248,255,.95);
+  transition:transform .16s ease, box-shadow .2s ease, background .16s ease;
+}
+.restore-family-action:hover{
+  transform:translateY(-1px);
+  background:linear-gradient(135deg, rgba(56,189,248,.32), rgba(56,189,248,.12));
+  box-shadow:0 16px 32px rgba(56,189,248,.25);
+}
+.restore-family-action svg{ width:15px; height:15px; }
+
+/* ---- Empty state ---- */
+.restore-family-empty{
+  margin-top:1.5rem; display:flex; align-items:center; gap:1rem;
+  padding:1rem 1.25rem; border-radius:18px; border:1px dashed rgba(56,189,248,.4);
+  background:linear-gradient(120deg, rgba(56,189,248,.16), rgba(56,189,248,.05));
+  color:rgba(226,248,255,.92);
+}
+.restore-family-empty .icon{ width:20px; height:20px; }
+.restore-family-empty__title{ font-weight:600; letter-spacing:.05em; text-transform:uppercase; }
+.restore-family-empty__desc{ margin-top:.15rem; font-size:.82rem; color:rgba(214,233,255,.78); }
+
+/* ---- Light theme tweaks ---- */
+html[data-theme="light"] .restore-family-card{
+  --card-bg:rgba(255,255,255,.96);
+  --card-border:color-mix(in oklab,#d9c8c2 70%, #a8844c 18%);
+  --card-shadow:0 0 0 1px rgba(201,189,170,.45), 0 0 32px rgba(34,50,88,.12), 0 16px 34px rgba(32,45,78,.16);
+  --card-divider:color-mix(in oklab,#d9c8c2 70%, #a8844c 20%);
+  --head-color:#a8844c;
+  --muted:color-mix(in oklab,#a8844c, #96a5c3 62%);
+  --text-strong:#0d1b3c;
+  --row-odd:rgba(248,245,240,.96);
+  --row-even:rgba(233,224,212,.9);
+  --row-hover:color-mix(in oklab, #e0c58f 45%, #fff 55%);
+}
+html[data-theme="light"] .restore-family-table__head th{
+  border-bottom-color:color-mix(in oklab,#d9c8c2, #a8844c 18%);
+  color:var(--lux-ink);
+}
+html[data-theme="light"] .restore-family-nik{ color:#081636; }
+html[data-theme="light"] .restore-family-date,
+html[data-theme="light"] .restore-family-note,
+html[data-theme="light"] .restore-family-location{ color:color-mix(in oklab,#a8844c, #9ba7be 60%); }
+
+html[data-theme="light"] .restore-tag{
+  border-color:color-mix(in oklab,#d9c8c2, #a8844c 24%);
+  background:color-mix(in oklab,#f5f0e9 88%, #e0c58f 12%);
+  color:#a8844c;
+}
+html[data-theme="light"] .restore-tag--ok{
+  border-color:color-mix(in oklab,#0ea5e9 55%, #000 20%);
+  background:color-mix(in oklab,#0ea5e9 18%, #fff 82%);
+  color:color-mix(in oklab,#0369a1 78%, #000 22%);
+}
+html[data-theme="light"] .restore-tag--warn{
+  border-color:color-mix(in oklab,#e0c58f 70%, #000 25%);
+  background:color-mix(in oklab,#e0c58f 22%, #fff 78%);
+  color:color-mix(in oklab,#a3742b 80%, #000 20%);
+}
+html[data-theme="light"] .restore-tag--danger{
+  border-color:color-mix(in oklab,#f43f5e 68%, #000 28%);
+  background:color-mix(in oklab,#f43f5e 18%, #fff 82%);
+  color:color-mix(in oklab,#9f1239 82%, #000 18%);
+}
+
+html[data-theme="light"] .restore-family-card__count{
+  border-color:color-mix(in oklab,#d9c8c2, #a8844c 20%);
+  background:color-mix(in oklab,#f5f0e9 88%, #e0c58f 12%);
+  color:#a8844c;
+}
+
+html[data-theme="light"] .restore-family-card{
+  border-radius:16px;
+  background:#fff;
+  border:1px solid color-mix(in oklab,#d9c8c2, #a8844c 18%);
+  box-shadow:0 16px 38px rgba(32,45,78,.12);
+}
+html[data-theme="light"] .restore-family-card__header{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.55)),
+    linear-gradient(135deg, color-mix(in oklab,#f8edd6 70%, #fff 30%), color-mix(in oklab,#d9c8c2 70%, #fff 30%));
+  border-bottom:1px solid color-mix(in oklab,#d9c8c2, #a8844c 22%);
+}
+html[data-theme="light"] .restore-family-card__title .restore-family-card__heading{
+  color:#0d1b3c;
+}
+html[data-theme="light"] .restore-family-card__sub{ color:color-mix(in oklab,#a8844c, #a6b0c6 62%); }
+html[data-theme="light"] .restore-family-card__count{
+  background:color-mix(in oklab,#f5f0e9 85%, #e0c58f 15%);
+  color:#a8844c;
+  border:1px solid color-mix(in oklab,#d9c8c2, #a8844c 20%);
+}
+
+/* Table wrapper */
+html[data-theme="light"] .restore-family-table{
+  border-radius:14px; overflow:hidden;
+  background:#fff;
+  border:1px solid color-mix(in oklab,#d9c8c2, #a8844c 18%);
+  box-shadow: 0 10px 26px rgba(32,45,78,.12);
+}
+html[data-theme="light"] .restore-family-table__inner{
+  width:100%; table-layout:fixed; border-collapse:separate; border-spacing:0;
+  color:#0d1b3c;
+}
+
+/* Sticky head + edges */
+html[data-theme="light"] .restore-family-table__head th{
+  position:sticky; top:0; z-index:3;
+  background:
+    linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.16) 100%),
+    linear-gradient(90deg, color-mix(in oklab,#f5f0e9 90%, #fff 10%) 0%, color-mix(in oklab,#d9c8c2 80%, #fff 20%) 100%);
+  color:#a8844c;
+  font-weight:700; font-size:13px; letter-spacing:.04em; text-align:left;
+  padding:.7rem .75rem;
+  border-bottom:1px solid color-mix(in oklab,#d9c8c2, #a8844c 22%);
+}
+html[data-theme="light"] .restore-family-table__inner th:first-child,
+html[data-theme="light"] .restore-family-table__inner td:first-child{
+  position:sticky; left:0; z-index:2; background:#fff;
+  border-right:1px solid color-mix(in oklab,#d9c8c2, #fff 45%);
+}
+html[data-theme="light"] .restore-family-table__inner th:last-child,
+html[data-theme="light"] .restore-family-table__inner td:last-child{
+  position:sticky; right:0; z-index:2; background:#fff; text-align:center;
+  border-left:1px solid color-mix(in oklab,#d9c8c2, #fff 45%);
+}
+
+/* Rows */
+html[data-theme="light"] .restore-family-table__inner td{
+  padding:.65rem .75rem; vertical-align:middle;
+  border-bottom:1px solid #f3ead1;
+}
+html[data-theme="light"] .restore-family-table__body tr:nth-child(odd){
+  background:#fffdf7;
+}
+html[data-theme="light"] .restore-family-table__body tr:hover{
+  background:#fff7dd;                  /* soft gold hover */
+}
+
+/* Index bubble */
+html[data-theme="light"] .restore-family-index span{
+  display:inline-grid; place-items:center; width:28px; height:28px; border-radius:999px;
+  background:#fff6d4; color:#3b2f10; font-weight:700;
+  border:1px solid color-mix(in oklab, var(--gold-1) 45%, #000 6%);
+  box-shadow: inset 0 1px 0 #fff, 0 4px 10px rgba(224,197,143,.14);
+}
+
+/* Name + NIK */
+html[data-theme="light"] .restore-family-name{ font-weight:600; color:#111827; }
+html[data-theme="light"] .restore-family-nik{
+  font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12px; letter-spacing:.08em; color:#6b7280;
+}
+
+/* Location cell */
+html[data-theme="light"] .restore-family-location{ color:#6b7280; }
+html[data-theme="light"] .restore-family-location .icon{ width:14px;height:14px; color:#8c7a2c; }
+
+/* Pills / flags */
+html[data-theme="light"] .restore-tag{
+  display:inline-flex; align-items:center; gap:.35rem;
+  padding:.2rem .6rem; border-radius:999px; font-size:11px; letter-spacing:.04em;
+  border:1px solid color-mix(in oklab, var(--gold-2) 38%, #000 8%);
+  background:#fffaf0; color:#4b3b14;
+}
+html[data-theme="light"] .restore-tag--ok   { background:#f0fff4; border-color:#86efac; color:#166534; }
+html[data-theme="light"] .restore-tag--warn { background:#fffbeb; border-color:#fcd34d; color:#92400e; }
+html[data-theme="light"] .restore-tag--danger{background:#fef2f2; border-color:#fecaca; color:#991b1b;}
+
+/* Action (Search) — white w/ gold outline, kecil */
+html[data-theme="light"] .restore-family-action{
+  height:30px; padding:0 .6rem; border-radius:999px;
+  display:inline-flex; align-items:center; gap:.4rem;
+  font-size:11px; font-weight:700; letter-spacing:.18em;
+  color:#a8844c; background:#fff;
+  border:1px solid color-mix(in oklab, var(--gold-1) 48%, #000 10%);
+  box-shadow: 0 4px 12px rgba(224,197,143,.10);
+  transition: transform .12s ease, box-shadow .16s ease, background .16s ease, border-color .16s ease;
+}
+html[data-theme="light"] .restore-family-action:hover{
+  transform: translateY(-1px);
+  background:#fff9e6;
+  border-color: color-mix(in oklab, var(--gold-2) 60%, #000 10%);
+  box-shadow: 0 10px 20px rgba(224,197,143,.18);
+}
+html[data-theme="light"] .restore-family-action .lucide{ width:14px; height:14px; }

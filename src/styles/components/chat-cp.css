@@ -1,13 +1,13 @@
 /* Chat / Conversation (cp) — Luxe light styling */
 html[data-theme="light"] .cp { color: var(--lux-ink) !important;
   --cp-rail: var(--lux-line-strong) !important;
-  --cp-rail-v: linear-gradient(180deg, rgba(210,182,138,.58), rgba(210,182,138,.12), transparent) !important;
-  --cp-ring: radial-gradient(circle at 40% 40%, rgba(210,182,138,.6), rgba(210,182,138,.08)) !important;
+  --cp-rail-v: linear-gradient(180deg, rgba(224,197,143,.58), rgba(224,197,143,.12), transparent) !important;
+  --cp-ring: radial-gradient(circle at 40% 40%, rgba(224,197,143,.6), rgba(224,197,143,.08)) !important;
 }
 
 html[data-theme="light"] .cp > .pointer-events-none [class*="bg-cyan-"],
 html[data-theme="light"] .cp > .pointer-events-none [class*="bg-blue-"] {
-  background: linear-gradient(180deg, rgba(210,182,138,.24), transparent 68%) !important; opacity: .45 !important;
+  background: linear-gradient(180deg, rgba(224,197,143,.24), transparent 68%) !important; opacity: .45 !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -44,7 +44,7 @@ html[data-theme="light"]
 section.rounded-2xl.border[class*="border-cyan-"][class*="shadow-[0_0_16px_#ff00ff22_inset]"]
 input[type="password"]:focus {
 outline: none !important;
-box-shadow: 0 0 0 3px rgba(210, 182, 138, 0.28) !important;
+box-shadow: 0 0 0 3px rgba(224, 197, 143, 0.28) !important;
 border-color: #e6d39a !important;
 }
 html[data-theme="light"]
@@ -52,7 +52,7 @@ section.rounded-2xl.border[class*="border-cyan-"][class*="shadow-[0_0_16px_#ff00
 .pt-4
 > button {
 background: var(--gold-grad) !important;
-color: #2a1e05 !important;
+color: #a8844c !important;
 border: 1px solid color-mix(in oklab, var(--gold-400), #fff 25%) !important;
 border-radius: 0.75rem !important;
 box-shadow: 0 8px 24px rgba(201, 164, 92, 0.18) !important;
@@ -66,14 +66,14 @@ html[data-theme="light"] .cp {
   --cp-rail: var(--lux-line-strong) !important;
   --cp-rail-v: linear-gradient(
     180deg,
-    rgba(210, 182, 138, 0.58),
-    rgba(210, 182, 138, 0.12),
+    rgba(224, 197, 143, 0.58),
+    rgba(224, 197, 143, 0.12),
     transparent
   ) !important;
   --cp-ring: radial-gradient(
     circle at 40% 40%,
-    rgba(210, 182, 138, 0.6),
-    rgba(210, 182, 138, 0.08)
+    rgba(224, 197, 143, 0.6),
+    rgba(224, 197, 143, 0.08)
   ) !important;
 }
 
@@ -81,7 +81,7 @@ html[data-theme="light"] .cp > .pointer-events-none [class*="bg-cyan-"],
 html[data-theme="light"] .cp > .pointer-events-none [class*="bg-fuchsia-"] {
   background: radial-gradient(
     circle,
-    rgba(210, 182, 138, 0.24),
+    rgba(224, 197, 143, 0.24),
     transparent 68%
   ) !important;
   opacity: 0.45 !important;
@@ -108,11 +108,11 @@ html[data-theme="light"] .cp section > header {
 
 html[data-theme="light"] .cp section > header::after {
   background: var(--lux-line-strong) !important;
-  filter: drop-shadow(0 0 14px rgba(210, 182, 138, 0.45)) !important;
+  filter: drop-shadow(0 0 14px rgba(224, 197, 143, 0.45)) !important;
 }
 
 html[data-theme="light"] .cp section > header.energize::after {
-  filter: drop-shadow(0 0 18px rgba(210, 182, 138, 0.6)) !important;
+  filter: drop-shadow(0 0 18px rgba(224, 197, 143, 0.6)) !important;
 }
 
 html[data-theme="light"] .cp section > header :is(h1, h3, p, span, svg) {
@@ -122,11 +122,11 @@ html[data-theme="light"] .cp section > header :is(h1, h3, p, span, svg) {
 
 html[data-theme="light"] .cp section > header span[class*="bg-cyan-"] {
   background: color-mix(in oklab, var(--gold-300), #fff 30%) !important;
-  box-shadow: 0 0 14px rgba(210, 182, 138, 0.45) !important;
+  box-shadow: 0 0 14px rgba(224, 197, 143, 0.45) !important;
 }
 
 html[data-theme="light"] .cp .cp-scroll {
-  scrollbar-color: rgba(210, 182, 138, 0.45) transparent !important;
+  scrollbar-color: rgba(224, 197, 143, 0.45) transparent !important;
 }
 html[data-theme="light"] .cp .cp-scroll::-webkit-scrollbar-thumb {
   background: linear-gradient(
@@ -169,7 +169,7 @@ html[data-theme="light"] .cp .avatar-ring img {
 html[data-theme="light"] .cp .notiv_mini {
   background: color-mix(in oklab, var(--gold-300), #fff 22%) !important;
   color: var(--accent-ink) !important;
-  box-shadow: 0 0 12px rgba(210, 182, 138, 0.32) !important;
+  box-shadow: 0 0 12px rgba(224, 197, 143, 0.32) !important;
 }
 
 html[data-theme="light"] .cp aside button {
@@ -196,11 +196,11 @@ html[data-theme="light"] .cp .contact-selected {
   background: color-mix(in oklab, var(--gold-50), #fff 55%) !important;
   border-color: #e6d4ae !important;
   border-color: color-mix(in oklab, var(--gold-300), #fff 45%) !important;
-  box-shadow: 0 12px 30px rgba(210, 182, 138, 0.26) !important;
+  box-shadow: 0 12px 30px rgba(224, 197, 143, 0.26) !important;
 }
 html[data-theme="light"] .cp .contact-selected::after {
   background: var(--lux-line-strong) !important;
-  filter: drop-shadow(0 0 16px rgba(210, 182, 138, 0.35)) !important;
+  filter: drop-shadow(0 0 16px rgba(224, 197, 143, 0.35)) !important;
 }
 
 html[data-theme="light"] .cp .cp-input {
@@ -211,7 +211,7 @@ html[data-theme="light"] .cp .cp-input {
   box-shadow: 0 1px 0 #fff inset !important;
 }
 html[data-theme="light"] .cp .cp-input:focus {
-  box-shadow: 0 0 0 3px rgba(210, 182, 138, 0.24) !important;
+  box-shadow: 0 0 0 3px rgba(224, 197, 143, 0.24) !important;
   border-color: #e4d3b1 !important;
   border-color: color-mix(in oklab, var(--gold-300), #fff 15%) !important;
 }
@@ -224,10 +224,10 @@ html[data-theme="light"] .cp .cp-btn {
   color: var(--accent-ink) !important;
   border: 1px solid #e3cfa4 !important;
   border: 1px solid color-mix(in oklab, var(--gold-300), #fff 42%) !important;
-  box-shadow: 0 14px 32px rgba(210, 182, 138, 0.24) !important;
+  box-shadow: 0 14px 32px rgba(224, 197, 143, 0.24) !important;
 }
 html[data-theme="light"] .cp .cp-btn::after {
-  box-shadow: 0 0 24px rgba(210, 182, 138, 0.32),
+  box-shadow: 0 0 24px rgba(224, 197, 143, 0.32),
     0 0 0 1px rgba(255, 255, 255, 0.55) inset !important;
 }
 html[data-theme="light"] .cp .cp-btn:not(:disabled):hover {
@@ -251,7 +251,7 @@ html[data-theme="light"] .cp .bubble-me {
     rgba(223, 189, 122, 0.55)
   ) !important;
   border-color: color-mix(in oklab, var(--gold-300), #fff 35%) !important;
-  box-shadow: 0 12px 32px rgba(210, 182, 138, 0.28) !important;
+  box-shadow: 0 12px 32px rgba(224, 197, 143, 0.28) !important;
 }
 
 html[data-theme="light"] .cp .bubble-you {
@@ -266,18 +266,18 @@ html[data-theme="light"] .cp .bubble-you {
 
 html[data-theme="light"] .cp .bubble-pulse {
   animation: pulse-slow 2.6s ease-in-out infinite !important;
-  box-shadow: 0 0 26px rgba(210, 182, 138, 0.24) !important;
+  box-shadow: 0 0 26px rgba(224, 197, 143, 0.24) !important;
 }
 
 html[data-theme="light"] .cp .cp-fab {
   background: var(--accent-grad) !important;
   color: var(--accent-ink) !important;
-  box-shadow: 0 16px 36px rgba(210, 182, 138, 0.26) !important;
+  box-shadow: 0 16px 36px rgba(224, 197, 143, 0.26) !important;
 }
 
 /* === NiceAlert @ light theme: jadikan ikon emas + bubble/coin === */
 html[data-theme="light"] [class~="z-[200000]"] svg.lucide {
-  color: #caa860 !important;          /* emas */
+  color: #e0c58f !important;          /* emas */
   stroke: currentColor !important;     /* lucide pakai currentColor */
   position: relative;
   z-index: 0;
@@ -291,7 +291,7 @@ html[data-theme="light"] [class~="z-[200000]"] svg.lucide::before {
   position: absolute;
   inset: -12px;
   border-radius: 9999px;
-  background: linear-gradient(135deg,#fff8e9,#f3e6c5 40%,#d7b773 68%,#d2b68a);
+  background: linear-gradient(135deg,#f8edd6,#e0c58f 40%,#d9c8c2 68%,rgba(60,80,125,.4));
   filter: blur(8px);
   opacity: .7;
   z-index: -1;
@@ -304,11 +304,11 @@ html[data-theme="light"] [class~="z-[200000]"] svg.lucide::after {
   inset: -8px;
   border-radius: 9999px;
   background: #fff;
-  border: 1px solid rgba(20,24,33,.14); /* var(--lux-border) */
-  box-shadow: 0 10px 22px rgba(20,32,51,.08);
+  border: 1px solid color-mix(in oklab,#d9c8c2 70%, #a8844c 18%);
+  box-shadow: 0 10px 22px rgba(32,45,78,.1);
   z-index: -1;
 }
 /* garis neon di atas kartu â†’ emas juga */
 html[data-theme="light"] [class~="z-[200000]"] [class~="-top-px"][class~="h-[2px]"] {
-  background: linear-gradient(135deg,#fff8e9,#f3e6c5 40%,#d7b773 68%,#d2b68a) !important;
+  background: linear-gradient(135deg,#f8edd6,#e0c58f 40%,#d9c8c2 68%,rgba(60,80,125,.4)) !important;
 }

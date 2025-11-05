@@ -42,6 +42,6 @@ box-shadow: 0 0 0 3px rgba(34,211,238,.18);
 html[data-theme="light"] .topbar{ background:#fff; border-bottom: 1px solid var(--lux-border); box-shadow: var(--lux-shadow); }
 html[data-theme="light"] .topbar__accent{ background: var(--gold-grad); }
 html[data-theme="light"] .topbar__search input{ background:#fff; border-color: var(--lux-border); color: var(--lux-ink); }
-html[data-theme="light"] .topbar__search input:focus{ border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 28%); box-shadow: 0 0 0 3px rgba(210,182,138,.22); }
+html[data-theme="light"] .topbar__search input:focus{ border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 28%); box-shadow: 0 0 0 3px rgba(224,197,143,.22); }
 html[data-theme="light"] .btn-icon{ background:#fff; border-color: var(--lux-border); color: var(--lux-ink); box-shadow: 0 8px 20px rgba(20,32,51,.06); }
-html[data-theme="light"] .btn-icon:focus-visible{ box-shadow: 0 0 0 3px rgba(210,182,138,.22); border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 35%); }
+html[data-theme="light"] .btn-icon:focus-visible{ box-shadow: 0 0 0 3px rgba(224,197,143,.22); border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 35%); }

@@ -19,4 +19,4 @@ html[data-theme="light"] .sticky-table thead th{
   background:#ffffffea; border-bottom:1px solid var(--lux-border);
 }
 html[data-theme="light"] .sticky-table tbody td{ border-bottom:1px solid var(--lux-border); }
-html[data-theme="light"] .sticky-table__shadow{ background: linear-gradient(180deg, rgba(210,182,138,.42), transparent); }
+html[data-theme="light"] .sticky-table__shadow{ background: linear-gradient(180deg, rgba(224,197,143,.42), transparent); }

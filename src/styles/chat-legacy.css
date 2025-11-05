@@ -10,24 +10,24 @@
 }
 
 html[data-theme="light"] {
-  --l-bg:           #f7f4ee;
+  --l-bg:           #f5f0e9;
   --l-surface:      #ffffff;
-  --l-surface-2:    #faf7ef;
-  --l-ink:          #141821;
-  --l-muted:        #5b6677;
-  --l-border:       rgba(20, 24, 33, 0.14);
-  --l-shadow:       0 10px 28px rgba(20, 32, 51, 0.08);
-  --l-gold-50:      #fff8ea;
-  --l-gold-100:     #f5e7c8;
-  --l-gold-300:     #d7b773;
-  --l-gold-400:     #caa860;
-  --l-gold-grad:    linear-gradient(135deg,#fff7e3,#efe0b2 35%,#d2b066 60%,#caa860);
-  --l-velvet:       #142033;
+  --l-surface-2:    #f3ece4;
+  --l-ink:          #a8844c;
+  --l-muted:        color-mix(in oklab,#a8844c, #8e9bb8 58%);
+  --l-border:       rgba(32, 45, 78, 0.14);
+  --l-shadow:       0 12px 28px rgba(32, 45, 78, 0.12);
+  --l-gold-50:      #f8edd6;
+  --l-gold-100:     #f2dfc0;
+  --l-gold-300:     #e0c58f;
+  --l-gold-400:     #c9a971;
+  --l-gold-grad:    linear-gradient(135deg,#f8edd6,#e0c58f 45%,#d9c8c2 72%,rgba(60,80,125,.28));
+  --l-velvet:       #f8edd6;
 }
 
 /* ---------- 1) Komponen kecil / legacy ---------- */
 html[data-theme="light"] .notiv_mini{
   background-color: var(--l-gold-400) !important;
-  color:#2a1e05 !important;
-  box-shadow: 0 8px 20px rgba(201,168,96,.18);
+  color:#a8844c !important;
+  box-shadow: 0 8px 20px rgba(32,45,78,.14);
 }

@@ -31,18 +31,18 @@ html[data-theme="light"] {
    MONALISA â€” LIGHT HARD OVERRIDES
    ========================================================== */
 :where(html[data-theme="light"], body.light) {
---ink: #151823;
---muted: #636b78;
---border: rgba(20, 24, 33, 0.14);
---gold-50: #fff8ea;
---gold-100: #f5e7c8;
---gold-300: #d7b773;
---gold-400: #caa860;
+--ink: #a8844c;
+--muted: color-mix(in oklab,#a8844c, #8e9bb8 58%);
+--border: rgba(32, 45, 78, 0.14);
+--gold-50: #f8edd6;
+--gold-100: #f2dfc0;
+--gold-300: #e0c58f;
+--gold-400: #c9a971;
 --gold-grad: linear-gradient(
 90deg,
 var(--gold-50),
-var(--gold-100) 35%,
-var(--gold-300) 72%,
+var(--gold-100) 38%,
+var(--gold-300) 70%,
 var(--gold-400)
 );
 
@@ -80,7 +80,7 @@ pointer-events: none;
 main.flex-1 > .relative.mt-5 > .absolute.inset-0 > .absolute {
 background: radial-gradient(
 closest-side,
-rgba(210, 182, 138, 0.18),
+rgba(224, 197, 143, 0.18),
 transparent
 ) !important;
 filter: none !important;
@@ -100,7 +100,7 @@ height: 3px;
 width: 220px;
 background: var(--gold-grad);
 border-radius: 999px;
-box-shadow: 0 4px 14px rgba(210, 182, 138, 0.25);
+box-shadow: 0 4px 14px rgba(224, 197, 143, 0.25);
 }
 
 p.text-gray-400 {
@@ -276,7 +276,7 @@ section.relative
   background: #ffffff !important;
   border-color: #e8d9b8 !important;
   border-color: color-mix(in oklab, var(--gold-300), #fff 55%) !important;
-  box-shadow: 0 10px 26px rgba(210, 182, 138, 0.15) !important;
+  box-shadow: 0 10px 26px rgba(224, 197, 143, 0.15) !important;
   color: var(--ink) !important;
 }
 
@@ -338,7 +338,7 @@ section.relative
 [class*="h-2.5"][class*="w-full"][class*="rounded-full"]
 > [class*="h-full"] {
   background: var(--accent-grad-strong) !important;
-  box-shadow: 0 8px 20px rgba(210, 182, 138, 0.28) !important;
+  box-shadow: 0 8px 20px rgba(224, 197, 143, 0.28) !important;
   filter: none !important;
 }
 
@@ -362,7 +362,7 @@ html[data-theme="light"] aside.w-80 a[class*="px-3"]:hover {
 /* Leaf (AKTIF) â€“ emas menyala */
 html[data-theme="light"] aside.w-80 a[aria-current="page"] {
   background: var(--gold-grad) !important;
-  color: #2a1e05 !important; /* readable on gold */
+  color: #a8844c !important; /* readable on gold */
   border-color: color-mix(in oklab, var(--gold-400), #fff 35%) !important;
   box-shadow:
     inset 0 0 0 1px color-mix(in oklab, var(--gold-400), #fff 30%),
@@ -402,26 +402,26 @@ html[data-theme="light"] aside.w-80 button[aria-expanded="true"] {
 /* Dot indikator kanan pada parent (OPEN/CLOSE) */
 html[data-theme="light"] aside.w-80 button[aria-expanded] .w-2.h-2 {
   background: color-mix(in oklab, var(--gold-400), #fff 25%) !important;
-  box-shadow: 0 0 6px rgba(210, 182, 138, 0.55) !important;
+  box-shadow: 0 0 6px rgba(224, 197, 143, 0.55) !important;
 }
 html[data-theme="light"] aside.w-80 button[aria-expanded="true"] .w-2.h-2 {
   background: var(--gold-300) !important;
-  box-shadow: 0 0 10px rgba(210, 182, 138, 0.75) !important;
+  box-shadow: 0 0 10px rgba(224, 197, 143, 0.75) !important;
 }
 
 /* Warna ikon ikut emas saat aktif/expanded */
 html[data-theme="light"] aside.w-80 a[aria-current="page"] i,
 html[data-theme="light"] aside.w-80 button[aria-expanded="true"] i {
-  color: #223254 !important; /* sedikit lebih gelap agar kontras */
-  stroke: #223254 !important;
+  color: #a8844c !important; /* sedikit lebih gelap agar kontras */
+  stroke: #a8844c !important;
 }
 
 /* ==== NiceAlert (hanya saat light theme) ==== */
 html[data-theme="light"] [class~="z-[200000]"] [role="dialog"]{
   /* kartu putih + bayangan elegan + border netral */
   background: #fff !important;
-  color: #1a1d21 !important;
-  border: 1px solid var(--lux-border, rgba(20,24,33,.14)) !important;
+  color: #a8844c !important;
+  border: 1px solid var(--lux-border, rgba(32,45,78,.14)) !important;
   box-shadow: 0 10px 40px rgba(0,0,0,.08) !important;
 }
 
@@ -429,7 +429,7 @@ html[data-theme="light"] [class~="z-[200000]"] [role="dialog"]{
 html[data-theme="light"] [class~="z-[200000]"]
 .absolute.inset-x-0.-top-px.h-\[2px\]{
   background: var(--gold-grad,
-    linear-gradient(135deg,#fff8e9,#f3e6c5 40%,#d7b773 68%,#d2b68a)) !important;
+    linear-gradient(135deg,#f8edd6,#e0c58f 40%,#d9c8c2 68%,rgba(60,80,125,.35))) !important;
   opacity: 1 !important;
 }
 
@@ -441,15 +441,15 @@ html[data-theme="light"] [class~="z-[200000]"] .absolute.inset-0.bg-black\/60{
 /* tombol -> gradasi emas */
 html[data-theme="light"] [class~="z-[200000]"] button{
   background: var(--gold-grad,
-    linear-gradient(135deg,#fff8e9,#f3e6c5 40%,#d7b773 68%,#d2b68a)) !important;
-  color: #2a1e05 !important;
-  border: 1px solid rgba(210,182,138,.50) !important;
-  box-shadow: 0 10px 22px rgba(210,182,138,.20) !important;
+    linear-gradient(135deg,#f8edd6,#e0c58f 42%,#d9c8c2 70%,rgba(60,80,125,.32))) !important;
+  color: #a8844c !important;
+  border: 1px solid rgba(224,197,143,.45) !important;
+  box-shadow: 0 10px 22px rgba(32,45,78,.16) !important;
 }
 
 /* warna ikon default (supaya kebaca di putih) */
 html[data-theme="light"] [class~="z-[200000]"] svg.lucide{
-  color: #223254 !important;              /* stroke mengikuti color */
+  color: #a8844c !important;              /* stroke mengikuti color */
   stroke: currentColor !important;
   filter: none !important;                 /* matikan drop-shadow neon */
 }
@@ -477,7 +477,7 @@ html[data-theme="light"] [class~="z-[200000]"] [role="dialog"] .flex.flex-col.it
   transform:translateX(-50%);
   border-radius:9999px;
   background: var(--gold-grad,
-    linear-gradient(135deg,#fff8e9,#f3e6c5 40%,#d7b773 68%,#d2b68a));
+    linear-gradient(135deg,#f8edd6,#e0c58f 42%,#d9c8c2 70%,rgba(60,80,125,.32)));
   filter: blur(10px);
   opacity:.7;
   pointer-events:none;

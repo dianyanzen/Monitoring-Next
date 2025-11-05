@@ -1,249 +1,200 @@
+/* FILE: src/styles/theme-light.css */
+
 /* =====================================================================
-   LIGHT THEME — Luxe & Elegant (aktif saat <html data-theme="light">)
+   LIGHT THEME – Sapphire / Royal Blue / Quicksand / Swan Wing / Shellstone
+   Palette reference:
+     Sapphire   #f8edd6  rgb(60,80,125)   cmyk(57,29,0,56)
+     RoyalBlue  #a8844c  rgb(17,34,80)    cmyk(79,58,0,69)
+     Quicksand  #E0C58F  rgb(224,197,143) cmyk(0,19,36,12)
+     SwanWing   #F5F0E9  rgb(245,240,233) cmyk(0,2,5,4)
+     Shellstone #D9C8C2  rgb(217,200,194) cmyk(0,8,11,15)
    ===================================================================== */
 
 /* 0) Palet & token dasar (HSL untuk shadcn/oklab mix) */
 html[data-theme="light"] {
-color-scheme: light;
+  color-scheme: light;
 
-  --bg: #fff;
-  --surface: rgba(255,255,255,.90);
-  --ink: #1c1a16;
-  --muted: #6b7280;
-  --border: color-mix(in oklab, var(--gold-300), #000 15%);
-  --ring: 0 0 0 3px rgba(210,182,138,.35);
-/* surfaces & text */
---lux-bg: #eee5d9; /* silk */
---lux-surface: #fff;
---lux-surface-soft: color-mix(in oklab, var(--lux-surface), #fff 12%);
---lux-ink: #141821; /* readable ink */
---lux-ink-subtle: color-mix(in oklab, var(--lux-ink), #50607a 32%);
---lux-muted: #5b6677;
+  --bg: #f5f0e9;
+  --surface: rgba(255,255,255,.94);
+  --ink: #a8844c;
+  --muted: color-mix(in oklab, #a8844c, #8a97b8 45%);
+  --border: color-mix(in oklab, #d9c8c2, #000 18%);
+  --ring: 0 0 0 3px rgba(60,80,125,.24);
 
-/* borders & shadows */
-  
-  --lux-border: color-mix(in oklab, var(--gold-300), #000 20%);
-  --lux-shadow: 0 10px 24px rgba(48,39,21,.08);
+  /* surfaces & text */
+  --lux-bg: #f5f0e9;
+  --lux-surface: #ffffff;
+  --lux-surface-soft: color-mix(in oklab, var(--lux-surface), #d9c8c2 18%);
+  --lux-ink: #a8844c;
+  --lux-ink-subtle: color-mix(in oklab, var(--lux-ink), #f8edd6 28%);
+  --lux-muted: color-mix(in oklab, #a8844c, #a6b0c6 60%);
 
-/* accents (gold) */
---gold-50: #fff8e9;
---gold-100: #f3e6c5;
---gold-200: #edd9a2;
---gold-300: #d7b773;
---gold-400: #d2b68a;
---gold-500: #b88a3d;
---gold-grad: linear-gradient(
-135deg,
-var(--gold-50),
-var(--gold-100) 40%,
-var(--gold-300) 68%,
-var(--gold-400)
-);
---gold-grad-soft: linear-gradient(
-150deg,
-color-mix(in oklab, var(--gold-50), #fff 25%),
-color-mix(in oklab, var(--gold-100), #fff 10%),
-color-mix(in oklab, var(--gold-300), #fff 5%),
-rgba(210, 182, 138, 0.78)
-);
---lux-line-soft: linear-gradient(
-90deg,
-rgba(210, 182, 138, 0.15),
-rgba(210, 182, 138, 0.58),
-rgba(210, 182, 138, 0.05)
-);
---lux-line-strong: linear-gradient(
-90deg,
-rgba(210, 182, 138, 0.65),
-rgba(245, 231, 200, 0.95),
-rgba(210, 182, 138, 0.35)
-);
---gold-grad-rich: linear-gradient(
-96deg,
-var(--gold-400) 0%,
-var(--gold-500) 45%,
-var(--gold-200) 78%,
-var(--gold-50) 100%
-);
+  /* borders & shadows */
+  --lux-border: color-mix(in oklab, #d9c8c2, #a8844c 12%);
+  --lux-shadow: 0 16px 34px rgba(17,34,80,.08);
 
-/* shadcn-style tokens */
---background: 38 42% 98%;
---foreground: 40 12% 14%;
---card: 0 0% 100%;
---card-foreground: 40 12% 20%;
---muted-foreground: 221 12% 42%;
+  /* accents (gold) */
+  --gold-50: #fff8e9;
+  --gold-100: #f3e6c5;
+  --gold-200: #edd9a2;
+  --gold-300: #d7b773;
+  --gold-400: #d2b68a;
+  --gold-500: #b88a3d;
 
-/* legacy remaps so global tokens follow luxe palette */
---bg: var(--lux-bg);
---surface: var(--lux-surface);
---surface-alt: var(--lux-surface-soft);
---ink: var(--lux-ink);
---muted: var(--lux-muted);
---border: var(--lux-border);
---shadow: var(--lux-shadow);
---ring: 0 0 0 3px rgba(210, 182, 138, 0.28);
---accent-grad: var(--gold-grad);
---accent-grad-soft: var(--gold-grad-soft);
---accent-grad-strong: var(--gold-grad-rich);
---accent-line: var(--lux-line-soft);
---accent-line-strong: var(--lux-line-strong);
---accent-ink: #2a1e05;
---accent-muted: color-mix(in oklab, var(--gold-100), #fff 60%);
---heading-glow-color: color-mix(in oklab, var(--gold-400), #fff 30%);
---heading-glow-shadow: 0 0 22px rgba(210, 182, 138, 0.38), 0 0 42px rgba(210, 182, 138, 0.24);
+  --gold-grad: linear-gradient(
+    135deg,
+    var(--gold-50),
+    var(--gold-100) 40%,
+    var(--gold-300) 68%,
+    var(--gold-400)
+  );
+
+  --gold-grad-soft: linear-gradient(
+    150deg,
+    color-mix(in oklab, var(--gold-50), #fff 25%),
+    color-mix(in oklab, var(--gold-100), #fff 10%),
+    color-mix(in oklab, var(--gold-300), #fff 5%),
+    rgba(210, 182, 138, 0.78)
+  );
+
+  --lux-line-soft: linear-gradient(
+    90deg,
+    rgba(210, 182, 138, 0.15),
+    rgba(210, 182, 138, 0.58),
+    rgba(210, 182, 138, 0.05)
+  );
+
+  --lux-line-strong: linear-gradient(
+    90deg,
+    rgba(210, 182, 138, 0.65),
+    rgba(245, 231, 200, 0.95),
+    rgba(210, 182, 138, 0.35)
+  );
+
+  --gold-grad-rich: linear-gradient(
+    96deg,
+    var(--gold-400) 0%,
+    var(--gold-500) 45%,
+    var(--gold-200) 78%,
+    var(--gold-50) 100%
+  );
+
+  --navy-grad: linear-gradient(135deg, #f8edd6, #a8844c);
+
+  /* shadcn-style tokens */
+  --background: 32 42% 96%;
+  --foreground: 222 37% 23%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 34% 23%;
+  --muted-foreground: 222 20% 46%;
+
+  /* legacy remaps so global tokens follow luxe palette */
+  --bg: var(--lux-bg);
+  --surface: var(--lux-surface);
+  --surface-alt: var(--lux-surface-soft);
+  --ink: var(--lux-ink);
+  --muted: var(--lux-muted);
+  --border: var(--lux-border);
+  --shadow: var(--lux-shadow);
+  --ring: 0 0 0 3px rgba(60, 80, 125, 0.22);
+  --accent-grad: var(--navy-grad);
+  --accent-grad-soft: linear-gradient(
+    135deg,
+    color-mix(in oklab,#f8edd6 65%, #fff 35%),
+    color-mix(in oklab,#a8844c 65%, #fff 35%)
+  );
+  --accent-grad-strong: linear-gradient(120deg, #a8844c 0%, #f8edd6 48%, #e0c58f 100%);
+  --accent-line: linear-gradient(90deg, rgba(60,80,125,.18), rgba(224,197,143,.55), rgba(60,80,125,.12));
+  --accent-line-strong: linear-gradient(90deg, rgba(224,197,143,.65), rgba(245,240,233,.95), rgba(60,80,125,.32));
+  --accent-ink: #b98532;
+  --accent-muted: color-mix(in oklab, var(--gold-100), #fff 55%);
+  --heading-glow-color: color-mix(in oklab, #f8edd6, var(--gold-200) 40%);
+  --heading-glow-shadow: 0 0 22px rgba(60, 80, 125, 0.32), 0 0 42px rgba(224, 197, 143, 0.26);
 }
 
 /* --------------------------------------------------------------------------
 1) Base & tipografi
 -------------------------------------------------------------------------- */
 html[data-theme="light"] body {
-background: radial-gradient(
-1200px 600px at 18% -10%,
-#fff8ec 0%,
-#ffffff 42%,
-transparent 70%
-),
-radial-gradient(900px 480px at 85% 8%, #fff4d4 0%, transparent 60%),
-var(--lux-bg) !important;
-color: var(--lux-ink) !important;
+  background:
+    radial-gradient(1200px 600px at 18% -10%, #f8f3eb 0%, #f5f0e9 48%, transparent 70%),
+    radial-gradient(900px 520px at 82% 6%, rgba(224,197,143,.22) 0%, transparent 65%),
+    radial-gradient(820px 420px at 12% 92%, rgba(60,80,125,.18) 0%, transparent 68%),
+    var(--lux-bg) !important;
+  color: var(--lux-ink) !important;
 }
 
 /* teks umum */
-html[data-theme="light"]
-:where(
-p,
-span,
-small,
-strong,
-em,
-li,
-dd,
-dt,
-td,
-th,
-code,
-button,
-a,
-label,
-div,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6
+html[data-theme="light"] :where(
+  p, span, small, strong, em, li, dd, dt, td, th, code, button, a, label, div, h1, h2, h3, h4, h5, h6
 ) {
-color: var(--lux-ink) !important;
+  color: var(--lux-ink) !important;
 }
 
 /* cegah aksen cyan/blue agar tetap elegan */
-html[data-theme="light"]
-main.flex-1
-> .relative.mt-5,
-html[data-theme="light"]
-main.flex-1
-> .relative.mt-6
-:is(
-  [class*="text-cyan-"],
-  [class*="text-sky-"],
-  [class*="text-blue-"],
-  [class*="text-indigo-"],
-  .text-cyan-200\/80,
-  .text-cyan-300,
-  .text-cyan-400,
-  .text-cyan-600\/70,
-  .text-blue-300,
-  .text-blue-400,
-  .text-indigo-400
-) {
-color: var(--lux-ink) !important;
+html[data-theme="light"] main.flex-1 > .relative.mt-5,
+html[data-theme="light"] main.flex-1 > .relative.mt-6 :is(
+  [class*="text-cyan-"], [class*="text-sky-"], [class*="text-blue-"], [class*="text-indigo-"],
+  .text-cyan-200\/80, .text-cyan-300, .text-cyan-400, .text-cyan-600\/70, .text-blue-300, .text-blue-400, .text-indigo-400
+) { color: var(--lux-ink) !important; }
+
+html[data-theme="light"] main.flex-1 > .relative.mt-5,
+html[data-theme="light"] main.flex-1 > .relative.mt-6 :is([class*="border-cyan-"], [class*="border-sky-"], [class*="border-blue-"]) {
+  border-color: var(--lux-border) !important;
 }
-html[data-theme="light"]
-main.flex-1
-> .relative.mt-5,
-html[data-theme="light"]
-main.flex-1
-> .relative.mt-6
-:is([class*="border-cyan-"], [class*="border-sky-"], [class*="border-blue-"]) {
-border-color: var(--lux-border) !important;
-}
-html[data-theme="light"]
-main.flex-1
-> .relative.mt-5,
-html[data-theme="light"]
-main.flex-1
-> .relative.mt-6
-:is([class*="bg-cyan-"], [class*="bg-sky-"], [class*="bg-blue-"]) {
-background: #fff !important;
+
+html[data-theme="light"] main.flex-1 > .relative.mt-5,
+html[data-theme="light"] main.flex-1 > .relative.mt-6 :is([class*="bg-cyan-"], [class*="bg-sky-"], [class*="bg-blue-"]) {
+  background: #fff !important;
 }
 
 /* luxe gradient/conic conversions */
-html[data-theme="light"]
-:is(
+html[data-theme="light"] :is(
   [class*="bg-gradient-to-"][class*="from-cyan-"],
   [class*="bg-gradient-to-"][class*="via-cyan-"],
   [class*="bg-gradient-to-"][class*="via-pink-"],
   [class*="bg-gradient-to-"][class*="to-cyan-"]
 ):not([class*="to-transparent"]) {
-background-image: var(--accent-grad-soft) !important;
-color: var(--accent-ink) !important;
+  background-image: var(--accent-grad-soft) !important;
+  color: var(--accent-ink) !important;
 }
 
-html[data-theme="light"]
-:is(
+html[data-theme="light"] :is(
   [class*="bg-gradient-to-"][class*="from-cyan-"][class*="to-transparent"],
   [class*="bg-gradient-to-"][class*="via-pink-"][class*="to-transparent"],
   [class*="bg-gradient-to-r"][class*="via-cyan-"][class*="to-transparent"]
-) {
-background-image: var(--accent-line) !important;
+) { background-image: var(--accent-line) !important; }
+
+html[data-theme="light"] [class*="bg-clip-text"][class*="bg-gradient-to-"][class*="from-cyan-"] {
+  background-image: var(--accent-grad) !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
 }
 
-html[data-theme="light"]
-[class*="bg-clip-text"][class*="bg-gradient-to-"][class*="from-cyan-"] {
-background-image: var(--accent-grad) !important;
--webkit-text-fill-color: transparent !important;
-color: transparent !important;
-}
-
-html[data-theme="light"]
-:is(h1, h2)[class*="bg-clip-text"][class*="bg-gradient-to-"][class*="from-cyan-"] {
-font-weight: 800 !important;
-letter-spacing: 0.01em !important;
-text-shadow: 0 6px 18px rgba(210, 182, 138, 0.32) !important;
-background-image: var(--accent-grad-strong) !important;
-color: transparent !important;
+html[data-theme="light"] :is(h1, h2)[class*="bg-clip-text"][class*="bg-gradient-to-"][class*="from-cyan-"] {
+  font-weight: 800 !important;
+  letter-spacing: 0.01em !important;
+  text-shadow: 0 6px 18px rgba(224, 197, 143, 0.32) !important;
+  background-image: var(--accent-grad-strong) !important;
+  color: transparent !important;
 }
 
 :where(h1, h2, h3)[class*="bg-clip-text"][class*="bg-gradient-to-"][class*="from-cyan-300"][class*="via-cyan-400"][class*="to-cyan-200"] {
-background-image: none !important;
--webkit-text-fill-color: var(--heading-glow-color) !important;
-color: var(--heading-glow-color) !important;
-animation: none !important;
-text-shadow: var(--heading-glow-shadow) !important;
-filter: none !important;
+  background-image: none !important;
+  -webkit-text-fill-color: var(--heading-glow-color) !important;
+  color: var(--heading-glow-color) !important;
+  animation: none !important;
+  text-shadow: var(--heading-glow-shadow) !important;
+  filter: none !important;
 }
 
 /* link */
-html[data-theme="light"] a {
-color: var(--lux-ink) !important;
-text-decoration: none;
-}
-html[data-theme="light"] a:hover {
-color: #1f2937 !important;
-text-decoration: underline;
-}
+html[data-theme="light"] a { color: var(--lux-ink) !important; text-decoration: none; }
+html[data-theme="light"] a:hover { color: #A8844C !important; text-decoration: underline; }
 
 /* matikan efek neon/animasi berat */
-html[data-theme="light"]
-:is(
-  .glow,
-  .glitch,
-  .glitchy,
-  .holo-panel,
-  [class*="drop-shadow"],
-  [class*="shadow-[0_0_"],
-  [class*="animate-"],
-  [style*="animation"]
+html[data-theme="light"] :is(
+  .glow, .glitch, .glitchy, .holo-panel, [class*="drop-shadow"], [class*="shadow-[0_0_"], [class*="animate-"], [style*="animation"]
 ) {
   filter: none !important;
   text-shadow: none !important;
@@ -252,179 +203,132 @@ html[data-theme="light"]
 }
 
 /* sembunyikan overlay dekoratif global dari tema gelap (hanya yang diberi aria-hidden) */
-html[data-theme="light"]
-:is(header, aside, footer, main)
-> .absolute[aria-hidden="true"] {
-display: none !important;
+html[data-theme="light"] :is(header, aside, footer, main) > .absolute[aria-hidden="true"] {
+  display: none !important;
 }
 
 /* --------------------------------------------------------------------------
 2) Header
 -------------------------------------------------------------------------- */
 html[data-theme="light"] header {
-background: #fff !important;
-backdrop-filter: blur(10px);
-border-bottom: 1px solid var(--lux-border) !important;
-box-shadow: var(--lux-shadow);
+  background: #fff !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--lux-border) !important;
+  box-shadow: var(--lux-shadow);
+}
+html[data-theme="light"] header .bg-gradient-to-r { background-image: var(--gold-grad) !important; opacity: 0.9; }
+html[data-theme="light"] header.fixed.top-0 > .absolute[aria-hidden] { display: none !important; }
+
+html[data-theme="light"] header.fixed.top-0 > .absolute.top-0.left-0.w-full[class~="h-[2px]"] {
+  display: block !important;
+  background: var(--gold-grad) !important;
 }
 
-html[data-theme="light"] header .bg-gradient-to-r {
-background-image: var(--gold-grad) !important;
-opacity: 0.9;
-}
-
-html[data-theme="light"] header.fixed.top-0 > .absolute[aria-hidden] {
-display: none !important;
-}
-html[data-theme="light"]
-header.fixed.top-0
-> .absolute.top-0.left-0.w-full[class~="h-[2px]"] {
-display: block !important;
-background: var(--gold-grad) !important;
-}
-
-html[data-theme="light"]
-header.fixed.top-0
-:is(svg.lucide, .lucide, i, [class^="ti-"], [class*="fa-"]) {
-color: var(--lux-ink) !important;
-stroke: var(--lux-ink) !important;
+html[data-theme="light"] header.fixed.top-0 :is(svg.lucide, .lucide, i, [class^="ti-"], [class*="fa-"]) {
+  color: var(--lux-ink) !important;
+  stroke: var(--lux-ink) !important;
 }
 
 html[data-theme="light"] header.fixed.top-0 .p-2.rounded-md {
-background: #fff !important;
-color: var(--lux-ink) !important;
-border: 1px solid var(--lux-border) !important;
-box-shadow: var(--lux-shadow) !important;
+  background: #fff !important;
+  color: var(--lux-ink) !important;
+  border: 1px solid var(--lux-border) !important;
+  box-shadow: var(--lux-shadow) !important;
 }
-
 html[data-theme="light"] header.fixed.top-0 .p-2.rounded-md:hover {
-background: #fff8ec !important;
-border-color: color-mix(
-in oklab,
-var(--lux-border),
-var(--gold-400) 25%
-) !important;
+  background: #fff8ec !important;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
 }
 
 html[data-theme="light"] header h1 span[aria-hidden="true"] [class~="h-[1px]"],
-html[data-theme="light"] [class~="h-[1px]"] {
-background: var(--gold-grad) !important;
-}
+html[data-theme="light"] [class~="h-[1px]"] { background: var(--gold-grad) !important; }
 
 /* --------------------------------------------------------------------------
 3) Sidebar
 -------------------------------------------------------------------------- */
 html[data-theme="light"] aside {
-background: rgba(255, 255, 255, 0.9) !important;
-backdrop-filter: blur(12px);
-border-right: 1px solid var(--lux-border) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(12px);
+  border-right: 1px solid var(--lux-border) !important;
 }
 
 html[data-theme="light"] aside.w-80 {
-background: radial-gradient(800px 420px at 20% 0%, #fff9ef 0%, transparent 60%),
-radial-gradient(600px 320px at 100% 10%, #fff4d8 0%, transparent 55%),
-var(--lux-surface) !important;
-color: var(--lux-ink) !important;
-border-right: 1px solid color-mix(in oklab, var(--gold-300), #fff 40%) !important;
-box-shadow:
-  inset -2px 0 0 rgba(210, 182, 138, 0.12),
-  0 12px 28px rgba(210, 182, 138, 0.14);
-outline: 1px solid color-mix(in oklab, var(--gold-300), #fff 55%);
-outline-offset: -1px;
+  background:
+    radial-gradient(800px 420px at 20% 0%, #fff9ef 0%, transparent 60%),
+    radial-gradient(600px 320px at 100% 10%, #fff4d8 0%, transparent 55%),
+    var(--lux-surface) !important;
+  color: var(--lux-ink) !important;
+  border-right: 1px solid color-mix(in oklab, var(--gold-300), #fff 40%) !important;
+  box-shadow: inset -2px 0 0 rgba(224, 197, 143, 0.12), 0 12px 28px rgba(224, 197, 143, 0.14);
+  outline: 1px solid color-mix(in oklab, var(--gold-300), #fff 55%);
+  outline-offset: -1px;
 }
 
-html[data-theme="light"] aside.w-80 > [aria-hidden] {
-display: none !important;
-}
-
+html[data-theme="light"] aside.w-80 > [aria-hidden] { display: none !important; }
 html[data-theme="light"] aside.w-80 > .relative {
-background: #fff !important;
-color: var(--lux-ink) !important;
-border-bottom: 1px solid var(--lux-border) !important;
-box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  background: #fff !important;
+  color: var(--lux-ink) !important;
+  border-bottom: 1px solid var(--lux-border) !important;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
 }
-
-html[data-theme="light"] aside.w-80 ul[class*="pl-4"][class*="border-l"] {
-border-left: 1px solid var(--lux-border) !important;
-}
+html[data-theme="light"] aside.w-80 ul[class*="pl-4"][class*="border-l"] { border-left: 1px solid var(--lux-border) !important; }
 
 html[data-theme="light"] aside.w-80 button[aria-expanded] {
-background: #fff !important;
-color: var(--lux-ink) !important;
-border: 1px solid var(--lux-border) !important;
+  background: #fff !important;
+  color: var(--lux-ink) !important;
+  border: 1px solid var(--lux-border) !important;
 }
-
 html[data-theme="light"] aside.w-80 button[aria-expanded]:hover {
-background: #fff8ec !important;
-border-color: color-mix(
-in oklab,
-var(--lux-border),
-var(--gold-400) 25%
-) !important;
+  background: #fff8ec !important;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
 }
-
 html[data-theme="light"] aside.w-80 button[aria-expanded="true"] {
-background: #fffdf6 !important;
-border-color: color-mix(in oklab, var(--gold-400), #fff 40%) !important;
-box-shadow: inset 3px 0 0 0 color-mix(in oklab, var(--gold-400), #fff 28%) !important;
+  background: #fffdf6 !important;
+  border-color: color-mix(in oklab, var(--gold-400), #fff 40%) !important;
+  box-shadow: inset 3px 0 0 0 color-mix(in oklab, var(--gold-400), #fff 28%) !important;
 }
 
-html[data-theme="light"]
-aside.w-80
-:is(a[class*="px-3"], div[aria-disabled="true"][class*="px-3"]) {
-background: #fff !important;
-color: var(--lux-muted) !important;
-border: 1px solid var(--lux-border) !important;
-box-shadow: none !important;
+html[data-theme="light"] aside.w-80 :is(a[class*="px-3"], div[aria-disabled="true"][class*="px-3"]) {
+  background: #fff !important;
+  color: var(--lux-muted) !important;
+  border: 1px solid var(--lux-border) !important;
+  box-shadow: none !important;
 }
-
 html[data-theme="light"] aside.w-80 a[class*="px-3"]:hover {
-background: #fff8ec !important;
-border-color: color-mix(
-in oklab,
-var(--lux-border),
-var(--gold-400) 25%
-) !important;
-color: var(--lux-ink) !important;
+  background: #fff8ec !important;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
+  color: var(--lux-ink) !important;
 }
 
-html[data-theme="light"]
-aside.w-80
-:is(a[aria-current="page"], div[aria-disabled="true"][class*="bg-cyan-900"]) {
-background: #fffdf6 !important;
-color: var(--lux-ink) !important;
-border-color: color-mix(in oklab, var(--gold-400), #fff 40%) !important;
-box-shadow: inset 3px 0 0 0 color-mix(in oklab, var(--gold-400), #fff 28%),
-0 10px 22px rgba(20, 32, 51, 0.06) !important;
+html[data-theme="light"] aside.w-80 :is(a[aria-current="page"], div[aria-disabled="true"][class*="bg-cyan-900"]) {
+  background: #fffdf6 !important;
+  color: var(--lux-ink) !important;
+  border-color: color-mix(in oklab, var(--gold-400), #fff 40%) !important;
+  box-shadow: inset 3px 0 0 0 color-mix(in oklab, var(--gold-400), #fff 28%), 0 10px 22px rgba(20, 32, 51, 0.06) !important;
 }
 
 html[data-theme="light"] aside.w-80 :is(a, div, button) i {
-color: color-mix(in oklab, var(--lux-ink), #8aa 35%) !important;
+  color: color-mix(in oklab, var(--lux-ink), #8aa 35%) !important;
 }
-html[data-theme="light"]
-aside.w-80
-:is(a[aria-current="page"], button[aria-expanded="true"])
-i {
-color: #223254 !important;
+html[data-theme="light"] aside.w-80 :is(a[aria-current="page"], button[aria-expanded="true"]) i {
+  color: #a8844c !important;
 }
 
 /* --------------------------------------------------------------------------
 4) Footer
 -------------------------------------------------------------------------- */
 html[data-theme="light"] footer > .absolute.inset-x-0.top-0[class~="h-[2px]"] {
-background: var(--gold-grad) !important;
-opacity: 1 !important;
+  background: var(--gold-grad) !important;
+  opacity: 1 !important;
 }
-html[data-theme="light"] footer > .absolute.inset-0 {
-display: none !important;
-}
+html[data-theme="light"] footer > .absolute.inset-0 { display: none !important; }
 html[data-theme="light"] footer > div,
 html[data-theme="light"] footer > div.relative {
-background: #fff !important;
-color: var(--lux-ink) !important;
-border-top: 1px solid var(--lux-border) !important;
-box-shadow: 0 -10px 28px rgba(20, 32, 51, 0.08) !important;
-backdrop-filter: blur(8px);
+  background: #fff !important;
+  color: var(--lux-ink) !important;
+  border-top: 1px solid var(--lux-border) !important;
+  box-shadow: 0 -10px 28px rgba(20, 32, 51, 0.08) !important;
+  backdrop-filter: blur(8px);
 }
 html[data-theme="light"] footer .text-cyan-400 {
   color: color-mix(in oklab, var(--gold-500), #fff 8%) !important;
@@ -434,55 +338,36 @@ html[data-theme="light"] footer .text-cyan-400:hover {
   color: color-mix(in oklab, var(--gold-500), #fff 2%) !important;
 }
 
-html[data-theme="light"]
-main
-:is(section, .card, .panel, section[class*="bg-[#"], div[class*="bg-[#"]) {
-background: #fff !important;
-border: 1px solid var(--lux-border) !important;
-border-radius: 16px !important;
-box-shadow: var(--lux-shadow) !important;
-color: var(--lux-ink) !important;
+/* Konten utama (panel / card generik) */
+html[data-theme="light"] main :is(section, .card, .panel, section[class*="bg-[#"], div[class*="bg-[#"]) {
+  background: #fff !important;
+  border: 1px solid var(--lux-border) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--lux-shadow) !important;
+  color: var(--lux-ink) !important;
 }
-
-html[data-theme="light"] main :is([class^="shadow-"], [class*=" shadow-"]) {
-box-shadow: var(--lux-shadow) !important;
-}
-html[data-theme="light"]
-main
-:is([class^="drop-shadow-"], [class*=" drop-shadow-"]) {
-filter: none !important;
-text-shadow: none !important;
-}
-
+html[data-theme="light"] main :is([class^="shadow-"], [class*=" shadow-"]) { box-shadow: var(--lux-shadow) !important; }
+html[data-theme="light"] main :is([class^="drop-shadow-"], [class*=" drop-shadow-"]) { filter: none !important; text-shadow: none !important; }
 html[data-theme="light"] main :is(h1, h2, h3, h4, h5, h6) {
-color: var(--lux-ink) !important;
-background-image: none !important;
--webkit-text-fill-color: currentColor !important;
+  color: var(--lux-ink) !important;
+  background-image: none !important;
+  -webkit-text-fill-color: currentColor !important;
 }
 
 /* cyan borders â†’ netral */
-html[data-theme="light"]
-main
-:is([class*="border-cyan-"], [style*="border-cyan"]) {
-border-color: var(--lux-border) !important;
+html[data-theme="light"] main :is([class*="border-cyan-"], [style*="border-cyan"]) {
+  border-color: var(--lux-border) !important;
 }
+
 /* --------------------------------------------------------------------------
 10) Scrollbar, selection, avatar
 -------------------------------------------------------------------------- */
-html[data-theme="light"] ::-webkit-scrollbar {
-width: 8px;
-}
-html[data-theme="light"] ::-webkit-scrollbar-thumb {
-background: var(--gold-grad);
-border-radius: 10px;
-}
-html[data-theme="light"] ::selection {
-background: rgba(199, 154, 62, 0.22);
-color: #1f2937;
-}
+html[data-theme="light"] ::-webkit-scrollbar { width: 8px; }
+html[data-theme="light"] ::-webkit-scrollbar-thumb { background: var(--gold-grad); border-radius: 10px; }
+html[data-theme="light"] ::selection { background: rgba(199, 154, 62, 0.22); color: #A8844C; }
 html[data-theme="light"] img[class*="rounded-full"] {
-border-color: color-mix(in oklab, var(--gold-400), #fff 25%) !important;
-box-shadow: 0 0 0 3px #fff, 0 10px 22px rgba(210, 182, 138, 0.2) !important;
+  border-color: color-mix(in oklab, var(--gold-400), #fff 25%) !important;
+  box-shadow: 0 0 0 3px #fff, 0 10px 22px rgba(224, 197, 143, 0.2) !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -491,733 +376,783 @@ box-shadow: 0 0 0 3px #fff, 0 10px 22px rgba(210, 182, 138, 0.2) !important;
 html[data-theme="light"] .border-cyan-700\/40,
 html[data-theme="light"] .border-cyan-800\/40,
 html[data-theme="light"] .border-cyan-900\/40 {
-border-color: color-mix(in oklab, var(--gold-400) 50%, #0000) !important;
+  border-color: color-mix(in oklab, var(--gold-400) 50%, #0000) !important;
 }
-html[data-theme="light"] .bg-cyan-600\/20 {
-background-color: color-mix(in oklab, var(--gold-100) 20%, #0000) !important;
-}
-html[data-theme="light"] .hover\:bg-cyan-600\/40:hover {
-background-color: color-mix(in oklab, var(--gold-100) 40%, #0000) !important;
-}
-html[data-theme="light"] .text-cyan-300,
-html[data-theme="light"] .text-cyan-400 {
-color: var(--lux-ink) !important;
-}
+html[data-theme="light"] .bg-cyan-600\/20 { background-color: color-mix(in oklab, var(--gold-100) 20%, #0000) !important; }
+html[data-theme="light"] .hover\:bg-cyan-600\/40:hover { background-color: color-mix(in oklab, var(--gold-100) 40%, #0000) !important; }
+html[data-theme="light"] .text-cyan-300, html[data-theme="light"] .text-cyan-400 { color: var(--lux-ink) !important; }
 
 /* hapus sisa background hex sangat gelap */
 html[data-theme="light"] :is([class*="bg-[#0"], [class*="bg-[#1"]) {
-background: #fff !important;
-background-image: none !important;
-border-color: var(--lux-border) !important;
-box-shadow: var(--lux-shadow) !important;
-color: var(--lux-ink) !important;
+  background: #fff !important;
+  background-image: none !important;
+  border-color: var(--lux-border) !important;
+  box-shadow: var(--lux-shadow) !important;
+  color: var(--lux-ink) !important;
 }
 
+/* Paket palet tambahan */
 html[data-theme="light"] {
   /* Palet dasar */
-  --pal-silk:      #EEE5D9;  /* base hangat */
-  --pal-marble:    #EBEAE0;  /* abu-beige lembut */
-  --pal-champagne: #F6E7C9;  /* highlight hangat */
+  --pal-silk:      #f5f0e9;
+  --pal-marble:    #d9c8c2;
+  --pal-champagne: #e0c58f;
 
   /* Surfaces & Ink */
   --surface-0: var(--pal-marble);
-  --surface-1: #F4EFE7;     /* panel lembut */
-  --surface-2: #FFF9F0;     /* raised lebih terang */
-  --ink:       #1A1D21;     /* teks utama */
-  --ink-muted: #4b5563;     /* teks sekunder */
+  --surface-1: #f3ece4;
+  --surface-2: #fffdf8;
+  --ink:       #a8844c;
+  --ink-muted: color-mix(in oklab,#a8844c, #8e9bb8 58%);
 
-  /* Accents (emas elegan; accent bukan fill besar) */
-  --gold-1: #d4af37;
-  --gold-2: #f6d365;
-  --gold-3: #ffe8a3;
-  --lux-gold-grad: linear-gradient(90deg, var(--gold-1), var(--gold-2) 60%, var(--gold-3));
+  /* Accents */
+  --gold-1: #e0c58f;
+  --gold-2: #f2dfc0;
+  --gold-3: #f8edd6;
+  --lux-gold-grad: linear-gradient(90deg, var(--gold-1), var(--gold-2) 55%, var(--gold-3));
 
-  /* Di Light, “accent” dipakai hemat (garis/ikon) */
-  --accent:   var(--gold-1);
-  --accent-2: #8f7a3e; /* bayangan emas */
-  --success:  #2e7d32;
-  --warning:  #b88315;
+  --accent:   #f8edd6;
+  --accent-2: #a8844c;
+  --success:  #108a7a;
+  --warning:  #c18a2d;
   --error:    #b3261e;
 
-  /* Borders & Shadows (lebih halus) */
-  --lux-border: rgba(26,29,33,.12);
+  /* Borders & Shadows */
+  --lux-border: color-mix(in oklab,#d9c8c2 70%, #a8844c 18%);
   --border-subtle: var(--lux-border);
-  --border-strong: rgba(26,29,33,.2);
-  --shadow-sm: 0 1px 2px rgba(26,29,33,.06);
-  --shadow-md: 0 8px 22px rgba(26,29,33,.10);
-  --shadow-lg: 0 22px 60px rgba(26,29,33,.14);
+  --border-strong: color-mix(in oklab,#a8844c 24%, #000 12%);
+  --shadow-sm: 0 1px 2px rgba(32,45,78,.08);
+  --shadow-md: 0 10px 26px rgba(32,45,78,.12);
+  --shadow-lg: 0 24px 60px rgba(32,45,78,.16);
 
-  /* Focus ring: gold glow lembut */
-  --focus-ring: 0 0 0 3px rgba(212,175,55,.35);
+  /* Focus ring */
+  --focus-ring: 0 0 0 3px rgba(60,80,125,.28);
 
   /* Scrollbar */
-  --scrollbar-track: rgba(26,29,33,.06);
-  --scrollbar-thumb: rgba(26,29,33,.18);
+  --scrollbar-track: rgba(32,45,78,.08);
+  --scrollbar-thumb: rgba(32,45,78,.22);
 }
 
 /* Contoh pemakaian khusus untuk kartu bergaris emas tipis */
-html[data-theme="light"] .card.prestige {
-  border-color: var(--lux-border);
-  box-shadow: var(--shadow-sm);
-}
-html[data-theme="light"] .card.prestige > .gold-underline {
-  background: var(--lux-gold-grad);
-  height: 2px;
-  opacity: .9;
-}
+html[data-theme="light"] .card.prestige { border-color: var(--lux-border); box-shadow: var(--shadow-sm); }
+html[data-theme="light"] .card.prestige > .gold-underline { background: var(--lux-gold-grad); height: 2px; opacity: .9; }
 
 /* ==============================
    Luxe Light – component classes
    ============================== */
 
 /* Label filter (chip) */
-html[data-theme="light"] .lux-label {
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  padding: .5rem 1rem;
-  border: 1px solid var(--lux-border);
-  border-radius: .75rem;
-  background: var(--surface);
-  color: var(--lux-ink);
-  box-shadow: var(--shadow-sm);
-  transition: background .2s, border-color .2s, box-shadow .2s;
+html[data-theme="light"] .lux-label{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.5rem 1rem; border:1px solid var(--lux-border); border-radius:.75rem;
+  background:var(--surface); color:var(--lux-ink);
+  box-shadow:var(--shadow-sm); transition: background .2s, border-color .2s, box-shadow .2s;
 }
-html[data-theme="light"] .lux-label:hover {
-  background: var(--surface-alt);
-  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%);
+html[data-theme="light"] .lux-label:hover{
+  background:var(--surface-alt);
+  border-color:color-mix(in oklab, var(--lux-border), var(--gold-400) 25%);
 }
-html[data-theme="light"] .lux-label:has(input:focus-visible) {
-  box-shadow: var(--focus-ring);
-}
+html[data-theme="light"] .lux-label:has(input:focus-visible){ box-shadow: var(--focus-ring); }
 
 /* Checkbox & radio */
 html[data-theme="light"] .lux-checkbox,
-html[data-theme="light"] .lux-radio {
-  accent-color: var(--gold-1);
-  outline: none;
-}
+html[data-theme="light"] .lux-radio { accent-color: var(--gold-1); outline: none; }
 
 /* Input & Textarea */
 html[data-theme="light"] .lux-input,
-html[data-theme="light"] .lux-textarea {
-  background: var(--surface);
-  color: var(--lux-ink);
-  border: 1px solid var(--lux-border);
-  border-radius: .75rem;
-  box-shadow: var(--shadow-sm);
-  transition: border-color .2s, box-shadow .2s, background .2s;
+html[data-theme="light"] .lux-textarea{
+  background:var(--surface); color:var(--lux-ink);
+  border:1px solid var(--lux-border); border-radius:.75rem;
+  box-shadow:var(--shadow-sm); transition: border-color .2s, box-shadow .2s, background .2s;
 }
 html[data-theme="light"] .lux-input::placeholder,
-html[data-theme="light"] .lux-textarea::placeholder {
-  color: var(--ink-muted);
-}
+html[data-theme="light"] .lux-textarea::placeholder{ color: var(--ink-muted); }
 html[data-theme="light"] .lux-input:focus,
-html[data-theme="light"] .lux-textarea:focus {
-  outline: none;
+html[data-theme="light"] .lux-textarea:focus{
+  outline:none;
   border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%);
   box-shadow: var(--focus-ring);
 }
 
 /* Button (netral elegan) */
-html[data-theme="light"] .lux-btn {
-  background: #fff;
-  color: var(--lux-ink);
-  border: 1px solid var(--lux-border);
-  border-radius: .75rem;
-  padding: .5rem 1rem;
-  font-weight: 600;
-  box-shadow: var(--shadow-sm);
+html[data-theme="light"] .lux-btn{
+  background:#fff; color:var(--lux-ink);
+  border:1px solid var(--lux-border); border-radius:.75rem;
+  padding:.5rem 1rem; font-weight:600;
+  box-shadow:var(--shadow-sm);
   transition: background .2s, border-color .2s, box-shadow .2s, transform .05s;
 }
-html[data-theme="light"] .lux-btn:hover {
-  background: var(--surface-alt);
+html[data-theme="light"] .lux-btn:hover{
+  background:var(--surface-alt);
   border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%);
 }
-html[data-theme="light"] .lux-btn:active {
-  transform: translateY(1px);
-}
+html[data-theme="light"] .lux-btn:active{ transform: translateY(1px); }
 
 /* Badge/pill status */
-html[data-theme="light"] .lux-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: .35rem;
-  padding: .125rem .5rem;
-  border-radius: 999px;
-  font-size: 11px;
-  background: var(--accent-muted);
-  color: var(--accent-ink);
-  border: 1px solid color-mix(in oklab, var(--gold-300), #000 10%);
+html[data-theme="light"] .lux-chip{
+  display:inline-flex; align-items:center; gap:.35rem;
+  padding:.125rem .5rem; border-radius:999px; font-size:11px;
+  background:var(--accent-muted); color:var(--accent-ink);
+  border:1px solid color-mix(in oklab, var(--gold-300), #000 10%);
 }
 
 /* Panel/kartu */
-html[data-theme="light"] .lux-card {
-  background: #fff;
-  border: 1px solid var(--lux-border);
-  border-radius: 16px;
-  box-shadow: var(--shadow-md);
+html[data-theme="light"] .lux-card{
+  background:#fff; border:1px solid var(--lux-border);
+  border-radius:16px; box-shadow:var(--shadow-md);
 }
 
 /* ---------- Dark fallback agar tetap match tema lama ---------- */
-html[data-theme="dark"] .lux-label {
-  background: #0c1220b3;
-  color: #e6fbff;
-  border: 1px solid rgba(34,211,238,.25);
+html[data-theme="dark"] .lux-label{
+  background:#0c1220b3; color:#e6fbff; border:1px solid rgba(34,211,238,.25);
 }
 html[data-theme="dark"] .lux-checkbox,
-html[data-theme="dark"] .lux-radio {
-  accent-color: #22d3ee;
-}
+html[data-theme="dark"] .lux-radio{ accent-color:#22d3ee; }
 html[data-theme="dark"] .lux-input,
-html[data-theme="dark"] .lux-textarea {
-  background: rgba(0,0,0,.3);
-  color: #d9fbff;
-  border: 1px solid rgba(8,145,178,.4);
+html[data-theme="dark"] .lux-textarea{
+  background:rgba(0,0,0,.3); color:#d9fbff; border:1px solid rgba(8,145,178,.4);
 }
-html[data-theme="dark"] .lux-btn {
-  background: rgba(8,145,178,.15);
-  color: #d9fbff;
-  border: 1px solid rgba(34,211,238,.25);
+html[data-theme="dark"] .lux-btn{
+  background:rgba(8,145,178,.15); color:#d9fbff; border:1px solid rgba(34,211,238,.25);
 }
 
 /* =========================================================
    LIGHT – Patch khusus halaman /check/akte (tanpa ubah JSX)
    ========================================================= */
-
-/* Panel utama yang semula gelap → putih elegan */
 html[data-theme="light"] main.flex-1 > .relative.mt-5 section.rounded-3xl.border,
-html[data-theme="light"] main.flex-1 > .relative.mt-6 section.rounded-3xl.border {
-  background: #fff !important;
-  border: 1px solid var(--lux-border) !important;
-  box-shadow: var(--lux-shadow) !important;
-  backdrop-filter: blur(10px);
+html[data-theme="light"] main.flex-1 > .relative.mt-6 section.rounded-3xl.border{
+  background:#fff !important; border:1px solid var(--lux-border) !important;
+  box-shadow:var(--lux-shadow) !important; backdrop-filter: blur(10px);
 }
 
-/* Header panel: garis emas tipis */
+/* Header panel */
 html[data-theme="light"] main.flex-1 > .relative.mt-5 section header,
-html[data-theme="light"] main.flex-1 > .relative.mt-6 section header {
-  background: #fff !important;
-  border-bottom: 1px solid var(--lux-border) !important;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+html[data-theme="light"] main.flex-1 > .relative.mt-6 section header{
+  background:#fff !important; border-bottom:1px solid var(--lux-border) !important;
+  box-shadow:0 6px 18px rgba(15, 23, 42, 0.06);
 }
 html[data-theme="light"] main.flex-1 > .relative.mt-5 section header h1,
-html[data-theme="light"] main.flex-1 > .relative.mt-6 section header h1 {
-  color: var(--lux-ink) !important;
-}
+html[data-theme="light"] main.flex-1 > .relative.mt-6 section header h1{ color: var(--lux-ink) !important; }
 html[data-theme="light"] main.flex-1 > .relative.mt-5 section header .inline-block.h-2.w-2.rounded-full,
-html[data-theme="light"] main.flex-1 > .relative.mt-6 section header .inline-block.h-2.w-2.rounded-full {
+html[data-theme="light"] main.flex-1 > .relative.mt-6 section header .inline-block.h-2.w-2.rounded-full{
   background: color-mix(in oklab, var(--gold-400), #fff 12%) !important;
-  box-shadow: 0 0 10px rgba(210,182,138,.35);
+  box-shadow: 0 0 10px rgba(224,197,143,.35);
 }
 
-/* Badge user (semula cyan) → soft gold */
+/* Badge user (cyan → soft gold) */
 html[data-theme="light"] main.flex-1 > .relative.mt-5 section header .rounded-full[class*="border-cyan-"][class*="bg-cyan-"],
-html[data-theme="light"] main.flex-1 > .relative.mt-6 section header .rounded-full[class*="border-cyan-"][class*="bg-cyan-"] {
+html[data-theme="light"] main.flex-1 > .relative.mt-6 section header .rounded-full[class*="border-cyan-"][class*="bg-cyan-"]{
   border-color: color-mix(in oklab, var(--gold-300), #000 15%) !important;
-  background: var(--gold-50) !important;
-  color: var(--accent-ink) !important;
+  background: var(--gold-50) !important; color: var(--accent-ink) !important;
 }
 
-/* Tombol Refresh: netral elegan */
+/* Tombol Refresh */
 html[data-theme="light"] main.flex-1 > .relative.mt-5 section header button[class*="bg-cyan-"],
-html[data-theme="light"] main.flex-1 > .relative.mt-6 section header button[class*="bg-cyan-"] {
-  background: #fff !important;
-  color: var(--lux-ink) !important;
-  border: 1px solid var(--lux-border) !important;
+html[data-theme="light"] main.flex-1 > .relative.mt-6 section header button[class*="bg-cyan-"]{
+  background:#fff !important; color:var(--lux-ink) !important; border:1px solid var(--lux-border) !important;
 }
 html[data-theme="light"] main.flex-1 > .relative.mt-5 section header button[class*="bg-cyan-"]:hover,
-html[data-theme="light"] main.flex-1 > .relative.mt-6 section header button[class*="bg-cyan-"]:hover {
-  background: var(--surface-alt) !important;
+html[data-theme="light"] main.flex-1 > .relative.mt-6 section header button[class*="bg-cyan-"]:hover{
+  background:var(--surface-alt) !important;
   border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
 }
 
 /* Toolbar container */
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section .px-5.pb-2.pt-4 > .rounded-xl {
-  background: #fff !important;
-  border: 1px solid var(--lux-border) !important;
-  box-shadow: var(--lux-shadow) !important;
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .px-5.pb-2.pt-4 > .rounded-xl{
+  background:#fff !important; border:1px solid var(--lux-border) !important; box-shadow:var(--lux-shadow) !important;
 }
 
-/* Label “No Akta” → pakai komponen luxe */
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section label.inline-flex[class*="bg-[#0c1220]"] {
-  background: var(--surface) !important;
-  color: var(--lux-ink) !important;
-  border: 1px solid var(--lux-border) !important;
-  box-shadow: var(--shadow-sm) !important;
+/* Label “No Akta” */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section label.inline-flex[class*="bg-[#0c1220]"]{
+  background:var(--surface) !important; color:var(--lux-ink) !important;
+  border:1px solid var(--lux-border) !important; box-shadow:var(--shadow-sm) !important;
 }
 
-/* Textarea input */
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section textarea[class*="bg-black/30"] {
-  background: #fff !important;
-  color: var(--lux-ink) !important;
-  border: 1px solid var(--lux-border) !important;
-  box-shadow: var(--shadow-sm);
+/* Textarea */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section textarea[class*="bg-black/30"]{
+  background:#fff !important; color:var(--lux-ink) !important; border:1px solid var(--lux-border) !important; box-shadow:var(--shadow-sm);
 }
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section textarea[class*="bg-black/30"]::placeholder {
-  color: var(--ink-muted) !important;
-}
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section textarea[class*="focus:border-cyan-400"] {
-  outline: none !important;
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section textarea[class*="bg-black/30"]::placeholder{ color: var(--ink-muted) !important; }
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section textarea[class*="focus:border-cyan-400"]{
+  outline:none !important;
   border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
   box-shadow: var(--focus-ring) !important;
 }
 
-/* Tips kbd */
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section kbd {
-  background: var(--surface-2) !important;
-  border: 1px solid var(--lux-border);
-  box-shadow: var(--shadow-sm);
-  color: var(--lux-ink);
+/* kbd */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section kbd{
+  background:var(--surface-2) !important; border:1px solid var(--lux-border);
+  box-shadow:var(--shadow-sm); color:var(--lux-ink);
 }
 
-/* Tombol Search (semula cyan) → primary gold */
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="bg-cyan-600/25"] {
-  background: var(--gold-grad) !important;
-  color: var(--accent-ink) !important;
+/* Tombol Search (primary gold) */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="bg-cyan-600/25"]{
+  background: var(--gold-grad) !important; color: var(--accent-ink) !important;
   border-color: color-mix(in oklab, var(--gold-400), #000 18%) !important;
   text-shadow: 0 1px 0 rgba(255,255,255,.25);
-  box-shadow: 0 8px 22px rgba(210,182,138,.22) !important;
+  box-shadow: 0 8px 22px rgba(224,197,143,.22) !important;
 }
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="bg-cyan-600/25"]:hover {
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="bg-cyan-600/25"]:hover{
   filter: saturate(1.02) brightness(1.02);
 }
 
-/* Tombol Clear (gelap) → netral */
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="bg-[#0c1220]"] {
-  background: #fff !important;
-  color: var(--lux-ink) !important;
-  border: 1px solid var(--lux-border) !important;
+/* Tombol Clear */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="bg-[#0c1220]"]{
+  background:#fff !important; color:var(--lux-ink) !important; border:1px solid var(--lux-border) !important;
 }
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="bg-[#0c1220]"]:hover {
-  background: var(--surface-alt) !important;
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="bg-[#0c1220]"]:hover{
+  background:var(--surface-alt) !important;
   border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
 }
 
-/* CHIP FILTER — deteksi “ON” dari util cyan → gold */
+/* CHIP FILTER */
 html[data-theme="light"] main.flex-1 > .relative.mt-5 section .px-3.py-1\.5.text-xs.border[class*="border-cyan-400"][class*="bg-cyan-500/20"],
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="border-cyan-400"][class*="bg-cyan-500/20"] {
-  background: var(--gold-50) !important;
-  color: var(--accent-ink) !important;
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="border-cyan-400"][class*="bg-cyan-500/20"]{
+  background: var(--gold-50) !important; color: var(--accent-ink) !important;
   border-color: color-mix(in oklab, var(--gold-300), #000 18%) !important;
-  box-shadow: 0 6px 18px rgba(210,182,138,.18);
+  box-shadow: 0 6px 18px rgba(224,197,143,.18);
 }
 html[data-theme="light"] main.flex-1 > .relative.mt-5 section .px-3.py-1\.5.text-xs.border[class*="border-cyan-800/50"],
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="border-cyan-800/50"] {
-  background: #fff !important;
-  color: var(--lux-ink) !important;
-  border-color: var(--lux-border) !important;
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="border-cyan-800/50"]{
+  background:#fff !important; color:var(--lux-ink) !important; border-color: var(--lux-border) !important;
 }
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="border-cyan-800/50"]:hover {
-  background: var(--surface-alt) !important;
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section button[class*="border-cyan-800/50"]:hover{
+  background:var(--surface-alt) !important;
   border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
 }
 
-/* Ringkasan angka (Total/NF/Tersaring) */
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section .ml-auto.text-\[11px\] {
-  color: var(--lux-ink) !important;
-}
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section .ml-auto .font-semibold {
-  color: #1f2937 !important;
-}
+/* Ringkasan angka */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .ml-auto.text-\[11px\]{ color: var(--lux-ink) !important; }
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .ml-auto .font-semibold{ color: #A8844C !important; }
 
-/* Tabel: header & zebra */
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section .overflow-hidden.rounded-xl.border[class*="bg-black/30"] {
-  background: #fff !important;
-  border: 1px solid var(--lux-border) !important;
-  box-shadow: var(--lux-shadow) !important;
+/* Tabel */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .overflow-hidden.rounded-xl.border[class*="bg-black/30"]{
+  background:#fff !important; border:1px solid var(--lux-border) !important; box-shadow:var(--lux-shadow) !important;
 }
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section thead[class*="bg-cyan-500/10"] {
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section thead[class*="bg-cyan-500/10"]{
   background: linear-gradient(180deg, color-mix(in oklab, var(--gold-50), #fff 40%), #fff) !important;
-  color: var(--lux-ink) !important;
-  border-bottom: 1px solid var(--lux-border);
+  color: var(--lux-ink) !important; border-bottom: 1px solid var(--lux-border);
 }
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section thead th {
-  color: var(--ink-muted) !important;
-}
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section tbody tr:nth-child(even) {
-  background: #fffdfa;
-}
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section tbody tr:hover {
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section thead th{ color: var(--ink-muted) !important; }
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section tbody tr:nth-child(even){ background:#fffdfa; }
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section tbody tr:hover{
   background: color-mix(in oklab, var(--gold-50), #fff 70%) !important;
 }
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section table {
-  color: var(--lux-ink) !important;
-}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section table{ color: var(--lux-ink) !important; }
 html[data-theme="light"] main.flex-1 > .relative.mt-5 section tbody td,
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section thead th {
-  border-color: var(--lux-border) !important;
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section thead th{ border-color: var(--lux-border) !important; }
+
+/* Status pill */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section td .inline-flex.rounded-full[class*="bg-cyan-500/10"]{
+  background: var(--accent-muted) !important; color: var(--accent-ink) !important;
+  border:1px solid color-mix(in oklab, var(--gold-300), #000 12%) !important;
+  padding-top:.2rem; padding-bottom:.2rem;
 }
 
-/* Status pill (semula bg-cyan-500/10) → accent muted + border */
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section td .inline-flex.rounded-full[class*="bg-cyan-500/10"] {
-  background: var(--accent-muted) !important;
-  color: var(--accent-ink) !important;
-  border: 1px solid color-mix(in oklab, var(--gold-300), #000 12%) !important;
-  padding-top: .2rem; padding-bottom: .2rem;
-}
-
-/* Sel request TTE: teks default */
+/* Sel request TTE */
 html[data-theme="light"] main.flex-1 > .relative.mt-5 section td[class*="text-cyan-100/80"],
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section td [class*="text-cyan-100/80"] {
-  color: var(--lux-ink) !important;
-}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section td [class*="text-cyan-100/80"]{ color: var(--lux-ink) !important; }
 
-/* Tombol download kecil (REGISTER/KUTIPAN) */
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section td button[class*="border-cyan-800/40"] {
-  background: #fff !important;
-  color: var(--lux-ink) !important;
-  border: 1px solid var(--lux-border) !important;
-  box-shadow: var(--shadow-sm);
+/* Tombol download kecil */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section td button[class*="border-cyan-800/40"]{
+  background:#fff !important; color:var(--lux-ink) !important; border:1px solid var(--lux-border) !important; box-shadow:var(--shadow-sm);
 }
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section td button[class*="border-cyan-800/40"]:hover {
-  background: var(--surface-alt) !important;
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section td button[class*="border-cyan-800/40"]:hover{
+  background:var(--surface-alt) !important;
   border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%) !important;
 }
 
 /* Empty state / loading */
 html[data-theme="light"] main.flex-1 > .relative.mt-5 section .text-cyan-200\/80,
 html[data-theme="light"] main.flex-1 > .relative.mt-5 section .text-cyan-200\/70,
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section .text-cyan-100\/70 {
-  color: var(--ink-muted) !important;
-}
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .text-cyan-100\/70{ color: var(--ink-muted) !important; }
 
 /* Matikan glow background dekoratif */
-html[data-theme="light"] main.flex-1 > .relative.mt-5 > .pointer-events-none.absolute {
-  display: none !important;
+html[data-theme="light"] main.flex-1 > .relative.mt-5 > .pointer-events-none.absolute{ display: none !important; }
+
+/* Ikon lucide */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section :is(svg.lucide, .lucide, i){
+  color: var(--lux-ink) !important; stroke: var(--lux-ink) !important;
 }
 
-/* Ikon lucide kembali ke tinta gelap */
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section :is(svg.lucide, .lucide, i) {
-  color: var(--lux-ink) !important;
-  stroke: var(--lux-ink) !important;
-}
-
-/* Checkbox gold yang sudah kamu buat — paksa ukuran di toolbar chip/label */
-html[data-theme="light"] main.flex-1 > .relative.mt-5 section .lux-checkbox {
-  width: 16px; height: 16px;
-}
+/* Checkbox gold – paksa ukuran */
+html[data-theme="light"] main.flex-1 > .relative.mt-5 section .lux-checkbox{ width:16px; height:16px; }
 
 /* =========================================================
    DARK fallback tambahan untuk elemen baru di atas
    ========================================================= */
-html:not([data-theme="light"]) main.flex-1 > .relative.mt-5 section thead[class*="bg-cyan-500/10"] {
+html:not([data-theme="light"]) main.flex-1 > .relative.mt-5 section thead[class*="bg-cyan-500/10"]{
   background: rgba(34,211,238,.08) !important;
 }
-html:not([data-theme="light"]) main.flex-1 > .relative.mt-5 section tbody tr:nth-child(even) {
-  background: rgba(0,0,0,.15);
-}
-html:not([data-theme="light"]) main.flex-1 > .relative.mt-5 section td .inline-flex.rounded-full[class*="bg-cyan-500/10"] {
-  background: rgba(34,211,238,.12) !important;
-  color: #cffafe !important;
-  border: 1px solid rgba(34,211,238,.25) !important;
+html:not([data-theme="light"]) main.flex-1 > .relative.mt-5 section tbody tr:nth-child(even){ background: rgba(0,0,0,.15); }
+html:not([data-theme="light"]) main.flex-1 > .relative.mt-5 section td .inline-flex.rounded-full[class*="bg-cyan-500/10"]{
+  background: rgba(34,211,238,.12) !important; color:#cffafe !important; border:1px solid rgba(34,211,238,.25) !important;
 }
 
 /* Restore page luxe styling */
-html[data-theme="light"] .restore-panel {
+html[data-theme="light"] .restore-panel{
   background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(243, 230, 197, 0.85));
   border: 1px solid var(--lux-border);
   box-shadow: 0 18px 38px rgba(48,39,21,0.18);
 }
-html[data-theme="light"] .restore-panel__header {
+html[data-theme="light"] .restore-panel__header{
   background: linear-gradient(90deg, rgba(255,255,255,0.92), rgba(247, 236, 214, 0.78));
   border-bottom: 1px solid color-mix(in oklab, var(--gold-200), #000 18%);
 }
-html[data-theme="light"] .restore-panel__pulse {
-  display:inline-block;
-  height:0.5rem;
-  width:0.5rem;
-  border-radius:999px;
-  background: var(--gold-400);
-  box-shadow: 0 0 14px rgba(210,182,138,0.6);
+html[data-theme="light"] .restore-panel__pulse{
+  display:inline-block; height:0.5rem; width:0.5rem; border-radius:999px;
+  background: var(--gold-400); box-shadow: 0 0 14px rgba(224,197,143,0.6);
 }
-html[data-theme="light"] .restore-chip {
+html[data-theme="light"] .restore-chip{
   border:1px solid color-mix(in oklab, var(--gold-300), #000 15%);
   background: color-mix(in oklab, var(--gold-50), #fff 30%);
   color: var(--accent-ink);
   border-radius:999px;
-  box-shadow: 0 4px 14px rgba(210,182,138,0.25);
+  box-shadow: 0 4px 14px rgba(224,197,143,0.25);
 }
-html[data-theme="light"] .restore-button-subtle {
+html[data-theme="light"] .restore-button-subtle{
   border:1px solid color-mix(in oklab, var(--gold-200), #000 18%);
   background: linear-gradient(180deg, #ffffff, color-mix(in oklab, var(--gold-50), #fff 65%));
   color: var(--lux-ink);
   box-shadow: 0 8px 18px rgba(209, 186, 138, 0.18);
 }
-html[data-theme="light"] .restore-button-subtle:hover {
+html[data-theme="light"] .restore-button-subtle:hover{
   background: linear-gradient(180deg, color-mix(in oklab, var(--gold-50), #fff 45%), color-mix(in oklab, var(--gold-100), #fff 25%));
 }
-html[data-theme="light"] .restore-toolbar {
+html[data-theme="light"] .restore-toolbar{
   background: color-mix(in oklab, var(--lux-surface), #fff 6%);
   border:1px solid var(--lux-border);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 12px 28px rgba(209,186,138,0.22);
 }
-html[data-theme="light"] .restore-toolbar__tabbar button {
-  border-radius: 999px;
-  padding-inline: 1rem;
+html[data-theme="light"] .restore-toolbar__tabbar button{
+  border-radius: 999px; padding-inline: 1rem;
   border: 1px solid color-mix(in oklab, var(--gold-200), #000 18%);
   background: color-mix(in oklab, var(--lux-surface), #fff 12%);
   color: var(--lux-muted);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.45);
 }
-html[data-theme="light"] .restore-toolbar__tabbar button:hover {
-  background: color-mix(in oklab, var(--lux-surface), #fff 4%);
-  color: var(--lux-ink);
+html[data-theme="light"] .restore-toolbar__tabbar button:hover{
+  background: color-mix(in oklab, var(--lux-surface), #fff 4%); color: var(--lux-ink);
 }
-html[data-theme="light"] .restore-toolbar__tabbar button[class*="bg-gradient-to-r"] {
-  background-image: var(--gold-grad);
-  color: var(--accent-ink) !important;
+html[data-theme="light"] .restore-toolbar__tabbar button[class*="bg-gradient-to-r"]{
+  background-image: var(--gold-grad); color: var(--accent-ink) !important;
   border: 1px solid color-mix(in oklab, var(--gold-200), #000 20%);
-  box-shadow: 0 16px 32px rgba(210,182,138,0.32);
+  box-shadow: 0 16px 32px rgba(224,197,143,0.32);
 }
-
-html[data-theme="light"] .restore-toolbar__tabbar button.bg-slate-100 {
-  background-image: var(--gold-grad-soft) !important;
-  color: var(--accent-ink) !important;
-  box-shadow: 0 12px 30px rgba(210,182,138,0.35);
+html[data-theme="light"] .restore-toolbar__tabbar button.bg-slate-100{
+  background-image: var(--gold-grad-soft) !important; color: var(--accent-ink) !important;
+  box-shadow: 0 12px 30px rgba(224,197,143,0.35);
 }
-html[data-theme="light"] .restore-toolbar__tabbar button.bg-slate-100:hover {
-  filter: brightness(1.05);
-}
-html[data-theme="light"] .restore-button {
-  background-image: linear-gradient(120deg, rgba(210,182,138,0.9), rgba(237,217,162,0.9));
+html[data-theme="light"] .restore-toolbar__tabbar button.bg-slate-100:hover{ filter: brightness(1.05); }
+html[data-theme="light"] .restore-button{
+  background-image: linear-gradient(120deg, rgba(224,197,143,0.9), rgba(237,217,162,0.9));
   color: var(--accent-ink);
-  box-shadow: 0 18px 36px rgba(210,182,138,0.28);
+  box-shadow: 0 18px 36px rgba(224,197,143,0.28);
   border: 1px solid color-mix(in oklab, var(--gold-200), #000 12%);
 }
-html[data-theme="light"] .restore-button:disabled {
-  background: rgba(214,214,214,0.6);
-  color: rgba(60,60,60,0.6);
-}
-html[data-theme="light"] .restore-section {
+html[data-theme="light"] .restore-button:disabled{ background: rgba(214,214,214,0.6); color: rgba(60,60,60,0.6); }
+html[data-theme="light"] .restore-section{
   background: color-mix(in oklab, var(--lux-surface), #fff 4%);
-  border:1px solid var(--lux-border);
-  box-shadow: var(--lux-shadow);
+  border:1px solid var(--lux-border); box-shadow: var(--lux-shadow);
 }
-html[data-theme="light"] .restore-info-card {
+html[data-theme="light"] .restore-info-card{
   background: color-mix(in oklab, var(--lux-surface), #fff 12%);
   border:1px solid color-mix(in oklab, var(--gold-200), #000 14%);
   color: var(--lux-ink);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.65), 0 6px 18px rgba(209,186,138,0.18);
 }
-html[data-theme="light"] .restore-photo {
+html[data-theme="light"] .restore-photo{
   border:1px solid color-mix(in oklab, var(--gold-200), #000 10%);
   background: radial-gradient(circle at top, rgba(255,248,233,0.9), rgba(240,230,210,0.65));
 }
-html[data-theme="light"] .restore-photo__badge {
-  background: rgba(255,255,255,0.88);
-  color: var(--accent-ink);
+html[data-theme="light"] .restore-photo__badge{
+  background: rgba(255,255,255,0.88); color: var(--accent-ink);
   border:1px solid color-mix(in oklab, var(--gold-200), #000 8%);
 }
-html[data-theme="light"] .restore-pill {
+html[data-theme="light"] .restore-pill{
   border:1px solid color-mix(in oklab, var(--gold-200), #000 10%);
   background: color-mix(in oklab, var(--gold-50), #fff 30%);
   color: var(--accent-ink);
 }
-html[data-theme="light"] .restore-note {
+html[data-theme="light"] .restore-note{
   border:1px solid color-mix(in oklab, var(--gold-200), #000 18%);
   background: color-mix(in oklab, var(--gold-50), #fff 45%);
   color: color-mix(in oklab, var(--gold-400), #361f0a 35%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
 }
-html[data-theme="light"] .restore-table {
+html[data-theme="light"] .restore-table{
   border:1px solid var(--lux-border);
   background: color-mix(in oklab, var(--lux-surface), #fff 6%);
   box-shadow: var(--lux-shadow);
 }
-html[data-theme="light"] .restore-table__head {
-  background-image: var(--accent-line);
-  color: var(--accent-ink);
-}
-html[data-theme="light"] .restore-table__body tr:hover {
+html[data-theme="light"] .restore-table__head{ background-image: var(--accent-line); color: var(--accent-ink); }
+html[data-theme="light"] .restore-table__body tr:hover{
   background: color-mix(in oklab, var(--gold-50), #fff 60%);
 }
 html[data-theme="light"] .restore-table__inner td,
-html[data-theme="light"] .restore-table__inner th {
-  border-color: var(--lux-border);
-}
-html[data-theme="light"] .restore-button:hover:not(:disabled) {
-  filter: brightness(1.05);
-}
+html[data-theme="light"] .restore-table__inner th{ border-color: var(--lux-border); }
+html[data-theme="light"] .restore-button:hover:not(:disabled){ filter: brightness(1.05); }
 
-
-html[data-theme="light"] .restore-tab {
-  border-radius: 999px;
-  padding-inline: 1rem;
+html[data-theme="light"] .restore-tab{
+  border-radius: 999px; padding-inline: 1rem;
   border: 1px solid color-mix(in oklab, var(--gold-200), #000 18%);
   background: color-mix(in oklab, var(--lux-surface), #fff 12%);
   color: var(--lux-muted);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.45);
 }
-html[data-theme="light"] .restore-tab:hover {
-  background: color-mix(in oklab, var(--lux-surface), #fff 4%);
-  color: var(--lux-ink);
-}
-html[data-theme="light"] .restore-tab.restore-tab--active {
+html[data-theme="light"] .restore-tab:hover{ background: color-mix(in oklab, var(--lux-surface), #fff 4%); color: var(--lux-ink); }
+html[data-theme="light"] .restore-tab.restore-tab--active{
   background-image: var(--gold-grad);
   color: var(--accent-ink);
   border: 1px solid color-mix(in oklab, var(--gold-200), #000 18%);
-  box-shadow: 0 14px 32px rgba(210,182,138,0.32);
+  box-shadow: 0 14px 32px rgba(224,197,143,0.32);
 }
 
-/* FILE: src/styles/components/select-light.css */
+/* ===== Light (LUX) tabel ringkas ===== */
+html[data-theme="light"] .restore-table{ border: 1px solid var(--lux-border); box-shadow: var(--lux-shadow); background:#fff; }
+html[data-theme="light"] .restore-table__head th{
+  background: linear-gradient(90deg, color-mix(in oklab, var(--gold-200) 28%, #fff 72%), #fff);
+  color: var(--lux-ink); border-bottom: 1px solid var(--lux-border);
+}
+html[data-theme="light"] .restore-table__inner td,
+html[data-theme="light"] .restore-table__inner th{ border-bottom: 1px solid var(--lux-border); }
+html[data-theme="light"] .restore-table__body tr:nth-child(odd){ background:#fafafa; }
+html[data-theme="light"] .restore-table__body tr:hover{
+  background: color-mix(in oklab, var(--gold-50) 24%, #fff 76%);
+}
+
+/* ===== Dark (CYBERPUNK NEON) untuk komponen restore ===== */
+html:not([data-theme="light"]) .restore-table{
+  border: 1px solid var(--border-subtle);
+  background: rgba(11,15,22,.78);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+html:not([data-theme="light"]) .restore-table__head th{
+  background: linear-gradient(90deg, rgba(0,230,195,.22), rgba(54,191,250,.22));
+  color: var(--ink); border-bottom: 1px solid var(--border-subtle);
+  text-shadow: 0 0 8px rgba(0,230,195,.25);
+}
+html:not([data-theme="light"]) .restore-table__body tr:nth-child(odd){ background: rgba(255,255,255,.02); }
+html:not([data-theme="light"]) .restore-table__body tr:hover{ background: rgba(0,230,195,.08); }
+html:not([data-theme="light"]) .restore-table__inner th:first-child,
+html:not([data-theme="light"]) .restore-table__inner td:first-child,
+html:not([data-theme="light"]) .restore-table__inner th:last-child,
+html:not([data-theme="light"]) .restore-table__inner td:last-child{
+  background: rgba(9,14,22,.96); backdrop-filter: blur(6px); box-shadow: 0 0 0 1px rgba(255,255,255,.02);
+}
+html:not([data-theme="light"]) .restore-pill{
+  border: 1px solid rgba(0,230,195,.28); background: rgba(0,230,195,.13); color:#dff;
+}
+html:not([data-theme="light"]) .restore-flag{
+  border: 1px solid rgba(0,230,195,.35); background: rgba(0,230,195,.12); color: var(--ink);
+}
+html:not([data-theme="light"]) .restore-button--ghost{
+  background: rgba(0,230,195,.12); color: var(--ink); border: 1px solid rgba(0,230,195,.20);
+}
+html:not([data-theme="light"]) .restore-button--ghost:hover{
+  background: rgba(0,230,195,.18); border-color: rgba(0,230,195,.35);
+}
+html[data-theme="light"] .restore-button--ghost{
+  background:#fff; color:var(--lux-ink); border:1px solid var(--lux-border);
+}
+html[data-theme="light"] .restore-button--ghost:hover{
+  background: var(--surface-alt);
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 25%);
+}
+
+/* Warna teks overlay foto */
+html[data-theme="light"] .restore-photo { --photo-text: #111; }
+html[data-theme="light"] .restore-photo[data-hasface="1"] { --photo-text: #fff; }
+html[data-theme="light"] .restore-photo .restore-photo__badges,
+html[data-theme="light"] .restore-photo .restore-photo__badges *{
+  color: var(--photo-text) !important; text-shadow: 0 1px 2px rgba(0,0,0,.35);
+}
+
+/* Utilitas aksen otomatis */
+html[data-theme="light"] .accent-cyan-500,
+html[data-theme="light"] .accent-cyan-600,
+html[data-theme="light"] .accent-cyan-400{ accent-color: var(--gold-400, #b88a3d) !important; }
+:root { --accent-main: #06b6d4; }
+html[data-theme="light"] { --accent-main: var(--gold-400, #b88a3d); }
+.accent-theme { accent-color: var(--accent-main) !important; }
 
 /* Scope: hanya untuk halaman /check/notrecord di tema putih */
-html[data-theme="light"] .page-notrecord {
-  --sel-bg: #fff;
-  --sel-ink: var(--lux-ink, #1a1d21);
-  --sel-border: var(--lux-border, rgba(26,29,33,.12));
-  --sel-shadow: var(--shadow-sm, 0 1px 2px rgba(26,29,33,.06));
-  --sel-shadow-open: var(--shadow-md, 0 8px 22px rgba(26,29,33,.10));
-  --sel-hover: var(--surface-alt, #f6f2ea);
-  --sel-focus: var(--focus-ring, 0 0 0 3px rgba(212,175,55,.35));
-  --sel-accent: var(--gold-1, #d4af37);
+html[data-theme="light"] .page-notrecord{
+  --sel-bg:#fff;
+  --sel-ink:var(--lux-ink,#a8844c);
+  --sel-border:var(--lux-border,rgba(32,45,78,.14));
+  --sel-shadow:var(--shadow-sm,0 1px 2px rgba(32,45,78,.08));
+  --sel-shadow-open:var(--shadow-md,0 10px 26px rgba(32,45,78,.12));
+  --sel-hover:var(--surface-alt,#f6f2ea);
+  --sel-focus:var(--focus-ring,0 0 0 3px rgba(60,80,125,.24));
+  --sel-accent:var(--gold-1,#d4af37);
 }
 
 /* ===== Trigger / Combobox ================================================= */
 html[data-theme="light"] .page-notrecord :is(
-  [role="combobox"],
-  button[aria-haspopup="listbox"],
-  .select-trigger,             /* jika SelectFancy memberi class ini */
-  .select-dark__trigger        /* fallback dari stylesheet lama */
-) {
-  background: var(--sel-bg) !important;
-  color: var(--sel-ink) !important;
-  border: 1px solid var(--sel-border) !important;
-  box-shadow: var(--sel-shadow) !important;
+  [role="combobox"], button[aria-haspopup="listbox"], .select-trigger, .select-dark__trigger
+){
+  background:var(--sel-bg) !important; color:var(--sel-ink) !important;
+  border:1px solid var(--sel-border) !important; box-shadow:var(--sel-shadow) !important;
 }
 
 /* Hover/focus state */
 html[data-theme="light"] .page-notrecord :is(
-  [role="combobox"]:hover,
-  button[aria-haspopup="listbox"]:hover,
-  .select-trigger:hover,
-  .select-dark__trigger:hover
-) {
-  background: var(--sel-hover) !important;
+  [role="combobox"]:hover, button[aria-haspopup="listbox"]:hover, .select-trigger:hover, .select-dark__trigger:hover
+){
+  background:var(--sel-hover) !important;
   border-color: color-mix(in oklab, var(--sel-border), var(--sel-accent) 25%) !important;
 }
-
 html[data-theme="light"] .page-notrecord :is(
-  [role="combobox"]:focus,
-  [role="combobox"]:focus-visible,
-  button[aria-haspopup="listbox"]:focus,
-  button[aria-haspopup="listbox"]:focus-visible,
-  .select-trigger:focus,
-  .select-trigger:focus-visible,
-  .select-dark__trigger:focus,
-  .select-dark__trigger:focus-visible
-) {
-  outline: none !important;
-  box-shadow: var(--sel-focus) !important;
-}
-
-/* Ikon chevron/indicator di dalam trigger */
-html[data-theme="light"] .page-notrecord :is(
-  [role="combobox"] svg,
-  button[aria-haspopup="listbox"] svg,
-  .select-trigger svg,
-  .select-dark__trigger svg
-) {
-  color: var(--sel-ink) !important;
-  stroke: var(--sel-ink) !important;
-  opacity: .9;
-}
-
-/* Placeholder/text redup */
-html[data-theme="light"] .page-notrecord :is(
-  [role="combobox"] [data-placeholder],
-  .select-trigger [data-placeholder]
+  [role="combobox"]:focus, [role="combobox"]:focus-visible,
+  button[aria-haspopup="listbox"]:focus, button[aria-haspopup="listbox"]:focus-visible,
+  .select-trigger:focus, .select-trigger:focus-visible,
+  .select-dark__trigger:focus, .select-dark__trigger:focus-visible
 ){
-  color: var(--ink-muted, #4b5563) !important;
+  outline:none !important; box-shadow:var(--sel-focus) !important;
 }
+
+/* Ikon indicator */
+html[data-theme="light"] .page-notrecord :is(
+  [role="combobox"] svg, button[aria-haspopup="listbox"] svg, .select-trigger svg, .select-dark__trigger svg
+){
+  color:var(--sel-ink) !important; stroke:var(--sel-ink) !important; opacity:.9;
+}
+
+/* Placeholder */
+html[data-theme="light"] .page-notrecord :is(
+  [role="combobox"] [data-placeholder], .select-trigger [data-placeholder]
+){ color: var(--ink-muted, #4b5563) !important; }
 
 /* ===== Dropdown / Content ================================================= */
-html[data-theme="light"] .page-notrecord :is(
-  [role="listbox"],
-  .select-content,
-  .select-dark__content
-){
-  background: var(--sel-bg) !important;
-  color: var(--sel-ink) !important;
-  border: 1px solid var(--sel-border) !important;
-  box-shadow: var(--sel-shadow-open) !important;
+html[data-theme="light"] .page-notrecord :is([role="listbox"], .select-content, .select-dark__content){
+  background:var(--sel-bg) !important; color:var(--sel-ink) !important;
+  border:1px solid var(--sel-border) !important; box-shadow:var(--sel-shadow-open) !important;
 }
 
 /* Item */
-html[data-theme="light"] .page-notrecord :is(
-  [role="option"],
-  .select-item,
-  .select-dark__item
-){
-  color: var(--sel-ink) !important;
-}
-
-html[data-theme="light"] .page-notrecord :is(
-  [role="option"]:hover,
-  .select-item:hover,
-  .select-dark__item:hover
-){
-  background: var(--sel-hover) !important;
+html[data-theme="light"] .page-notrecord :is([role="option"], .select-item, .select-dark__item){ color: var(--sel-ink) !important; }
+html[data-theme="light"] .page-notrecord :is([role="option"]:hover, .select-item:hover, .select-dark__item:hover){
+  background:var(--sel-hover) !important;
 }
 
 /* Item terpilih */
 html[data-theme="light"] .page-notrecord :is(
-  [role="option"][data-state="checked"],
-  .select-item[data-state="checked"],
-  .select-dark__item[data-state="checked"]
+  [role="option"][data-state="checked"], .select-item[data-state="checked"], .select-dark__item[data-state="checked"]
 ){
-  background: color-mix(in oklab, #fff, var(--sel-accent) 18%) !important;
-  color: var(--sel-ink) !important;
+  background: color-mix(in oklab, #fff, var(--sel-accent) 18%) !important; color:var(--sel-ink) !important;
 }
 
-/* ===== Native <select> fallback (jaga-jaga) =============================== */
-html[data-theme="light"] .page-notrecord select {
-  background: var(--sel-bg) !important;
-  color: var(--sel-ink) !important;
-  border: 1px solid var(--sel-border) !important;
-  box-shadow: var(--sel-shadow) !important;
+/* Native <select> fallback */
+html[data-theme="light"] .page-notrecord select{
+  background:var(--sel-bg) !important; color:var(--sel-ink) !important;
+  border:1px solid var(--sel-border) !important; box-shadow:var(--sel-shadow) !important;
 }
-html[data-theme="light"] .page-notrecord select:focus {
-  outline: none !important;
-  box-shadow: var(--sel-focus) !important;
-}
-/* FILE: src/styles/components/select-light.css */
+html[data-theme="light"] .page-notrecord select:focus{ outline:none !important; box-shadow:var(--sel-focus) !important; }
+
 /* ===== React-Select (halaman /check/notrecord – tema light) ===== */
-
-/* 1) Style control/menu dengan prefix 'rs' (BUKAN [role="combobox"]) */
 html[data-theme="light"] .page-notrecord .rs__control{
-  background:#fff !important;
-  color:var(--lux-ink,#1a1d21) !important;
-  border:1px solid var(--lux-border,rgba(26,29,33,.12)) !important;
-  border-radius:12px !important;
-  box-shadow:var(--shadow-sm,0 1px 2px rgba(26,29,33,.06)) !important;
+  background:#fff !important; color:var(--lux-ink,#a8844c) !important;
+  border:1px solid var(--lux-border,rgba(32,45,78,.14)) !important; border-radius:12px !important;
+  box-shadow:var(--shadow-sm,0 1px 2px rgba(32,45,78,.08)) !important;
 }
 html[data-theme="light"] .page-notrecord .rs__control--is-focused{
-  box-shadow:0 0 0 3px rgba(212,175,55,.35) !important;
-  border-color:color-mix(in oklab,var(--lux-border),var(--gold-400) 35%) !important;
+  box-shadow:0 0 0 3px rgba(60,80,125,.24) !important;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 35%) !important;
 }
 html[data-theme="light"] .page-notrecord .rs__menu{
-  background:#fff !important;
-  border:1px solid var(--lux-border,rgba(26,29,33,.12)) !important;
-  border-radius:12px !important;
-  box-shadow:0 12px 28px rgba(26,29,33,.14) !important;
+  background:#fff !important; border:1px solid var(--lux-border,rgba(32,45,78,.14)) !important;
+  border-radius:12px !important; box-shadow:0 12px 28px rgba(32,45,78,.16) !important;
 }
 
-/* 2) RESET input internal supaya “pil putih” hilang */
+/* Reset input internal */
 html[data-theme="light"] .page-notrecord .rs__input input,
 html[data-theme="light"] .page-notrecord [role="combobox"]{
-  background:transparent !important;
-  border:0 !important;
-  box-shadow:none !important;
-  padding:0 !important;
-  border-radius:0 !important;
+  background:transparent !important; border:0 !important; box-shadow:none !important; padding:0 !important; border-radius:0 !important;
 }
 
-/* 3) Warna ikon indikator & hover item */
-html[data-theme="light"] .page-notrecord .rs__indicator svg{ color:var(--lux-ink,#1a1d21) !important; }
+/* Ikon & hover */
+html[data-theme="light"] .page-notrecord .rs__indicator svg{ color:var(--lux-ink,#a8844c) !important; }
 html[data-theme="light"] .page-notrecord .rs__option--is-focused{ background:var(--surface-alt,#f4efe7) !important; }
 html[data-theme="light"] .page-notrecord .rs__option--is-selected{
-  background:color-mix(in oklab,#fff,var(--gold-400,#d2b68a) 18%) !important;
-  color:var(--lux-ink,#1a1d21) !important;
+  background: color-mix(in oklab,#fff, var(--gold-400,#c9a971) 18%) !important; color:var(--lux-ink,#a8844c) !important;
+}
+
+/* --- DARK fallback untuk React-Select --- */
+html:not([data-theme="light"]) .page-notrecord .rs__control{
+  background: rgba(0,0,0,.30) !important; color: var(--ink,#e5e7eb) !important;
+  border: 1px solid var(--border-subtle,rgba(255,255,255,.08)) !important;
+  border-radius:12px !important; box-shadow: var(--shadow-sm,0 1px 2px rgba(0,0,0,.35)) !important; min-height:40px;
+}
+html:not([data-theme="light"]) .page-notrecord .rs__control--is-focused{
+  box-shadow: var(--focus-ring,0 0 0 3px rgba(0,230,195,.45)) !important; border-color: rgba(34,211,238,.45) !important;
+}
+html:not([data-theme="light"]) .page-notrecord .rs__input,
+html:not([data-theme="light"]) .page-notrecord .rs__input input{
+  margin:0 !important; padding:0 !important; background:transparent !important; border:0 !important; box-shadow:none !important; border-radius:0 !important;
+}
+html:not([data-theme="light"]) .page-notrecord .rs__indicator-separator{ display:none !important; }
+html:not([data-theme="light"]) .page-notrecord .rs__indicator svg{ color: var(--ink,#e5e7eb) !important; }
+html:not([data-theme="light"]) .page-notrecord .rs__menu{
+  background: rgba(14,18,26,.96) !important;
+  border:1px solid var(--border-subtle,rgba(255,255,255,.08)) !important; border-radius:12px !important;
+  box-shadow: var(--shadow-md,0 8px 22px rgba(0,0,0,.45)) !important; overflow:hidden;
+}
+html:not([data-theme="light"]) .page-notrecord .rs__option--is-focused{ background: rgba(34,211,238,.12) !important; }
+html:not([data-theme="light"]) .page-notrecord .rs__option--is-selected{
+  background: rgba(34,211,238,.18) !important; color:#dff !important;
+}
+
+
+/* ===== UserKTP – Light theme fixes (gold accent) ===== */
+html[data-theme="light"] .page-userktp .chip{
+  background: var(--gold-50) !important;
+  color: var(--accent-ink) !important;
+  border-color: color-mix(in oklab, var(--gold-300), #000 18%) !important;
+  box-shadow: 0 4px 12px rgba(224,197,143,.18);
+}
+html[data-theme="light"] .page-userktp .chip:hover{
+  background: color-mix(in oklab, var(--gold-50), #fff 30%) !important;
+  border-color: color-mix(in oklab, var(--gold-400), #000 20%) !important;
+}
+
+/* Tombol “Detail” di sisi kanan list */
+html[data-theme="light"] .page-userktp .btn-detail{
+  background-image: var(--gold-grad) !important;
+  color: var(--accent-ink) !important;
+  border: 1px solid color-mix(in oklab, var(--gold-200), #000 18%) !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,.3);
+  box-shadow: 0 10px 24px rgba(224,197,143,.22) !important;
+}
+html[data-theme="light"] .page-userktp .btn-detail:hover{ filter: brightness(1.03) saturate(1.02); }
+
+/* Jaga DARK theme tetap seperti semula */
+html[data-theme="light"] .accent-cyan-500,
+html[data-theme="light"] .accent-cyan-600,
+html[data-theme="light"] .accent-cyan-400{ accent-color: var(--gold-400, #b88a3d) !important; }
+
+:root { --accent-main: #06b6d4; }           /* dark / default */
+html[data-theme="light"] { --accent-main: var(--gold-400, #b88a3d); }
+.accent-theme { accent-color: var(--accent-main) !important; }
+
+/* Paksa semua tombol/link bg-cyan-* jadi soft-gold di LIGHT */
+html[data-theme="light"] button[class*="bg-cyan-"],
+html[data-theme="light"] a[class*="bg-cyan-"],
+html[data-theme="light"] [class*="bg-cyan-500/10"],
+html[data-theme="light"] [class*="bg-cyan-600/25"],
+html[data-theme="light"] [class*="bg-cyan-600/30"],
+html[data-theme="light"] [class*="bg-cyan-600/40"],
+html[data-theme="light"] [class*="bg-cyan-600/45"]{
+  background: var(--gold-50) !important;
+  background-color: var(--gold-50) !important;
+  color: var(--accent-ink) !important;
+  border: 1px solid color-mix(in oklab, var(--gold-300), #000 18%) !important;
+  box-shadow: 0 6px 18px rgba(224,197,143,.18);
+}
+html[data-theme="light"] button[class*="bg-cyan-"]:hover,
+html[data-theme="light"] a[class*="bg-cyan-"]:hover{
+  background: color-mix(in oklab, var(--gold-50), #fff 30%) !important;
+  background-color: color-mix(in oklab, var(--gold-50), #fff 30%) !important;
+  border-color: color-mix(in oklab, var(--gold-400), #000 20%) !important;
+}
+
+/* Border cyan → gold */
+html[data-theme="light"] [class*="border-cyan-"]{
+  border-color: color-mix(in oklab, var(--gold-300), #000 18%) !important;
+}
+html[data-theme="light"] .border-cyan-400,
+html[data-theme="light"] .border-cyan-500,
+html[data-theme="light"] .border-cyan-400\/40,
+html[data-theme="light"] .border-cyan-800\/40{
+  border-color: color-mix(in oklab, var(--gold-200), #000 18%) !important;
+}
+html[data-theme="light"] [class*="border-cyan-"]:hover{
+  border-color: color-mix(in oklab, var(--gold-400), #000 22%) !important;
+}
+
+/* BG cyan → gold */
+html[data-theme="light"] .bg-cyan-400,
+html[data-theme="light"] .bg-cyan-500,
+html[data-theme="light"] .bg-cyan-400\/10,
+html[data-theme="light"] .bg-cyan-500\/10,
+html[data-theme="light"] .bg-cyan-600\/25,
+html[data-theme="light"] .bg-cyan-600\/30,
+html[data-theme="light"] .bg-cyan-600\/40,
+html[data-theme="light"] .bg-cyan-600\/45{
+  background: var(--gold-50) !important;
+  background-color: var(--gold-50) !important;
+  color: var(--accent-ink) !important;
+  border-color: color-mix(in oklab, var(--gold-300), #000 18%) !important;
+  box-shadow: 0 6px 18px rgba(224,197,143,.18);
+}
+
+/* garis/indicator kecil yg pakai bg-cyan-400 jadi gold solid */
+html[data-theme="light"] .page-userktp .bg-cyan-400{
+  background: var(--gold-400) !important; background-color: var(--gold-400) !important;
+}
+
+/* Text cyan → tinta Luxe (opsional) */
+html[data-theme="light"] .page-userktp [class*="text-cyan-"]{ color: var(--lux-ink) !important; }
+
+/* opsional: red → gold pada halaman ini */
+html[data-theme="light"] .page-userktp [class*="border-red-"],
+html[data-theme="light"] .page-userktp [class*="border-rose-"]{
+  border-color: color-mix(in oklab, var(--gold-300), #000 18%) !important;
+}
+
+/* Border fuchsia → soft gold */
+html[data-theme="light"] [class*="border-fuchsia-"] {
+  /* menutupi .border-fuchsia-400/30 dsb (rgba(232,121,249,0.x)) */
+  border-color: color-mix(in oklab, var(--gold-300, #edd9a2), #000 18%) !important;
+}
+
+/* Border red → amber elegan (peringatan) */
+html[data-theme="light"] [class*="border-red-"] {
+  /* menutupi .border-red-400/40 dsb (rgba(248,113,113,0.x)) */
+  border-color: color-mix(in oklab, #f59e0b 58%, #000 18%) !important; /* ~amber-500 */
+}
+
+/* Hover states agar tetap halus */
+html[data-theme="light"] [class*="border-fuchsia-"]:hover {
+  border-color: color-mix(in oklab, var(--gold-400, #d2b68a) 65%, #000 18%) !important;
+}
+html[data-theme="light"] [class*="border-red-"]:hover {
+  border-color: color-mix(in oklab, #f59e0b 72%, #000 20%) !important;
+}
+
+/* Jika ada background fuchsia/red yang muncul sebagai chip/pill, map ke palet */
+html[data-theme="light"] [class*="bg-fuchsia-"] {
+  background: color-mix(in oklab, var(--gold-50, #fff8e9) 80%, #fff 20%) !important;
+  color: var(--accent-ink, #b98532) !important;
+  border: 1px solid color-mix(in oklab, var(--gold-200, #edd9a2) 36%, #000 12%) !important;
+  box-shadow: 0 6px 18px rgba(224,197,143,.18);
+}
+html[data-theme="light"] [class*="bg-red-"] {
+  background: color-mix(in oklab, #fff 85%, #f59e0b 15%) !important;
+  color: color-mix(in oklab, #7c4a03 85%, #000 15%) !important;
+  border: 1px solid color-mix(in oklab, #f59e0b 52%, #000 18%) !important;
+  box-shadow: 0 8px 18px rgba(245,158,11,.18);
+}
+
+/* Untuk elemen kecil seperti pill/indicator yang awalnya pakai fuchsia/red tipis */
+html[data-theme="light"] .pill--fx,
+html[data-theme="light"] .indicator--fx,
+html[data-theme="light"] [class*="rounded-full"][class*="border-fuchsia-"],
+html[data-theme="light"] [class*="rounded-full"][class*="border-red-"] {
+  border-radius: 9999px !important; /* menangkap kasus radius 9999px dari util lama */
+}
+
+/* Tetap biarkan tema gelap tidak berubah */
+/* No overrides required for dark theme; keep original utilities intact. */
+html[data-theme="light"] .fx-line,
+html[data-theme="light"] [class*="before\:border-fuchsia-"],
+html[data-theme="light"] [class*="after\:border-fuchsia-"] {
+  border-color: color-mix(in oklab, var(--gold-300, #edd9a2), #000 18%) !important;
+}
+
+/* Badge peringatan yang sebelumnya merah pekat → amber elegan */
+html[data-theme="light"] .warn-soft,
+html[data-theme="light"] [class*="before\:border-red-"],
+html[data-theme="light"] [class*="after\:border-red-"] {
+  border-color: color-mix(in oklab, #f59e0b 62%, #000 20%) !important;
 }

@@ -32,7 +32,7 @@ box-shadow: inset 3px 0 0 rgba(34,211,238,.5);
 
 
 /* Light (Luxe) */
-html[data-theme="light"] .sidebar{ background:#fff; border-right:1px solid var(--lux-border); box-shadow: inset -2px 0 0 rgba(210,182,138,.12); }
+html[data-theme="light"] .sidebar{ background:#fff; border-right:1px solid var(--lux-border); box-shadow: inset -2px 0 0 rgba(224,197,143,.12); }
 html[data-theme="light"] .sidebar__item:hover{ background:#fff8ec; }
 html[data-theme="light"] .sidebar__item[data-active="true"],
 html[data-theme="light"] .sidebar__item[aria-current="page"]{ background:#fffdf6; border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 40%); box-shadow: inset 3px 0 0 color-mix(in oklab, var(--gold-400), #fff 28%), 0 10px 22px rgba(20,32,51,.06); }

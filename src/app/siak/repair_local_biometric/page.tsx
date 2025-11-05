@@ -212,25 +212,29 @@ export default function RepairLocalBiometricPage() {
   }, [doScan, doDelete, loading]);
 
   return (
-    <div className="siak-page relative mt-5 space-y-6 px-4 pb-16 pt-6 text-slate-900 transition-colors duration-500 sm:px-6 md:mt-10 md:px-10 md:pt-10 dark:text-slate-100">
+    <div className="relative mt-5 space-y-8 px-4 pb-10 pt-6 text-gray-100 sm:px-6 md:px-8 md:pt-8">
+      {/* glow */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute left-[15%] top-[-15%] h-[1100px] w-[1100px] rounded-full bg-cyan-500/15 blur-[220px]" />
+        <div className="absolute right-[18%] bottom-[-20%] h-[1000px] w-[1000px] rounded-full bg-fuchsia-600/12 blur-[190px]" />
+      </div>
 
-      {/* header + search */}
-      <section className="repair-panel overflow-hidden transition-all duration-500">
-        <header className="repair-panel__header px-5 py-5 transition">
-          <p className="text-xs uppercase tracking-[0.32em] text-slate-500/80 dark:text-slate-400/70">Repair</p>
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="repair-panel__pulse" />
-            <h1 className="text-base font-semibold tracking-wide text-slate-800 dark:text-cyan-200">
+      <section className="rounded-3xl border border-cyan-800/40 bg-[#0b0b1a]/80 shadow-[0_0_34px_#00ffff22] backdrop-blur-xl">
+        <header className="border-b border-cyan-900/50 px-5 py-4">
+        <p className="text-xs uppercase tracking-[0.32em] text-slate-500/80 dark:text-slate-400/70">Repair</p>
+          <div className="flex items-center gap-3">
+            <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_12px_#22d3ee]" />
+            <h1 className="text-base font-semibold tracking-wide text-cyan-200">
               Monitoring - Repair Local Biometric
             </h1>
             <div className="ml-auto flex items-center gap-2">
-              <div className="repair-chip">
+              <div className="rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100/80">
                 User: {(user as any)?.S_NAMA_LGKP ?? (user as any)?.S_USER_ID ?? "-"}
               </div>
               <button
                 type="button"
                 onClick={() => window.location.reload()}
-                className="restore-button-subtle text-[11px]"
+                className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-[11px] font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
               >
                 <RefreshCcw className="h-3.5 w-3.5" />
                 Refresh
@@ -243,9 +247,8 @@ export default function RepairLocalBiometricPage() {
         </header>
 
         {/* TOOLBAR */}
-        <div className="repair-toolbar px-5 py-5">
+        <div className="repair-toolbar border-t border-slate-200/60 bg-white/85 px-5 py-5 dark:border-white/10 dark:bg-slate-900/40">
           <div className="grid gap-4 sm:grid-cols-[2fr_auto_auto] sm:items-start">
-            {/* NIK */}
             <div>
               <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500/90 dark:text-slate-400/80">
                 NIK (16 digit)
@@ -276,29 +279,27 @@ export default function RepairLocalBiometricPage() {
                 <p className="mt-1 text-xs text-rose-600 dark:text-rose-300">NIK harus 16 digit angka.</p>
               ) : null}
             </div>
-
             {/* Scope segmented */}
             <div className="self-start sm:justify-self-start">
               <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500/90 dark:text-slate-400/80">
                 Scope
               </label>
-
-              {/* segmented baru: wrapper + 2 pilihan */}
-              <div className="repair-seg">
-                {/* indikator yg bergerak */}
-                <span aria-hidden className="repair-seg__indicator" />
-                {(["rekam", "cetak"] as Scope[]).map((v) => (
-                  <button
-                    key={v}
-                    type="button"
-                    onClick={() => setScope(v)}
-                    className={classNames("repair-seg__item", scope === v && "is-active")}
-                  >
-                    <span className="repair-seg__pill">{v === "rekam" ? "Perekaman" : "Pencetakan"}</span>
-                  </button>
-                ))}
+              <div className="ktpel-tabs">
+                <button
+                  type="button"
+                  onClick={() => setScope("rekam")}
+                  className={`ktpel-tab${scope === "rekam" ? " ktpel-tab--active" : ""}`}
+                >
+                  Perekaman
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setScope("cetak")}
+                  className={`ktpel-tab${scope === "cetak" ? " ktpel-tab--active" : ""}`}
+                >
+                  Pencetakan
+                </button>
               </div>
-
             </div>
 
             {/* Actions */}
@@ -307,10 +308,10 @@ export default function RepairLocalBiometricPage() {
                 type="button"
                 onClick={onReset}
                 disabled={loading !== "idle"}
-                className="repair-btn repair-btn--ghost"
+                className="repair-btn repair-btn--ghost inline-flex items-center gap-2 rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.22em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-cyan-400 dark:focus-visible:ring-offset-slate-900"
                 title="Reset"
               >
-                <RefreshCcw className="h-4 w-4" />
+                <RefreshCcw className="h-3.5 w-3.5" />
                 <span>Reset</span>
               </button>
 
@@ -318,10 +319,10 @@ export default function RepairLocalBiometricPage() {
                 type="button"
                 onClick={doScan}
                 disabled={!nikValid || loading !== "idle"}
-                className="repair-btn repair-btn--primary"
+                className="repair-btn repair-btn--primary inline-flex items-center gap-2 rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:text-slate-950 dark:focus-visible:ring-cyan-400 dark:focus-visible:ring-offset-slate-900"
                 title="Scan"
               >
-                {loading === "scan" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+                {loading === "scan" ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Search className="h-3.5 w-3.5" />}
                 <span>Scan</span>
               </button>
 
@@ -329,10 +330,10 @@ export default function RepairLocalBiometricPage() {
                 type="button"
                 onClick={doDelete}
                 disabled={!nikValid || loading !== "idle"}
-                className="repair-btn repair-btn--danger"
+                className="repair-btn repair-btn--danger inline-flex items-center gap-2 rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.22em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-rose-400 dark:focus-visible:ring-offset-slate-900"
                 title="Bersihkan"
               >
-                {loading === "delete" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                {loading === "delete" ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
                 <span>Bersihkan</span>
               </button>
             </div>
@@ -345,7 +346,7 @@ export default function RepairLocalBiometricPage() {
         <div className="mt-4 grid gap-6 lg:grid-cols-3">
           {/* kiri: visual biometrik */}
           <div className="space-y-4">
-            <div className="repair-info-card p-4">
+            <div className="repair-info-card rounded-2xl border border-slate-200/60 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/60">
               <h3 className="mb-3 text-sm font-semibold">Face</h3>
               {faceBase64 ? (
                 <img
@@ -386,7 +387,7 @@ export default function RepairLocalBiometricPage() {
               )}
             </div>
 
-            <div className="repair-info-card p-4">
+            <div className="repair-info-card rounded-2xl border border-slate-200/60 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/60">
               <h3 className="mb-3 text-sm font-semibold">Signature</h3>
               {signBase64 ? (
                 <img
@@ -404,7 +405,7 @@ export default function RepairLocalBiometricPage() {
               )}
             </div>
 
-            <div className="repair-info-card p-4">
+            <div className="repair-info-card rounded-2xl border border-slate-200/60 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/60">
               <h3 className="mb-2 text-sm font-semibold">Ringkas Biometrik</h3>
               <ul className="text-sm leading-6">
                 <li>Faces: <span key={scan.biometric.counts.faces} className="metric-bump font-semibold">
@@ -418,7 +419,7 @@ export default function RepairLocalBiometricPage() {
           </div>
 
           {/* kanan: detail + matriks */}
-          <div className="repair-info-card p-4 lg:col-span-2">
+          <div className="repair-info-card rounded-2xl border border-slate-200/60 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/60 lg:col-span-2">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-sm font-semibold">Data Penduduk</h3>
               <span
@@ -435,7 +436,7 @@ export default function RepairLocalBiometricPage() {
             </div>
 
             {person ? (
-              <div className="repair-info-card overflow-hidden p-0">
+              <div className="repair-info-card overflow-hidden rounded-2xl border border-slate-200/60 bg-white/90 p-0 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/60">
                 <table className="w-full text-sm">
                   <tbody className="divide-y fade-stagger">
                     <Tr label="NAMA LENGKAP" value={person.NAMA_LGKP} />
@@ -457,9 +458,9 @@ export default function RepairLocalBiometricPage() {
             {/* matriks keberadaan tabel */}
             <div className="mt-6">
               <h4 className="mb-2 text-sm font-semibold">Keberadaan Data (indikatif)</h4>
-              <div className="repair-info-card overflow-hidden p-0">
-                <table className="w-full text-sm">
-                  <thead className="bg-muted/50">
+              <div className="repair-info-card overflow-hidden rounded-2xl border border-slate-200/60 bg-white/90 p-0 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/60">
+                <table className="w-full text-sm table-minimal">{/* ⬅️ header tabel minimal */}
+                  <thead>
                     <tr>
                       <th className="px-3 py-2 text-left">Tabel</th>
                       <th className="px-3 py-2 text-left">Status</th>
@@ -499,7 +500,7 @@ export default function RepairLocalBiometricPage() {
       )}
 
       {/* catatan */}
-      <div className="repair-info-card p-4 text-xs">
+      <div className="repair-info-card rounded-2xl border border-slate-200/60 bg-white/90 p-4 text-xs shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/60">
         <div className="flex items-center gap-2">
           <Activity className="h-3.5 w-3.5" />
           <span>

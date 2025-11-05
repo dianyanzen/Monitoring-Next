@@ -30,7 +30,7 @@ box-shadow: 0 22px 60px rgba(0,0,0,.45);
 html[data-theme="light"] .modal__panel{ background:#fff; color: var(--lux-ink); border-color: var(--lux-border); box-shadow: 0 28px 72px rgba(20,32,51,.18); }
 html[data-theme="light"] .modal__header{ border-bottom:1px solid var(--lux-border); }
 html[data-theme="light"] .modal__footer{ border-top:1px solid var(--lux-border); }
-html[data-theme="light"] .modal-backdrop::before{ background: radial-gradient(120% 120% at 50% -10%, rgba(210,182,138,.22), rgba(0,0,0,.35)); }
+html[data-theme="light"] .modal-backdrop::before{ background: radial-gradient(120% 120% at 50% -10%, rgba(224,197,143,.22), rgba(0,0,0,.35)); }
 
 html[data-theme="light"] [class~="z-[200]"] > .absolute.inset-0 {
 background: rgba(0, 0, 0, 0.38) !important;
@@ -72,6 +72,6 @@ html[data-theme="light"]
 [class~="z-[200]"]
 [class*="border-cyan-400/40"][class*="bg-cyan-500/15"] {
 background: var(--gold-grad) !important;
-border-color: rgba(210, 182, 138, 0.5) !important;
-color: #2a1e05 !important;
+border-color: rgba(224, 197, 143, 0.5) !important;
+color: #a8844c !important;
 }

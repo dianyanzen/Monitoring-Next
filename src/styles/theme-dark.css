@@ -589,3 +589,741 @@ html:not([data-theme="light"]) .restore-button:hover {
   box-shadow: 0 18px 38px rgba(0,230,195,0.42);
 }
 
+/* FILE: src/styles/siak-pages.css */
+
+/* =============================
+   Restore — Neon Dark Polish
+   ============================= */
+
+/* Panel & header */
+html:not([data-theme="light"]) .restore-panel {
+  border-radius: 16px;
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-lg);
+}
+html:not([data-theme="light"]) .restore-panel__header {
+  border-radius: 16px 16px 0 0;
+}
+
+/* Toolbar & tabs */
+html:not([data-theme="light"]) .restore-toolbar {
+  border-radius: 0 0 16px 16px;
+}
+html:not([data-theme="light"]) .restore-toolbar__tabbar .restore-tab {
+  /* pastikan pakai .restore-tab saja, bukan styling generic button */
+  border: 1px solid var(--border-subtle);
+  background: rgba(14,20,30,.75);
+  color: var(--ink-muted);
+}
+html:not([data-theme="light"]) .restore-toolbar__tabbar .restore-tab:hover {
+  background: rgba(18,28,42,.85);
+  color: var(--ink);
+}
+html:not([data-theme="light"]) .restore-toolbar__tabbar .restore-tab.restore-tab--active {
+  background: linear-gradient(120deg, rgba(0,230,195,.82), rgba(54,191,250,.82));
+  border-color: rgba(0,230,195,.45);
+  color: #051012;
+  box-shadow: 0 12px 28px rgba(0,230,195,.28);
+}
+
+/* Input */
+html:not([data-theme="light"]) .lux-input {
+  height: 42px;
+  border-radius: .75rem;
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+}
+html:not([data-theme="light"]) .lux-input:focus {
+  border-color: var(--accent-2);
+  box-shadow: var(--focus-ring);
+}
+
+/* Primary & subtle buttons */
+html:not([data-theme="light"]) .restore-button {
+  background: linear-gradient(120deg, rgba(0,230,195,.85), rgba(54,191,250,.85));
+  color: #0a0a0c;
+  border: none;
+  box-shadow: 0 14px 32px rgba(0,230,195,.30);
+}
+html:not([data-theme="light"]) .restore-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 38px rgba(0,230,195,.38);
+}
+html:not([data-theme="light"]) .restore-button:disabled {
+  background: rgba(255,255,255,.08);
+  color: var(--ink-muted);
+}
+
+/* Tombol ghost khusus tabel (lebih kalem) */
+html:not([data-theme="light"]) .restore-button--ghost {
+  background: rgba(0,230,195,.12);
+  color: var(--ink);
+  border: 1px solid rgba(0,230,195,.20);
+  box-shadow: none;
+}
+html:not([data-theme="light"]) .restore-button--ghost:hover {
+  background: rgba(0,230,195,.18);
+  border-color: rgba(0,230,195,.35);
+}
+
+/* Ukuran kecil untuk tombol di tabel */
+html:not([data-theme="light"]) .restore-button--sm {
+  padding: .375rem .5rem;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: .6rem;
+}
+
+/* Section & kartu */
+html:not([data-theme="light"]) .restore-section {
+  border-radius: 16px;
+  background: rgba(14,18,26,.92);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+}
+html:not([data-theme="light"]) .restore-info-card {
+  border-radius: 14px;
+  background: rgba(17,23,34,.88);
+  border: 1px solid var(--border-subtle);
+  color: var(--ink);
+}
+
+/* Foto wrapper */
+html:not([data-theme="light"]) .restore-photo {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(0,230,195,.16);
+  background: radial-gradient(circle at 30% 0%, rgba(54,191,250,.14), rgba(12,18,28,.92));
+}
+
+/* Pill status rekam */
+html:not([data-theme="light"]) .restore-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .125rem .5rem;
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: .04em;
+  border: 1px solid rgba(0,230,195,.22);
+  background: rgba(0,230,195,.13);
+  color: #dff;
+}
+
+/* Tabel */
+html:not([data-theme="light"]) .restore-table {
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(11,15,22,.75);
+  border: 1px solid var(--border-subtle);
+}
+html:not([data-theme="light"]) .restore-table__inner {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: var(--ink);
+}
+html:not([data-theme="light"]) .restore-table__head th {
+  background: linear-gradient(90deg, rgba(0,230,195,.14), rgba(54,191,250,.14));
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: .02em;
+  border-bottom: 1px solid var(--border-subtle);
+}
+html:not([data-theme="light"]) .restore-table__inner th,
+html:not([data-theme="light"]) .restore-table__inner td {
+  padding: .65rem .75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+html:not([data-theme="light"]) .restore-table__body tr:hover {
+  background: rgba(0,230,195,.07);
+}
+html:not([data-theme="light"]) .restore-table__inner .col-action {
+  width: 115px;
+  text-align: left;
+}
+
+/* NIK kolom agar rapih */
+html:not([data-theme="light"]) .restore-table__inner .col-nik {
+  width: 220px;
+  white-space: nowrap;
+}
+
+/* Chip user kanan header */
+html:not([data-theme="light"]) .restore-chip {
+  padding: .25rem .6rem;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid rgba(0,230,195,.35);
+  background: rgba(0,230,195,.10);
+  color: var(--ink);
+}
+
+/* FILE: src/styles/theme-dark.css */
+
+/* === Restore Page — polish (DARK) ==================================== */
+html:not([data-theme="light"]) .restore-panel{
+  --rest-br:16px;
+  border-radius:var(--rest-br);
+  background:
+    radial-gradient(1200px 240px at 20% -10%, rgba(0,230,195,.10), transparent 60%),
+    radial-gradient(1000px 240px at 80% -20%, rgba(54,191,250,.08), transparent 60%),
+    linear-gradient(135deg,#0e0e14,#0c1423 55%, #0e0e14);
+  border:1px solid var(--border-subtle);
+  box-shadow: 0 8px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.03);
+}
+html:not([data-theme="light"]) .restore-panel__header{
+  border-top-left-radius:var(--rest-br);
+  border-top-right-radius:var(--rest-br);
+  background:
+    linear-gradient(90deg, rgba(0,230,195,.12), rgba(54,191,250,.12)),
+    linear-gradient(90deg, rgba(18,26,36,.85), rgba(10,16,24,.65));
+}
+html:not([data-theme="light"]) .restore-panel__pulse{
+  position:relative; top:2px;
+  width:.55rem;height:.55rem;border-radius:999px;background:var(--accent);
+  box-shadow:0 0 0 6px rgba(0,230,195,.10), 0 0 16px rgba(0,230,195,.60);
+  animation:pulse-slow 4.5s ease-in-out infinite;
+}
+
+html:not([data-theme="light"]) .restore-toolbar{
+  border-top:1px solid var(--border-subtle);
+  border-bottom-left-radius:var(--rest-br);
+  border-bottom-right-radius:var(--rest-br);
+  background:
+    linear-gradient(180deg, rgba(13,19,30,.92), rgba(13,19,30,.82));
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,.03);
+}
+
+html:not([data-theme="light"]) .restore-tab{
+  height:34px; display:inline-flex; align-items:center; gap:.5rem;
+  border-radius:999px; padding:0 .95rem;
+  border:1px solid rgba(255,255,255,.08);
+  background: rgba(14,20,30,.72);
+  color: var(--ink-muted); letter-spacing:.06em;
+  transition: all .18s ease;
+}
+html:not([data-theme="light"]) .restore-tab:hover{
+  background: rgba(18,28,42,.85); color: var(--ink);
+}
+html:not([data-theme="light"]) .restore-tab.restore-tab--active{
+  color:#041014;
+  background: linear-gradient(120deg, rgba(0,230,195,.92), rgba(54,191,250,.92));
+  border-color: rgba(0,230,195,.45);
+  box-shadow: 0 10px 28px rgba(0,230,195,.35);
+}
+
+html:not([data-theme="light"]) .restore-chip{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.35rem .65rem; border-radius:999px;
+  border:1px solid rgba(0,230,195,.35);
+  background: rgba(0,230,195,.10);
+  text-transform:uppercase; font-size:10px; letter-spacing:.18em;
+}
+
+html:not([data-theme="light"]) .restore-button{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.65rem 1rem; border-radius:.9rem; font-weight:700;
+  background: linear-gradient(120deg, rgba(0,230,195,.92), rgba(54,191,250,.92));
+  color:#0a0a0c; border:none; box-shadow:0 12px 30px rgba(0,230,195,.30);
+  transition: transform .06s ease, box-shadow .15s ease, opacity .15s;
+}
+html:not([data-theme="light"]) .restore-button:hover{ transform: translateY(-1px); box-shadow:0 16px 40px rgba(0,230,195,.42); }
+html:not([data-theme="light"]) .restore-button:disabled{ opacity:.55; filter:saturate(.6); }
+html:not([data-theme="light"]) .restore-button.restore-button--sm{ padding:.4rem .65rem; border-radius:.75rem; }
+
+html:not([data-theme="light"]) .restore-button-subtle{
+  display:inline-flex; align-items:center; gap:.45rem;
+  padding:.55rem .8rem; border-radius:.85rem;
+  background: rgba(17,17,24,.85);
+  border:1px solid var(--border-subtle); color:var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+html:not([data-theme="light"]) .restore-button-subtle:hover{
+  border-color: rgba(0,230,195,.35); background: rgba(25,25,34,.95);
+}
+
+html:not([data-theme="light"]) .restore-section{
+  border-radius:18px;
+  background: rgba(14,18,26,.92);
+  border:1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+}
+html:not([data-theme="light"]) .restore-info-card{
+  border-radius:14px;
+  background: rgba(17,23,34,.88);
+  border:1px solid var(--border-subtle);
+  color: var(--ink);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+html:not([data-theme="light"]) .restore-photo{
+  border-radius:14px; overflow:hidden;
+  border:1px solid rgba(0,230,195,.18);
+  background: radial-gradient(120% 100% at 0% 0%, rgba(54,191,250,.12), rgba(12,18,28,.90));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02), 0 12px 36px rgba(0,0,0,.45);
+}
+html:not([data-theme="light"]) .restore-photo .absolute:after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background: linear-gradient(180deg, transparent 70%, rgba(0,0,0,.25));
+}
+
+html:not([data-theme="light"]) .restore-note{
+  border-radius:12px;
+  border:1px solid rgba(245,194,107,.35);
+  background: linear-gradient(180deg, rgba(245,194,107,.08), rgba(245,194,107,.03));
+  color:#fce7b1;
+}
+
+/* Table */
+html:not([data-theme="light"]) .restore-table{
+  border-radius:14px; overflow:hidden;
+  border:1px solid var(--border-subtle);
+  background: rgba(11,15,22,.78);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+html:not([data-theme="light"]) .restore-table__head{
+  background:
+    linear-gradient(90deg, rgba(0,230,195,.22), rgba(54,191,250,.22));
+  color: var(--ink);
+}
+html:not([data-theme="light"]) .restore-table__inner th,
+html:not([data-theme="light"]) .restore-table__inner td{
+  border-color: var(--border-subtle);
+}
+html:not([data-theme="light"]) .restore-table__body tr{
+  transition: background .14s ease, transform .06s ease;
+}
+html:not([data-theme="light"]) .restore-table__body tr:nth-child(odd){
+  background: rgba(255,255,255,.01);
+}
+html:not([data-theme="light"]) .restore-table__body tr:hover{
+  background: rgba(0,230,195,.08);
+}
+
+/* Small “status” pill (Status KTP kolom) */
+html:not([data-theme="light"]) .restore-pill{
+  display:inline-flex; align-items:center; gap:.45rem;
+  padding:.25rem .6rem; border-radius:999px; font-size:11px;
+  border:1px solid rgba(0,230,195,.28);
+  background: rgba(0,230,195,.12);
+  color:#dff; letter-spacing:.04em;
+}
+
+/* === SIAK Restore & Repair refresh (dark) ================================= */
+html:not([data-theme="light"]) .siak-page{
+  max-width:1120px;
+  margin-inline:auto;
+}
+
+html:not([data-theme="light"]) .restore-panel{
+  background:linear-gradient(135deg, rgba(16,23,36,.94), rgba(7,12,22,.9));
+  border-color:rgba(148,163,184,.22);
+  box-shadow:0 22px 60px rgba(5,12,24,.52);
+}
+html:not([data-theme="light"]) .restore-panel__header{
+  background:linear-gradient(120deg, rgba(18,28,44,.9), rgba(10,16,28,.88));
+  border-bottom:1px solid rgba(148,163,184,.25);
+}
+html:not([data-theme="light"]) .restore-panel__pulse{
+  width:.55rem;height:.55rem;border-radius:999px;background:var(--accent);
+  box-shadow:0 0 0 6px rgba(0,230,195,.12),0 0 16px rgba(0,230,195,.5);
+}
+html:not([data-theme="light"]) .restore-toolbar{
+  background:rgba(11,18,30,.78);
+  border-top:1px solid rgba(148,163,184,.18);
+  border-bottom-left-radius:32px;
+  border-bottom-right-radius:32px;
+  backdrop-filter:blur(16px);
+}
+html:not([data-theme="light"]) .restore-tab{
+  border-color:rgba(148,163,184,.30);
+  background:rgba(15,22,34,.68);
+  color:rgba(226,232,240,.78);
+}
+html:not([data-theme="light"]) .restore-tab.restore-tab--active{
+  background:linear-gradient(115deg, rgba(0,230,195,.9), rgba(54,191,250,.9));
+  color:#041014;
+  border-color:rgba(0,230,195,.55);
+  box-shadow:0 16px 38px rgba(0,230,195,.28);
+}
+html:not([data-theme="light"]) .restore-chip{
+  border-color:rgba(0,230,195,.35);
+  background:rgba(0,230,195,.12);
+  color:rgba(226,248,252,.85);
+}
+html:not([data-theme="light"]) .restore-button{
+  background:linear-gradient(115deg, rgba(0,230,195,.9), rgba(54,191,250,.9));
+  color:#041014;
+  border:none;
+  box-shadow:0 18px 42px rgba(0,230,195,.28);
+}
+html:not([data-theme="light"]) .restore-button:hover:not(:disabled){
+  transform:translateY(-1px);
+  box-shadow:0 22px 48px rgba(0,230,195,.36);
+}
+html:not([data-theme="light"]) .restore-button:disabled{
+  background:rgba(255,255,255,.08);
+  color:rgba(226,232,240,.45);
+}
+html:not([data-theme="light"]) .restore-button-subtle{
+  border-color:rgba(148,163,184,.26);
+  background:rgba(15,22,34,.7);
+  color:rgba(226,232,240,.78);
+}
+html:not([data-theme="light"]) .restore-button-subtle:hover{
+  color:rgba(236,248,252,.95);
+}
+html:not([data-theme="light"]) .restore-button.restore-button--sm{
+  box-shadow:none;
+}
+html:not([data-theme="light"]) .restore-section{
+  background:rgba(10,16,26,.88);
+  border-color:rgba(148,163,184,.22);
+  box-shadow:0 26px 56px rgba(3,8,16,.55);
+}
+html:not([data-theme="light"]) .restore-info-card{
+  background:rgba(14,20,32,.9);
+  border-color:rgba(148,163,184,.2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+html:not([data-theme="light"]) .restore-photo{
+  background:radial-gradient(120% 100% at 0% 0%, rgba(54,191,250,.18), rgba(9,15,27,.9));
+  border-color:rgba(54,191,250,.28);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 18px 48px rgba(0,0,0,.54);
+}
+html:not([data-theme="light"]) .restore-note{
+  background:rgba(120,66,20,.28);
+  border-color:rgba(245,158,11,.38);
+  color:rgba(252,231,153,.9);
+}
+html:not([data-theme="light"]) .restore-table{
+  background:rgba(9,15,24,.86);
+  border-color:rgba(148,163,184,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+html:not([data-theme="light"]) .restore-table__head{
+  background:linear-gradient(120deg, rgba(0,230,195,.22), rgba(54,191,250,.22));
+  color:rgba(226,248,252,.86);
+}
+html:not([data-theme="light"]) .restore-table__body tr:nth-child(odd){
+  background:rgba(255,255,255,.02);
+}
+html:not([data-theme="light"]) .restore-table__body tr:hover{
+  background:rgba(0,230,195,.12);
+}
+html:not([data-theme="light"]) .restore-pill{
+  border-color:rgba(0,230,195,.38);
+  background:rgba(0,230,195,.2);
+  color:rgba(226,248,252,.92);
+}
+
+html:not([data-theme="light"]) .repair-panel{
+  background:linear-gradient(135deg, rgba(18,24,38,.94), rgba(8,12,22,.9));
+  border-color:rgba(148,163,184,.22);
+  box-shadow:0 22px 60px rgba(4,10,24,.54);
+}
+html:not([data-theme="light"]) .repair-panel__header{
+  background:linear-gradient(120deg, rgba(20,28,44,.92), rgba(10,14,26,.88));
+  border-bottom:1px solid rgba(148,163,184,.22);
+}
+html:not([data-theme="light"]) .repair-panel__pulse{
+  width:.55rem;height:.55rem;border-radius:999px;background:var(--accent);
+  box-shadow:0 0 0 6px rgba(0,230,195,.12),0 0 16px rgba(0,230,195,.5);
+  animation:pulse-slow 4s ease-in-out infinite;
+}
+html:not([data-theme="light"]) .repair-chip{
+  border-color:rgba(0,230,195,.32);
+  background:rgba(0,230,195,.12);
+  color:rgba(226,248,252,.85);
+}
+html:not([data-theme="light"]) .repair-seg{
+  border-color:rgba(148,163,184,.28);
+  background:rgba(14,20,32,.75);
+}
+html:not([data-theme="light"]) .repair-seg__indicator{
+  position:absolute;
+  inset:4px;
+  width:calc(50% - 8px);
+  border-radius:999px;
+  background:linear-gradient(115deg, rgba(0,230,195,.85), rgba(54,191,250,.85));
+  box-shadow:0 12px 30px rgba(0,230,195,.28);
+  transition:transform .25s ease;
+  pointer-events:none;
+  z-index:0;
+}
+html:not([data-theme="light"]) .repair-seg[data-active="cetak"] .repair-seg__indicator{
+  transform:translateX(100%);
+}
+html:not([data-theme="light"]) .repair-seg__item{
+  color:rgba(226,232,240,.78);
+}
+html:not([data-theme="light"]) .repair-seg__item.is-active{
+  color:#041014;
+}
+html:not([data-theme="light"]) .repair-info-card{
+  background:rgba(12,18,30,.9);
+  border-color:rgba(148,163,184,.2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+html:not([data-theme="light"]) .metric-bump{
+  color:rgba(0,230,195,.92);
+}
+
+.restore-table { position: relative; overflow: auto; border-radius: 14px; }
+.restore-table__inner { border-collapse: separate; border-spacing: 0; table-layout: fixed; width: 100%; }
+
+/* Kolom (sesuaikan jika perlu) */
+.restore-table__inner col.col-name   { width: 22%; }
+.restore-table__inner col.col-nik    { width: 18%; }
+.restore-table__inner col.col-hubkel { width: 10%; }
+.restore-table__inner col.col-tgl    { width: 12%; }
+.restore-table__inner col.col-wilayah{ width: 14%; }
+.restore-table__inner col.col-status { width: 12%; }
+.restore-table__inner col.col-flag   { width: 10%; }
+.restore-table__inner col.col-ket    { width: 12%; }
+.restore-table__inner col.col-action { width: 10%; }
+
+/* Sticky header + kolom pertama & action */
+.restore-table__head th {
+  position: sticky; top: 0; z-index: 3;
+  font-weight: 700; font-size: 13px; letter-spacing: .02em; text-align: left;
+  padding: .7rem .75rem;
+}
+.restore-table__inner th:first-child,
+.restore-table__inner td:first-child { position: sticky; left: 0; z-index: 2; }
+.restore-table__inner th:last-child,
+.restore-table__inner td:last-child { position: sticky; right: 0; z-index: 2; text-align: center; }
+
+.restore-table__inner td { padding: .65rem .75rem; vertical-align: middle; }
+.restore-row { transition: background .14s ease, transform .06s ease; }
+
+/* Pills & flags */
+.restore-pill { display:inline-flex; gap:.35rem; padding:.22rem .55rem; border-radius:999px; font-size:11px; letter-spacing:.04em; }
+.restore-flag { border-radius:999px; padding:.22rem .55rem; font-size:11px; white-space:nowrap; }
+
+/* FILE: src/styles/pages/repair-local-biometric.css */
+
+/* ===== Cards (seragam dark/light) ===== */
+.repair-info-card{
+  --bg: rgba(255,255,255,.9);
+  --bd: rgba(203,213,225,.55);
+  --sh: 0 6px 24px rgba(2,12,22,.18);
+  background: var(--bg);
+  border: 1px solid var(--bd);
+  box-shadow: var(--sh);
+}
+.dark .repair-info-card{
+  --bg: rgba(11,17,27,.55);
+  --bd: rgba(255,255,255,.08);
+  --sh: 0 10px 28px rgba(0,247,255,.06);
+}
+
+/* ===== Buttons: kecil + glow halus ===== */
+.repair-btn{
+  --repair-btn-bg: transparent;
+  --repair-btn-bg-hover: var(--repair-btn-bg);
+  --repair-btn-border: rgba(148,163,184,.35);
+  --repair-btn-color: inherit;
+  --repair-btn-shadow: none;
+  --repair-btn-shadow-hover: var(--repair-btn-shadow);
+  --repair-btn-translate-hover: 0;
+  --repair-btn-bg-disabled: rgba(148,163,184,.12);
+  --repair-btn-opacity-disabled: .55;
+  --repair-btn-color-disabled: color-mix(in oklab,#e2e8f0 70%, #0f172a 30%);
+
+  height:36px;
+  padding-inline:12px;
+  border-radius:12px;
+  letter-spacing:.2em;
+  border:1px solid var(--repair-btn-border);
+  background:var(--repair-btn-bg);
+  color:var(--repair-btn-color);
+  box-shadow:var(--repair-btn-shadow);
+  transition:transform .12s ease, box-shadow .16s ease, background .16s ease, border-color .16s ease, color .16s ease;
+}
+.repair-btn svg{ width:14px; height:14px; }
+
+.repair-btn:not(:disabled):hover{
+  background:var(--repair-btn-bg-hover);
+  box-shadow:var(--repair-btn-shadow-hover);
+  transform:translateY(var(--repair-btn-translate-hover));
+}
+
+.repair-btn:active{
+  transform:translateY(1px);
+  box-shadow:none;
+}
+
+.repair-btn:disabled{
+  cursor:not-allowed;
+  opacity:var(--repair-btn-opacity-disabled);
+  transform:none;
+  background:var(--repair-btn-bg-disabled);
+  color:var(--repair-btn-color-disabled);
+  box-shadow:none;
+}
+
+.repair-btn--ghost{
+  --repair-btn-bg:rgba(15,22,34,.72);
+  --repair-btn-border:rgba(148,163,184,.22);
+  --repair-btn-color:rgba(226,232,240,.78);
+  --repair-btn-bg-hover:rgba(45,64,92,.55);
+  --repair-btn-shadow:none;
+  --repair-btn-shadow-hover:none;
+  --repair-btn-translate-hover:0;
+  --repair-btn-bg-disabled:rgba(28,38,56,.55);
+}
+
+.repair-btn--primary{
+  --repair-btn-bg:linear-gradient(115deg,#00e6c3,#36bffa);
+  --repair-btn-bg-hover:linear-gradient(115deg,#11f3d3,#48c8ff);
+  --repair-btn-border:rgba(0,230,195,.5);
+  --repair-btn-color:#041014;
+  --repair-btn-shadow:0 10px 24px rgba(0,230,195,.28);
+  --repair-btn-shadow-hover:0 14px 30px rgba(0,230,195,.36);
+  --repair-btn-translate-hover:-1px;
+  --repair-btn-bg-disabled:rgba(8,47,73,.35);
+}
+
+.repair-btn--danger{
+  --repair-btn-bg:linear-gradient(115deg,#f43f5e,#fb7185);
+  --repair-btn-bg-hover:linear-gradient(115deg,#ff5f7f,#ffa0ad);
+  --repair-btn-border:rgba(244,63,94,.5);
+  --repair-btn-color:#2a0c12;
+  --repair-btn-shadow:0 10px 24px rgba(244,63,94,.24);
+  --repair-btn-shadow-hover:0 14px 30px rgba(244,63,94,.3);
+  --repair-btn-translate-hover:-1px;
+  --repair-btn-bg-disabled:rgba(63,12,24,.35);
+}
+
+.repair-toolbar .repair-btn{
+  height:34px;
+  padding:0 14px;
+  border-radius:999px;
+  font-weight:700;
+  letter-spacing:.22em;
+  line-height:1;
+}
+
+.repair-toolbar .repair-btn--primary:disabled{
+  --repair-btn-opacity-disabled:1;
+  --repair-btn-bg-disabled:transparent;
+  --repair-btn-border:rgba(34,211,238,.4);
+  --repair-btn-color:rgba(34,211,238,.62);
+  --repair-btn-color-disabled:rgba(34,211,238,.62);
+  --repair-btn-shadow:none;
+  --repair-btn-shadow-hover:none;
+}
+
+.repair-toolbar .repair-btn--danger:disabled{
+  --repair-btn-opacity-disabled:1;
+  --repair-btn-bg-disabled:transparent;
+  --repair-btn-border:rgba(244,63,94,.4);
+  --repair-btn-color:rgba(244,63,94,.65);
+  --repair-btn-color-disabled:rgba(244,63,94,.65);
+  --repair-btn-shadow:none;
+  --repair-btn-shadow-hover:none;
+}
+
+.repair-toolbar .repair-btn:disabled svg{ opacity:.7; }
+
+/* ===== Segmented control dengan indikator bergerak + glow ===== */
+.repair-seg{
+  --seg-h: 36px;
+  position: relative;
+  height: var(--seg-h);
+  border-radius: 999px;
+}
+.repair-seg__item{ height: calc(var(--seg-h) - 10px); }
+.repair-seg__indicator{
+  position: absolute;
+  top: 5px; left: 5px;
+  width: calc(50% - 10px);
+  height: calc(var(--seg-h) - 10px);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(34,211,238,.25), rgba(34,211,238,.08));
+  box-shadow: 0 10px 26px rgba(0,255,255,.22), 0 0 0 1px rgba(34,211,238,.35) inset;
+  transition: left .18s ease, background .18s ease, box-shadow .18s ease;
+}
+.repair-seg[data-active="cetak"] .repair-seg__indicator{ left: calc(50% + 5px); }
+.dark .repair-seg{ border-color: rgba(255,255,255,.1); background: rgba(2,8,18,.35); }
+.dark .repair-seg__indicator{ background: linear-gradient(135deg, rgba(34,211,238,.32), rgba(34,211,238,.12)); }
+
+/* ===== Placeholder frame untuk foto ===== */
+.ph-wrap{
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.1));
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+/* ===== Animasi kecil untuk angka ===== */
+@keyframes bump{ 0%{transform:scale(1)} 20%{transform:scale(1.1)} 100%{transform:scale(1)} }
+.metric-bump{ display:inline-block; animation:bump .48s ease; }
+
+/* ===== Header tabel minimal (polos) ===== */
+.table-minimal thead th{
+  background: none;
+  box-shadow: none;
+  border-bottom: 1px solid rgba(148,163,184,.25);
+  color: rgba(226,232,240,.85);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  padding: .5rem .75rem;
+  white-space: nowrap;
+}
+html[data-theme="light"] .table-minimal thead th{
+  border-bottom-color: var(--lux-border);
+  color: var(--lux-ink);
+}
+
+.repair-seg{
+  --seg-h: 34px;              /* sedikit lebih kecil */
+  padding: 2px;               /* rapat seperti ktpel-tab */
+  height: var(--seg-h);
+  border-radius: 999px;
+  gap: 2px;
+}
+
+.repair-seg__item{
+  min-width: 112px;           /* kompak */
+  height: calc(var(--seg-h) - 6px);
+  padding-inline: 10px;
+}
+
+.repair-seg__indicator{
+  position: absolute;
+  top: 2px; left: 2px;
+  width: calc(50% - 4px);
+  height: calc(var(--seg-h) - 4px);
+  border-radius: 999px;
+
+  /* warna & bayangan lebih dekat (seperti tab Restore) */
+  background: linear-gradient(135deg, rgba(34,211,238,.16), rgba(34,211,238,.06));
+  box-shadow:
+    0 6px 14px rgba(0,255,255,.12),      /* dekat */
+    0 0 0 1px rgba(34,211,238,.28) inset;/* ring tipis */
+  transition: left .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+/* posisi indikator */
+.repair-seg[data-active="rekam"]  .repair-seg__indicator{ left: 2px; }
+.repair-seg[data-active="cetak"]  .repair-seg__indicator{ left: calc(50% + 2px); }
+
+/* dark tweak: tetap dekat, tanpa flare panjang */
+.dark .repair-seg{
+  border-color: rgba(255,255,255,.08);
+  background: rgba(3,9,18,.35);
+}
+.dark .repair-seg__indicator{
+  background: linear-gradient(135deg, rgba(34,211,238,.22), rgba(34,211,238,.10));
+  box-shadow:
+    0 8px 16px rgba(0,255,255,.14),
+    0 0 0 1px rgba(34,211,238,.30) inset;
+}
+

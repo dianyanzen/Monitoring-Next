@@ -33,6 +33,6 @@ html[data-theme="light"] .kpi-card--accent{
   border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 28%);
 }
 html[data-theme="light"] .kpi-card__title{ color: color-mix(in oklab, var(--lux-ink), #5b6677 34%); }
-html[data-theme="light"] .kpi-card__value{ color: var(--lux-ink); text-shadow: 0 10px 22px rgba(210,182,138,.16); }
+html[data-theme="light"] .kpi-card__value{ color: var(--lux-ink); text-shadow: 0 10px 22px rgba(224,197,143,.16); }
 html[data-theme="light"] .kpi-card__delta--up{ color:#0f9d58; }
 html[data-theme="light"] .kpi-card__delta--down{ color:#b91c1c; }

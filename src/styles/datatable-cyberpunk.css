@@ -22,12 +22,12 @@
   --cp-soft-glow: 0 0 14px rgba(39,243,255,.25);
 
   /* Luxe & Elegant (untuk fallback light) */
-  --pal-silk:       #e9e3d9;
-  --pal-marble:     #ecebea;
-  --pal-champagne:  #c9a45c;
+  --pal-silk:       #f5f0e9;
+  --pal-marble:     #d9c8c2;
+  --pal-champagne:  #e0c58f;
   --pal-pearl:      #ffffff;
-  --pal-velvet:     #142033;
-  --pal-onyx:       #0e1116;
+  --pal-velvet:     #f8edd6;
+  --pal-onyx:       #a8844c;
 }
 
 /* ------------------------------------------------------------
@@ -317,7 +317,7 @@ html[data-theme="light"] table.dataTable.dt-cyberpunk tbody td {
 /* Buttons */
 html[data-theme="light"] .dt-buttons .dt-button {
   background: var(--dtL-gold-grad);
-  color:#2a1e05 !important;
+  color:#a8844c !important;
   border:1px solid #e7d6a1 !important;
   border-radius:10px !important; padding:7px 12px !important;
   box-shadow: 0 8px 24px rgba(201,164,92,.18);

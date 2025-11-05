@@ -78,7 +78,7 @@ export default function userrekamPage() {
   };
 
   return (
-    <div className="relative px-8 pb-8 pt-6 md:pt-8 text-gray-200 space-y-8 mt-5">
+    <div className="page-userktp relative px-8 pb-8 pt-6 md:pt-8 text-gray-200 space-y-8 mt-5">
       {/* Ambient cyberpunk glow */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute top-[-15%] left-[15%] w-[1100px] h-[1100px] bg-cyan-500/15 blur-[220px] rounded-full" />
@@ -214,7 +214,7 @@ export default function userrekamPage() {
                             pathname: `/dashboard/userrekam/${encodeURIComponent(r.USER_ID)}`,
                             query: { start, end },
                           }}
-                          className="inline-flex items-center justify-center gap-2
+                          className="btn-detail inline-flex items-center justify-center gap-2
                                     px-4 py-2 rounded-lg text-sm font-medium
                                     bg-cyan-600/30 hover:bg-cyan-600/45
                                     border border-cyan-400/40
@@ -240,7 +240,7 @@ function Chip({ onClick, children }: { onClick: () => void; children: React.Reac
   return (
     <button
       onClick={onClick}
-      className="text-xs px-2.5 py-1 rounded-md border border-cyan-700/40 bg-cyan-600/10 hover:bg-cyan-600/20 transition-colors"
+      className="chip text-xs px-2.5 py-1 rounded-md border border-cyan-700/40 bg-cyan-600/10 hover:bg-cyan-600/20 transition-colors"
     >
       {children}
     </button>
