@@ -1156,3 +1156,185 @@ html[data-theme="light"] [class*="before\:border-red-"],
 html[data-theme="light"] [class*="after\:border-red-"] {
   border-color: color-mix(in oklab, #f59e0b 62%, #000 20%) !important;
 }
+
+/* =========================================================
+   Toolbar (input + segmented tabs) — Light
+   ========================================================= */
+html[data-theme="light"] .repair-toolbar {
+  background: #fff !important;
+  border-top: 1px solid var(--lux-border) !important;
+  box-shadow: 0 10px 26px rgba(32,45,78,.08) inset;
+}
+
+/* Input NIK */
+html[data-theme="light"] .repair-toolbar input {
+  background: #fff !important;
+  color: var(--lux-ink) !important;
+  border: 1px solid var(--lux-border) !important;
+}
+html[data-theme="light"] .repair-toolbar input:focus {
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-3) 30%);
+  box-shadow: 0 0 0 3px rgba(224,197,143,.22);
+}
+
+/* Segmented (pakai .ktpel-tab global), pastikan kontras di light */
+html[data-theme="light"] .ktpel-tab {
+  background: #fff;
+  color: var(--lux-ink);
+  border: 1px solid var(--lux-border);
+}
+html[data-theme="light"] .ktpel-tab.ktpel-tab--active {
+  background: var(--gold-grad);
+  color: #3b2f10;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-3) 35%);
+  box-shadow: 0 8px 18px rgba(224,197,143,.15);
+}
+
+/* =========================================================
+   Buttons — Light variants
+   ========================================================= */
+.repair-btn { border-width: 1px; }
+
+html[data-theme="light"] .repair-btn--ghost {
+  background: #fff;
+  color: var(--gold-3);
+  border-color: var(--lux-border);
+}
+html[data-theme="light"] .repair-btn--ghost:hover {
+  background: #fffaf0;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-3) 35%);
+  box-shadow: 0 8px 16px rgba(224,197,143,.16);
+}
+
+html[data-theme="light"] .repair-btn--primary {
+  background: var(--gold-grad);
+  color: #3b2f10 !important; /* kalahkan util text-slate-900 jika perlu */
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-3) 38%);
+  box-shadow: 0 10px 22px rgba(224,197,143,.18);
+}
+html[data-theme="light"] .repair-btn--primary:hover {
+  filter: brightness(1.02);
+  background: #fff5f5;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-3) 38%);
+  box-shadow: 0 14px 26px rgba(224,197,143,.22);
+}
+
+html[data-theme="light"] .repair-btn--danger {
+  background: #fff;
+  color: #3b2f10 !important; /* kalahkan util text-slate-900 jika perlu */
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-3) 38%);
+  box-shadow: 0 10px 22px rgba(224,197,143,.18);
+}
+html[data-theme="light"] .repair-btn--danger:hover {
+  filter: brightness(1.02);
+  background: #fff5f5;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-3) 38%);
+  box-shadow: 0 14px 26px rgba(224,197,143,.22);
+}
+
+/* Disabled state kelihatan jelas di light */
+html[data-theme="light"] .repair-btn:disabled {
+  background: #fff !important;
+  color: #9ca3af !important;
+  border-color: color-mix(in oklab, var(--lux-border), #000 8%) !important;
+  box-shadow: none !important;
+}
+
+/* =========================================================
+   Cards (repair-info-card) — Light
+   ========================================================= */
+html[data-theme="light"] .repair-info-card {
+  background: #fff !important;
+  color: var(--lux-ink);
+  border: 1px solid var(--lux-border) !important;
+  box-shadow: 0 12px 30px rgba(210,182,138,.18);
+}
+
+/* =========================================================
+   Placeholder foto (ph-wrap) — Light
+   ========================================================= */
+.ph-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+html[data-theme="light"] .ph-wrap {
+  background: color-mix(in oklab, var(--lux-surface), #000 4%);
+  border: 1px solid var(--lux-border);
+  box-shadow: inset 0 1px 0 #fff, 0 8px 18px rgba(32,45,78,.08);
+}
+
+/* =========================================================
+   Table minimal (header + border + warna status) — Light
+   ========================================================= */
+.table-minimal thead th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+html[data-theme="light"] .table-minimal thead th {
+  background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.55));
+  color: var(--gold-3);
+  border-bottom: 1px solid color-mix(in oklab, var(--lux-border), var(--gold-3) 22%);
+}
+.table-minimal tbody td { vertical-align: middle; }
+html[data-theme="light"] .table-minimal tbody td {
+  border-bottom: 1px solid #f3ead1;
+  color: var(--lux-ink);
+}
+
+/* Status “ADA/TIDAK ADA” warna tegas di light */
+html[data-theme="light"] .table-minimal .text-emerald-600 { color: #166534 !important; }
+html[data-theme="light"] .table-minimal .text-rose-600    { color: #991b1b !important; }
+
+/* =========================================================
+   Badge sumber (DEMOGRAPHICS, DEMOGRAPHICS_ALL, NONE) — Light
+   ========================================================= */
+html[data-theme="light"] .repair-info-card [title="Sumber record"] {
+  background: #fffaf0;
+  border: 1px solid color-mix(in oklab, var(--lux-border), var(--gold-3) 22%);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* =========================================================
+   Micro-animations (optional, tak ganggu dark)
+   ========================================================= */
+.metric-bump {
+  animation: metric-bump .22s ease-out;
+  display: inline-block;
+}
+@keyframes metric-bump {
+  0% { transform: scale(.96); filter: saturate(.9); }
+  100% { transform: scale(1); filter: saturate(1); }
+}
+
+/* Fade in rows table */
+.fade-stagger > tr {
+  animation: fade-rows .22s ease both;
+}
+.fade-stagger > tr:nth-child(odd)  { animation-delay: .02s; }
+.fade-stagger > tr:nth-child(even) { animation-delay: .06s; }
+@keyframes fade-rows {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+html[data-theme="light"] .bg-cyan-500\/15 { background-color: rgba(6,182,212,.12); }
+html.dark .bg-cyan-500\/15 { background-color: rgba(34,211,238,.15); }
+
+html[data-theme="light"] .repair-btn--primary{
+  /* cyan/teal only */
+  --repair-btn-bg:        linear-gradient(115deg,#0fe5c8,#2adfd0);
+  --repair-btn-bg-hover:  linear-gradient(115deg,#17f1d6,#32e8da); /* no blue */
+  --repair-btn-border:    color-mix(in oklab,#2adfd0 60%, #0fe5c8 40%);
+  --repair-btn-color:     #0b1320;
+  --repair-btn-shadow:        0 10px 24px rgba(16,216,197,.18);
+  --repair-btn-shadow-hover:  0 14px 30px rgba(16,216,197,.24);
+}
+
+/* Override ring Tailwind untuk state focus (hapus sky-400/biru) */
+html[data-theme="light"] .repair-toolbar .repair-btn--primary:focus-visible{
+  /* Tailwind ring uses this var */
+  --tw-ring-color: rgb(34 211 238 / 0.55); /* cyan-400 */
+}
