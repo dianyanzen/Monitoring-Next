@@ -706,3 +706,60 @@
 [2025-11-06 17:36:13.942] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":90,"extra":{"count":0}}
 [2025-11-06 17:36:21.312] [INFO] [DB] SELECT ok {"at":"DB","tookMs":7,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
 [2025-11-06 17:36:21.323] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":26,"extra":{"count":0}}
+[2025-11-06 17:36:59.760] [INFO] [DB] SELECT ok {"at":"DB","tookMs":3,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-11-06 17:36:59.763] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":7,"extra":{"count":0}}
+[2025-11-06 17:38:40.720] [INFO] [DB] SELECT ok {"at":"DB","tookMs":49,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-11-06 17:38:40.722] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":52,"extra":{"count":0}}
+[2025-11-06 17:38:42.747] [INFO] [DB] SELECT ok {"at":"DB","tookMs":4,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-11-06 17:38:42.753] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":19,"extra":{"count":0}}
+[2025-11-06 17:43:22.319] [INFO] [DB] SELECT ok {"at":"DB","tookMs":210,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-11-06 17:43:22.325] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":220,"extra":{"count":0}}
+[2025-11-06 17:43:29.617] [INFO] [SYSTEM] menu.GET {"at":"/api/menu","tookMs":2,"extra":{"level":5,"items":10}}
+[2025-11-06 17:43:29.625] [INFO] [DB] SELECT ok {"at":"DB","tookMs":31,"sql":"SELECT LEVEL_CODE, LEVEL_NAME FROM SIAK_USER_GROUP ORDER BY LEVEL_CODE","binds":{}}
+[2025-11-06 17:43:29.692] [INFO] [DB] SELECT ok {"at":"DB","tookMs":95,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-11-06 17:43:29.697] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":105,"extra":{"count":0}}
+[2025-11-06 17:43:29.771] [INFO] [DB] SELECT ok {"at":"DB","tookMs":153,"sql":"SELECT MENU_ID, PARENT_ID, ICON, TITLE, LOWER(URL) URL, IS_ACTIVE, USER_LEVEL, MENU_LEVEL, IS_NEXT, LEVEL_HEAD, LEVEL_SUB, LEVEL_CONTENT FROM VW_SIAK_MENU WHERE USER_LEVEL = :b_user_level AND ACTIVE_MENU = 1 AND IS_NEXT = 1 ORDER BY LEVEL_HEAD, LEVEL_SUB, LEVEL_CONTENT, TITLE","binds":{"b_user_level":5}}
+[2025-11-06 17:43:32.165] [INFO] [SYSTEM] menu.GET {"at":"/api/menu","tookMs":1,"extra":{"level":5,"items":10}}
+[2025-11-06 17:43:32.163] [INFO] [DB] SELECT ok {"at":"DB","tookMs":16,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-11-06 17:43:32.175] [INFO] [DB] SELECT ok {"at":"DB","tookMs":29,"sql":"SELECT LEVEL_CODE, LEVEL_NAME FROM SIAK_USER_GROUP ORDER BY LEVEL_CODE","binds":{}}
+[2025-11-06 17:43:32.188] [INFO] [DB] SELECT ok {"at":"DB","tookMs":16,"sql":"SELECT LEVEL_CODE, LEVEL_NAME FROM SIAK_USER_GROUP ORDER BY LEVEL_CODE","binds":{}}
+[2025-11-06 17:43:32.192] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":59,"extra":{"count":0}}
+[2025-11-06 17:43:35.988] [INFO] [DB] SELECT ok {"at":"DB","tookMs":8,"sql":"SELECT A.USER_LEVEL, A.LEVEL_NAME, B.LEVEL_NAME AS GROUP_NAME, B.LEVEL_CODE FROM SIAK_USER_LEVEL A INNER JOIN SIAK_USER_GROUP B ON A.GROUP_LEVEL = B.LEVEL_CODE WHERE A.GROUP_LEVEL = :b_group_id ORDER BY A.USER_LEVEL","binds":{"b_group_id":"1"}}
+[2025-11-06 17:43:39.210] [INFO] [DB] SELECT ok {"at":"DB","tookMs":2,"sql":"SELECT A.USER_LEVEL, A.LEVEL_NAME, B.LEVEL_NAME AS GROUP_NAME, B.LEVEL_CODE FROM SIAK_USER_LEVEL A INNER JOIN SIAK_USER_GROUP B ON A.GROUP_LEVEL = B.LEVEL_CODE WHERE A.GROUP_LEVEL = :b_group_id ORDER BY A.USER_LEVEL","binds":{"b_group_id":"3"}}
+[2025-11-06 17:43:42.790] [INFO] [DB] SELECT ok {"at":"DB","tookMs":4,"sql":"SELECT A.USER_LEVEL, A.LEVEL_NAME, B.LEVEL_NAME AS GROUP_NAME, B.LEVEL_CODE FROM SIAK_USER_LEVEL A INNER JOIN SIAK_USER_GROUP B ON A.GROUP_LEVEL = B.LEVEL_CODE WHERE A.GROUP_LEVEL = :b_group_id ORDER BY A.USER_LEVEL","binds":{"b_group_id":"2"}}
+[2025-11-06 17:43:47.167] [INFO] [SYSTEM] menu.GET {"at":"/api/menu","tookMs":1,"extra":{"level":5,"items":10}}
+[2025-11-06 17:43:47.173] [INFO] [DB] SELECT ok {"at":"DB","tookMs":7,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-11-06 17:43:47.175] [INFO] [DB] SELECT ok {"at":"DB","tookMs":10,"sql":"SELECT LEVEL_CODE, LEVEL_NAME FROM SIAK_USER_GROUP ORDER BY LEVEL_CODE","binds":{}}
+[2025-11-06 17:43:47.179] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":27,"extra":{"count":0}}
+[2025-11-06 17:44:10.009] [INFO] [DB] SELECT ok {"at":"DB","tookMs":7,"sql":"SELECT COALESCE(COUNT(1),0) AS JML, COALESCE(MAX(CASE WHEN LEVEL_NAME IS NOT NULL THEN LEVEL_NAME ELSE '-' END), '-') AS LEVEL_NAME FROM SIAK_USER_LEVEL WHERE USER_LEVEL = :b_lvl_cd","binds":{"b_lvl_cd":17}}
+[2025-11-06 17:44:10.984] [INFO] [DB] TX commit {"at":"DB","tookMs":31}
+[2025-11-06 17:44:16.214] [INFO] [DB] SELECT ok {"at":"DB","tookMs":4,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-11-06 17:44:16.241] [INFO] [SYSTEM] menu.GET {"at":"/api/menu","tookMs":1,"extra":{"level":5,"items":10}}
+[2025-11-06 17:44:16.238] [INFO] [DB] SELECT ok {"at":"DB","tookMs":29,"sql":"SELECT LEVEL_CODE, LEVEL_NAME FROM SIAK_USER_GROUP ORDER BY LEVEL_CODE","binds":{}}
+[2025-11-06 17:44:16.256] [INFO] [DB] SELECT ok {"at":"DB","tookMs":12,"sql":"SELECT LEVEL_CODE, LEVEL_NAME FROM SIAK_USER_GROUP ORDER BY LEVEL_CODE","binds":{}}
+[2025-11-06 17:44:16.257] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":49,"extra":{"count":0}}
+[2025-11-06 17:44:18.252] [INFO] [DB] SELECT ok {"at":"DB","tookMs":7,"sql":"SELECT A.USER_LEVEL, A.LEVEL_NAME, B.LEVEL_NAME AS GROUP_NAME, B.LEVEL_CODE FROM SIAK_USER_LEVEL A INNER JOIN SIAK_USER_GROUP B ON A.GROUP_LEVEL = B.LEVEL_CODE WHERE A.GROUP_LEVEL = :b_group_id ORDER BY A.USER_LEVEL","binds":{"b_group_id":"3"}}
+[2025-11-06 17:45:26.506] [INFO] [DB] SELECT ok {"at":"DB","tookMs":54,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-11-06 17:45:26.512] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":65,"extra":{"count":0}}
+[2025-11-06 17:45:39.024] [INFO] [SYSTEM] menu.GET {"at":"/api/menu","tookMs":1,"extra":{"level":5,"items":10}}
+[2025-11-06 17:45:39.044] [INFO] [DB] SELECT ok {"at":"DB","tookMs":35,"sql":"SELECT LEVEL_CODE, LEVEL_NAME FROM SIAK_USER_GROUP ORDER BY LEVEL_CODE","binds":{}}
+[2025-11-06 17:45:39.105] [INFO] [DB] SELECT ok {"at":"DB","tookMs":71,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-11-06 17:45:39.110] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":103,"extra":{"count":0}}
+[2025-11-06 17:45:40.905] [INFO] [DB] SELECT ok {"at":"DB","tookMs":6,"sql":"SELECT A.USER_LEVEL, A.LEVEL_NAME, B.LEVEL_NAME AS GROUP_NAME, B.LEVEL_CODE FROM SIAK_USER_LEVEL A INNER JOIN SIAK_USER_GROUP B ON A.GROUP_LEVEL = B.LEVEL_CODE WHERE A.GROUP_LEVEL = :b_group_id ORDER BY A.USER_LEVEL","binds":{"b_group_id":"3"}}
+[2025-11-06 17:45:46.703] [INFO] [DB] SELECT ok {"at":"DB","tookMs":7,"sql":"SELECT LEVEL_CODE, LEVEL_NAME FROM SIAK_USER_GROUP ORDER BY LEVEL_CODE","binds":{}}
+[2025-11-06 17:45:46.727] [INFO] [SYSTEM] menu.GET {"at":"/api/menu","tookMs":1,"extra":{"level":5,"items":10}}
+[2025-11-06 17:45:46.736] [INFO] [DB] SELECT ok {"at":"DB","tookMs":12,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-11-06 17:45:46.746] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":35,"extra":{"count":0}}
+[2025-11-06 17:46:04.372] [INFO] [DB] SELECT ok {"at":"DB","tookMs":4,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-11-06 17:46:04.375] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":14,"extra":{"count":0}}
+[2025-11-06 17:46:06.487] [INFO] [DB] SELECT ok {"at":"DB","tookMs":7,"sql":"SELECT A.USER_LEVEL, A.LEVEL_NAME, B.LEVEL_NAME AS GROUP_NAME, B.LEVEL_CODE FROM SIAK_USER_LEVEL A INNER JOIN SIAK_USER_GROUP B ON A.GROUP_LEVEL = B.LEVEL_CODE WHERE A.GROUP_LEVEL = :b_group_id ORDER BY A.USER_LEVEL","binds":{"b_group_id":"3"}}
+[2025-11-06 17:46:25.663] [INFO] [SYSTEM] menu.GET {"at":"/api/menu","tookMs":1,"extra":{"level":5,"items":10}}
+[2025-11-06 17:46:25.673] [INFO] [DB] SELECT ok {"at":"DB","tookMs":12,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-11-06 17:46:25.675] [INFO] [DB] SELECT ok {"at":"DB","tookMs":16,"sql":"SELECT LEVEL_CODE, LEVEL_NAME FROM SIAK_USER_GROUP ORDER BY LEVEL_CODE","binds":{}}
+[2025-11-06 17:46:25.680] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":32,"extra":{"count":0}}
+[2025-11-06 17:46:27.569] [INFO] [DB] SELECT ok {"at":"DB","tookMs":11,"sql":"SELECT A.USER_LEVEL, A.LEVEL_NAME, B.LEVEL_NAME AS GROUP_NAME, B.LEVEL_CODE FROM SIAK_USER_LEVEL A INNER JOIN SIAK_USER_GROUP B ON A.GROUP_LEVEL = B.LEVEL_CODE WHERE A.GROUP_LEVEL = :b_group_id ORDER BY A.USER_LEVEL","binds":{"b_group_id":"3"}}
+[2025-11-06 17:46:40.696] [INFO] [SYSTEM] menu.GET {"at":"/api/menu","tookMs":0,"extra":{"level":5,"items":10}}
+[2025-11-06 17:46:40.713] [INFO] [DB] SELECT ok {"at":"DB","tookMs":18,"sql":"SELECT LEVEL_CODE, LEVEL_NAME FROM SIAK_USER_GROUP ORDER BY LEVEL_CODE","binds":{}}
+[2025-11-06 17:46:40.715] [INFO] [DB] SELECT ok {"at":"DB","tookMs":8,"sql":"SELECT COUNT(DISTINCT FROM_ID) AS CNT FROM MESSAGES WHERE TO_ID = :b_nik AND READ = 0","binds":{"b_nik":"3273112909950002"}}
+[2025-11-06 17:46:40.725] [INFO] [API] Unread messages counted {"at":"/api/messages/unread","user":"3273112909950002","tookMs":31,"extra":{"count":0}}
+[2025-11-06 17:46:42.646] [INFO] [DB] SELECT ok {"at":"DB","tookMs":5,"sql":"SELECT A.USER_LEVEL, A.LEVEL_NAME, B.LEVEL_NAME AS GROUP_NAME, B.LEVEL_CODE FROM SIAK_USER_LEVEL A INNER JOIN SIAK_USER_GROUP B ON A.GROUP_LEVEL = B.LEVEL_CODE WHERE A.GROUP_LEVEL = :b_group_id ORDER BY A.USER_LEVEL","binds":{"b_group_id":"3"}}
