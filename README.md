@@ -1,11 +1,3 @@
-Tentu. File `README.md` yang Anda berikan memiliki banyak kesalahan pengkodean teks (encoding errors) yang membuatnya sulit dibaca. Karakter seperti `ΓÇö`, `ΓåÆ`, dan `≡ƒôÜ` seharusnya menjadi simbol tipografi (seperti tanda hubung, panah) dan ikon.
-
-Saya akan memperbaiki seluruh dokumen ini untuk Anda, membersihkan semua kesalahan pengkodean, mengganti penanda bagian yang rusak dengan emoji yang sesuai agar struktur visualnya tetap terjaga, dan memperbaiki format hierarki file (file tree).
-
-Berikut adalah isi file `README.md` yang telah diperbaiki secara lengkap:
-
------
-
 # Monalisa Monitoring — **README**
 
 > “Web adalah kanvas pelayanan publik: **data → narasi → keputusan → dampak**.”
