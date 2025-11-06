@@ -1366,3 +1366,228 @@ html[data-theme="light"]{
   --heading-glow-color: #cda760;
   --heading-glow-shadow: 0 0 18px rgba(224,197,143,.22), 0 0 8px rgba(60,80,125,.20);
 }
+
+
+/* ===== Page glows (soft gold–rose wash) ===== */
+html[data-theme="light"] .abs-glow-cyan{
+  background: color-mix(in oklab, #fff 70%, #d7f7ff 30%);
+  filter: blur(210px);
+  opacity:.85;
+}
+html[data-theme="light"] .abs-glow-magenta{
+  background: color-mix(in oklab, #ffe8f8 60%, #ffd2ff 40%);
+  filter: blur(190px);
+  opacity:.9;
+}
+
+/* ===== Header shell ===== */
+html[data-theme="light"] .ui-shell-title{
+  color: color-mix(in oklab, #2a2a2a, #000 12%);
+}
+html[data-theme="light"] .ui-shell-title .sep{ opacity:.35 }
+html[data-theme="light"] .ui-shell-title .accent{
+  color: color-mix(in oklab, #7b5b2e, #d2b48c 55%);
+}
+html[data-theme="light"] .ui-shell-actions .btn.op{
+  background: color-mix(in oklab, #fff 82%, #f6efe3 18%);
+  color: color-mix(in oklab, #1c1c1c, #000 8%);
+  border-color: color-mix(in oklab, #d2b48c 45%, #000 10%);
+}
+html[data-theme="light"] .ui-shell-actions .btn.op:hover{
+  background: color-mix(in oklab, #fff 92%, #f6efe3 8%);
+}
+
+/* ===== Glass card & neon ring ===== */
+html[data-theme="light"] .glass-card{
+  background: color-mix(in oklab, #ffffff 78%, #f6efe3 22%);
+  border-color: color-mix(in oklab, #d2b48c 65%, #000 8%);
+  box-shadow: 0 18px 40px rgba(190,150,90,.25), inset 0 1px 0 rgba(255,255,255,.9);
+}
+html[data-theme="light"] .neon-border::after{
+  background: conic-gradient(from 180deg, #e9cf8a66, #ff5bd466, #e9cf8a66);
+}
+html[data-theme="light"] .glass-head{
+  background: linear-gradient(180deg, #fffdfa, #f8f1e5);
+  border-bottom-color: color-mix(in oklab, #d2b48c 55%, #000 14%);
+}
+html[data-theme="light"] .glass-foot{
+  background: linear-gradient(180deg, #fffdfa, #efe6d6);
+  border-top-color: color-mix(in oklab, #d2b48c 48%, #000 12%);
+}
+html[data-theme="light"] .foot-text{
+  color: color-mix(in oklab, #3a2e22, #000 10%);
+  background: linear-gradient(180deg, #fffdfa, #efe6d6) !important;
+  /* color: rgb(138, 106, 47) !important; */
+  
+}
+
+/* ===== Buttons ===== */
+html[data-theme="light"] .btn-accent{
+  border-color: color-mix(in oklab, #d2b48c 55%, #000 10%);
+  background: linear-gradient(180deg, #fff7e1, #f2e6cf);
+  color:#2b2b2b;
+  box-shadow: 0 8px 18px rgba(210,180,140,.35), inset 0 1px 0 rgba(255,255,255,.95);
+}
+html[data-theme="light"] .btn{
+  color: color-mix(in oklab, #1e1f23, #000 10%);
+}
+html[data-theme="light"] .btn.op{
+  background: color-mix(in oklab, #fff 90%, #f6efe3 10%);
+  border-color: color-mix(in oklab, #d2b48c 40%, #000 12%);
+}
+html[data-theme="light"] .btn.op:hover{
+  background: color-mix(in oklab, #fff 100%, #f6efe3 0%);
+}
+/* semantic ops */
+html[data-theme="light"] .btn.op.see{
+  border-color: color-mix(in oklab, #34d399 55%, #000 8%);
+  background: color-mix(in oklab, #eafff6 82%, #34d399 8%);
+}
+html[data-theme="light"] .btn.op.edit{
+  border-color: color-mix(in oklab, #f59e0b 55%, #000 8%);
+  background: color-mix(in oklab, #fff6e6 86%, #f59e0b 6%);
+}
+html[data-theme="light"] .btn.op.del{
+  border-color: color-mix(in oklab, #f43f5e 55%, #000 8%);
+  background: color-mix(in oklab, #fff0f2 86%, #f43f5e 6%);
+}
+
+/* ===== Inputs ===== */
+html[data-theme="light"] .lbl{
+  color: color-mix(in oklab, #5a4a30, #000 10%);
+}
+html[data-theme="light"] .select{
+  background: linear-gradient(180deg, #ffffff, #f8f1e6);
+  border-color: color-mix(in oklab, #d2b48c 55%, #000 12%);
+  color: color-mix(in oklab, #1c1d20, #000 8%);
+}
+html[data-theme="light"] .select:focus{
+  border-color: color-mix(in oklab, #d9b76a 70%, #000 10%);
+  box-shadow: 0 0 0 3px color-mix(in oklab, #f5e1a3 45%, #000 0%);
+}
+html[data-theme="light"] .caret{
+  color: color-mix(in oklab, #8a6b32, #000 10%);
+}
+html[data-theme="light"] .hint{
+  color: color-mix(in oklab, #4a3b2a, #000 8%);
+}
+html[data-theme="light"] .hint.error{
+  color: color-mix(in oklab, #b42318, #000 6%);
+}
+
+/* ===== Table ===== */
+html[data-theme="light"] .table-wrap{ background: transparent }
+html[data-theme="light"] .fancy-table{
+  color: color-mix(in oklab, #1b1c20, #000 8%);
+}
+html[data-theme="light"] .fancy-table thead th{
+  background: color-mix(in oklab, #fff 80%, #f6efe3 20%);
+  color: color-mix(in oklab, #2a2a2a, #000 10%);
+  border-bottom-color: color-mix(in oklab, #d2b48c 65%, #000 12%);
+}
+html[data-theme="light"] .fancy-table tbody td{
+  border-bottom-color: color-mix(in oklab, #d2b48c 30%, #000 10%);
+  color: color-mix(in oklab, #1b1c20, #000 8%);
+}
+html[data-theme="light"] .fancy-table tbody tr:hover{
+  background: color-mix(in oklab, #fff 60%, #f6efe3 40%);
+}
+html[data-theme="light"] .fancy-table tbody tr:nth-child(2n){
+  background: color-mix(in oklab, #fff 88%, #f6efe3 12%);
+}
+
+/* cells */
+html[data-theme="light"] .td-center{
+  color: color-mix(in oklab, #2a2b2f, #000 8%);
+}
+html[data-theme="light"] .td-empty{ color: color-mix(in oklab, #7a7f86, #000 8%) }
+html[data-theme="light"] .td-error{
+  color: color-mix(in oklab, #7a1111, #000 6%);
+  background: color-mix(in oklab, #fff4f4 90%, #ef4444 10%);
+  border-color: color-mix(in oklab, #ef4444 45%, #000 8%);
+}
+
+/* ===== Badges & Chips ===== */
+html[data-theme="light"] .badge{
+  border-color: color-mix(in oklab, #d2b48c 55%, #000 10%);
+  background: color-mix(in oklab, #fff 80%, #f7efe4 20%);
+  color:#3a2e22;
+}
+html[data-theme="light"] .badge.mono{
+  color: color-mix(in oklab, #2a2a2f, #000 8%);
+}
+html[data-theme="light"] .badge.tone{
+  border-color:#d9b7ff; background:#f6f0ff; color:#3a2e44;
+}
+html[data-theme="light"] .chip{
+  border-color: color-mix(in oklab, #d2b48c 35%, #000 12%);
+  background: color-mix(in oklab, #fff 85%, #f6efe3 15%);
+  color: color-mix(in oklab, #1f2024, #000 8%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.75);
+}
+html[data-theme="light"] .chip.ghost{
+  border-color: color-mix(in oklab, #000 14%, #000 14%);
+  background: color-mix(in oklab, #fff 92%, #f6efe3 8%);
+  color: color-mix(in oklab, #222426, #000 8%);
+}
+
+/* ===== Misc ===== */
+html[data-theme="light"] .ops > .btn{ filter: drop-shadow(0 2px 6px rgba(0,0,0,.08)) }
+
+
+/* === Light (Luxe) — code badge setara kerennya, tanpa glow neon === */
+html[data-theme="light"] .badge.mono.code-glow{
+  position: relative;
+  /* kapsul krem-emas dengan depth */
+  border: 1px solid color-mix(in oklab, #d2b48c 62%, #000 10%);
+  background:
+    radial-gradient(120% 140% at 50% -10%, #fffdf4 0%, #fff6e6 38%, transparent 60%),
+    linear-gradient(180deg, #fff7e8 0%, #f3e7d2 60%, #eadabb 100%);
+  color: color-mix(in oklab, #2a2a2a, #000 14%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.95),        /* top highlight */
+    inset 0 -1px 0 rgba(0,0,0,.07),             /* bottom bevel */
+    0 8px 18px rgba(190,150,90,.22);            /* soft drop shadow */
+  text-shadow: 0 1px 0 rgba(255,255,255,.6);    /* readable tanpa neon */
+  transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+/* inner-rim tipis (emas lembut) */
+html[data-theme="light"] .badge.mono.code-glow::before{
+  content:""; position:absolute; inset:1.6px; border-radius:9999px;
+  border: 1px solid color-mix(in oklab, #d2b48c 50%, #000 8%);
+  opacity:.55; pointer-events:none;
+}
+
+/* sheen diagonal—muncul saat hover/focus, bukan glow */
+html[data-theme="light"] .badge.mono.code-glow::after{
+  content:""; position:absolute; inset:-1px; border-radius:9999px; pointer-events:none;
+  background:
+    linear-gradient(120deg,
+      transparent 20%,
+      rgba(255,255,255,.65) 38%,
+      rgba(255,255,255,.25) 45%,
+      transparent 60%);
+  transform: translateX(-120%) rotate(0.001deg);
+  opacity:0; transition: opacity .25s ease, transform .6s ease;
+}
+
+html[data-theme="light"] .badge.mono.code-glow:hover,
+html[data-theme="light"] .badge.mono.code-glow:focus{
+  border-color: color-mix(in oklab, #d2b48c 72%, #000 6%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.98),
+    inset 0 -1px 0 rgba(0,0,0,.09),
+    0 12px 24px rgba(190,150,90,.28);
+  transform: translateY(-1px);
+}
+html[data-theme="light"] .badge.mono.code-glow:hover::after,
+html[data-theme="light"] .badge.mono.code-glow:focus::after{
+  opacity:.9; transform: translateX(25%);
+}
+
+/* hormati reduced motion */
+@media (prefers-reduced-motion: reduce){
+  html[data-theme="light"] .badge.mono.code-glow::after{ transition: opacity .2s ease }
+}
+

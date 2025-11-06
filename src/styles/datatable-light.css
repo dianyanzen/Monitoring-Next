@@ -107,3 +107,7 @@ html[data-theme="light"] .dt-master-nama__subtitle {
   color: color-mix(in oklab, var(--lux-muted), #8a94a6 18%);
 }
 
+html[data-theme="light"] .table-minimal thead th{
+  border-bottom-color: var(--lux-border);
+  color: var(--lux-ink);
+}
