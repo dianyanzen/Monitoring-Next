@@ -51,10 +51,10 @@ const ImgProfile = ({ nik, alt }: { nik: string; alt: string }) => {
 };
 
 /* ===== Tree components (React murni, cascade check) ===== */
-function TreeItem({
+  function TreeItem({
     node,
     onToggle,
-    readOnly = false,                 // ✅ tambah prop
+    readOnly = false,
   }: {
     node: TreeNode;
     onToggle: (id: string, checked: boolean) => void;
@@ -62,6 +62,7 @@ function TreeItem({
   }) {
     const [open, setOpen] = useState(true);
     const hasKids = !!node.children?.length;
+
     return (
       <div className="pl-2">
         <div className="flex items-center gap-2 py-1">
@@ -76,13 +77,22 @@ function TreeItem({
             </button>
           ) : <span className="inline-block h-5 w-5" />}
 
-          <label className={`inline-flex select-none items-center gap-2 ${readOnly ? "cursor-default" : "cursor-pointer"}`}>
+          {/* ⬇️ label & checkbox: readOnly = biru, tapi tak bisa diubah */}
+          <label
+            className={`inline-flex select-none items-center gap-2 ${
+              readOnly ? "cursor-default" : "cursor-pointer"
+            }`}
+            onMouseDown={readOnly ? (e) => e.preventDefault() : undefined}   // blok toggle via label
+          >
             <input
               type="checkbox"
               className="h-4 w-4 accent-cyan-400"
               checked={!!node.checked}
-              disabled={readOnly}         // ✅ benar-benar read-only
+              aria-readonly={readOnly || undefined}
+              // kunci interaksi tanpa 'disabled' supaya warna tetap biru
+              onClick={readOnly ? (e) => e.preventDefault() : undefined}
               onChange={(e) => !readOnly && onToggle(node.id, e.target.checked)}
+              tabIndex={readOnly ? -1 : 0}
             />
             <span className="text-sm text-cyan-100">{node.text}</span>
           </label>
@@ -102,14 +112,14 @@ function TreeItem({
   function CheckTree({
     data,
     onChange,
-    readOnly = false,                 // ✅ tambah prop
+    readOnly = false,
   }: {
     data: TreeNode[];
     onChange: (next: TreeNode[]) => void;
     readOnly?: boolean;
   }) {
     const onToggle = useCallback((id: string, checked: boolean) => {
-      if (readOnly) return;           // ✅ cegah perubahan
+      if (readOnly) return; // extra guard
       const clone = structuredClone(data) as TreeNode[];
       const dfs = (arr: TreeNode[]) => {
         for (const n of arr) {
