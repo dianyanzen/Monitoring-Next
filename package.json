@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+	"start:3273": "node scripts/pretty-start.mjs -- start -p 3273 -H 0.0.0.0"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
