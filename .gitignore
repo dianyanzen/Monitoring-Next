@@ -43,3 +43,8 @@ next-env.d.ts
 # editor & logs
 .vscode
 /log
+
+# Custom startup scripts
+/scripts/ansi.mjs
+/scripts/pretty-start.mjs
+/start-3273.bat
