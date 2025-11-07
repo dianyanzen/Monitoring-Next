@@ -1,17 +1,23 @@
-﻿"use client";
+﻿// FILE: src/app/setting/userlevel/page.tsx
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, Plus, Eye, Pencil, Trash2, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Loader2, Plus, Eye, Pencil, Trash2, Users, RefreshCcw } from "lucide-react";
+import { useSession } from "@/contexts/session";
 
 type GroupItem = { level_code: string; level_name: string };
 type UserLevelRow = {
-  user_level: string;   // ← kode level SEBENARNYA (USER_LEVEL)
+  user_level: string;   // kode level sebenarnya (USER_LEVEL)
   level_name: string;
   group_name: string;
-  level_code: string;   // ← kode grup (LEVEL_CODE)
+  level_code: string;   // kode grup (LEVEL_CODE)
 };
 
 export default function UserLevelPage() {
+  const router = useRouter();
+  const { user } = useSession();
+
   const [groups, setGroups] = useState<GroupItem[]>([]);
   const [groupId, setGroupId] = useState<string>("0");
 
@@ -92,46 +98,62 @@ export default function UserLevelPage() {
 
   return (
     <div className="relative mt-5 space-y-8 px-4 pb-12 pt-6 sm:px-6 md:px-8 md:pt-8">
-      {/* background glow */}
+      {/* ambient glow seperti halaman KTP-el */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="abs-glow-cyan" />
-        <div className="abs-glow-magenta" />
+        <div className="absolute left-[15%] top-[-15%] h-[1100px] w-[1100px] rounded-full bg-cyan-500/15 blur-[220px]" />
+        <div className="absolute right-[18%] bottom-[-20%] h-[1000px] w-[1000px] rounded-full bg-fuchsia-600/12 blur-[190px]" />
       </div>
 
-      {/* page header */}
-      <div className="ui-shell-head">
-        <div className="ui-shell-title">
-          <Users className="h-5 w-5 text-cyan-300" />
-          <span>Settings</span>
-          <span className="sep">/</span>
-          <span className="accent">User Level</span>
-        </div>
+      <section className="rounded-3xl border border-cyan-800/40 bg-[#0b0b1a]/80 shadow-[0_0_34px_#00ffff22] backdrop-blur-xl">
+        {/* HEADER — diseragamkan dengan style KTP-el */}
+        <header className="border-b border-cyan-900/50 px-5 py-4">
+          <div className="flex items-center gap-3">
+            <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_12px_#22d3ee]" />
+            <h1 className="text-base font-semibold tracking-wide text-cyan-200">
+              Settings — User Level
+            </h1>
+            <div className="ml-auto flex items-center gap-2">
+              <div className="hidden sm:inline-block rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100/80">
+                User: {(user as any)?.S_NAMA_LGKP ?? (user as any)?.S_USER_ID ?? "-"}
+              </div>
+              {currentGroupName ? (
+                <div className="rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100/80">
+                  Group: <b>{currentGroupName}</b>
+                </div>
+              ) : null}
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-[11px] font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
+              >
+                <RefreshCcw className="h-3.5 w-3.5" />
+                Refresh
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/setting/user/add")}
+                className="inline-flex items-center gap-2 rounded-lg border border-transparent bg-gradient-to-r from-cyan-400 to-blue-500 px-3 py-1.5 text-[11px] font-semibold text-black shadow-lg transition hover:from-cyan-300 hover:to-blue-400"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                Add
+              </button>
+            </div>
+          </div>
+        </header>
 
-        <div className="ui-shell-actions">
-          <button
-            type="button"
-            onClick={() => (window.location.href = "/setting/user/add")}
-            className="btn-accent"
-          >
-            <Plus className="h-4 w-4" />
-            <span>Add</span>
-          </button>
-        </div>
-      </div>
-
-      {/* card */}
-      <section className="glass-card neon-border">
-        <header className="glass-head">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            {/* Group selector */}
+        {/* FILTER BAR (Group selector) */}
+        <div className="border-b border-cyan-900/40 px-5 py-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div className="w-full md:max-w-md">
-              <label className="lbl">Group</label>
-              <div className="select-wrap">
+              <label className="block text-xs font-semibold uppercase tracking-wide text-cyan-100/70">
+                Group
+              </label>
+              <div className="relative">
                 <select
                   value={groupId}
                   onChange={(e) => setGroupId(e.target.value)}
                   disabled={loadingGroup}
-                  className="select"
+                  className="w-full appearance-none rounded-lg border border-cyan-800/50 bg-black/30 px-3 py-2 pr-8 text-sm text-cyan-100 outline-none transition focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   aria-label="Pilih group user level"
                 >
                   <option value="0">-- Select Group --</option>
@@ -141,144 +163,139 @@ export default function UserLevelPage() {
                     </option>
                   ))}
                 </select>
-                <span className="caret">▾</span>
+                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-cyan-300/70">
+                  ▾
+                </span>
               </div>
               {loadingGroup ? (
-                <div className="hint">
-                  <Loader2 className="icon-spin" />
+                <div className="mt-1 flex items-center gap-2 text-xs text-cyan-200/70">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-300" />
                   Memuat daftar group…
                 </div>
               ) : errGroup ? (
-                <div className="hint error">{errGroup}</div>
+                <div className="mt-1 text-xs text-red-300">{errGroup}</div>
               ) : null}
             </div>
 
-            {/* context info */}
             <div className="flex flex-wrap items-center gap-2 md:justify-end">
-              <span className="chip">
-                List User Level
-                {currentGroupName ? (
-                  <>
-                    {" "}
-                    — <b>{currentGroupName}</b>
-                  </>
-                ) : null}
+              <span className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-[11px] font-semibold text-cyan-100/80">
+                List User Level{currentGroupName ? <> — <b>{currentGroupName}</b></> : null}
               </span>
               {rows.length > 0 ? (
-                <span className="chip ghost">Total: {rows.length}</span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-[11px] font-semibold text-cyan-100/80">
+                  Total: {rows.length}
+                </span>
               ) : null}
             </div>
           </div>
-        </header>
-
-        {/* table */}
-        <div className="table-wrap">
-          <table className="fancy-table">
-            <thead>
-              <tr>
-                <th className="text-center w-16">No</th>
-                <th className="text-center w-24">Code</th>
-                <th>Group Name</th>
-                <th>Level</th>
-                <th className="text-center w-60">Operation</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {loadingTable ? (
-                <tr>
-                  <td colSpan={5} className="td-center">
-                    <Loader2 className="icon-spin" />
-                    Mengambil data user level…
-                  </td>
-                </tr>
-              ) : errTable ? (
-                <tr>
-                  <td colSpan={5} className="td-center td-error">
-                    {errTable}
-                  </td>
-                </tr>
-              ) : rows.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="td-center td-empty">
-                    {groupId === "0"
-                      ? "Silakan pilih Group terlebih dahulu."
-                      : "Tidak ada data untuk group yang dipilih."}
-                  </td>
-                </tr>
-              ) : (
-                rows.map((r, idx) => (
-                  <tr key={`${r.user_level}-${idx}`}>
-                    <td className="text-center">{idx + 1}</td>
-                    {/* ⬇️ FIX UTAMA: kolom Code harus menampilkan USER_LEVEL, bukan LEVEL_CODE */}
-                    <td className="text-center">
-                      <span className="badge mono code-glow">{r.user_level}</span>
-                    </td>
-                    <td>
-                      <div className="cell-title">{r.group_name || "-"}</div>
-                    </td>
-                    <td>
-                      <span className="badge tone">{r.level_name || "-"}</span>
-                    </td>
-                    <td>
-                      <div className="ops">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            (window.location.href = `/setting/user/lihat/${encodeURIComponent(
-                              r.user_level
-                            )}`)
-                          }
-                          className="btn op see"
-                          title="Lihat"
-                        >
-                          <Eye className="h-4 w-4" />
-                          Lihat
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            (window.location.href = `/setting/user/change/${encodeURIComponent(
-                              r.user_level
-                            )}`)
-                          }
-                          className="btn op edit"
-                          title="Ubah"
-                        >
-                          <Pencil className="h-4 w-4" />
-                          Ubah
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            (window.location.href = `/setting/user/delete/${encodeURIComponent(
-                              r.user_level
-                            )}`)
-                          }
-                          className="btn op del"
-                          title="Hapus"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          Hapus
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
         </div>
 
-        {/* foot */}
-        <footer className="glass-foot">
+        {/* TABLE */}
+        <div className="p-5">
+          <div className="overflow-hidden rounded-xl border border-cyan-800/40 bg-black/30">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-cyan-800/60 text-sm text-cyan-100/90">
+                <thead className="bg-cyan-500/10 text-xs uppercase tracking-wide text-cyan-200">
+                  <tr>
+                    <th className="px-3 py-3 text-center w-16">No</th>
+                    <th className="px-3 py-3 text-center w-24">Code</th>
+                    <th className="px-3 py-3 text-left">Group Name</th>
+                    <th className="px-3 py-3 text-left">Level</th>
+                    <th className="px-3 py-3 text-center w-60">Operation</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-cyan-900/60">
+                  {loadingTable ? (
+                    <tr>
+                      <td colSpan={5} className="px-3 py-6 text-center text-cyan-100/80">
+                        <div className="inline-flex items-center gap-2">
+                          <Loader2 className="h-4 w-4 animate-spin text-cyan-300" />
+                          Mengambil data user level…
+                        </div>
+                      </td>
+                    </tr>
+                  ) : errTable ? (
+                    <tr>
+                      <td colSpan={5} className="px-3 py-6 text-center text-red-200">
+                        {errTable}
+                      </td>
+                    </tr>
+                  ) : rows.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="px-3 py-6 text-center text-cyan-100/70">
+                        {groupId === "0"
+                          ? "Silakan pilih Group terlebih dahulu."
+                          : "Tidak ada data untuk group yang dipilih."}
+                      </td>
+                    </tr>
+                  ) : (
+                    rows.map((r, idx) => (
+                      <tr key={`${r.user_level}-${idx}`} className="transition hover:bg-cyan-500/10">
+                        <td className="px-3 py-3 text-center text-xs font-medium text-cyan-100/70">
+                          {idx + 1}
+                        </td>
+                        {/* Kolom Code menampilkan USER_LEVEL (fix) */}
+                        <td className="px-3 py-3 text-center">
+                          <span className="inline-flex items-center rounded-full border border-cyan-400/40 bg-cyan-500/10 px-2.5 py-1 font-mono text-xs font-semibold text-cyan-100 shadow-[inset_0_1px_0_rgba(255,255,255,.06)]">
+                            {r.user_level}
+                          </span>
+                        </td>
+                        <td className="px-3 py-3">
+                          <div className="font-semibold text-cyan-50">{r.group_name || "-"}</div>
+                        </td>
+                        <td className="px-3 py-3">
+                          <span className="inline-flex items-center rounded-full border border-fuchsia-400/30 bg-fuchsia-500/10 px-2.5 py-1 text-xs font-bold text-fuchsia-100">
+                            {r.level_name || "-"}
+                          </span>
+                        </td>
+                        <td className="px-3 py-3 text-center whitespace-nowrap">
+                        <div className="flex flex-nowrap items-center justify-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => router.push(`/setting/user/lihat/${encodeURIComponent(r.user_level)}`)}
+                            className="btn op see inline-flex shrink-0 items-center gap-2 rounded-lg border border-cyan-800/50 bg-white/5 px-3 py-1.5 text-xs font-medium text-cyan-100 transition hover:bg-white/10"
+                            title="Lihat"
+                          >
+                            <Eye className="h-4 w-4" />
+                            Lihat
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => router.push(`/setting/user/change/${encodeURIComponent(r.user_level)}`)}
+                            className="btn op edit inline-flex shrink-0 items-center gap-2 rounded-lg border border-cyan-800/50 bg-white/5 px-3 py-1.5 text-xs font-medium text-cyan-100 transition hover:bg-white/10"
+                            title="Ubah"
+                          >
+                            <Pencil className="h-4 w-4" />
+                            Ubah
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => router.push(`/setting/user/delete/${encodeURIComponent(r.user_level)}`)}
+                            className="btn op del inline-flex shrink-0 items-center gap-2 rounded-lg border border-cyan-800/50 bg-white/5 px-3 py-1.5 text-xs font-medium text-cyan-100 transition hover:bg-white/10"
+                            title="Hapus"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            Hapus
+                          </button>
+                        </div>
+                      </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        {/* FOOTER */}
+        <footer className="border-t border-cyan-900/50 px-5 py-3 text-sm text-cyan-200/70">
           {groupId !== "0" && rows.length > 0 ? (
-            <div className="foot-text">
-              Menampilkan <b>{rows.length}</b> level pada group{" "}
-              <b>{currentGroupName}</b>.
+            <div>
+              Menampilkan <b>{rows.length}</b> level pada group <b>{currentGroupName}</b>.
             </div>
           ) : (
-            <div className="foot-text">Pilih group untuk menampilkan daftar level.</div>
+            <div>Pilih group untuk menampilkan daftar level.</div>
           )}
         </footer>
       </section>

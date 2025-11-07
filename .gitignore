@@ -43,6 +43,7 @@ next-env.d.ts
 # editor & logs
 .vscode
 /log
+/logs
 
 # Custom startup scripts
 /scripts/ansi.mjs

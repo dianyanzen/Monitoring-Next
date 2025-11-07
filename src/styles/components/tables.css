@@ -836,3 +836,5 @@ html[data-theme="light"] .ctbl{
 .ctbl-head [data-sort],
 .ctbl-sort-indicator { display:none !important; }
 .ctbl-paginate { display:none !important; }
+
+.table-nowrap, .fancy-table .nowrap { white-space: nowrap; }
