@@ -1591,3 +1591,113 @@ html[data-theme="light"] .badge.mono.code-glow:focus::after{
   html[data-theme="light"] .badge.mono.code-glow::after{ transition: opacity .2s ease }
 }
 
+/* FILE: src/styles/theme-light.css */
+/* ========== Light Patch v3 — Repair Local Biometric ========== */
+
+/* 1) Finger tiles: putih + border emas, header elegan */
+html[data-theme="light"] .repair-info-card figure{
+  background: #fff !important;
+  border: 1px solid var(--lux-border) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--lux-shadow) !important;
+}
+html[data-theme="light"] .repair-info-card figcaption{
+  background: linear-gradient(180deg, #fff, color-mix(in oklab, var(--gold-50), #fff 35%)) !important;
+  color: var(--lux-ink) !important;
+  border-bottom: 1px solid var(--lux-border) !important;
+}
+
+/* 2) Hapus sisa nuansa biru pada hover/focus */
+html[data-theme="light"] :is(
+  [class*="hover\\:bg-cyan-"],
+  [class*="hover\\:bg-sky-"],
+  [class*="focus-visible\\:ring-sky-"],
+  [class*="focus-visible\\:ring-blue-"]
+){
+  background: var(--surface-alt) !important;
+  --tw-ring-color: rgba(224,197,143,.45) !important; /* gold ring */
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 28%) !important;
+}
+
+/* 3) Focus ring generik: set ke gold agar tak biru lagi */
+html[data-theme="light"] :is(button, input, textarea, select):focus-visible{
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(224,197,143,.32) !important;
+}
+
+/* 4) Checkbox & radio: pastikan aksen emas */
+html[data-theme="light"] input[type="checkbox"],
+html[data-theme="light"] input[type="radio"]{
+  accent-color: var(--gold-400) !important;
+}
+
+/* 5) Kapsul tab (segmented) tetap kontras di light */
+html[data-theme="light"] .ktpel-tab{
+  background: #fff !important;
+  color: var(--lux-ink) !important;
+  border: 1px solid var(--lux-border) !important;
+}
+html[data-theme="light"] .ktpel-tab.ktpel-tab--active{
+  background-image: var(--gold-grad) !important;
+  color: #3b2f10 !important;
+  border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 35%) !important;
+  box-shadow: 0 10px 22px rgba(224,197,143,.18) !important;
+}
+
+/* 6) Button states: primary/ghost/danger konsisten, non-biru */
+html[data-theme="light"] .repair-btn--primary{
+  background-image: var(--gold-grad) !important;
+  color: #3b2f10 !important;
+  border: 1px solid color-mix(in oklab, var(--lux-border), var(--gold-400) 35%) !important;
+  box-shadow: 0 10px 22px rgba(224,197,143,.18) !important;
+}
+html[data-theme="light"] .repair-btn--primary:hover{ filter: brightness(1.03) }
+
+html[data-theme="light"] .repair-btn--ghost,
+html[data-theme="light"] .repair-btn--danger{
+  background:#fff !important; color:var(--lux-ink) !important;
+  border:1px solid var(--lux-border) !important; box-shadow: var(--lux-shadow) !important;
+}
+html[data-theme="light"] .repair-btn:disabled{
+  background:#fff !important; color:#9ca3af !important; box-shadow:none !important;
+  border-color: color-mix(in oklab, var(--lux-border), #000 8%) !important;
+}
+
+/* 7) Grid gambar iris/finger tanpa latar abu gelap */
+html[data-theme="light"] .repair-info-card .relative.w-full.pb-\[145\%\]{
+  background: #fff !important;
+}
+
+/* 8) Tabel minimal matriks status: border & warna tegas */
+html[data-theme="light"] .table-minimal thead th{
+  background: linear-gradient(180deg, #fff, #fff9ef) !important;
+  border-bottom: 1px solid var(--lux-border) !important;
+  color: var(--lux-ink) !important;
+}
+html[data-theme="light"] .table-minimal tbody td{
+  border-bottom: 1px solid var(--lux-border) !important;
+  color: var(--lux-ink) !important;
+}
+html[data-theme="light"] .table-minimal .text-emerald-600{ color:#166534 !important }
+html[data-theme="light"] .table-minimal .text-rose-600{ color:#991b1b !important }
+
+/* 9) Badge sumber record: kapsul emas lembut */
+html[data-theme="light"] [title="Sumber record"]{
+  background:#fffaf0 !important;
+  color: var(--accent-ink) !important;
+  border:1px solid color-mix(in oklab, var(--lux-border), var(--gold-300) 30%) !important;
+  padding: 2px 8px; border-radius: 999px;
+}
+
+/* 10) Paksa util cyan → gold (fallback terakhir) */
+html[data-theme="light"] :is(
+  [class*="bg-cyan-"], [class*="text-cyan-"],
+  [class*="border-cyan-"]
+){
+  color: var(--lux-ink) !important;
+  border-color: color-mix(in oklab, var(--gold-300), #000 18%) !important;
+}
+html[data-theme="light"] [class*="bg-cyan-"]{
+  background: var(--gold-50) !important;
+  box-shadow: 0 6px 18px rgba(224,197,143,.18) !important;
+}

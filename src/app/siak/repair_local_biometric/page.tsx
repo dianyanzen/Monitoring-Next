@@ -3,7 +3,7 @@
 
 import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useSession } from "@/contexts/session";
-import { Activity, Image as ImageIcon, Loader2, RefreshCcw, Search, Trash2 } from "lucide-react";
+import { Activity, Loader2, RefreshCcw, Search, Trash2 } from "lucide-react";
 import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
 
 /* ========= Types ========= */
@@ -20,6 +20,7 @@ type ScanPerson = {
 };
 
 type FingerItem = { name: string; png: string | null; error?: string };
+
 type ScanResponse = {
   scope: Scope;
   nik: string;
@@ -46,10 +47,21 @@ const PLACEHOLDER_MALE_DARK = "/assets/upload/cyber_man.png";
 const PLACEHOLDER_FEMALE_DARK = "/assets/upload/cyber_woman.png";
 const PLACEHOLDER_MALE_LIGHT = "/assets/upload/lux_man.png";
 const PLACEHOLDER_FEMALE_LIGHT = "/assets/upload/lux_woman.png";
-const BIOMETRIC_TABLES = ["DEMOGRAPHICS", "FACES", "SIGNATURES"] as const;
+
+/* Not Found placeholders — gunakan aset yang sudah disediakan user */
+const SIGN_PLACE_LIGHT = "/assets/upload/Sign-NotFound_lux.png";
+const SIGN_PLACE_DARK = "/assets/upload/Sign-NotFound_cyber.png";
+const IRIS_PLACE_LIGHT = "/assets/upload/Iris-NotFound_lux.png";
+const IRIS_PLACE_DARK = "/assets/upload/Iris-NotFound_cyber.png";
+const FINGER_PLACE_LIGHT = "/assets/upload/Fingger-NotFound_lux.png";
+const FINGER_PLACE_DARK = "/assets/upload/Fingger-NotFound_cyber.png";
+
+const BIOMETRIC_TABLES_BASE = ["DEMOGRAPHICS", "FACES", "SIGNATURES"] as const;
 
 /* ========= Utils ========= */
-function cx(...a: (string | false | null | undefined)[]) { return a.filter(Boolean).join(" "); }
+function cx(...a: (string | false | null | undefined)[]) {
+  return a.filter(Boolean).join(" ");
+}
 function useThemeDark(): boolean {
   const [isDark, set] = useState(false);
   useEffect(() => {
@@ -98,65 +110,110 @@ export default function RepairLocalBiometricPage() {
   const irisMime = scan?.iris?.mime || "image/jpeg";
   const irisMeta = scan?.iris?.meta;
 
+  const irisExists = Boolean(scan?.iris?.left || scan?.iris?.right);
+  const fingerExists = Boolean(scan?.fingers?.items?.some((f) => !!f.png));
+
   function openAlert(kind: ModalKind, title: string, message: string) {
-    setModalKind(kind); setModalTitle(title); setModalMsg(message); setModalOnYes(undefined); setModalOpen(true);
+    setModalKind(kind);
+    setModalTitle(title);
+    setModalMsg(message);
+    setModalOnYes(undefined);
+    setModalOpen(true);
   }
   function openConfirm(title: string, message: string, onYes: () => void) {
-    setModalKind("confirm"); setModalTitle(title); setModalMsg(message); setModalOnYes(() => onYes); setModalOpen(true);
+    setModalKind("confirm");
+    setModalTitle(title);
+    setModalMsg(message);
+    setModalOnYes(() => onYes);
+    setModalOpen(true);
   }
 
   const doScan = useCallback(async () => {
-    if (!nikValid) { openAlert("warning", "Format NIK salah", "NIK harus 16 digit angka."); return; }
-    setLoading("scan"); setScan(null);
+    if (!nikValid) {
+      openAlert("warning", "Format NIK salah", "NIK harus 16 digit angka.");
+      return;
+    }
+    setLoading("scan");
+    setScan(null);
     try {
       const url = `/api/siak/repair_local_biometric/scan?nik=${encodeURIComponent(nik)}&scope=${scope}`;
       const res = await fetch(url, { method: "GET" });
       const json: ApiEnvelope<ScanResponse> = await res.json();
-      if (!json.success) { openAlert("error", "Gagal memuat data", json.message || "Tidak dapat memindai data."); return; }
+      if (!json.success) {
+        openAlert("error", "Gagal memuat data", json.message || "Tidak dapat memindai data.");
+        return;
+      }
       setScan(json.data as ScanResponse);
     } catch (e: any) {
       openAlert("error", "Kesalahan", e?.message || "Terjadi kesalahan saat memindai data.");
-    } finally { setLoading("idle"); }
+    } finally {
+      setLoading("idle");
+    }
   }, [nik, nikValid, scope]);
 
   const performDelete = useCallback(async () => {
     setLoading("delete");
     try {
       const res = await fetch("/api/siak/repair_local_biometric/delete", {
-        method: "POST", headers: { "Content-Type": "application/json" },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nik, scope }),
       });
       const json: ApiEnvelope<any> = await res.json();
-      if (!json.success) { openAlert("error", "Gagal menghapus data", json.message || "Operasi hapus gagal."); return; }
+      if (!json.success) {
+        openAlert("error", "Gagal menghapus data", json.message || "Operasi hapus gagal.");
+        return;
+      }
       setScan((prev) =>
-        prev ? {
-          ...prev,
-          person: [], personSource: "NONE",
-          biometric: { counts: { faces: 0, signatures: 0 }, faces: [], signatures: [] },
-          iris: { mime: prev.iris?.mime ?? null, left: null, right: null, meta: prev.iris?.meta },
-          fingers: { mime: prev.fingers?.mime ?? "image/png", items: [] },
-        } : prev
+        prev
+          ? {
+              ...prev,
+              person: [],
+              personSource: "NONE",
+              biometric: { counts: { faces: 0, signatures: 0 }, faces: [], signatures: [] },
+              iris: { mime: prev.iris?.mime ?? null, left: null, right: null, meta: prev.iris?.meta },
+              fingers: { mime: prev.fingers?.mime ?? "image/png", items: [] },
+            }
+          : prev
       );
       openAlert("success", "Selesai", json.data?.message || "Data berhasil dibersihkan.");
     } catch (e: any) {
       openAlert("error", "Kesalahan", e?.message || "Terjadi kesalahan saat menghapus data.");
-    } finally { setLoading("idle"); setModalOpen(false); }
+    } finally {
+      setLoading("idle");
+      setModalOpen(false);
+    }
   }, [nik, scope]);
 
   const doDelete = useCallback(() => {
-    if (!nikValid) { openAlert("warning", "Format NIK salah", "NIK harus 16 digit angka."); return; }
-    const confirmText = scope === "rekam"
-      ? "Bersihkan data perekaman (termasuk Demographics_all) dan selaraskan pencetakan?"
-      : "Bersihkan data di database pencetakan?";
+    if (!nikValid) {
+      openAlert("warning", "Format NIK salah", "NIK harus 16 digit angka.");
+      return;
+    }
+    const confirmText =
+      scope === "rekam"
+        ? "Bersihkan data perekaman (termasuk Demographics_all) dan selaraskan pencetakan?"
+        : "Bersihkan data di database pencetakan?";
     openConfirm("Konfirmasi Hapus", confirmText, performDelete);
   }, [nikValid, scope, performDelete]);
 
-  const onReset = useCallback(() => { setNik(""); setScope("rekam"); setScan(null); nikRef.current?.focus(); }, []);
+  const onReset = useCallback(() => {
+    setNik("");
+    setScope("rekam");
+    setScan(null);
+    nikRef.current?.focus();
+  }, []);
 
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
-      if (e.key === "Enter") { e.preventDefault(); if (loading === "idle") void doScan(); }
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "d") { e.preventDefault(); if (loading === "idle") doDelete(); }
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (loading === "idle") void doScan();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "d") {
+        e.preventDefault();
+        if (loading === "idle") doDelete();
+      }
     };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
@@ -164,6 +221,7 @@ export default function RepairLocalBiometricPage() {
 
   return (
     <div className="relative mt-5 space-y-8 px-4 pb-10 pt-6 text-gray-100 sm:px-6 md:px-8 md:pt-8">
+      {/* glow */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-[15%] top-[-15%] h-[1100px] w-[1100px] rounded-full bg-cyan-500/15 blur-[220px]" />
         <div className="absolute right-[18%] bottom-[-20%] h-[1000px] w-[1000px] rounded-full bg-fuchsia-600/12 blur-[190px]" />
@@ -191,16 +249,26 @@ export default function RepairLocalBiometricPage() {
           <p className="text-sm text-slate-500 dark:text-slate-400">Cek & bersihkan data biometrik dan demografis di database perekaman atau pencetakan.</p>
         </header>
 
+        {/* toolbar */}
         <div className="repair-toolbar border-t border-slate-200/60 bg-white/85 px-5 py-5 dark:border-white/10 dark:bg-slate-900/40">
           <div className="grid gap-4 sm:grid-cols-[2fr_auto_auto] sm:items-start">
             <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500/90 dark:text-slate-400/80">NIK (16 digit)</label>
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500/90 dark:text-slate-400/80">
+                NIK (16 digit)
+              </label>
               <input
                 ref={nikRef}
                 value={nik}
                 onChange={(e) => setNik(e.target.value.replace(/\D/g, "").slice(0, 16))}
-                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void doScan(); } }}
-                inputMode="numeric" maxLength={16} placeholder="Masukkan NIK"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    void doScan();
+                  }
+                }}
+                inputMode="numeric"
+                maxLength={16}
+                placeholder="Masukkan NIK"
                 className={cx(
                   "w-full rounded-xl border bg-white px-4 py-3 font-mono text-sm tracking-widest text-slate-800 outline-none transition dark:bg-white/5 dark:text-white",
                   "focus:ring-2",
@@ -218,14 +286,20 @@ export default function RepairLocalBiometricPage() {
             <div className="self-start sm:justify-self-start">
               <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500/90 dark:text-slate-400/80">Scope</label>
               <div className="ktpel-tabs">
-                <button type="button" onClick={() => setScope("rekam")} className={`ktpel-tab${scope === "rekam" ? " ktpel-tab--active" : ""}`}>Perekaman</button>
-                <button type="button" onClick={() => setScope("cetak")} className={`ktpel-tab${scope === "cetak" ? " ktpel-tab--active" : ""}`}>Pencetakan</button>
+                <button type="button" onClick={() => setScope("rekam")} className={`ktpel-tab${scope === "rekam" ? " ktpel-tab--active" : ""}`}>
+                  Perekaman
+                </button>
+                <button type="button" onClick={() => setScope("cetak")} className={`ktpel-tab${scope === "cetak" ? " ktpel-tab--active" : ""}`}>
+                  Pencetakan
+                </button>
               </div>
             </div>
 
             <div className="flex flex-col gap-2 self-start sm:flex-row sm:items-start sm:justify-end">
               <button
-                type="button" onClick={onReset} disabled={loading !== "idle"}
+                type="button"
+                onClick={onReset}
+                disabled={loading !== "idle"}
                 className="repair-btn repair-btn--ghost inline-flex items-center gap-2 rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.22em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-cyan-400 dark:focus-visible:ring-offset-slate-900"
                 title="Reset"
               >
@@ -233,7 +307,9 @@ export default function RepairLocalBiometricPage() {
               </button>
 
               <button
-                type="button" onClick={doScan} disabled={!nikValid || loading !== "idle"}
+                type="button"
+                onClick={doScan}
+                disabled={!nikValid || loading !== "idle"}
                 className="repair-btn repair-btn--primary inline-flex items-center gap-2 rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-900 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:text-slate-950 dark:focus-visible:ring-cyan-400 dark:focus-visible:ring-offset-slate-900"
                 title="Scan"
               >
@@ -241,7 +317,9 @@ export default function RepairLocalBiometricPage() {
               </button>
 
               <button
-                type="button" onClick={doDelete} disabled={!nikValid || loading !== "idle"}
+                type="button"
+                onClick={doDelete}
+                disabled={!nikValid || loading !== "idle"}
                 className="repair-btn repair-btn--danger inline-flex items-center gap-2 rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.22em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-rose-400 dark:focus-visible:ring-offset-slate-900"
                 title="Bersihkan"
               >
@@ -257,22 +335,26 @@ export default function RepairLocalBiometricPage() {
         <div className="mt-4 grid gap-6 lg:grid-cols-3">
           {/* Kiri */}
           <div className="space-y-4">
+            {/* Face */}
             <div className="repair-info-card rounded-2xl border border-slate-200/60 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/60">
               <h3 className="mb-3 text-sm font-semibold">Face</h3>
               {faceBase64 ? (
                 <img alt="Face" className="ph-wrap w-full" style={{ aspectRatio: "4 / 5" }} src={`data:image/jpeg;base64,${faceBase64}`} />
               ) : (
                 (() => {
-                  const src = isFemale
-                    ? isDark ? PLACEHOLDER_FEMALE_DARK : PLACEHOLDER_FEMALE_LIGHT
-                    : isDark ? PLACEHOLDER_MALE_DARK : PLACEHOLDER_MALE_LIGHT;
+                  const src = isFemale ? (isDark ? PLACEHOLDER_FEMALE_DARK : PLACEHOLDER_FEMALE_LIGHT) : isDark ? PLACEHOLDER_MALE_DARK : PLACEHOLDER_MALE_LIGHT;
                   return (
                     <div className="ph-wrap w-full" style={{ aspectRatio: "4 / 5" }}>
                       <img
-                        src={src} alt="" width={480} height={600}
+                        src={src}
+                        alt=""
+                        width={480}
+                        height={600}
                         className="absolute left-1/2 top-1/2 max-h-[96%] max-w-[96%] -translate-x-1/2 -translate-y-1/2 select-none object-contain"
                         draggable={false}
-                        onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).style.display = "none";
+                        }}
                       />
                     </div>
                   );
@@ -280,26 +362,55 @@ export default function RepairLocalBiometricPage() {
               )}
             </div>
 
+            {/* Signature (pakai Sign-NotFound_*.png saat kosong) */}
             <div className="repair-info-card rounded-2xl border border-slate-200/60 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/60">
               <h3 className="mb-3 text-sm font-semibold">Signature</h3>
+
               {signBase64 ? (
-                <img alt="Signature" className="aspect-video w-full rounded-xl object-contain" src={`data:image/jpeg;base64,${signBase64}`} />
+                <img alt="Signature" className="aspect-video w-full rounded-xl select-none object-contain" src={`data:image/jpeg;base64,${signBase64}`} draggable={false} />
               ) : (
-                <div className="flex aspect-video w-full items-center justify-center rounded-xl border bg-muted/10 text-muted-foreground">
-                  <div className="flex flex-col items-center gap-2">
-                    <ImageIcon className="h-5 w-5" />
-                    <span className="text-xs">Tidak ada signature</span>
-                  </div>
-                </div>
+                <img
+                  alt="Signature placeholder"
+                  className="aspect-video w-full rounded-xl select-none object-contain"
+                  src={isDark ? SIGN_PLACE_DARK : SIGN_PLACE_LIGHT}
+                  draggable={false}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                  }}
+                />
               )}
             </div>
 
             <div className="repair-info-card rounded-2xl border border-slate-200/60 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/60">
               <h3 className="mb-2 text-sm font-semibold">Ringkas Biometrik</h3>
-              <ul className="text-sm leading-6">
-                <li>Faces: <span key={scan.biometric.counts.faces} className="metric-bump font-semibold">{scan.biometric.counts.faces}</span></li>
-                <li>Signatures: <span key={scan.biometric.counts.signatures} className="metric-bump font-semibold">{scan.biometric.counts.signatures}</span></li>
-              </ul>
+
+              {(() => {
+                const facesCount = Number(scan?.biometric?.counts?.faces ?? 0);
+                const signsCount = Number(scan?.biometric?.counts?.signatures ?? 0);
+
+                const irisLeftOk = Boolean(scan?.iris?.left);
+                const irisRightOk = Boolean(scan?.iris?.right);
+                const irisCount = Number(irisLeftOk) + Number(irisRightOk);
+
+                const fingerItems = scan?.fingers?.items ?? [];
+                const fingerOk = fingerItems.filter((f) => !!f.png).length;
+
+                const Stat = ({ label, value }: { label: string; value: string | number }) => (
+                  <li className="flex items-center gap-2">
+                    <span className="w-28 text-sm">{label}</span>
+                    <span className="metric-bump font-semibold">{value}</span>
+                  </li>
+                );
+
+                return (
+                  <ul className="space-y-1 text-sm leading-6">
+                    <Stat label="Faces:" value={facesCount} />
+                    <Stat label="Signatures:" value={signsCount} />
+                    <Stat label="Iris:" value={`${irisCount}`} />
+                    <Stat label="Fingers:" value={`${fingerOk}`} />
+                  </ul>
+                );
+              })()}
             </div>
           </div>
 
@@ -335,25 +446,31 @@ export default function RepairLocalBiometricPage() {
                 </table>
               </div>
             ) : (
-              <div className="flex items-center justify-center rounded-xl border p-10 text-sm text-muted-foreground">
-                Data tidak ditemukan pada sumber utama.
-              </div>
+              <div className="flex items-center justify-center rounded-xl border p-10 text-sm text-muted-foreground">Data tidak ditemukan pada sumber utama.</div>
             )}
 
+            {/* Matriks keberadaan data: + IRIS + FINGERS */}
             <div className="mt-6">
               <h4 className="mb-2 text-sm font-semibold">Keberadaan Data (indikatif)</h4>
               <div className="repair-info-card overflow-hidden rounded-2xl border border-slate-200/60 bg-white/90 p-0 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/60">
                 <table className="w-full text-sm table-minimal">
                   <thead>
-                    <tr><th className="px-3 py-2 text-left">Tabel</th><th className="px-3 py-2 text-left">Status</th></tr>
+                    <tr>
+                      <th className="px-3 py-2 text-left">Tabel</th>
+                      <th className="px-3 py-2 text-left">Status</th>
+                    </tr>
                   </thead>
                   <tbody className="divide-y">
-                    {BIOMETRIC_TABLES.map((name) => {
-                      const status =
-                        name === "DEMOGRAPHICS" ? (person ? "ADA" : "TIDAK ADA")
-                        : name === "FACES" ? (scan.biometric.counts.faces > 0 ? "ADA" : "TIDAK ADA")
-                        : (scan.biometric.counts.signatures > 0 ? "ADA" : "TIDAK ADA");
+                    {[...BIOMETRIC_TABLES_BASE, "IRIS", "FINGERS"].map((name) => {
+                      let status: "ADA" | "TIDAK ADA" = "TIDAK ADA";
+                      if (name === "DEMOGRAPHICS") status = person ? "ADA" : "TIDAK ADA";
+                      else if (name === "FACES") status = (scan?.biometric?.counts?.faces || 0) > 0 ? "ADA" : "TIDAK ADA";
+                      else if (name === "SIGNATURES") status = (scan?.biometric?.counts?.signatures || 0) > 0 ? "ADA" : "TIDAK ADA";
+                      else if (name === "IRIS") status = irisExists ? "ADA" : "TIDAK ADA";
+                      else if (name === "FINGERS") status = fingerExists ? "ADA" : "TIDAK ADA";
+
                       const color = status === "ADA" ? "text-emerald-600 dark:text-emerald-300" : "text-rose-600 dark:text-rose-300";
+
                       return (
                         <tr key={name}>
                           <td className="px-3 py-2">{name}</td>
@@ -376,71 +493,124 @@ export default function RepairLocalBiometricPage() {
                   </span>
                 )}
                 {irisMeta?.converted && (
-                  <span className="rounded-full border border-emerald-400/40 bg-emerald-400/10 px-2 py-[2px] text-[10px] text-emerald-100">
-                    Otomatis dikonversi ke PNG (JPG2 → PNG)
-                  </span>
+                  <span className="rounded-full border border-emerald-400/40 bg-emerald-400/10 px-2 py-[2px] text-[10px] text-emerald-100">Otomatis dikonversi ke PNG (JPG2 → PNG)</span>
                 )}
                 {!!irisMeta?.errors?.length && (
-                  <span className="rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-[2px] text-[10px] text-amber-100">
-                    {irisMeta.errors[0]}
-                  </span>
+                  <span className="rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-[2px] text-[10px] text-amber-100">{irisMeta.errors[0]}</span>
                 )}
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <figure className="flex aspect-square flex-col overflow-hidden rounded-xl border border-white/10 bg-black/20 text-center dark:bg-black/30">
-                  <figcaption className="border-b border-white/10 px-3 py-2 text-left text-xs font-semibold text-white/70">Left Iris</figcaption>
-                  <div className="flex flex-1 items-center justify-center p-2">
+                <figure className="repair-info-card rounded-2xl border border-slate-200/60 bg-white/90 p-2 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/60">
+                  <figcaption className="mb-3 text-sm font-semibold">Left Iris</figcaption>
+                  <div className="flex items-center justify-center px-2 pb-2">
                     {scan?.iris?.left ? (
-                      <img alt="Left Iris" src={`data:${irisMime};base64,${scan.iris.left}`} className="h-full w-full rounded-md object-contain" draggable={false} />
-                    ) : (<span className="text-xs text-white/50">Tidak ada data</span>)}
+                      <img
+                        alt="Left Iris"
+                        src={`data:${irisMime};base64,${scan.iris.left}`}
+                        className="w-full select-none rounded-md object-contain"
+                        style={{ aspectRatio: "1 / 1" }}
+                        draggable={false}
+                      />
+                    ) : (
+                      <img
+                        alt="Iris placeholder"
+                        className="w-full select-none rounded-md object-contain"
+                        style={{ aspectRatio: "1 / 1" }}
+                        src={isDark ? IRIS_PLACE_DARK : IRIS_PLACE_LIGHT}
+                        draggable={false}
+                      />
+                    )}
                   </div>
                 </figure>
 
-                <figure className="flex aspect-square flex-col overflow-hidden rounded-xl border border-white/10 bg-black/20 text-center dark:bg-black/30">
-                  <figcaption className="border-b border-white/10 px-3 py-2 text-left text-xs font-semibold text-white/70">Right Iris</figcaption>
-                  <div className="flex flex-1 items-center justify-center p-2">
+                <figure className="repair-info-card rounded-2xl border border-slate-200/60 bg-white/90 p-2 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/60">
+                  <figcaption className="mb-3 text-sm font-semibold">Right Iris</figcaption>
+                  <div className="flex items-center justify-center px-2 pb-2">
                     {scan?.iris?.right ? (
-                      <img alt="Right Iris" src={`data:${irisMime};base64,${scan.iris.right}`} className="h-full w-full rounded-md object-contain" draggable={false} />
-                    ) : (<span className="text-xs text-white/50">Tidak ada data</span>)}
+                      <img
+                        alt="Right Iris"
+                        src={`data:${irisMime};base64,${scan.iris.right}`}
+                        className="w-full select-none rounded-md object-contain"
+                        style={{ aspectRatio: "1 / 1" }}
+                        draggable={false}
+                      />
+                    ) : (
+                      <img
+                        alt="Iris placeholder"
+                        className="w-full select-none rounded-md object-contain"
+                        style={{ aspectRatio: "1 / 1" }}
+                        src={isDark ? IRIS_PLACE_DARK : IRIS_PLACE_LIGHT}
+                        draggable={false}
+                      />
+                    )}
                   </div>
                 </figure>
               </div>
             </div>
 
             {/* FINGERS */}
-            {scan?.fingers && (
-              <div className="mt-6">
-                <h3 className="mb-2 text-sm font-semibold">Fingers (WSQ → PNG)</h3>
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-                  {scan.fingers.items.map((f) => (
-                    <figure key={f.name} className="overflow-hidden rounded-xl border border-white/10 bg-black/30">
-                      <figcaption className="border-b border-white/10 px-3 py-2 text-left text-xs font-semibold text-white/70 uppercase">
-                        {f.name.replaceAll("_", " ")}
-                      </figcaption>
-                      <div className="relative w-full pb-[145%]">
-                        <div className="absolute inset-0 p-3">
-                          {f.png ? (
+            <div className="mt-6">
+              <h3 className="mb-2 text-sm font-semibold">Fingers (WSQ → PNG)</h3>
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+                {scan?.fingers?.items?.length
+                  ? scan.fingers.items.map((f) => (
+                      <figure key={f.name} className="overflow-hidden rounded-xl border border-white/10 bg-black/30">
+                        <figcaption className="border-b border-white/10 px-3 py-2 text-left text-xs font-semibold text-white/70 uppercase">
+                          {f.name.replaceAll("_", " ")}
+                        </figcaption>
+                        <div className="relative w-full pb-[145%]">
+                          <div className="absolute inset-0 p-3">
+                            {f.png ? (
+                              <img
+                                alt={f.name}
+                                src={`data:${scan.fingers?.mime || "image/png"};base64,${f.png}`}
+                                className="h-full w-full rounded-md bg-white object-contain"
+                                draggable={false}
+                              />
+                            ) : (
+                              <img
+                                src={isDark ? FINGER_PLACE_DARK : FINGER_PLACE_LIGHT}
+                                alt="Finger placeholder"
+                                className="h-full w-full rounded-md object-contain opacity-90"
+                                draggable={false}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </figure>
+                    ))
+                  : // jika tidak ada satu pun item finger, tampilkan 10 placeholder standar
+                    [
+                      "RIGHT_THUMB",
+                      "RIGHT_INDEX",
+                      "RIGHT_MIDDLE",
+                      "RIGHT_RING",
+                      "RIGHT_LITTLE",
+                      "LEFT_THUMB",
+                      "LEFT_INDEX",
+                      "LEFT_MIDDLE",
+                      "LEFT_RING",
+                      "LEFT_LITTLE",
+                    ].map((name) => (
+                      <figure key={name} className="overflow-hidden rounded-xl border border-white/10 bg-black/30">
+                        <figcaption className="border-b border-white/10 px-3 py-2 text-left text-xs font-semibold text-white/70 uppercase">
+                          {name.replaceAll("_", " ")}
+                        </figcaption>
+                        <div className="relative w-full pb-[145%]">
+                          <div className="absolute inset-0 p-3">
                             <img
-                              alt={f.name}
-                              src={`data:${scan.fingers.mime || "image/png"};base64,${f.png}`}
-                              className="h-full w-full rounded-md object-contain bg-white"
+                              src={isDark ? FINGER_PLACE_DARK : FINGER_PLACE_LIGHT}
+                              alt="Finger placeholder"
+                              className="h-full w-full rounded-md object-contain opacity-90"
                               draggable={false}
                             />
-                          ) : f.error ? (
-                            <span className="flex h-full items-center justify-center px-2 text-center text-[11px] text-amber-200">
-                              No data / {f.error}
-                            </span>
-                          ) : (
-                            <span className="flex h-full items-center justify-center text-xs text-white/50">Tidak ada data</span>
-                          )}
+                          </div>
                         </div>
-                      </div>
-                    </figure>
-                  ))}
-                </div>
+                      </figure>
+                    ))}
               </div>
-            )}
+            </div>
           </div>
         </div>
       )}
@@ -450,8 +620,7 @@ export default function RepairLocalBiometricPage() {
         <div className="flex items-center gap-2">
           <Activity className="h-3.5 w-3.5" />
           <span>
-            Mode <b>perekaman</b>: termasuk hapus <code>Demographics_all</code> dan selaraskan ke database pencetakan.
-            Mode <b>pencetakan</b>: hanya bersihkan database pencetakan.
+            Mode <b>perekaman</b>: termasuk hapus <code>Demographics_all</code> dan selaraskan ke database pencetakan. Mode <b>pencetakan</b>: hanya bersihkan database pencetakan.
           </span>
         </div>
       </div>
@@ -464,14 +633,16 @@ export default function RepairLocalBiometricPage() {
         confirmText={modalKind === "confirm" ? "Ya, lanjut" : "OK"}
         cancelText="Batal"
         loading={saving && modalKind === "confirm"}
-        onConfirm={() => { modalOnYes?.(); }}
+        onConfirm={() => {
+          modalOnYes?.();
+        }}
         onClose={() => !saving && setModalOpen(false)}
       />
     </div>
   );
 }
 
-function Tr({ label, value, mono, badge }: { label: string; value: string | number | null | undefined; mono?: boolean; badge?: boolean; }) {
+function Tr({ label, value, mono, badge }: { label: string; value: string | number | null | undefined; mono?: boolean; badge?: boolean }) {
   const v = value ?? "-";
   return (
     <tr>
