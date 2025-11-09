@@ -1374,6 +1374,15 @@ html:not([data-theme="light"]) .metric-bump{
 .btn.op.edit:hover{ border-color:rgba(245,158,11,.55); background:rgba(245,158,11,.15) }
 .btn.op.del{ border-color:rgba(244,63,94,.35); background:rgba(244,63,94,.10) }
 .btn.op.del:hover{ border-color:rgba(244,63,94,.55); background:rgba(244,63,94,.15) }
+.btn.op.priv{ /* Privilege Access */
+  border-color: rgba(99,102,241,.40);        /* indigo-500 */
+  background: rgba(99,102,241,.12);
+  color:#e6fbff;
+}
+.btn.op.priv:hover{
+  border-color: rgba(99,102,241,.65);
+  background: rgba(99,102,241,.18);
+}
 
 /* ===== Card ===== */
 .glass-card{

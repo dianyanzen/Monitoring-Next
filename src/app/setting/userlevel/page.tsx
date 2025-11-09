@@ -3,7 +3,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Plus, Eye, Pencil, Trash2, Users, RefreshCcw } from "lucide-react";
+import { Loader2, Plus, Eye, Pencil, Trash2, Users, RefreshCcw, KeyRound  } from "lucide-react";
 import { useSession } from "@/contexts/session";
 
 type GroupItem = { level_code: string; level_name: string };
@@ -267,6 +267,15 @@ export default function UserLevelPage() {
                           >
                             <Pencil className="h-4 w-4" />
                             Ubah
+                          </button>
+                           <button
+                            type="button"
+                            onClick={() => router.push(`/setting/user/edit/${encodeURIComponent(r.user_level)}`)}
+                            className="btn op priv inline-flex shrink-0 items-center gap-2 rounded-lg border border-cyan-800/50 bg-white/5 px-3 py-1.5 text-xs font-medium text-cyan-100 transition hover:bg-white/10"
+                            title="Privilege Access"
+                          >
+                            <KeyRound className="h-4 w-4" />
+                            Privilege
                           </button>
                           <button
                             type="button"

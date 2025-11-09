@@ -3,7 +3,7 @@
 
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Loader2, ArrowLeft, Save } from "lucide-react";
+import { Loader2, ArrowLeft, Save,RefreshCcw, Users } from "lucide-react";
 import { useSession } from "@/contexts/session";
 import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
 
@@ -100,16 +100,32 @@ export default function UserLevelChangePage() {
 
   return (
     <div className="relative mt-5 space-y-8 px-4 pb-12 pt-6 sm:px-6 md:px-8 md:pt-8">
+      {/* glow bg */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-[15%] top-[-15%] h-[900px] w-[900px] rounded-full bg-cyan-500/15 blur-[220px]" />
-        <div className="absolute right-[18%] bottom-[-20%] h-[800px] w-[800px] rounded-full bg-fuchsia-600/12 blur-[190px]" />
+        <div className="absolute left-[15%] top-[-15%] h-[1100px] w-[1100px] rounded-full bg-cyan-500/15 blur-[220px]" />
+        <div className="absolute right-[18%] bottom-[-20%] h-[1000px] w-[1000px] rounded-full bg-fuchsia-600/12 blur-[190px]" />
       </div>
 
       <section className="rounded-3xl border border-cyan-800/40 bg-[#0b0b1a]/80 shadow-[0_0_34px_#00ffff22] backdrop-blur-xl">
+        {/* Header */}
         <header className="sticky top-0 z-10 border-b border-cyan-900/50 bg-[#0b0b1a]/90 px-5 py-4 backdrop-blur">
           <div className="flex items-center gap-3">
-            <h1 className="text-base font-semibold tracking-wide text-cyan-200">Setting User Level — Change</h1>
+            <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_12px_#22d3ee]" />
+            <h1 className="text-base font-semibold tracking-wide text-cyan-200">
+              Settings — Change User Level Name
+            </h1>
             <div className="ml-auto flex items-center gap-2">
+              <div className="hidden sm:inline-flex items-center gap-1 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100/80">
+                <Users className="h-3.5 w-3.5" />
+                User: {(user as any)?.S_NAMA_LGKP ?? (user as any)?.S_USER_ID ?? "-"}
+              </div>
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-[11px] font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
+              >
+                <RefreshCcw className="h-3.5 w-3.5" /> Refresh
+              </button>
               <button
                 type="button"
                 onClick={() => router.push("/setting/userlevel")}

@@ -1451,6 +1451,10 @@ html[data-theme="light"] .btn.op.del{
   border-color: color-mix(in oklab, #f43f5e 55%, #000 8%);
   background: color-mix(in oklab, #fff0f2 86%, #f43f5e 6%);
 }
+html[data-theme="light"] .btn.op.priv{
+  border-color: color-mix(in oklab, #f59e0b 55%, #000 8%);
+  background: color-mix(in oklab, #fff6e6 86%, #f59e0b 6%);     /* indigo-50 wash */
+}
 
 /* ===== Inputs ===== */
 html[data-theme="light"] .lbl{
