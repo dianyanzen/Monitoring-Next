@@ -427,7 +427,7 @@ function HistoryCard({
         {icon}
         <span>{title}</span>
       </div>
-      <div className="mt-2 text-sm leading-relaxed">{children}</div>
+      {React.createElement("div", { className: "mt-2 text-sm leading-relaxed" }, children)}
     </div>
   );
 }

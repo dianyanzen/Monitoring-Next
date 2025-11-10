@@ -1505,3 +1505,12 @@ html:not([data-theme="light"]) .badge.mono.code-glow:hover{
       0 0 52px rgba(34,211,238,.24);
   }
 }
+
+.pemanfaatan-table-panel__spinner{
+  width: 18px; height: 18px; border-radius: 9999px;
+  border: 2px solid rgba(34,211,238,.25);
+  border-top-color: rgba(34,211,238,.9);
+  animation: mmspin .8s linear infinite;
+  display:inline-block;
+}
+@keyframes mmspin{ to { transform: rotate(360deg); } }

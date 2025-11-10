@@ -1705,3 +1705,284 @@ html[data-theme="light"] [class*="bg-cyan-"]{
   background: var(--gold-50) !important;
   box-shadow: 0 6px 18px rgba(224,197,143,.18) !important;
 }
+
+/* FILE: src/styles/pages/pemanfaatan.css */
+
+/* ========== Layout & neon panels (umum) ========== */
+.pemanfaatan-page{
+  position:relative;
+  isolation:isolate;
+}
+.pemanfaatan-shell{
+  position:relative;
+  border-radius:32px;
+  border:1px solid rgba(39,243,255,.24);
+  background:
+    radial-gradient(circle at 18% -10%, rgba(39,243,255,.20), transparent 55%),
+    radial-gradient(circle at 82% -20%, rgba(255,63,173,.14), transparent 60%),
+    linear-gradient(160deg, rgba(5,10,22,.96), rgba(2,5,14,.92));
+  box-shadow: 0 35px 65px rgba(0,0,0,.78), 0 0 78px rgba(39,243,255,.18);
+  overflow:hidden;
+}
+.pemanfaatan-shell::before{
+  content:"";
+  position:absolute;
+  inset:1px;
+  border-radius:inherit;
+  border:1px solid rgba(255,63,173,.12);
+  pointer-events:none;
+}
+
+.pemanfaatan-group-block{
+  border:1px solid rgba(39,243,255,.12);
+  border-radius:26px;
+  padding:1.5rem;
+  background:linear-gradient(140deg, rgba(6,12,28,.88), rgba(5,9,22,.82));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02), 0 24px 48px rgba(1,4,12,.75);
+}
+.pemanfaatan-group-block .group-chip{
+  margin-bottom:1rem;
+}
+.pemanfaatan-group-block .salaman-grid{
+  margin-top:1.25rem;
+}
+
+.pemanfaatan-table-panel{
+  border:1px solid rgba(39,243,255,.2);
+  border-radius:28px;
+  padding:1.5rem;
+  background:linear-gradient(150deg, rgba(5,10,22,.95), rgba(3,7,18,.9));
+  box-shadow:0 40px 70px rgba(0,0,0,.72);
+}
+.pemanfaatan-table-panel__head{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:1.5rem;
+  align-items:flex-start;
+}
+.pemanfaatan-table-panel__head h3{
+  font-size:1.35rem;
+  letter-spacing:.05em;
+  margin-bottom:.15rem;
+}
+.pemanfaatan-table-panel__head p span{
+  color:#67f6ff;
+}
+.pemanfaatan-table-panel__eyebrow{
+  font-size:.72rem;
+  letter-spacing:.35em;
+  text-transform:uppercase;
+  color:rgba(103,246,255,.86);
+  display:inline-flex;
+  gap:.45rem;
+  align-items:center;
+}
+
+.pemanfaatan-table-panel__stats{
+  display:grid;
+  gap:1rem;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+}
+.pemanfaatan-table-panel__stats div{
+  border:1px solid rgba(39,243,255,.18);
+  border-radius:18px;
+  padding:1rem 1.2rem;
+  background:linear-gradient(180deg, rgba(8,14,32,.92), rgba(5,10,24,.86));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+}
+.pemanfaatan-table-panel__stats span{
+  font-size:.72rem;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:rgba(168,210,255,.72);
+}
+.pemanfaatan-table-panel__stats strong{
+  display:block;
+  margin-top:.35rem;
+  font-size:1.5rem;
+  color:#c4faff;
+  text-shadow:0 0 18px rgba(39,243,255,.4);
+}
+
+.pemanfaatan-table-panel__body{
+  border:1px solid rgba(39,243,255,.14);
+  border-radius:22px;
+  padding:1.25rem;
+  background:rgba(3,8,20,.9);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+}
+.pemanfaatan-table-panel__body .dataTables_wrapper{
+  background:transparent;
+  border:none;
+  box-shadow:none;
+  padding:0;
+}
+.pemanfaatan-table-panel__body .dataTables_wrapper table.dataTable{
+  border-radius:18px;
+}
+
+.pemanfaatan-table-panel__empty{
+  display:flex;
+  align-items:center;
+  gap:.85rem;
+  border:1px dashed rgba(39,243,255,.35);
+  border-radius:16px;
+  padding:1rem 1.2rem;
+  color:#c8faff;
+  font-size:.9rem;
+  background:rgba(9,15,28,.7);
+}
+.pemanfaatan-table-panel__spinner{
+  width:1rem;
+  height:1rem;
+  border-radius:999px;
+  border:2px solid rgba(39,243,255,.35);
+  border-top-color:rgba(255,63,173,.85);
+  animation:pemanfaatan-spin .9s linear infinite;
+}
+@keyframes pemanfaatan-spin{
+  to{ transform:rotate(360deg); }
+}
+
+.pemanfaatan-table-panel__foot{
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.28em;
+  color:rgba(181,224,255,.62);
+}
+
+@media (max-width: 768px){
+  .pemanfaatan-table-panel__stats{
+    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  }
+}
+
+/* ========== Group heading chip (umum) ========== */
+.group-chip{
+  display:flex; align-items:center; gap:.5rem;
+  padding:.4rem .75rem; border-radius:9999px;
+  width:max-content;
+  border:1px solid rgba(34,211,238,.35);
+  background: rgba(34,211,238,.08);
+}
+.group-chip__dot{ width:.6rem; height:.6rem; border-radius:9999px; background:#22d3ee; box-shadow:0 0 10px #22d3ee80; }
+.group-chip__label{ font-weight:700; letter-spacing:.03em; color:#cffafe; font-size:.85rem; }
+
+/* ========== Footer kartu (umum) ========== */
+.master-card__footer{
+  display:grid; grid-template-columns: 1fr 1fr; gap:.75rem;
+  padding:.85rem; border-top:1px solid rgba(255,255,255,.08);
+  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.06));
+  align-items:stretch;
+}
+.fcell{
+  display:flex; flex-direction:column; justify-content:center; gap:.25rem;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius: .9rem; padding:.65rem .8rem;
+  background: rgba(255,255,255,.03);
+}
+.fcell__label{ font-size:.7rem; letter-spacing:.12em; opacity:.8; text-transform:uppercase; }
+.fcell__value{ font-weight:800; font-size:1.1rem; line-height:1; }
+.fcell__code{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size:.9rem; letter-spacing:.02em; word-break: break-all; /* aman di kolom sempit */
+  opacity:.95; font-weight:700;
+}
+
+/* ========== Only LIGHT overrides (tema Luxe) ========== */
+html[data-theme="light"] .group-chip{
+  border-color: rgba(212,172,98,.45);            /* gold border */
+  background: linear-gradient(180deg,#fffef9,.5,#fff6e6 .5) !important;
+  box-shadow: inset 0 1px 0 #ffffffcc, 0 2px 10px rgba(212,172,98,.12);
+}
+html[data-theme="light"] .group-chip__dot{
+  background: #d4ac62; box-shadow: 0 0 10px #d4ac6280;
+}
+html[data-theme="light"] .group-chip__label{
+  color:#7a5a1a; letter-spacing:.06em;
+}
+
+html[data-theme="light"] .master-card{
+  --mc-bd: rgba(212,172,98,.35);
+  border-color: var(--mc-bd);
+  background: linear-gradient(180deg,#ffffff, #fffaf2);
+  box-shadow: 0 6px 22px rgba(212,172,98,.12);
+}
+html[data-theme="light"] .master-card__body .master-card__stat{
+  background: linear-gradient(180deg,#ffffff,#fff4e3);
+  border:1px solid rgba(212,172,98,.28);
+  box-shadow: 0 2px 10px rgba(212,172,98,.10);
+}
+
+html[data-theme="light"] .master-card__footer.luxe{
+  border-top-color: rgba(212,172,98,.28);
+  background: linear-gradient(180deg,#fffaf1,#fff3db);
+}
+html[data-theme="light"] .fcell{
+  border-color: rgba(212,172,98,.32);
+  background: linear-gradient(180deg,#ffffff,#fff5e6);
+  box-shadow: 0 1px 8px rgba(212,172,98,.10);
+}
+html[data-theme="light"] .fcell--total .fcell__value{
+  color:#7a5a1a;
+}
+html[data-theme="light"] .fcell--nik .fcell__code{
+  color:#57421c; opacity:.9;
+}
+
+html[data-theme="light"] .pemanfaatan-shell{
+  background:linear-gradient(168deg,#ffffff,#fff6e5);
+  border-color:rgba(212,172,98,.32);
+  box-shadow:0 28px 54px rgba(188,153,89,.24);
+}
+html[data-theme="light"] .pemanfaatan-shell::before{
+  border-color:rgba(212,172,98,.28);
+}
+html[data-theme="light"] .pemanfaatan-group-block{
+  background:linear-gradient(160deg,#ffffff,#fff5e0);
+  border-color:rgba(212,172,98,.3);
+  box-shadow:0 20px 40px rgba(188,153,89,.22);
+}
+html[data-theme="light"] .pemanfaatan-table-panel{
+  background:linear-gradient(150deg,#ffffff,#fff3d8);
+  border-color:rgba(212,172,98,.32);
+  box-shadow:0 24px 48px rgba(188,153,89,.22);
+}
+html[data-theme="light"] .pemanfaatan-table-panel__eyebrow{
+  color:#b98532;
+}
+html[data-theme="light"] .pemanfaatan-table-panel__stats div{
+  background:linear-gradient(180deg,#fffdfa,#f9edd4);
+  border-color:rgba(212,172,98,.3);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.7);
+}
+html[data-theme="light"] .pemanfaatan-table-panel__stats span{
+  color:color-mix(in oklab,var(--lux-muted),#8a94a6 28%);
+}
+html[data-theme="light"] .pemanfaatan-table-panel__stats strong{
+  color:#b98532;
+  text-shadow:none;
+}
+html[data-theme="light"] .pemanfaatan-table-panel__body{
+  background:#ffffff;
+  border-color:color-mix(in oklab,var(--lux-border),#fff 18%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.7);
+}
+html[data-theme="light"] .pemanfaatan-table-panel__empty{
+  border-color:color-mix(in oklab,var(--lux-border),#fff 15%);
+  color:var(--lux-ink);
+  background:rgba(255,255,255,.85);
+}
+html[data-theme="light"] .pemanfaatan-table-panel__spinner{
+  border-color:rgba(212,172,98,.25);
+  border-top-color:#b98532;
+}
+html[data-theme="light"] .pemanfaatan-table-panel__foot{
+  color:color-mix(in oklab,var(--lux-muted),#7d6a41 28%);
+}
+
+/* Responsif kecil: tumpuk footer jika sempit */
+@media (max-width: 520px){
+  .master-card__footer{ grid-template-columns: 1fr; }
+}
