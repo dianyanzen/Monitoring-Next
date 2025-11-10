@@ -114,7 +114,7 @@ function SalamanCard({ row }: { row: TSalamanRow }) {
         </section>
 
         <section className="salaman-card__section">
-          <h3 className="salaman-card__section-title">Keseluruhan</h3>
+          <h3 className="salaman-card__section-title">Keseluruhan {new Date().getFullYear()}</h3>
           <div className="salaman-card__stat-grid">
             <SalamanStat label="Pengajuan Baru" value={row.total.baru} />
             <SalamanStat label="Upload Ulang" value={row.total.upload} />

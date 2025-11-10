@@ -37,6 +37,7 @@ function useSalaman() {
 }
 
 export default function PelayananOnline() {
+  const year = new Date().getFullYear();
   const { loading, data } = useSalaman();
 
   return (
@@ -106,7 +107,7 @@ export default function PelayananOnline() {
                   {/* Keseluruhan */}
                   <div className="mb-4">
                     <p className="text-cyan-400 font-bold text-center mb-2">
-                      Keseluruhan
+                      Keseluruhan {year}
                     </p>
                     <div className="space-y-1 text-sm">
                       <div className="flex justify-between font-bold text-cyan-100/90">

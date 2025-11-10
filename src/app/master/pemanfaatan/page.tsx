@@ -23,6 +23,17 @@ type PemanfaatanRow = {
   JUMLAH: number;
 };
 
+type SummaryRow = {
+  kategori: string;               // "KELURAHAN" | "KUA" | "PENGADILAN AGAMA" | "BIDAN" | "RUMAH SAKIT" | "RUMAH DUKA" | "HOTLINE EXTERNAL"
+  TOTAL_INSTANSI: number;
+  BARU: number;
+  MELENGKAPI: number;
+  BATAL: number;
+  SUDAH_DIVERIFIKASI: number;
+  SELESAI: number;
+  JUMLAH: number;
+};
+
 type Tab = "master" | "excel";
 
 /* ===== Helpers ===== */
@@ -203,6 +214,10 @@ export default function PemanfaatanPage() {
   const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
+  const [sumRows, setSumRows] = useState<SummaryRow[]>([]);
+  const [sumLoading, setSumLoading] = useState(false);
+  const [sumError, setSumError] = useState<string | null>(null);
+
   const label = useMemo(() => rangeLabel(start, end), [start, end]);
 
   async function load(s = start, e = end) {
@@ -230,16 +245,42 @@ export default function PemanfaatanPage() {
     }
   }
 
-  useEffect(() => { load(); /* mount */ // eslint-disable-next-line react-hooks/exhaustive-deps
+  async function loadSummary(s = start, e = end) {
+    setSumLoading(true);
+    setSumError(null);
+    try {
+      const res = await fetch(`/api/master/pemanfaatan/summary?start=${encodeURIComponent(s)}&end=${encodeURIComponent(e)}`, {
+        cache: "no-store",
+      });
+      const j = await res.json();
+      const data: SummaryRow[] = Array.isArray(j?.data) ? j.data : [];
+      setSumRows(data);
+    } catch (e: any) {
+      setSumRows([]);
+      setSumError(e?.message || "Gagal memuat ringkasan");
+    } finally {
+      setSumLoading(false);
+    }
+  }
+
+    useEffect(() => { 
+    load(); 
+    loadSummary();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  
 
   useEffect(() => { if (end < start) setEnd(start); }, [start, end]);
 
   const onClear = () => { const t = todayISO(); setStart(t); setEnd(t); };
 
+  // ⬇️ Refresh keduanya bareng
+  const refreshBoth = () => { load(); loadSummary(); };
+
   return (
-    <div className="pemanfaatan-page relative px-8 pb-10 pt-6 md:pt-8 space-y-8 mt-5">
-      {/* Ambient glow (masked by overrides in light) */}
+     <div className="pemanfaatan-page relative px-8 pb-10 pt-6 md:pt-8 space-y-8 mt-5">
+      {/* Ambient glow */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="abs-glow-cyan absolute top-[-15%] left-[15%] w-[1100px] h-[1100px] blur-[220px] rounded-full" />
         <div className="abs-glow-magenta absolute bottom-[-20%] right-[18%] w-[1000px] h-[1000px] blur-[190px] rounded-full" />
@@ -274,11 +315,11 @@ export default function PemanfaatanPage() {
 
               <button
                 type="button"
-                onClick={() => load()}
+                onClick={refreshBoth}
                 className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-sm transition-colors"
                 aria-label="Muat ulang data"
               >
-                <RefreshCcw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+                <RefreshCcw className={`w-4 h-4 ${(loading || sumLoading) ? "animate-spin" : ""}`} />
                 Refresh
               </button>
             </div>
@@ -333,7 +374,12 @@ export default function PemanfaatanPage() {
         </div>
 
         {/* Divider */}
-        <div className="mx-5 h-[1px] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
+         <div className="mx-5 h-[1px] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
+
+        {/* ===== RINGKASAN PER KATEGORI ===== */}
+        <div className="px-5 pt-4">
+          <SummaryStrip rows={sumRows} loading={sumLoading} error={sumError} />
+        </div>
 
         {/* ===== Content ===== */}
         <div className="p-5 space-y-5">
@@ -631,14 +677,94 @@ function PemanfaatanCard({ row }: { row: PemanfaatanRow }) {
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
+function SummaryStrip({
+  rows,
+  loading,
+  error,
+}: {
+  rows: SummaryRow[];
+  loading: boolean;
+  error: string | null;
+}) {
+  const order = [
+    "KELURAHAN",
+    "KUA",
+    "PENGADILAN AGAMA",
+    "BIDAN",
+    "RUMAH SAKIT",
+    "RUMAH DUKA",
+    "HOTLINE EXTERNAL",
+  ];
+  const map = new Map(rows.map((r) => [r.kategori, r]));
+  const data = order.map((k) => map.get(k) || ({
+    kategori: k,
+    TOTAL_INSTANSI: 0, BARU: 0, MELENGKAPI: 0, BATAL: 0,
+    SUDAH_DIVERIFIKASI: 0, SELESAI: 0, JUMLAH: 0,
+  }));
+
+  const n = (v: number) => Number(v ?? 0).toLocaleString("id-ID");
+
   return (
-    <div className="salaman-card__stat">
-      <span className="salaman-card__stat-label">{label}</span>
-      <span className="salaman-card__stat-value">
-        {Number(value ?? 0).toLocaleString("id-ID")}
-      </span>
-    </div>
+    <section
+      className="summary-strip rounded-2xl"
+      aria-labelledby="summary-strip-title"
+      role="region"
+    >
+      <header className="summary-strip__head">
+        <div className="summary-strip__titlewrap">
+          <span aria-hidden className="summary-strip__dot" />
+          <h3 id="summary-strip-title" className="summary-strip__title">
+            Ringkasan per Kategori Inovasi
+          </h3>
+        </div>
+        {loading && (
+          <span className="summary-strip__loading" aria-live="polite">
+            Memuat ringkasan…
+          </span>
+        )}
+      </header>
+
+      {error ? (
+        <div className="summary-strip__error" role="alert">
+          {error}
+        </div>
+      ) : (
+        <>
+          <div className="summary-strip__grid">
+            {data.map((r) => (
+              <article
+                key={r.kategori}
+                className="summary-card"
+                tabIndex={0}
+                aria-label={`Kategori ${r.kategori}, total ${n(r.JUMLAH)}`}
+              >
+                <p className="summary-card__eyebrow">{r.kategori}</p>
+
+                <div className="summary-card__total">
+                  <span className="summary-card__total-num">{n(r.JUMLAH)}</span>
+                  <span className="summary-card__total-label">pengajuan</span>
+                </div>
+
+                <dl className="summary-card__mini">
+                  <div className="summary-card__mini-col">
+                    <dt>Baru</dt><dd>{n(r.BARU)}</dd>
+                  </div>
+                  <div className="summary-card__mini-col">
+                    <dt>Upload</dt><dd>{n(r.MELENGKAPI)}</dd>
+                  </div>
+                  <div className="summary-card__mini-col">
+                    <dt>Batal</dt><dd>{n(r.BATAL)}</dd>
+                  </div>
+                  <div className="summary-card__mini-col">
+                    <dt>Selesai</dt><dd>{n(r.SELESAI)}</dd>
+                  </div>
+                </dl>
+              </article>
+            ))}
+          </div>
+        </>
+      )}
+    </section>
   );
 }
 
