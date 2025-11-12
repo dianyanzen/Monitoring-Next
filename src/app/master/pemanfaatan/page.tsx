@@ -1,3 +1,4 @@
+// FILE: src/app/master/pemanfaatan/page.tsx
 "use client";
 
 import * as React from "react";
@@ -5,6 +6,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { LayoutGrid, List as ListIcon, RefreshCcw, Search, Trash2 } from "lucide-react";
 import DateRangePopup from "@/components/ui/DateRangePopup";
+import { DataShell, LoadingBlank } from "@/components/ui/LoadingOverlay";
 import Image from "next/image";
 
 /* ===== Types ===== */
@@ -24,7 +26,7 @@ type PemanfaatanRow = {
 };
 
 type SummaryRow = {
-  kategori: string;               // "KELURAHAN" | "KUA" | "PENGADILAN AGAMA" | "BIDAN" | "RUMAH SAKIT" | "RUMAH DUKA" | "HOTLINE EXTERNAL"
+  kategori: string;               // "KELURAHAN" | "KUA" | "SIAP PA" | "BIDAN" | "RUMAH SAKIT" | "PADUKA" | "HOTLINE"
   TOTAL_INSTANSI: number;
   BARU: number;
   MELENGKAPI: number;
@@ -36,7 +38,7 @@ type SummaryRow = {
 
 type Tab = "master" | "excel";
 
-/* ===== Helpers ===== */
+/* ===== Helpers (tanggal) ===== */
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 const todayISO = () => iso(new Date());
 const toDisp = (s: string) => { const [y, m, d] = s.split("-"); return `${d}-${m}-${y}`; };
@@ -47,38 +49,82 @@ const monthEdges = (d = new Date()) => {
   return { start: iso(s), end: iso(e) };
 };
 
-const fallbackAvatar = "/assets/plugins/images/calming-cat.gif";
-const PLACEHOLDER_LIGHT = "/assets/upload/lux_man.png";
-const PLACEHOLDER_DARK  = "/assets/upload/cyber_man.png";
+/* =========================================================================
+   PLACEHOLDER LANDSCAPE 3:2 – TERTANAM LANGSUNG DI PAGE
+   Folder gambar: /assets/upload/
+   Nama file:
+   - inovasi-hotlineexternal(.png | -lux.png)
+   - inovasi-kompakkang(.png | -lux.png)
+   - inovasi-paduka(.png | -lux.png)
+   - inovasi-pelanabidan(.png | -lux.png)
+   - inovasi-pelanarumahsakit(.png | -lux.png)
+   - inovasi-pelitahati(.png | -lux.png)
+   - inovasi-siappa(.png | -lux.png)
+   ======================================================================== */
+type InovasiKey =
+  | "KELURAHAN"
+  | "KUA"
+  | "SIAP PA"
+  | "BIDAN"
+  | "RUMAH SAKIT"
+  | "PADUKA"
+  | "HOTLINE";
 
-// pilih placeholder berdasar theme
-const placeholderByTheme = (isDark: boolean) => (isDark ? PLACEHOLDER_DARK : PLACEHOLDER_LIGHT);
+const P = (n: string) => `/assets/upload/${n}`;
+const PLACEHOLDER_MAP: Record<
+  "KELURAHAN"|"KUA"|"SIAP PA"|"BIDAN"|"RUMAH SAKIT"|"PADUKA"|"HOTLINE",
+  { dark: string; light: string }
+> = {
+  "HOTLINE": { dark: P("inovasi-hotlineexternal.png"),      light: P("inovasi-hotlineexternal-lux.png") },
+  "KUA":               { dark: P("inovasi-kompakkang.png"),           light: P("inovasi-kompakkang-lux.png") },
+  "PADUKA":        { dark: P("inovasi-paduka.png"),               light: P("inovasi-paduka-lux.png") },
+  "BIDAN":             { dark: P("inovasi-pelanabidan.png"),          light: P("inovasi-pelanabidan-lux.png") },
+  "RUMAH SAKIT":       { dark: P("inovasi-pelanarumahsakit.png"),     light: P("inovasi-pelanarumahsakit-lux.png") },
+  "KELURAHAN":         { dark: P("inovasi-pelitahati.png"),           light: P("inovasi-pelitahati-lux.png") },
+  "SIAP PA":  { dark: P("inovasi-siappa.png"),               light: P("inovasi-siappa-lux.png") },
+};
+const phByKategori = (kategori: string, isDark: boolean) => {
+  const key = (kategori || "").trim().toUpperCase() as keyof typeof PLACEHOLDER_MAP;
+  const m = PLACEHOLDER_MAP[key] ?? PLACEHOLDER_MAP["HOTLINE"];
+  return isDark ? m.dark : m.light;
+};
 
-// jika nanti butuh nik (foto asli), tetap konsisten signature-nya
-const kerjasamaAvatar = (nik?: string | null, isDark?: boolean) =>
-  placeholderByTheme(Boolean(isDark));
-// const kerjasamaAvatar = (nik?: string | null) => (nik ? fallbackAvatar : fallbackAvatar);
-// const kerjasamaAvatar = (nik?: string | null) => (nik ? `/assets/upload/pp_kerjasama/${nik}.jpg` : fallbackAvatar);
+function useThemeDark(): boolean {
+  const [isDark, setIsDark] = React.useState(false);
+  React.useEffect(() => {
+    const root = document.documentElement;
+    const update = () => {
+      const byClass = root.classList.contains("dark");
+      const byAttr = (root.getAttribute("data-theme") || "").toLowerCase() === "dark";
+      setIsDark(byClass || byAttr);
+    };
+    update();
+    const obs = new MutationObserver(update);
+    obs.observe(root, { attributes: true, attributeFilter: ["class", "data-theme"] });
+    return () => obs.disconnect();
+  }, []);
+  return isDark;
+}
 
 /* ===== Order & label kategori (sesuai instruksi) ===== */
 const ORDER_KEYS = [
   "KELURAHAN",
   "KUA",
-  "PENGADILAN AGAMA",
+  "SIAP PA",
   "BIDAN",
-  "RUMAH SAKIT",         // (DB: tetap "RUMAH SAKIT") tampil: RS/Klinik/Puskesmas
-  "RUMAH DUKA",
-  "HOTLINE EXTERNAL",
+  "RUMAH SAKIT",         // tampil: RS/Klinik/Puskesmas
+  "PADUKA",
+  "HOTLINE",
 ] as const;
 
 const LABEL_MAP: Record<string, string> = {
   "KELURAHAN": "INOVASI PELITA HATI (KELURAHAN)",
   "KUA": "INOVASI KOMPAK KANG (KUA)",
-  "PENGADILAN AGAMA": "INOVASI SIAP PA (PENGADILAN AGAMA)",
+  "SIAP PA": "INOVASI SIAP PA (PENGADILAN AGAMA)",
   "BIDAN": "INOVASI PELANA (BIDAN)",
   "RUMAH SAKIT": "INOVASI PELANA (RUMAH SAKIT, KLINIK, DAN PUSKESMAS)",
-  "RUMAH DUKA": "INOVASI PADUKA (RUMAH DUKA)",
-  "HOTLINE EXTERNAL": "HOTLINE EXTERNAL",
+  "PADUKA": "INOVASI PADUKA (PADUKA)",
+  "HOTLINE": "HOTLINE",
 };
 
 const keyOf = (raw?: string) => (raw || "LAINNYA").trim().toUpperCase();
@@ -153,23 +199,7 @@ const JQDataTable = dynamic(() => import("@/components/datatable/JQDataTable"), 
   loading: () => <div className="px-2 py-6 text-sm">Menyiapkan DataTable...</div>,
 });
 
-function useThemeDark(): boolean {
-  const [isDark, setIsDark] = React.useState(false);
-  React.useEffect(() => {
-    const root = document.documentElement;
-    const update = () => {
-      const byClass = root.classList.contains("dark");
-      const byAttr = (root.getAttribute("data-theme") || "").toLowerCase() === "dark";
-      setIsDark(byClass || byAttr);
-    };
-    update();
-    const obs = new MutationObserver(update);
-    obs.observe(root, { attributes: true, attributeFilter: ["class", "data-theme"] });
-    return () => obs.disconnect();
-  }, []);
-  return isDark;
-}
-// ====== Export helpers ======
+/* ===== CSV/XLSX helpers ===== */
 const stripHtml = (d: any) => String(d ?? "").replace(/<[^>]*>/g, "");
 
 // indeks kolom di DataTables (0-based): 
@@ -219,6 +249,27 @@ export default function PemanfaatanPage() {
   const [sumError, setSumError] = useState<string | null>(null);
 
   const label = useMemo(() => rangeLabel(start, end), [start, end]);
+  const [openKeys, setOpenKeys] = useState<Set<string>>(new Set());          // ⬅ state group terbuka
+  type GroupAnchorMap = Record<string, HTMLElement | null>;
+  const sectionRefs = useRef<GroupAnchorMap>({});
+  
+
+  const toggleGroup = (rawKey: string) => {
+    const key = (rawKey || "").trim().toUpperCase();
+    setOpenKeys(prev => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
+    });
+  };
+
+  const openAndJump = (rawKey: string) => {
+    const key = (rawKey || "").trim().toUpperCase();
+    setOpenKeys(prev => new Set(prev).add(key));
+    requestAnimationFrame(() => {
+      sectionRefs.current[key]?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
 
   async function load(s = start, e = end) {
     abortRef.current?.abort();
@@ -263,23 +314,19 @@ export default function PemanfaatanPage() {
     }
   }
 
-    useEffect(() => { 
+  useEffect(() => { 
     load(); 
     loadSummary();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  
-
   useEffect(() => { if (end < start) setEnd(start); }, [start, end]);
-
+  const isBusy = (loading || sumLoading);
   const onClear = () => { const t = todayISO(); setStart(t); setEnd(t); };
-
-  // ⬇️ Refresh keduanya bareng
   const refreshBoth = () => { load(); loadSummary(); };
-
+  
   return (
-     <div className="pemanfaatan-page relative px-8 pb-10 pt-6 md:pt-8 space-y-8 mt-5">
+    <div className="pemanfaatan-page relative px-8 pb-10 pt-6 md:pt-8 space-y-8 mt-5">
       {/* Ambient glow */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="abs-glow-cyan absolute top-[-15%] left-[15%] w-[1100px] h-[1100px] blur-[220px] rounded-full" />
@@ -356,12 +403,13 @@ export default function PemanfaatanPage() {
             {/* Actions */}
             <div className="flex items-center gap-2">
               <button
-                onClick={() => load()}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-600/25 hover:bg-cyan-600/40 border border-cyan-400/40 text-sm shadow-[0_0_14px_#00ffff55] transition-colors"
-              >
-                <Search className="w-4 h-4" />
-                {loading && !firstLoad ? "Loading…" : "Search"}
-              </button>
+                  onClick={refreshBoth}                                  // ← was: () => load()
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-600/25 hover:bg-cyan-600/40 border border-cyan-400/40 text-sm shadow-[0_0_14px_#00ffff55] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                  disabled={isBusy}
+                >
+                  <Search className={`w-4 h-4 ${isBusy ? "animate-pulse" : ""}`} />
+                  {isBusy && !firstLoad ? "Loading…" : "Search"}
+                </button>
               <button
                 onClick={onClear}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/20 text-sm transition-colors"
@@ -374,40 +422,77 @@ export default function PemanfaatanPage() {
         </div>
 
         {/* Divider */}
-         <div className="mx-5 h-[1px] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
+        <div className="mx-5 h-[1px] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
 
         {/* ===== RINGKASAN PER KATEGORI ===== */}
         <div className="px-5 pt-4">
-          <SummaryStrip rows={sumRows} loading={sumLoading} error={sumError} />
+            <DataShell
+              loading={sumLoading}
+              hasData={sumRows.length > 0}
+              message="Mengambil ringkasan"
+              subtext={label}
+            >
+              <SummaryStrip
+                rows={sumRows}
+                loading={sumLoading}
+                error={sumError}
+                onJump={openAndJump}
+              />
+            </DataShell>
         </div>
 
         {/* ===== Content ===== */}
         <div className="p-5 space-y-5">
-          {error && (
-            <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm">
-              {error}
-            </div>
-          )}
-
-          {tab === "master" ? (
-            loading && firstLoad ? (
-              <MasterSkeletonGrid />
+         {tab === "master" ? (
+          <DataShell
+            loading={loading}
+            hasData={rows.length > 0}
+            message="Memuat data"
+            subtext={label}
+          >
+            {error ? (
+              <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm">
+                {error}
+              </div>
             ) : (
-              <MasterCardGroups rows={rows} />
-            )
-          ) : (
-            <ExcelDataTable rows={rows} loading={loading} rangeLabel={label} />
-          )}
-        </div>
-      </section>
+              <MasterCardGroups
+                rows={rows}
+                openKeys={openKeys}
+                onToggle={toggleGroup}
+                sectionRefs={sectionRefs}
+              />
+            )}
+          </DataShell>
+        ) : (
+          <DataShell
+            loading={loading}
+            hasData={rows.length > 0}
+            message="Menyiapkan tabel"
+            subtext={label}
+          >
+            {/* Hindari spinner dobel: kirim loading=false ke tabel */}
+            <ExcelDataTable rows={rows} loading={false} rangeLabel={label} />
+          </DataShell>
+        )}
+      </div>
+    </section>
     </div>
   );
 }
 
 /* ===== Master View (grouped & ordered by custom order) ===== */
-function MasterCardGroups({ rows }: { rows: PemanfaatanRow[] }) {
+function MasterCardGroups({
+  rows,
+  openKeys,
+  onToggle,
+  sectionRefs,
+}: {
+  rows: PemanfaatanRow[];
+  openKeys: Set<string>;
+  onToggle: (key: string) => void;
+  sectionRefs: React.MutableRefObject<Record<string, HTMLElement | null>>;
+}) {
   const groups = useMemo(() => buildPemanfaatanGroups(rows), [rows]);
-
   if (rows.length === 0) {
     return (
       <div className="rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-4 py-3 text-sm">
@@ -417,26 +502,43 @@ function MasterCardGroups({ rows }: { rows: PemanfaatanRow[] }) {
   }
 
   return (
-    <div className="space-y-8">
-      {groups.map(([kategoriKey, items]) => (
-        <section key={kategoriKey} className="pemanfaatan-group-block">
-          <header className="group-chip">
-            <span className="group-chip__dot" />
-            <h2 className="group-chip__label">{LABEL_MAP[kategoriKey] ?? kategoriKey}</h2>
-          </header>
+    <div className="space-y-6">
+      {groups.map(([kategoriKey, items]) => {
+        const isOpen = openKeys.has(kategoriKey);
+        return (
+          <section
+              key={kategoriKey}
+              ref={(el: HTMLElement | null) => { sectionRefs.current[kategoriKey] = el; }}
+              className={`pemanfaatan-group-block collapsible ${isOpen ? "is-open" : ""}`}
+            >
+            <button
+              type="button"
+              className="group-chip group-chip--button"
+              aria-expanded={isOpen}
+              aria-controls={`panel-${kategoriKey}`}
+              onClick={() => onToggle(kategoriKey)}
+              title={`Toggle ${LABEL_MAP[kategoriKey] ?? kategoriKey}`}
+            >
+              <span className="group-chip__dot" />
+              <h2 className="group-chip__label">{LABEL_MAP[kategoriKey] ?? kategoriKey}</h2>
+              <span className={`caret ${isOpen ? "rot" : ""}`} aria-hidden>▾</span>
+            </button>
 
-          <div className="attendance-grid">
-          {items.map((r, i) => (
-            <PemanfaatanCard key={`${kategoriKey}-${r.NIK}-${i}`} row={r} />
-          ))}
-        </div>
-        </section>
-      ))}
+            {isOpen && (
+              <div id={`panel-${kategoriKey}`} className="attendance-grid collapsible-body">
+                {items.map((r, i) => (
+                  <PemanfaatanCard key={`${kategoriKey}-${r.NIK}-${i}`} row={r} />
+                ))}
+              </div>
+            )}
+          </section>
+        );
+      })}
     </div>
   );
 }
 
-/* ===== Excel View (order awal berdasarkan "No") ===== */
+/* ===== Excel View ===== */
 function ExcelDataTable({
   rows,
   loading,
@@ -481,7 +583,6 @@ function ExcelDataTable({
       </header>
 
       <div className="pemanfaatan-table-panel__body relative">
-        {/* State kosong / inisialisasi */}
         {loading && !hasData ? (
           <div className="pemanfaatan-table-panel__empty">
             <span className="pemanfaatan-table-panel__spinner" aria-hidden="true" />
@@ -531,11 +632,10 @@ function ExcelDataTable({
                   processing: "Memproses…",
                 },
                 order: [[0, "asc"]],
-                processing: true, // ✅ indikator bawaan DataTables
+                processing: true,
               }}
             />
 
-            {/* Overlay loading di atas tabel ketika reload/refresh */}
             {loading && (
               <div
                 className="pointer-events-none absolute inset-0 grid place-items-center rounded-xl
@@ -608,66 +708,40 @@ function MasterSkeletonGrid() {
     </div>
   );
 }
-function PemanfaatanCard({ row }: { row: PemanfaatanRow }) {
-   const isDark = useThemeDark();
-  const avatar = kerjasamaAvatar(row.NIK, isDark);
 
-  // formatter angka
+function PemanfaatanCard({ row }: { row: PemanfaatanRow }) {
+  const isDark = useThemeDark(); // ← hook versi kamu
+  const src = phByKategori(row.KATEGORI, isDark);
   const n = (v: number) => Number(v ?? 0).toLocaleString("id-ID");
 
   return (
     <article className="master-card attendance-card">
-      {/* === HERO (match Master Absensi) === */}
-      <div className="master-card__hero">
-        {/* pakai next/image tapi class & fallback sama */}
+      <div className="landscape-hero">
         <Image
-          src={avatar}
-          alt={row.NAMA_INSTANSI || "Instansi"}
-          width={192}
-          height={192}
-          quality={92}
-          loading="lazy"
-          sizes="(max-width: 640px) 112px, 128px"
-          className="master-card__avatar object-cover"
-          onError={(e: any) => { e.currentTarget.src = placeholderByTheme(isDark); }}
+          key={`${src}-${isDark}`}    // paksa re-render saat tema berubah
+          src={src}
+          alt={row.KATEGORI ? `${row.KATEGORI} — ${row.NAMA_INSTANSI || ""}` : "Placeholder Inovasi"}
+          fill
+          sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 480px"
+          className="landscape-img"
+          priority={false}
         />
-        <h2 className="master-card__name">
-          {(row.NAMA_INSTANSI || "—").toUpperCase()}
-        </h2>
-        <p className="master-card__office">
-          {(LABEL_MAP[keyOf(row.USER_NAME)] ?? keyOf(row.USER_NAME))}
-        </p>
       </div>
 
-      {/* === BODY (2 kolom stat, sama seperti Absensi) === */}
+      <h2 className="master-card__name ta-center">{(row.NAMA_INSTANSI || "—").toUpperCase()}</h2>
+      <p className="master-card__office ta-center">{row.USER_NAME || "—"}</p>
+
+      {/* === BODY (stat) === */}
       <div className="master-card__body">
-        <div className="master-card__stat">
-          <span className="master-card__stat-label">Pengajuan Baru</span>
-          <span className="master-card__stat-value">{n(row.BARU)}</span>
-        </div>
-        <div className="master-card__stat">
-          <span className="master-card__stat-label">Upload Ulang</span>
-          <span className="master-card__stat-value">{n(row.MELENGKAPI)}</span>
-        </div>
-        <div className="master-card__stat">
-          <span className="master-card__stat-label">Batal</span>
-          <span className="master-card__stat-value">{n(row.BATAL)}</span>
-        </div>
-        <div className="master-card__stat">
-          <span className="master-card__stat-label">Diverifikasi</span>
-          <span className="master-card__stat-value">{n(row.SUDAH_DIVERIFIKASI)}</span>
-        </div>
-        <div className="master-card__stat">
-          <span className="master-card__stat-label">Selesai</span>
-          <span className="master-card__stat-value">{n(row.SELESAI)}</span>
-        </div>
-        <div className="master-card__stat">
-          <span className="master-card__stat-label">Jumlah</span>
-          <span className="master-card__stat-value">{n(row.JUMLAH)}</span>
-        </div>
+        <div className="master-card__stat"><span className="master-card__stat-label">Pengajuan Baru</span><span className="master-card__stat-value">{n(row.BARU)}</span></div>
+        <div className="master-card__stat"><span className="master-card__stat-label">Upload Ulang</span><span className="master-card__stat-value">{n(row.MELENGKAPI)}</span></div>
+        <div className="master-card__stat"><span className="master-card__stat-label">Batal</span><span className="master-card__stat-value">{n(row.BATAL)}</span></div>
+        <div className="master-card__stat"><span className="master-card__stat-label">Diverifikasi</span><span className="master-card__stat-value">{n(row.SUDAH_DIVERIFIKASI)}</span></div>
+        <div className="master-card__stat"><span className="master-card__stat-label">Selesai</span><span className="master-card__stat-value">{n(row.SELESAI)}</span></div>
+        <div className="master-card__stat"><span className="master-card__stat-label">Jumlah</span><span className="master-card__stat-value">{n(row.JUMLAH)}</span></div>
       </div>
 
-      {/* === FOOTER (match) === */}
+      {/* === FOOTER === */}
       <footer className="master-card__footer">
         <span className="master-card__nik-label">NIK Petugas</span>
         <span className="master-card__nik-value">{row.NIK || "—"}</span>
@@ -678,94 +752,61 @@ function PemanfaatanCard({ row }: { row: PemanfaatanRow }) {
 }
 
 function SummaryStrip({
-  rows,
-  loading,
-  error,
+  rows, loading, error, onJump,
 }: {
   rows: SummaryRow[];
   loading: boolean;
   error: string | null;
+  onJump: (kategoriKey: string) => void;
 }) {
-  const order = [
-    "KELURAHAN",
-    "KUA",
-    "PENGADILAN AGAMA",
-    "BIDAN",
-    "RUMAH SAKIT",
-    "RUMAH DUKA",
-    "HOTLINE EXTERNAL",
-  ];
+  const order = ["KELURAHAN","KUA","SIAP PA","BIDAN","RUMAH SAKIT","PADUKA","HOTLINE"];
   const map = new Map(rows.map((r) => [r.kategori, r]));
   const data = order.map((k) => map.get(k) || ({
-    kategori: k,
-    TOTAL_INSTANSI: 0, BARU: 0, MELENGKAPI: 0, BATAL: 0,
-    SUDAH_DIVERIFIKASI: 0, SELESAI: 0, JUMLAH: 0,
+    kategori: k, TOTAL_INSTANSI: 0, BARU: 0, MELENGKAPI: 0, BATAL: 0, SUDAH_DIVERIFIKASI: 0, SELESAI: 0, JUMLAH: 0,
   }));
-
   const n = (v: number) => Number(v ?? 0).toLocaleString("id-ID");
 
   return (
-    <section
-      className="summary-strip rounded-2xl"
-      aria-labelledby="summary-strip-title"
-      role="region"
-    >
+    <section className="summary-strip rounded-2xl" aria-labelledby="summary-strip-title" role="region">
       <header className="summary-strip__head">
         <div className="summary-strip__titlewrap">
           <span aria-hidden className="summary-strip__dot" />
-          <h3 id="summary-strip-title" className="summary-strip__title">
-            Ringkasan per Kategori Inovasi
-          </h3>
+          <h3 id="summary-strip-title" className="summary-strip__title">Ringkasan per Kategori Inovasi</h3>
         </div>
-        {loading && (
-          <span className="summary-strip__loading" aria-live="polite">
-            Memuat ringkasan…
-          </span>
-        )}
+        {loading && <span className="summary-strip__loading" aria-live="polite">Memuat ringkasan…</span>}
       </header>
 
       {error ? (
-        <div className="summary-strip__error" role="alert">
-          {error}
-        </div>
+        <div className="summary-strip__error" role="alert">{error}</div>
       ) : (
-        <>
-          <div className="summary-strip__grid">
-            {data.map((r) => (
-              <article
-                key={r.kategori}
-                className="summary-card"
-                tabIndex={0}
-                aria-label={`Kategori ${r.kategori}, total ${n(r.JUMLAH)}`}
-              >
-                <p className="summary-card__eyebrow">{r.kategori}</p>
+        <div className="summary-strip__grid">
+          {data.map((r) => (
+            <article
+              key={r.kategori}
+              role="button"
+              tabIndex={0}
+              onClick={() => onJump(r.kategori)}
+              onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onJump(r.kategori)}
+              className="summary-card summary-card--clickable"
+              aria-label={`Buka ${r.kategori}, total ${n(r.JUMLAH)} pengajuan`}
+            >
+              <p className="summary-card__eyebrow">{r.kategori}</p>
 
-                <div className="summary-card__total">
-                  <span className="summary-card__total-num">{n(r.JUMLAH)}</span>
-                  <span className="summary-card__total-label">pengajuan</span>
-                </div>
+              <div className="summary-card__total">
+                <span className="summary-card__total-num">{n(r.JUMLAH)}</span>
+                <span className="summary-card__total-label">pengajuan</span>
+              </div>
 
-                <dl className="summary-card__mini">
-                  <div className="summary-card__mini-col">
-                    <dt>Baru</dt><dd>{n(r.BARU)}</dd>
-                  </div>
-                  <div className="summary-card__mini-col">
-                    <dt>Upload</dt><dd>{n(r.MELENGKAPI)}</dd>
-                  </div>
-                  <div className="summary-card__mini-col">
-                    <dt>Batal</dt><dd>{n(r.BATAL)}</dd>
-                  </div>
-                  <div className="summary-card__mini-col">
-                    <dt>Selesai</dt><dd>{n(r.SELESAI)}</dd>
-                  </div>
-                </dl>
-              </article>
-            ))}
-          </div>
-        </>
+              <dl className="summary-card__mini">
+                <div className="summary-card__mini-col"><dt>Baru</dt><dd>{n(r.BARU)}</dd></div>
+                <div className="summary-card__mini-col"><dt>Upload</dt><dd>{n(r.MELENGKAPI)}</dd></div>
+                <div className="summary-card__mini-col"><dt>Batal</dt><dd>{n(r.BATAL)}</dd></div>
+                <div className="summary-card__mini-col"><dt>Selesai</dt><dd>{n(r.SELESAI)}</dd></div>
+              </dl>
+            </article>
+          ))}
+        </div>
       )}
     </section>
   );
 }
-
-/* ===== Skeleton (match gaya salaman) ===== */

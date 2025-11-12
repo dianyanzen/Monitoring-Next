@@ -164,7 +164,7 @@ export async function GET(req: NextRequest) {
         FROM U_RS U LEFT JOIN CNT C ON C.NIK = U.NIK
       ),
       S_PADUKA AS (
-        SELECT 'RUMAH DUKA' AS KATEGORI,  -- ⟵ kunci untuk frontend
+        SELECT 'PADUKA' AS KATEGORI,  -- ⟵ kunci untuk frontend
                COUNT(*) AS TOTAL_INSTANSI,
                SUM(NVL(C.BARU,0)) AS BARU,
                SUM(NVL(C.MELENGKAPI,0)) AS MELENGKAPI,
@@ -175,7 +175,7 @@ export async function GET(req: NextRequest) {
         FROM U_PADUKA U LEFT JOIN CNT C ON C.NIK = U.NIK
       ),
       S_HOTLINE AS (
-        SELECT 'HOTLINE EXTERNAL' AS KATEGORI,
+        SELECT 'HOTLINE' AS KATEGORI,
                COUNT(*) AS TOTAL_INSTANSI,
                SUM(NVL(C.BARU,0)) AS BARU,
                SUM(NVL(C.MELENGKAPI,0)) AS MELENGKAPI,
@@ -186,7 +186,7 @@ export async function GET(req: NextRequest) {
         FROM U_HOTLINE U LEFT JOIN CNT C ON C.NIK = U.NIK
       ),
       S_SIAPPA AS (
-        SELECT 'PENGADILAN AGAMA' AS KATEGORI, -- ⟵ kunci untuk frontend
+        SELECT 'SIAP PA' AS KATEGORI, -- ⟵ kunci untuk frontend
                COUNT(*) AS TOTAL_INSTANSI,
                SUM(NVL(C.BARU,0)) AS BARU,
                SUM(NVL(C.MELENGKAPI,0)) AS MELENGKAPI,
@@ -216,11 +216,11 @@ export async function GET(req: NextRequest) {
     const ORDER_KEYS = [
       "KELURAHAN",
       "KUA",
-      "PENGADILAN AGAMA",
+      "SIAP PA",
       "BIDAN",
       "RUMAH SAKIT",
-      "RUMAH DUKA",
-      "HOTLINE EXTERNAL",
+      "PADUKA",
+      "HOTLINE",
     ];
 
     const map = new Map<string, any>();

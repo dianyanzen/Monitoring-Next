@@ -2094,3 +2094,26 @@ html[data-theme="light"] .summary-card__mini-col dt{
 html[data-theme="light"] .summary-card__mini-col dd{
   font-weight:800; font-size:.95rem; color:#7a5a1a;
 }
+
+html[data-theme="light"] .landscape-hero{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;              /* target 1536x1024 */
+  border-radius: 1rem;
+  overflow: hidden;
+  background: rgba(255,255,255,.70);
+  border: 1px solid rgba(17,34,80,.12);      /* royal navy tipis */
+  box-shadow: 0 10px 26px rgba(60,80,125,.10), inset 0 0 0 1px rgba(255,255,255,.35);
+}
+html[data-theme="light"] .landscape-img{ object-fit: cover; object-position: center; display:block; }
+
+/* sedikit jarak setelah gambar */
+html[data-theme="light"] .master-card.attendance-card .master-card__name{ margin-top:.65rem; }
+
+html[data-theme="light"] .group-chip--button{display:flex;align-items:center;gap:.6rem;width:100%;text-align:left;padding:.5rem .75rem;border-radius:.8rem;background:rgba(17,34,80,.04);border:1px solid rgba(17,34,80,.14)}
+html[data-theme="light"] .group-chip--button:hover{background:rgba(17,34,80,.07)}
+html[data-theme="light"] .group-chip--button .caret{margin-left:auto;transition:transform .18s ease;opacity:.7}
+html[data-theme="light"] .group-chip--button .caret.rot{transform:rotate(180deg)}
+html[data-theme="light"] .collapsible{border:1px solid rgba(17,34,80,.12);border-radius:1rem;padding:.6rem .6rem 1rem;background:rgba(255,255,255,.65)}
+html[data-theme="light"] .summary-card--clickable{cursor:pointer;transition:transform .12s ease,box-shadow .12s ease}
+html[data-theme="light"] .summary-card--clickable:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(60,80,125,.12)}
