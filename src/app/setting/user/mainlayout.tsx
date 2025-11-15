@@ -1,8 +1,9 @@
-// 📄 src/app/setting/user/lihat/[code]/mainlayout.tsx
+// FILE: src/app/setting/user/mainlayout.tsx
 "use client";
 
 import ResponsiveAppShell from "@/components/layout/ResponsiveAppShell";
 
-export default function MainLayoutClient({ children }: { children: React.ReactNode }) {
+export default function SettingUserMainLayout({ children }: { children: React.ReactNode }) {
   return <ResponsiveAppShell>{children}</ResponsiveAppShell>;
 }
+

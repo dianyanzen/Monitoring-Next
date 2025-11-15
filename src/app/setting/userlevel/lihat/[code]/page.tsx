@@ -279,6 +279,7 @@ export default function UserLevelLihatPage() {
                 type="button"
                 onClick={() => router.push("/setting/userlevel")}
                 className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-[11px] font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
+                data-overlay-on-click
               >
                 <ArrowLeft className="h-3.5 w-3.5" /> Back
               </button>

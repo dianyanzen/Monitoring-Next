@@ -131,7 +131,7 @@ export default function UserLevelPage() {
               </button>
               <button
                 type="button"
-                onClick={() => router.push("/setting/user/add")}
+                onClick={() => router.push("/setting/userlevel/add")}
                 className="inline-flex items-center gap-2 rounded-lg border border-transparent bg-gradient-to-r from-cyan-400 to-blue-500 px-3 py-1.5 text-[11px] font-semibold text-black shadow-lg transition hover:from-cyan-300 hover:to-blue-400"
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -252,7 +252,7 @@ export default function UserLevelPage() {
                         <div className="flex flex-nowrap items-center justify-center gap-2">
                           <button
                             type="button"
-                            onClick={() => router.push(`/setting/user/lihat/${encodeURIComponent(r.user_level)}`)}
+                            onClick={() => router.push(`/setting/userlevel/lihat/${encodeURIComponent(r.user_level)}`)}
                             className="btn op see inline-flex shrink-0 items-center gap-2 rounded-lg border border-cyan-800/50 bg-white/5 px-3 py-1.5 text-xs font-medium text-cyan-100 transition hover:bg-white/10"
                             title="Lihat"
                           >
@@ -261,7 +261,7 @@ export default function UserLevelPage() {
                           </button>
                           <button
                             type="button"
-                            onClick={() => router.push(`/setting/user/change/${encodeURIComponent(r.user_level)}`)}
+                            onClick={() => router.push(`/setting/userlevel/change/${encodeURIComponent(r.user_level)}`)}
                             className="btn op edit inline-flex shrink-0 items-center gap-2 rounded-lg border border-cyan-800/50 bg-white/5 px-3 py-1.5 text-xs font-medium text-cyan-100 transition hover:bg-white/10"
                             title="Ubah"
                           >
@@ -270,7 +270,7 @@ export default function UserLevelPage() {
                           </button>
                            <button
                             type="button"
-                            onClick={() => router.push(`/setting/user/edit/${encodeURIComponent(r.user_level)}`)}
+                            onClick={() => router.push(`/setting/userlevel/edit/${encodeURIComponent(r.user_level)}`)}
                             className="btn op priv inline-flex shrink-0 items-center gap-2 rounded-lg border border-cyan-800/50 bg-white/5 px-3 py-1.5 text-xs font-medium text-cyan-100 transition hover:bg-white/10"
                             title="Privilege Access"
                           >
@@ -279,7 +279,7 @@ export default function UserLevelPage() {
                           </button>
                           <button
                             type="button"
-                            onClick={() => router.push(`/setting/user/delete/${encodeURIComponent(r.user_level)}`)}
+                            onClick={() => router.push(`/setting/userlevel/delete/${encodeURIComponent(r.user_level)}`)}
                             className="btn op del inline-flex shrink-0 items-center gap-2 rounded-lg border border-cyan-800/50 bg-white/5 px-3 py-1.5 text-xs font-medium text-cyan-100 transition hover:bg-white/10"
                             title="Hapus"
                           >

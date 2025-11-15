@@ -19,3 +19,10 @@ html, body { overflow-x: hidden; }
   *{ animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
 ::selection{ background:#fee8b0; color:#1a1d21; }
+
+@layer components {
+  .field-input {
+    @apply w-full rounded-xl border border-cyan-800/60 bg-[#04060b]/70 px-4 py-2.5 text-sm text-cyan-50
+      placeholder:text-cyan-200/40 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/40;
+  }
+}
