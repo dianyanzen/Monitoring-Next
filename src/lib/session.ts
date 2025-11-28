@@ -1,4 +1,5 @@
 // FILE: src/lib/session.ts
+import "server-only";
 import crypto from "crypto";
 import { cookies, headers } from "next/headers";
 import { Log } from "./log";

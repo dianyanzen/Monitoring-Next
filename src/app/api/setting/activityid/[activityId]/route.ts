@@ -5,6 +5,9 @@ import { execOne, execDml, withTransaction } from "@/lib/db";
 import { readServerSession, getClientInfo } from "@/lib/session";
 import { Log } from "@/lib/log";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 const ORACLE_ALIAS = process.env.DB_ALIAS_SETTING ?? "DB";
 const AT = "/api/setting/activityid/[activityId]";
 
@@ -43,14 +46,18 @@ async function getActivityRow(id: number) {
   );
 }
 
-export async function GET(_req: NextRequest, context: { params: { activityId: string } }) {
+export async function GET(
+  _req: NextRequest,
+  context: { params: Promise<{ activityId: string }> }
+) {
   const started = Date.now();
   const { ip, ua } = await getClientInfo();
   try {
     const session = await readServerSession();
     if (!session?.S_USER_ID) return unauthorized("Unauthorized");
 
-    const id = parseActivityId(context.params?.activityId);
+    const { activityId } = await context.params;
+    const id = parseActivityId(activityId);
     if (!id) return badRequest("ID activity tidak valid");
 
     const row = await getActivityRow(id);
@@ -89,14 +96,18 @@ export async function GET(_req: NextRequest, context: { params: { activityId: st
   }
 }
 
-export async function PUT(req: NextRequest, context: { params: { activityId: string } }) {
+export async function PUT(
+  req: NextRequest,
+  context: { params: Promise<{ activityId: string }> }
+) {
   const started = Date.now();
   const { ip, ua } = await getClientInfo();
   try {
     const session = await readServerSession();
     if (!session?.S_USER_ID) return unauthorized("Unauthorized");
 
-    const id = parseActivityId(context.params?.activityId);
+    const { activityId } = await context.params;
+    const id = parseActivityId(activityId);
     if (!id) return badRequest("ID activity tidak valid");
 
     const body = await req.json().catch(() => ({}));
@@ -152,14 +163,18 @@ export async function PUT(req: NextRequest, context: { params: { activityId: str
   }
 }
 
-export async function DELETE(_req: NextRequest, context: { params: { activityId: string } }) {
+export async function DELETE(
+  _req: NextRequest,
+  context: { params: Promise<{ activityId: string }> }
+) {
   const started = Date.now();
   const { ip, ua } = await getClientInfo();
   try {
     const session = await readServerSession();
     if (!session?.S_USER_ID) return unauthorized("Unauthorized");
 
-    const id = parseActivityId(context.params?.activityId);
+    const { activityId } = await context.params;
+    const id = parseActivityId(activityId);
     if (!id) return badRequest("ID activity tidak valid");
 
     await withTransaction(
@@ -246,4 +261,3 @@ export async function DELETE(_req: NextRequest, context: { params: { activityId:
     return err(message, status);
   }
 }
-

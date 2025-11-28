@@ -5,6 +5,9 @@ import { ok, unauthorized, err, badRequest } from "@/lib/http";
 import { execOne, execDml } from "@/lib/db";
 import { Log } from "@/lib/log";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 const ORACLE_ALIAS = process.env.DB_ALIAS_SETTING ?? "DB";
 const AT = "/api/setting/pejabat/[pejabatId]";
 
@@ -34,14 +37,18 @@ async function getPejabatRow(id: number) {
   );
 }
 
-export async function GET(_req: NextRequest, context: { params: { pejabatId: string } }) {
+export async function GET(
+  _req: NextRequest,
+  context: { params: Promise<{ pejabatId: string }> }
+) {
   const started = Date.now();
   const { ip, ua } = await getClientInfo();
   try {
     const sess = await readServerSession();
     if (!sess?.S_USER_ID) return unauthorized("Unauthorized");
 
-    const id = Number(context.params?.pejabatId);
+    const { pejabatId } = await context.params;
+    const id = Number(pejabatId);
     if (!Number.isFinite(id) || id <= 0) return badRequest("ID pejabat tidak valid");
 
     const row = await getPejabatRow(id);
@@ -81,14 +88,18 @@ export async function GET(_req: NextRequest, context: { params: { pejabatId: str
   }
 }
 
-export async function PUT(req: NextRequest, context: { params: { pejabatId: string } }) {
+export async function PUT(
+  req: NextRequest,
+  context: { params: Promise<{ pejabatId: string }> }
+) {
   const started = Date.now();
   const { ip, ua } = await getClientInfo();
   try {
     const sess = await readServerSession();
     if (!sess?.S_USER_ID) return unauthorized("Unauthorized");
 
-    const id = Number(context.params?.pejabatId);
+    const { pejabatId } = await context.params;
+    const id = Number(pejabatId);
     if (!Number.isFinite(id) || id <= 0) return badRequest("ID pejabat tidak valid");
 
     const body = await req.json().catch(() => ({}));
@@ -153,14 +164,18 @@ export async function PUT(req: NextRequest, context: { params: { pejabatId: stri
   }
 }
 
-export async function DELETE(_req: NextRequest, context: { params: { pejabatId: string } }) {
+export async function DELETE(
+  _req: NextRequest,
+  context: { params: Promise<{ pejabatId: string }> }
+) {
   const started = Date.now();
   const { ip, ua } = await getClientInfo();
   try {
     const sess = await readServerSession();
     if (!sess?.S_USER_ID) return unauthorized("Unauthorized");
 
-    const id = Number(context.params?.pejabatId);
+    const { pejabatId } = await context.params;
+    const id = Number(pejabatId);
     if (!Number.isFinite(id) || id <= 0) return badRequest("ID pejabat tidak valid");
 
     const affected = await execDml(

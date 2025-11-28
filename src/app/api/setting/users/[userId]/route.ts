@@ -102,14 +102,15 @@ type UpdatePayload = {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   const started = Date.now();
   try {
     const sess = await readServerSession();
     if (!sess?.S_USER_ID) return unauthorized();
 
-    const userIdParam = params?.userId?.trim();
+    const { userId } = await params;
+    const userIdParam = userId?.trim();
     if (!userIdParam) return badRequest("User ID tidak valid");
 
     const sql = `
@@ -265,14 +266,15 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   const started = Date.now();
   try {
     const sess = await readServerSession();
     if (!sess?.S_USER_ID) return unauthorized();
 
-    const userIdParam = params?.userId?.trim();
+    const { userId } = await params;
+    const userIdParam = userId?.trim();
     if (!userIdParam) return badRequest("User ID tidak valid");
 
     const body = (await req.json().catch(() => null)) as UpdatePayload | null;
@@ -510,14 +512,15 @@ export async function PUT(
 }
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   const started = Date.now();
   try {
     const sess = await readServerSession();
     if (!sess?.S_USER_ID) return unauthorized();
 
-    const userIdParam = params?.userId?.trim();
+    const { userId } = await params;
+    const userIdParam = userId?.trim();
     if (!userIdParam) return badRequest("User ID tidak valid");
 
     let deletedRows = 0;

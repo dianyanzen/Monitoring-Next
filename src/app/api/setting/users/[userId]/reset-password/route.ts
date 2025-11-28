@@ -17,10 +17,11 @@ function toMd5(raw: string) {
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   const started = Date.now();
-  const targetId = (params?.userId ?? "").trim().toUpperCase();
+  const { userId } = await params;
+  const targetId = (userId ?? "").trim().toUpperCase();
   if (!targetId) return badRequest("User ID wajib diisi");
 
   try {
@@ -69,4 +70,3 @@ export async function POST(
     return err(e?.message || "Gagal me-reset password user");
   }
 }
-
