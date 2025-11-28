@@ -368,58 +368,62 @@ export default function EditUserPage() {
     return null;
   }
 
-  async function onSubmit() {
-    const validation = validateForm();
-    if (validation) {
-      setModal({ open: true, kind: "warning", title: "Validasi", message: validation });
-      return;
+
+    async function onSubmit() {
+      const validation = validateForm();
+      if (validation) {
+        setModal({ open: true, kind: "warning", title: "Validasi", message: validation });
+        return;
+      }
+      setSubmitting(true);
+      try {
+        const payload = {
+          nama_lgkp: form.nama_lgkp.trim(),
+          nama_dpn: form.nama_dpn.trim(),
+          nik: form.nik.trim(),
+          tmpt_lhr: form.tmpt_lhr.trim().toUpperCase(),
+          tgl_lhr: form.tgl_lhr.trim(),
+          jenis_klmin: Number(form.jenis_klmin),
+          gol_drh: Number(form.gol_drh),
+          nama_kantor: form.nama_kantor.trim().toUpperCase(),
+          alamat_kantor: form.alamat_kantor.trim().toUpperCase(),
+          telp: form.telp.trim(),
+          alamat_rumah: form.alamat_rumah.trim().toUpperCase(),
+          user_level: form.user_level,
+          wilayah: { ...form.wilayah },
+          akun: { ...form.akun },
+          // kirim string "0"/"1" apa adanya, biar server yang convert
+          flags: { ...form.flags },
+          supervisors: { ...form.supervisors },
+        };
+
+        const res = await fetch(`/api/setting/users/${encodeURIComponent(userId)}`, {
+          method: "PUT",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const json = await res.json();
+        if (!res.ok || json?.success === false) throw new Error(json?.message || "Gagal memperbarui user");
+        setModal({
+          open: true,
+          kind: "success",
+          title: "User diperbarui",
+          message: `Data user ${userId} berhasil diperbarui.`,
+          goBack: true,
+        });
+      } catch (e: any) {
+        setModal({
+          open: true,
+          kind: "error",
+          title: "Gagal menyimpan",
+          message: e?.message || "Terjadi kesalahan saat menyimpan user",
+        });
+      } finally {
+        setSubmitting(false);
+      }
     }
-    setSubmitting(true);
-    try {
-      const payload = {
-        nama_lgkp: form.nama_lgkp.trim(),
-        nama_dpn: form.nama_dpn.trim(),
-        nik: form.nik.trim(),
-        tmpt_lhr: form.tmpt_lhr.trim().toUpperCase(),
-        tgl_lhr: form.tgl_lhr.trim(),
-        jenis_klmin: Number(form.jenis_klmin),
-        gol_drh: Number(form.gol_drh),
-        nama_kantor: form.nama_kantor.trim().toUpperCase(),
-        alamat_kantor: form.alamat_kantor.trim().toUpperCase(),
-        telp: form.telp.trim(),
-        alamat_rumah: form.alamat_rumah.trim().toUpperCase(),
-        user_level: form.user_level,
-        wilayah: { ...form.wilayah },
-        akun: { ...form.akun },
-        flags: Object.fromEntries(Object.entries(form.flags).map(([k, v]) => [k, v === "1"])) as FormState["flags"],
-        supervisors: { ...form.supervisors },
-      };
-      const res = await fetch(`/api/setting/users/${encodeURIComponent(userId)}`, {
-        method: "PUT",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const json = await res.json();
-      if (!res.ok || json?.success === false) throw new Error(json?.message || "Gagal memperbarui user");
-      setModal({
-        open: true,
-        kind: "success",
-        title: "User diperbarui",
-        message: `Data user ${userId} berhasil diperbarui.`,
-        goBack: true,
-      });
-    } catch (e: any) {
-      setModal({
-        open: true,
-        kind: "error",
-        title: "Gagal menyimpan",
-        message: e?.message || "Terjadi kesalahan saat menyimpan user",
-      });
-    } finally {
-      setSubmitting(false);
-    }
-  }
+
 
   if (loadingDetail) {
     return (

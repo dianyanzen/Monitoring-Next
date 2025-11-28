@@ -333,7 +333,7 @@ export async function POST(req: NextRequest) {
         IS_MONITORING, IS_GISA, IS_ABSEN, IS_ASN, ABSENSI_CHECKING,
         IS_ACTIVE, IPADDRESS_CHECK, IS_SHOW,
         USER_PWD,
-        CREATED_AT
+        CREATED_DT
       )
       VALUES (
         :b_user_id, :b_nama_lgkp, :b_nama_dpn, :b_nik,

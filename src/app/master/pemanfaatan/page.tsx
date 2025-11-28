@@ -26,7 +26,7 @@ type PemanfaatanRow = {
 };
 
 type SummaryRow = {
-  kategori: string;               // "KELURAHAN" | "KUA" | "SIAP PA" | "BIDAN" | "RUMAH SAKIT" | "PADUKA" | "HOTLINE"
+  kategori: string; // "KELURAHAN" | "KUA" | "SIAP PA" | "BIDAN" | "RUMAH SAKIT" | "PADUKA" | "HOTLINE"
   TOTAL_INSTANSI: number;
   BARU: number;
   MELENGKAPI: number;
@@ -41,7 +41,10 @@ type Tab = "master" | "excel";
 /* ===== Helpers (tanggal) ===== */
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 const todayISO = () => iso(new Date());
-const toDisp = (s: string) => { const [y, m, d] = s.split("-"); return `${d}-${m}-${y}`; };
+const toDisp = (s: string) => {
+  const [y, m, d] = s.split("-");
+  return `${d}-${m}-${y}`;
+};
 const rangeLabel = (s: string, e: string) => `(${toDisp(s)} - ${toDisp(e)})`;
 const monthEdges = (d = new Date()) => {
   const s = new Date(d.getFullYear(), d.getMonth(), 1);
@@ -71,21 +74,18 @@ type InovasiKey =
   | "HOTLINE";
 
 const P = (n: string) => `/assets/upload/${n}`;
-const PLACEHOLDER_MAP: Record<
-  "KELURAHAN"|"KUA"|"SIAP PA"|"BIDAN"|"RUMAH SAKIT"|"PADUKA"|"HOTLINE",
-  { dark: string; light: string }
-> = {
-  "HOTLINE": { dark: P("inovasi-hotlineexternal.png"),      light: P("inovasi-hotlineexternal-lux.png") },
-  "KUA":               { dark: P("inovasi-kompakkang.png"),           light: P("inovasi-kompakkang-lux.png") },
-  "PADUKA":        { dark: P("inovasi-paduka.png"),               light: P("inovasi-paduka-lux.png") },
-  "BIDAN":             { dark: P("inovasi-pelanabidan.png"),          light: P("inovasi-pelanabidan-lux.png") },
-  "RUMAH SAKIT":       { dark: P("inovasi-pelanarumahsakit.png"),     light: P("inovasi-pelanarumahsakit-lux.png") },
-  "KELURAHAN":         { dark: P("inovasi-pelitahati.png"),           light: P("inovasi-pelitahati-lux.png") },
-  "SIAP PA":  { dark: P("inovasi-siappa.png"),               light: P("inovasi-siappa-lux.png") },
+const PLACEHOLDER_MAP: Record<InovasiKey, { dark: string; light: string }> = {
+  HOTLINE: { dark: P("inovasi-hotlineexternal.png"), light: P("inovasi-hotlineexternal-lux.png") },
+  KUA: { dark: P("inovasi-kompakkang.png"), light: P("inovasi-kompakkang-lux.png") },
+  PADUKA: { dark: P("inovasi-paduka.png"), light: P("inovasi-paduka-lux.png") },
+  BIDAN: { dark: P("inovasi-pelanabidan.png"), light: P("inovasi-pelanabidan-lux.png") },
+  "RUMAH SAKIT": { dark: P("inovasi-pelanarumahsakit.png"), light: P("inovasi-pelanarumahsakit-lux.png") },
+  KELURAHAN: { dark: P("inovasi-pelitahati.png"), light: P("inovasi-pelitahati-lux.png") },
+  "SIAP PA": { dark: P("inovasi-siappa.png"), light: P("inovasi-siappa-lux.png") },
 };
 const phByKategori = (kategori: string, isDark: boolean) => {
-  const key = (kategori || "").trim().toUpperCase() as keyof typeof PLACEHOLDER_MAP;
-  const m = PLACEHOLDER_MAP[key] ?? PLACEHOLDER_MAP["HOTLINE"];
+  const key = (kategori || "").trim().toUpperCase() as InovasiKey;
+  const m = PLACEHOLDER_MAP[key] ?? PLACEHOLDER_MAP.HOTLINE;
   return isDark ? m.dark : m.light;
 };
 
@@ -112,19 +112,19 @@ const ORDER_KEYS = [
   "KUA",
   "SIAP PA",
   "BIDAN",
-  "RUMAH SAKIT",         // tampil: RS/Klinik/Puskesmas
+  "RUMAH SAKIT", // tampil: RS/Klinik/Puskesmas
   "PADUKA",
   "HOTLINE",
 ] as const;
 
 const LABEL_MAP: Record<string, string> = {
-  "KELURAHAN": "INOVASI PELITA HATI (KELURAHAN)",
-  "KUA": "INOVASI KOMPAK KANG (KUA)",
+  KELURAHAN: "INOVASI PELITA HATI (KELURAHAN)",
+  KUA: "INOVASI KOMPAK KANG (KUA)",
   "SIAP PA": "INOVASI SIAP PA (PENGADILAN AGAMA)",
-  "BIDAN": "INOVASI PELANA (BIDAN)",
+  BIDAN: "INOVASI PELANA (BIDAN)",
   "RUMAH SAKIT": "INOVASI PELANA (RUMAH SAKIT, KLINIK, DAN PUSKESMAS)",
-  "PADUKA": "INOVASI PADUKA (PADUKA)",
-  "HOTLINE": "HOTLINE",
+  PADUKA: "INOVASI PADUKA (PADUKA)",
+  HOTLINE: "HOTLINE",
 };
 
 const keyOf = (raw?: string) => (raw || "LAINNYA").trim().toUpperCase();
@@ -190,8 +190,7 @@ const buildPemanfaatanGroups = (rows: PemanfaatanRow[]): PemanfaatanGroup[] => {
   return ordered;
 };
 
-const flattenPemanfaatanGroups = (groups: PemanfaatanGroup[]) =>
-  groups.flatMap(([, items]) => items);
+const flattenPemanfaatanGroups = (groups: PemanfaatanGroup[]) => groups.flatMap(([, items]) => items);
 
 /* ===== Lazy DT ===== */
 const JQDataTable = dynamic(() => import("@/components/datatable/JQDataTable"), {
@@ -202,7 +201,7 @@ const JQDataTable = dynamic(() => import("@/components/datatable/JQDataTable"), 
 /* ===== CSV/XLSX helpers ===== */
 const stripHtml = (d: any) => String(d ?? "").replace(/<[^>]*>/g, "");
 
-// indeks kolom di DataTables (0-based): 
+// indeks kolom di DataTables (0-based):
 // 0 No, 1 Kategori, 2 Nama Instansi, 3 Nama Petugas, 4 NIK Petugas, 5 Baru, 6 Upload Ulang, 7 Batal, 8 Diverifikasi, 9 Selesai, 10 Jumlah
 const NIK_COL_IDX = 4;
 
@@ -249,14 +248,13 @@ export default function PemanfaatanPage() {
   const [sumError, setSumError] = useState<string | null>(null);
 
   const label = useMemo(() => rangeLabel(start, end), [start, end]);
-  const [openKeys, setOpenKeys] = useState<Set<string>>(new Set());          // ⬅ state group terbuka
+  const [openKeys, setOpenKeys] = useState<Set<string>>(new Set());
   type GroupAnchorMap = Record<string, HTMLElement | null>;
   const sectionRefs = useRef<GroupAnchorMap>({});
-  
 
   const toggleGroup = (rawKey: string) => {
     const key = (rawKey || "").trim().toUpperCase();
-    setOpenKeys(prev => {
+    setOpenKeys((prev) => {
       const next = new Set(prev);
       next.has(key) ? next.delete(key) : next.add(key);
       return next;
@@ -265,7 +263,7 @@ export default function PemanfaatanPage() {
 
   const openAndJump = (rawKey: string) => {
     const key = (rawKey || "").trim().toUpperCase();
-    setOpenKeys(prev => new Set(prev).add(key));
+    setOpenKeys((prev) => new Set(prev).add(key));
     requestAnimationFrame(() => {
       sectionRefs.current[key]?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -287,11 +285,13 @@ export default function PemanfaatanPage() {
       if (!ac.signal.aborted) setRows(data);
     } catch (e: any) {
       if (!abortRef.current?.signal.aborted) {
-        setRows([]); setError(e?.message || "Gagal memuat data pemanfaatan");
+        setRows([]);
+        setError(e?.message || "Gagal memuat data pemanfaatan");
       }
     } finally {
       if (!abortRef.current?.signal.aborted) {
-        setLoading(false); setFirstLoad(false);
+        setLoading(false);
+        setFirstLoad(false);
       }
     }
   }
@@ -300,9 +300,12 @@ export default function PemanfaatanPage() {
     setSumLoading(true);
     setSumError(null);
     try {
-      const res = await fetch(`/api/master/pemanfaatan/summary?start=${encodeURIComponent(s)}&end=${encodeURIComponent(e)}`, {
-        cache: "no-store",
-      });
+      const res = await fetch(
+        `/api/master/pemanfaatan/summary?start=${encodeURIComponent(s)}&end=${encodeURIComponent(e)}`,
+        {
+          cache: "no-store",
+        }
+      );
       const j = await res.json();
       const data: SummaryRow[] = Array.isArray(j?.data) ? j.data : [];
       setSumRows(data);
@@ -314,17 +317,27 @@ export default function PemanfaatanPage() {
     }
   }
 
-  useEffect(() => { 
-    load(); 
+  useEffect(() => {
+    load();
     loadSummary();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => { if (end < start) setEnd(start); }, [start, end]);
-  const isBusy = (loading || sumLoading);
-  const onClear = () => { const t = todayISO(); setStart(t); setEnd(t); };
-  const refreshBoth = () => { load(); loadSummary(); };
-  
+  useEffect(() => {
+    if (end < start) setEnd(start);
+  }, [start, end]);
+
+  const isBusy = loading || sumLoading;
+  const onClear = () => {
+    const t = todayISO();
+    setStart(t);
+    setEnd(t);
+  };
+  const refreshBoth = () => {
+    load();
+    loadSummary();
+  };
+
   return (
     <div className="pemanfaatan-page relative px-8 pb-10 pt-6 md:pt-8 space-y-8 mt-5">
       {/* Ambient glow */}
@@ -347,14 +360,22 @@ export default function PemanfaatanPage() {
             <div className="md:ml-auto flex items-center gap-2">
               <button
                 onClick={() => setTab("master")}
-                className={`segbtn inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition ${tab === "master" ? "is-active bg-cyan-600/30 border border-cyan-400/50 shadow-[0_0_16px_#00ffff66]" : "bg-white/5 border border-white/10 hover:bg-white/10"}`}
+                className={`segbtn inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition ${
+                  tab === "master"
+                    ? "is-active bg-cyan-600/30 border border-cyan-400/50 shadow-[0_0_16px_#00ffff66]"
+                    : "bg-white/5 border border-white/10 hover:bg-white/10"
+                }`}
               >
                 <LayoutGrid className="w-4 h-4" />
                 Master View
               </button>
               <button
                 onClick={() => setTab("excel")}
-                className={`segbtn inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition ${tab === "excel" ? "is-active bg-cyan-600/30 border border-cyan-400/50 shadow-[0_0_16px_#00ffff66]" : "bg-white/5 border border-white/10 hover:bg-white/10"}`}
+                className={`segbtn inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition ${
+                  tab === "excel"
+                    ? "is-active bg-cyan-600/30 border border-cyan-400/50 shadow-[0_0_16px_#00ffff66]"
+                    : "bg-white/5 border border-white/10 hover:bg-white/10"
+                }`}
               >
                 <ListIcon className="w-4 h-4" />
                 Excel View
@@ -366,7 +387,7 @@ export default function PemanfaatanPage() {
                 className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-sm transition-colors"
                 aria-label="Muat ulang data"
               >
-                <RefreshCcw className={`w-4 h-4 ${(loading || sumLoading) ? "animate-spin" : ""}`} />
+                <RefreshCcw className={`w-4 h-4 ${isBusy ? "animate-spin" : ""}`} />
                 Refresh
               </button>
             </div>
@@ -385,7 +406,10 @@ export default function PemanfaatanPage() {
               <DateRangePopup
                 start={start}
                 end={end}
-                onChange={(s, e) => { setStart(s); setEnd(e); }}
+                onChange={(s, e) => {
+                  setStart(s);
+                  setEnd(e);
+                }}
                 minWidth={700}
                 months={2}
               />
@@ -393,23 +417,60 @@ export default function PemanfaatanPage() {
 
               {/* Quick chips */}
               <div className="flex items-center gap-2">
-                <Chip onClick={() => { const t = todayISO(); setStart(t); setEnd(t); }}>Today</Chip>
-                <Chip onClick={() => { const d = new Date(); d.setDate(d.getDate() - 1); const y = iso(d); setStart(y); setEnd(y); }}>Yesterday</Chip>
-                <Chip onClick={() => { const to = todayISO(); const d = new Date(); d.setDate(d.getDate() - 6); const fr = iso(d); setStart(fr); setEnd(to); }}>Last 7d</Chip>
-                <Chip onClick={() => { const { start: ms, end: me } = monthEdges(); setStart(ms); setEnd(me); }}>This Month</Chip>
+                <Chip
+                  onClick={() => {
+                    const t = todayISO();
+                    setStart(t);
+                    setEnd(t);
+                  }}
+                >
+                  Today
+                </Chip>
+                <Chip
+                  onClick={() => {
+                    const d = new Date();
+                    d.setDate(d.getDate() - 1);
+                    const y = iso(d);
+                    setStart(y);
+                    setEnd(y);
+                  }}
+                >
+                  Yesterday
+                </Chip>
+                <Chip
+                  onClick={() => {
+                    const to = todayISO();
+                    const d = new Date();
+                    d.setDate(d.getDate() - 6);
+                    const fr = iso(d);
+                    setStart(fr);
+                    setEnd(to);
+                  }}
+                >
+                  Last 7d
+                </Chip>
+                <Chip
+                  onClick={() => {
+                    const { start: ms, end: me } = monthEdges();
+                    setStart(ms);
+                    setEnd(me);
+                  }}
+                >
+                  This Month
+                </Chip>
               </div>
             </div>
 
             {/* Actions */}
             <div className="flex items-center gap-2">
               <button
-                  onClick={refreshBoth}                                  // ← was: () => load()
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-600/25 hover:bg-cyan-600/40 border border-cyan-400/40 text-sm shadow-[0_0_14px_#00ffff55] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                  disabled={isBusy}
-                >
-                  <Search className={`w-4 h-4 ${isBusy ? "animate-pulse" : ""}`} />
-                  {isBusy && !firstLoad ? "Loading…" : "Search"}
-                </button>
+                onClick={refreshBoth}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-600/25 hover:bg-cyan-600/40 border border-cyan-400/40 text-sm shadow-[0_0_14px_#00ffff55] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                disabled={isBusy}
+              >
+                <Search className={`w-4 h-4 ${isBusy ? "animate-pulse" : ""}`} />
+                {isBusy && !firstLoad ? "Loading…" : "Search"}
+              </button>
               <button
                 onClick={onClear}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/20 text-sm transition-colors"
@@ -426,56 +487,34 @@ export default function PemanfaatanPage() {
 
         {/* ===== RINGKASAN PER KATEGORI ===== */}
         <div className="px-5 pt-4">
-            <DataShell
-              loading={sumLoading}
-              hasData={sumRows.length > 0}
-              message="Mengambil ringkasan"
-              subtext={label}
-            >
-              <SummaryStrip
-                rows={sumRows}
-                loading={sumLoading}
-                error={sumError}
-                onJump={openAndJump}
-              />
-            </DataShell>
+          <DataShell loading={sumLoading} hasData={sumRows.length > 0} message="Mengambil ringkasan" subtext={label}>
+            <SummaryStrip rows={sumRows} loading={sumLoading} error={sumError} onJump={openAndJump} />
+          </DataShell>
         </div>
 
         {/* ===== Content ===== */}
         <div className="p-5 space-y-5">
-         {tab === "master" ? (
-          <DataShell
-            loading={loading}
-            hasData={rows.length > 0}
-            message="Memuat data"
-            subtext={label}
-          >
-            {error ? (
-              <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm">
-                {error}
-              </div>
-            ) : (
-              <MasterCardGroups
-                rows={rows}
-                openKeys={openKeys}
-                onToggle={toggleGroup}
-                sectionRefs={sectionRefs}
-              />
-            )}
-          </DataShell>
-        ) : (
-          <DataShell
-            loading={loading}
-            hasData={rows.length > 0}
-            message="Menyiapkan tabel"
-            subtext={label}
-          >
-            {/* Hindari spinner dobel: kirim loading=false ke tabel */}
-            <ExcelDataTable rows={rows} loading={false} rangeLabel={label} />
-          </DataShell>
-        )}
-      </div>
-    </section>
+          {tab === "master" ? (
+            <DataShell loading={loading} hasData={rows.length > 0} message="Memuat data" subtext={label}>
+              {error ? (
+                <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm">{error}</div>
+              ) : (
+                <MasterCardGroups
+                  rows={rows}
+                  openKeys={openKeys}
+                  onToggle={toggleGroup}
+                  sectionRefs={sectionRefs}
+                />
+              )}
+            </DataShell>
+          ) : (
+            <DataShell loading={loading} hasData={rows.length > 0} message="Menyiapkan tabel" subtext={label}>
+              {/* Hindari spinner dobel: kirim loading=false ke tabel */}
+              <ExcelDataTable rows={rows} loading={false} rangeLabel={label} />
+            </DataShell>
+          )}
+        </div>
+      </section>
     </div>
   );
 }
@@ -493,6 +532,25 @@ function MasterCardGroups({
   sectionRefs: React.MutableRefObject<Record<string, HTMLElement | null>>;
 }) {
   const groups = useMemo(() => buildPemanfaatanGroups(rows), [rows]);
+
+  // agregat per kategori: jumlah instansi & total pengajuan
+  const aggregates = useMemo(() => {
+    const m = new Map<string, { instansi: number; jumlah: number }>();
+    for (const [kategoriKey, items] of groups) {
+      let totalJumlah = 0;
+      for (const r of items) {
+        totalJumlah += Number(r.JUMLAH ?? 0);
+      }
+      m.set(kategoriKey, {
+        instansi: items.length,
+        jumlah: totalJumlah,
+      });
+    }
+    return m;
+  }, [groups]);
+
+  const n = (v: number | undefined | null) => Number(v ?? 0).toLocaleString("id-ID");
+
   if (rows.length === 0) {
     return (
       <div className="rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-4 py-3 text-sm">
@@ -505,12 +563,16 @@ function MasterCardGroups({
     <div className="space-y-6">
       {groups.map(([kategoriKey, items]) => {
         const isOpen = openKeys.has(kategoriKey);
+        const agg = aggregates.get(kategoriKey);
+
         return (
           <section
-              key={kategoriKey}
-              ref={(el: HTMLElement | null) => { sectionRefs.current[kategoriKey] = el; }}
-              className={`pemanfaatan-group-block collapsible ${isOpen ? "is-open" : ""}`}
-            >
+            key={kategoriKey}
+            ref={(el: HTMLElement | null) => {
+              sectionRefs.current[kategoriKey] = el;
+            }}
+            className={`pemanfaatan-group-block collapsible ${isOpen ? "is-open" : ""}`}
+          >
             <button
               type="button"
               className="group-chip group-chip--button"
@@ -520,8 +582,30 @@ function MasterCardGroups({
               title={`Toggle ${LABEL_MAP[kategoriKey] ?? kategoriKey}`}
             >
               <span className="group-chip__dot" />
-              <h2 className="group-chip__label">{LABEL_MAP[kategoriKey] ?? kategoriKey}</h2>
-              <span className={`caret ${isOpen ? "rot" : ""}`} aria-hidden>▾</span>
+              <h2 className="group-chip__label">
+                {LABEL_MAP[kategoriKey] ?? kategoriKey}
+              </h2>
+
+              {/* badge jumlah instansi – rapi & kebaca */}
+              <span
+                className="
+                  ml-3 inline-flex flex-col items-center justify-center
+                  rounded-full border border-cyan-400/45
+                  bg-cyan-500/15 px-3 py-1
+                  text-[10px] uppercase tracking-[0.16em]
+                  text-cyan-100 text-center
+                  min-w-[80px]
+                "
+              >
+                <span className="leading-none opacity-80">Instansi</span>
+                <span className="text-sm font-semibold leading-tight">
+                  {n(agg?.instansi ?? items.length)}
+                </span>
+              </span>
+
+              <span className={`caret ${isOpen ? "rot" : ""}`} aria-hidden>
+                ▾
+              </span>
             </button>
 
             {isOpen && (
@@ -578,7 +662,9 @@ function ExcelDataTable({
         <div>
           <p className="pemanfaatan-table-panel__eyebrow">Excel Mirror</p>
           <h3>Pemanfaatan Layanan Online</h3>
-          <p>Disdukcapil Kota Bandung <span>{rangeLabel}</span></p>
+          <p>
+            Disdukcapil Kota Bandung <span>{rangeLabel}</span>
+          </p>
         </div>
       </header>
 
@@ -634,6 +720,16 @@ function ExcelDataTable({
                 order: [[0, "asc"]],
                 processing: true,
               }}
+              exportButtons={{
+                filename: `pemanfaatan-${rangeLabel}`,
+                excel: {
+                  body: bodyXlsxPemanfaatan,
+                  customize: excelCustomizePemanfaatan,
+                },
+                csv: {
+                  body: bodyCsvPemanfaatan,
+                },
+              }}
             />
 
             {loading && (
@@ -671,7 +767,7 @@ function Chip({ onClick, children }: { onClick: () => void; children: React.Reac
   );
 }
 
-/* ===== Skeleton ===== */
+/* ===== Skeleton (opsional, belum dipakai di layout ini) ===== */
 function MasterSkeletonGrid() {
   return (
     <div className="salaman-grid">
@@ -710,7 +806,7 @@ function MasterSkeletonGrid() {
 }
 
 function PemanfaatanCard({ row }: { row: PemanfaatanRow }) {
-  const isDark = useThemeDark(); // ← hook versi kamu
+  const isDark = useThemeDark();
   const src = phByKategori(row.KATEGORI, isDark);
   const n = (v: number) => Number(v ?? 0).toLocaleString("id-ID");
 
@@ -718,7 +814,7 @@ function PemanfaatanCard({ row }: { row: PemanfaatanRow }) {
     <article className="master-card attendance-card">
       <div className="landscape-hero">
         <Image
-          key={`${src}-${isDark}`}    // paksa re-render saat tema berubah
+          key={`${src}-${isDark}`}
           src={src}
           alt={row.KATEGORI ? `${row.KATEGORI} — ${row.NAMA_INSTANSI || ""}` : "Placeholder Inovasi"}
           fill
@@ -733,12 +829,30 @@ function PemanfaatanCard({ row }: { row: PemanfaatanRow }) {
 
       {/* === BODY (stat) === */}
       <div className="master-card__body">
-        <div className="master-card__stat"><span className="master-card__stat-label">Pengajuan Baru</span><span className="master-card__stat-value">{n(row.BARU)}</span></div>
-        <div className="master-card__stat"><span className="master-card__stat-label">Upload Ulang</span><span className="master-card__stat-value">{n(row.MELENGKAPI)}</span></div>
-        <div className="master-card__stat"><span className="master-card__stat-label">Batal</span><span className="master-card__stat-value">{n(row.BATAL)}</span></div>
-        <div className="master-card__stat"><span className="master-card__stat-label">Diverifikasi</span><span className="master-card__stat-value">{n(row.SUDAH_DIVERIFIKASI)}</span></div>
-        <div className="master-card__stat"><span className="master-card__stat-label">Selesai</span><span className="master-card__stat-value">{n(row.SELESAI)}</span></div>
-        <div className="master-card__stat"><span className="master-card__stat-label">Jumlah</span><span className="master-card__stat-value">{n(row.JUMLAH)}</span></div>
+        <div className="master-card__stat">
+          <span className="master-card__stat-label">Pengajuan Baru</span>
+          <span className="master-card__stat-value">{n(row.BARU)}</span>
+        </div>
+        <div className="master-card__stat">
+          <span className="master-card__stat-label">Upload Ulang</span>
+          <span className="master-card__stat-value">{n(row.MELENGKAPI)}</span>
+        </div>
+        <div className="master-card__stat">
+          <span className="master-card__stat-label">Batal</span>
+          <span className="master-card__stat-value">{n(row.BATAL)}</span>
+        </div>
+        <div className="master-card__stat">
+          <span className="master-card__stat-label">Diverifikasi</span>
+          <span className="master-card__stat-value">{n(row.SUDAH_DIVERIFIKASI)}</span>
+        </div>
+        <div className="master-card__stat">
+          <span className="master-card__stat-label">Selesai</span>
+          <span className="master-card__stat-value">{n(row.SELESAI)}</span>
+        </div>
+        <div className="master-card__stat">
+          <span className="master-card__stat-label">Jumlah</span>
+          <span className="master-card__stat-value">{n(row.JUMLAH)}</span>
+        </div>
       </div>
 
       {/* === FOOTER === */}
@@ -752,18 +866,31 @@ function PemanfaatanCard({ row }: { row: PemanfaatanRow }) {
 }
 
 function SummaryStrip({
-  rows, loading, error, onJump,
+  rows,
+  loading,
+  error,
+  onJump,
 }: {
   rows: SummaryRow[];
   loading: boolean;
   error: string | null;
   onJump: (kategoriKey: string) => void;
 }) {
-  const order = ["KELURAHAN","KUA","SIAP PA","BIDAN","RUMAH SAKIT","PADUKA","HOTLINE"];
+  const order: InovasiKey[] = ["KELURAHAN", "KUA", "SIAP PA", "BIDAN", "RUMAH SAKIT", "PADUKA", "HOTLINE"];
   const map = new Map(rows.map((r) => [r.kategori, r]));
-  const data = order.map((k) => map.get(k) || ({
-    kategori: k, TOTAL_INSTANSI: 0, BARU: 0, MELENGKAPI: 0, BATAL: 0, SUDAH_DIVERIFIKASI: 0, SELESAI: 0, JUMLAH: 0,
-  }));
+  const data = order.map(
+    (k) =>
+      map.get(k) || {
+        kategori: k,
+        TOTAL_INSTANSI: 0,
+        BARU: 0,
+        MELENGKAPI: 0,
+        BATAL: 0,
+        SUDAH_DIVERIFIKASI: 0,
+        SELESAI: 0,
+        JUMLAH: 0,
+      }
+  );
   const n = (v: number) => Number(v ?? 0).toLocaleString("id-ID");
 
   return (
@@ -771,13 +898,21 @@ function SummaryStrip({
       <header className="summary-strip__head">
         <div className="summary-strip__titlewrap">
           <span aria-hidden className="summary-strip__dot" />
-          <h3 id="summary-strip-title" className="summary-strip__title">Ringkasan per Kategori Inovasi</h3>
+          <h3 id="summary-strip-title" className="summary-strip__title">
+            Ringkasan per Kategori Inovasi
+          </h3>
         </div>
-        {loading && <span className="summary-strip__loading" aria-live="polite">Memuat ringkasan…</span>}
+        {loading && (
+          <span className="summary-strip__loading" aria-live="polite">
+            Memuat ringkasan…
+          </span>
+        )}
       </header>
 
       {error ? (
-        <div className="summary-strip__error" role="alert">{error}</div>
+        <div className="summary-strip__error" role="alert">
+          {error}
+        </div>
       ) : (
         <div className="summary-strip__grid">
           {data.map((r) => (
@@ -798,10 +933,26 @@ function SummaryStrip({
               </div>
 
               <dl className="summary-card__mini">
-                <div className="summary-card__mini-col"><dt>Baru</dt><dd>{n(r.BARU)}</dd></div>
-                <div className="summary-card__mini-col"><dt>Upload</dt><dd>{n(r.MELENGKAPI)}</dd></div>
-                <div className="summary-card__mini-col"><dt>Batal</dt><dd>{n(r.BATAL)}</dd></div>
-                <div className="summary-card__mini-col"><dt>Selesai</dt><dd>{n(r.SELESAI)}</dd></div>
+                <div className="summary-card__mini-col">
+                  <dt>Instansi</dt>
+                  <dd>{n(r.TOTAL_INSTANSI)}</dd>
+                </div>
+                <div className="summary-card__mini-col">
+                  <dt>Baru</dt>
+                  <dd>{n(r.BARU)}</dd>
+                </div>
+                <div className="summary-card__mini-col">
+                  <dt>Upload</dt>
+                  <dd>{n(r.MELENGKAPI)}</dd>
+                </div>
+                <div className="summary-card__mini-col">
+                  <dt>Batal</dt>
+                  <dd>{n(r.BATAL)}</dd>
+                </div>
+                <div className="summary-card__mini-col">
+                  <dt>Selesai</dt>
+                  <dd>{n(r.SELESAI)}</dd>
+                </div>
               </dl>
             </article>
           ))}

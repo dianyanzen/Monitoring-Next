@@ -1,8 +1,9 @@
 // FILE: src/app/api/setting/pejabat/route.ts
 import type { NextRequest } from "next/server";
-import { readServerSession } from "@/lib/session";
-import { ok, unauthorized, err } from "@/lib/http";
-import { execRows } from "@/lib/db";
+import { readServerSession, getClientInfo } from "@/lib/session";
+import { ok, unauthorized, err, badRequest } from "@/lib/http";
+import { execRows, execOne, execDml } from "@/lib/db";
+import { Log } from "@/lib/log";
 
 const ORACLE_ALIAS = process.env.DB_ALIAS_SETTING ?? "DB";
 export const runtime = "nodejs";
@@ -17,8 +18,16 @@ type PejabatRow = {
 };
 
 const toStr = (v: unknown) => (v == null ? "" : String(v).trim());
+const normalizeNip = (value: unknown) => String(value ?? "").replace(/[^\d]/g, "");
+const normalizeUpper = (value: unknown) => String(value ?? "").trim().toUpperCase();
+const normalizeStruktural = (value: unknown) => {
+  if (value === true || String(value).trim() === "1") return 1;
+  return 0;
+};
 
 export async function GET(req: NextRequest) {
+  const started = Date.now();
+  const { ip, ua } = await getClientInfo();
   try {
     const sess = await readServerSession();
     if (!sess?.S_USER_ID) return unauthorized("Unauthorized");
@@ -76,9 +85,98 @@ export async function GET(req: NextRequest) {
       is_struktural: Number(r.IS_STRUKTURAL ?? 0) === 1,
     }));
 
-    // tetap bentuk { rows, limit } seperti semula
+    await Log.info({
+      scope: "API",
+      msg: "pejabat/list",
+      at: "/api/setting/pejabat",
+      user: sess.S_USER_ID,
+      ip,
+      ua,
+      tookMs: Date.now() - started,
+      extra: { count: data.length, limit },
+    });
+
     return ok({ rows: data, limit });
   } catch (e: any) {
+    await Log.error({
+      scope: "API",
+      msg: "pejabat/list_err",
+      at: "/api/setting/pejabat",
+      ip,
+      ua,
+      tookMs: Date.now() - started,
+      err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
+    });
     return err(e?.message || "Gagal memuat daftar pejabat");
+  }
+}
+
+export async function POST(req: NextRequest) {
+  const started = Date.now();
+  const { ip, ua } = await getClientInfo();
+  try {
+    const sess = await readServerSession();
+    if (!sess?.S_USER_ID) return unauthorized("Unauthorized");
+
+    const body = await req.json().catch(() => ({}));
+    const nip = normalizeNip(body.nip);
+    const nama = normalizeUpper(body.nama);
+    const jabatan = normalizeUpper(body.jabatan);
+    const isStruktural = normalizeStruktural(body.is_struktural ?? body.struktural);
+
+    if (!nip) return badRequest("NIP pejabat wajib diisi", { field: "nip" });
+    if (nip.length < 8 || nip.length > 30) {
+      return badRequest("Format NIP tidak valid", { field: "nip" });
+    }
+    if (!nama) return badRequest("Nama pejabat wajib diisi", { field: "nama" });
+    if (!jabatan) return badRequest("Jabatan pejabat wajib diisi", { field: "jabatan" });
+
+    const nextRow = await execOne<{ NEXT_ID?: number }>(
+      `SELECT NVL(MAX(PEJABAT_ID), 0) + 1 AS NEXT_ID FROM SIAK_PEJABAT`,
+      {},
+      {},
+      ORACLE_ALIAS
+    );
+    const pejabatId = Number(nextRow?.NEXT_ID ?? 1);
+
+    await execDml(
+      `
+      INSERT INTO SIAK_PEJABAT (PEJABAT_ID, NIP, NAMA, JABATAN, IS_STRUKTURAL)
+      VALUES (:b_id, :b_nip, :b_nama, :b_jabatan, :b_struktural)
+      `,
+      {
+        b_id: pejabatId,
+        b_nip: nip,
+        b_nama: nama,
+        b_jabatan: jabatan,
+        b_struktural: isStruktural,
+      },
+      { autoCommit: true },
+      ORACLE_ALIAS
+    );
+
+    await Log.info({
+      scope: "API",
+      msg: "pejabat/create",
+      at: "/api/setting/pejabat",
+      user: sess.S_USER_ID,
+      ip,
+      ua,
+      tookMs: Date.now() - started,
+      extra: { pejabatId, nip },
+    });
+
+    return ok({ pejabat_id: pejabatId }, "Pejabat berhasil ditambahkan");
+  } catch (e: any) {
+    await Log.error({
+      scope: "API",
+      msg: "pejabat/create_err",
+      at: "/api/setting/pejabat",
+      ip,
+      ua,
+      tookMs: Date.now() - started,
+      err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
+    });
+    return err(e?.message || "Gagal menyimpan pejabat baru");
   }
 }

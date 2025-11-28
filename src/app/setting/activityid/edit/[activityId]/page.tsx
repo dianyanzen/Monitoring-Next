@@ -1,0 +1,204 @@
+"use client";
+
+import { useEffect, useState, type ChangeEvent } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, Loader2, Save } from "lucide-react";
+import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
+
+type FormState = {
+  activity_id: string;
+  activity: string;
+  user_level: string;
+  level_name: string;
+};
+
+type ModalState = {
+  open: boolean;
+  kind: ModalKind;
+  title: string;
+  message: string;
+  redirect?: string | null;
+};
+
+const initialForm: FormState = {
+  activity_id: "",
+  activity: "",
+  user_level: "",
+  level_name: "",
+};
+
+export default function SettingActivityIdEditPage({ params }: { params: { activityId: string } }) {
+  const router = useRouter();
+  const [form, setForm] = useState<FormState>(initialForm);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [modal, setModal] = useState<ModalState | null>(null);
+
+  useEffect(() => {
+    void loadDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.activityId]);
+
+  async function loadDetail() {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/setting/activityid/${params.activityId}`, {
+        credentials: "include",
+        cache: "no-store",
+      });
+      const json = await res.json();
+      if (!res.ok || json?.success === false) {
+        throw new Error(json?.message || "Gagal memuat data activity.");
+      }
+      const data = json?.data;
+      setForm({
+        activity_id: String(data?.activity_id ?? ""),
+        activity: (data?.activity ?? "").toUpperCase(),
+        user_level: String(data?.user_level ?? ""),
+        level_name: data?.level_name ?? "",
+      });
+    } catch (e: any) {
+      setModal({
+        open: true,
+        kind: "error",
+        title: "Gagal Memuat",
+        message: e?.message || "Tidak dapat memuat detail activity.",
+        redirect: "/setting/activityid",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleChange =
+    (field: keyof FormState) =>
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value.toUpperCase();
+      setForm((prev) => ({ ...prev, [field]: value }));
+    };
+
+  function validate(values: FormState) {
+    if (!values.activity.trim()) return "Activity Name wajib diisi.";
+    return null;
+  }
+
+  async function handleSubmit() {
+    const validation = validate(form);
+    if (validation) {
+      setModal({
+        open: true,
+        kind: "warning",
+        title: "Validasi Gagal",
+        message: validation,
+      });
+      return;
+    }
+
+    try {
+      setSaving(true);
+      const res = await fetch(`/api/setting/activityid/${params.activityId}`, {
+        method: "PUT",
+        credentials: "include",
+        cache: "no-store",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activity_nm: form.activity }),
+      });
+      const json = await res.json();
+      if (!res.ok || json?.success === false) {
+        throw new Error(json?.message || "Gagal menyimpan activity.");
+      }
+      setModal({
+        open: true,
+        kind: "success",
+        title: "Activity Diperbarui",
+        message: json?.message || "Perubahan activity berhasil disimpan.",
+      });
+    } catch (e: any) {
+      setModal({
+        open: true,
+        kind: "error",
+        title: "Gagal Menyimpan",
+        message: e?.message || "Terjadi kesalahan saat menyimpan activity.",
+      });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <section className="rounded-3xl border border-cyan-900/40 bg-[#05070d]/70 p-6 shadow-[0_0_35px_rgba(6,182,212,.15)]">
+        <button
+          type="button"
+          onClick={() => router.push("/setting/activityid")}
+          className="inline-flex items-center gap-2 text-sm text-cyan-200/80 hover:text-cyan-50"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Kembali ke List Activity
+        </button>
+        <h1 className="mt-3 text-2xl font-extrabold text-cyan-50">Edit Activity ID</h1>
+        <p className="mt-2 text-sm text-cyan-100/70">Perbarui nama activity tanpa mengubah group user yang sudah terikat.</p>
+      </section>
+
+      <section className="rounded-3xl border border-cyan-900/40 bg-[#05070d]/60 p-5 shadow-[0_0_30px_rgba(6,182,212,.08)]">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-16 text-cyan-200/70">
+            <Loader2 className="h-6 w-6 animate-spin" />
+            <p className="mt-3 text-sm">Memuat detail activity...</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="Activity Code">
+                <input value={form.activity_id} className="field-input" readOnly />
+              </Field>
+              <Field label="Group User">
+                <input value={form.level_name} className="field-input" readOnly />
+              </Field>
+              <div className="md:col-span-2">
+                <Field label="Activity Name">
+                  <input value={form.activity} onChange={handleChange("activity")} className="field-input" />
+                </Field>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end">
+              <button
+                type="button"
+                onClick={() => void handleSubmit()}
+                className="inline-flex items-center gap-2 rounded-2xl border border-emerald-400/50 bg-emerald-500/10 px-5 py-2 text-sm font-semibold text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,.25)] hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 disabled:opacity-60"
+                disabled={saving}
+              >
+                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                Simpan Perubahan
+              </button>
+            </div>
+          </>
+        )}
+      </section>
+
+      {modal && (
+        <NeonModal
+          open={modal.open}
+          kind={modal.kind}
+          title={modal.title}
+          message={modal.message}
+          onClose={() => {
+            const redirect = modal.redirect || (modal.kind === "success" ? "/setting/activityid" : null);
+            setModal(null);
+            if (redirect) router.push(redirect);
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="flex flex-col text-sm text-cyan-100/90">
+      <span className="text-xs font-semibold uppercase tracking-wide text-cyan-200/80">{label}</span>
+      <div className="mt-1">{children}</div>
+    </label>
+  );
+}

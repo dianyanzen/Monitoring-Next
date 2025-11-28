@@ -260,7 +260,6 @@ export default function SettingUserPage() {
             <div className="flex items-center gap-3">
               <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_12px_#22d3ee]" />
               <div>
-                <p className="text-[11px] uppercase tracking-[0.4em] text-cyan-400/60">Setting — User</p>
                 <h1 className="text-base font-semibold tracking-wide text-cyan-200">Manajemen User</h1>
               </div>
             </div>
