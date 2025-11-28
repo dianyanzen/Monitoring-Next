@@ -2,7 +2,7 @@
 @echo off
 setlocal enabledelayedexpansion
 chcp 65001 >nul
-title next-server (persist)
+title next-server (v15.5.4)
 
 :: ===== Konfigurasi =====
 set "PORT=3273"
@@ -13,12 +13,16 @@ pushd "%~dp0" >nul
 
 where node >nul 2>&1 || (
   echo [ERROR] Node.js tidak ditemukan di PATH.
-  pause & popd & exit /b 1
+  pause
+  popd
+  exit /b 1
 )
 
 if not exist "scripts\pretty-start.mjs" (
   echo [ERROR] scripts\pretty-start.mjs tidak ditemukan.
-  pause & popd & exit /b 1
+  pause
+  popd
+  exit /b 1
 )
 
 set "PORT=%PORT%"
@@ -34,5 +38,6 @@ echo.
 echo [EXIT] Kode keluar: %EC%
 echo Tekan tombol apa saja untuk menutup jendela ini...
 pause >nul
+
 popd
 endlocal

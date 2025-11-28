@@ -57,6 +57,8 @@ export default function RouteChangeOverlay() {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
     if (failsafeRef.current) clearTimeout(failsafeRef.current);
+    (window as any).__monalisaRouteOverlayVisible = true;
+    window.dispatchEvent(new CustomEvent("monalisa:route-overlay", { detail: true }));
 
     rafRef.current = requestAnimationFrame(() => {
       if (!mountedRef.current) return;
@@ -96,6 +98,8 @@ export default function RouteChangeOverlay() {
         clearTimeout(failsafeRef.current);
         failsafeRef.current = null;
       }
+      (window as any).__monalisaRouteOverlayVisible = false;
+      window.dispatchEvent(new CustomEvent("monalisa:route-overlay", { detail: false }));
     }, remain);
   };
 
@@ -104,6 +108,8 @@ export default function RouteChangeOverlay() {
     (window as any).__monalisaShow = show;
     return () => {
       delete (window as any).__monalisaShow;
+      (window as any).__monalisaRouteOverlayVisible = false;
+      window.dispatchEvent(new CustomEvent("monalisa:route-overlay", { detail: false }));
     };
   }, []);
 

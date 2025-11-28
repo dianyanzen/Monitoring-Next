@@ -33,10 +33,7 @@ export async function GET(req: NextRequest) {
     ].join("-");
 
     const whereRange = `
-      (H.CREATED_AT >= TO_DATE(:b_start,'YYYY-MM-DD') AND H.CREATED_AT < TO_DATE(:b_end,'YYYY-MM-DD'))
-      OR
-      (H.UPDATED_AT >= TO_DATE(:b_start,'YYYY-MM-DD') AND H.UPDATED_AT < TO_DATE(:b_end,'YYYY-MM-DD'))
-    `;
+      (H.CREATED_AT >= TO_DATE(:b_start,'YYYY-MM-DD') AND H.CREATED_AT < TO_DATE(:b_end,'YYYY-MM-DD')) `;
 
     // === KUA (per kecamatan)
     const sqlKUA = `

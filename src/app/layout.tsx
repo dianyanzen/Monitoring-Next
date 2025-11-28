@@ -39,6 +39,7 @@ import "../styles/components/date-range-dark.css";
 
 
 import type { Metadata } from "next";
+import GlobalFetchOverlay from "@/components/system/GlobalFetchOverlay";
 
 export const metadata: Metadata = {
   title: { default: "Monalisa System", template: "%s — Disdukcapil Kota Bandung" },
@@ -59,7 +60,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="/assets/material-design-iconic-font/css/materialdesignicons.min.css"
         />
       </head>
-      <body className="bg-[#0b0b0d] text-gray-100 min-h-screen overflow-x-hidden">{children}</body>
+      <body className="bg-[#0b0b0d] text-gray-100 min-h-screen overflow-x-hidden">
+        <GlobalFetchOverlay key="global-fetch-overlay-v2" />
+        {children}
+      </body>
     </html>
   );
 }

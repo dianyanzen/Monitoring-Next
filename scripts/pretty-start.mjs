@@ -1,97 +1,148 @@
 // FILE: scripts/pretty-start.mjs
-// (tanpa shebang; ESM murni, kompatibel Windows)
+// FINAL HYBRID VERSION — Windows-safe (no ANSI), Linux full ANSI
 
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import os from "node:os";
-import { ansi as c, line, padAnsi, cutAnsi } from "./ansi.mjs";
 
-/* ========= meta ========= */
-const PKG = safeJson("./package.json");
-const APP = process.env.APP_NAME || "Monalisa Monitoring";
-const NODEV = process.version; // v22.x
-const NEXTV =
-  (PKG.dependencies && PKG.dependencies.next) ||
-  (PKG.devDependencies && PKG.devDependencies.next) || "?";
+// detect platform
+const isWin = process.platform === "win32";
+const canColor = !isWin;  // Windows Server = NO ANSI
 
-const basePath = normalizeBase(process.env.NEXT_BASEPATH || "/monitoring");
-const now = new Date();
-const stamp = now.toISOString().replace(/[:T]/g, "-").slice(0, 19);
-const logDir = process.env.LOG_DIR || "./log";
-safeMkdir(logDir);
-const logFile = join(logDir, `start-${stamp}.log`);
-
-/* ========= args ========= */
-const dash = process.argv.indexOf("--");
-let passthrough = dash > -1 ? process.argv.slice(dash + 1) : [];
-if (passthrough[0] === "start") passthrough.shift(); // jaga kalau ada yang terlanjur kirim "start"
-const host = getArg(passthrough, "-H", "--hostname") || "0.0.0.0";
-const port = +(getArg(passthrough, "-p", "--port") || process.env.PORT || 3000);
-const ip = guessIP(host);
-
-/* ========= banner ========= */
-console.clear();
-
-const W = 76; // lebar isi box (ubah jika perlu)
-
-const box = (rows) => {
-  const tl = "┌", tr = "┐", bl = "└", br = "┘", v = "│";
-  const head = `${tl}${line(W)}${tr}`;
-  const foot = `${bl}${line(W)}${br}`;
-  const body = rows.map((s) => `${v} ${padAnsi(s, W - 1)}${v}`).join("\n");
-  return `${head}\n${body}\n${foot}`;
+// dummy color wrapper
+const color = {
+  bold: (s) => (canColor ? `\x1b[1m${s}\x1b[0m` : s),
+  cyan: (s) => (canColor ? `\x1b[36m${s}\x1b[0m` : s),
+  pink: (s) => (canColor ? `\x1b[35m${s}\x1b[0m` : s),
 };
 
-const titleRows = [
-  padAnsi(` ${c.fg(213, "▞")} ${c.b(APP)}  ${c.dim("(0.0.0.0 win64)")}`, W - 2),
-  padAnsi(` ${c.fg(45, "▚")} ${c.dim(`Next ${stripRange(NEXTV)} | Node ${NODEV}`)}`, W - 2),
-];
-console.log(box(titleRows));
+// FIX: swallow stdout/stderr errors (EIO/EPIPE)
+function protectStream(stream) {
+  if (!stream || typeof stream.on !== "function") return;
+  stream.on("error", (err) => {
+    if (!err) return;
+    if (err.code === "EIO" || err.code === "EPIPE") return;
+    try { console.error("[stream-error]", err.code); } catch {}
+  });
+}
+protectStream(process.stdout);
+protectStream(process.stderr);
 
-const label = (k, v, col = 81) => `${k.padEnd(5)} : ${c.fg(col, v)}`;
+// small helpers
+function safeJson(p) {
+  try { return JSON.parse(readFileSync(p, "utf8")); }
+  catch { return {}; }
+}
+function append(f, s) {
+  try { writeFileSync(f, s, { flag: "a" }); } catch {}
+}
 
-const appPath = cutAnsi(process.cwd().replace(/\\/g, "/"), W - 12);
-const logPath = cutAnsi(logFile.replace(/\\/g, "/"), W - 12);
+// load metadata
+const PKG = safeJson("./package.json");
+const APP = process.env.APP_NAME || "Monalisa Monitoring";
+const NODEV = process.version;
+const NEXTV = PKG.dependencies?.next || PKG.devDependencies?.next || "?";
 
-const infoRows = [
-  c.b("Listening on"),
-  label("ip", ip),
-  label("port", String(port)),
-  label("host", host),
-  "",
-  c.b("Process"),
-  label("app", appPath),
-  label("log", logPath),
-  "",
-  c.dim("[CTRL+C] untuk menghentikan server"),
-];
-console.log(box(infoRows));
+const basePath = process.env.NEXT_BASEPATH || "/monitoring";
+const stamp = new Date().toISOString().replace(/[:T]/g, "-").slice(0, 19);
+const logDir = process.env.LOG_DIR || "./log";
+if (!existsSync(logDir)) mkdirSync(logDir, { recursive: true });
+const logFile = join(logDir, `start-${stamp}.log`);
+
+// get args
+const dash = process.argv.indexOf("--");
+let passthrough = dash > -1 ? process.argv.slice(dash + 1) : [];
+if (passthrough[0] === "start") passthrough.shift();
+
+const host = passthrough.includes("-H") ? passthrough[passthrough.indexOf("-H")+1] : "0.0.0.0";
+const port = +(passthrough.includes("-p") ? passthrough[passthrough.indexOf("-p")+1] : process.env.PORT || 3000);
+
+// guess IP
+function guessIP() {
+  if (host !== "0.0.0.0") return host;
+  try {
+    const nets = os.networkInterfaces();
+    for (const name of Object.keys(nets)) {
+      for (const n of nets[name] || []) {
+        if (n.family === "IPv4" && !n.internal) return n.address;
+      }
+    }
+  } catch {}
+  return "localhost";
+}
+const ip = guessIP();
+
+// CLEAR SCREEN
+try { console.clear(); } catch {}
+
+// ========================
+// WINDOWS HEADER (simple)
+// ========================
+if (isWin) {
+  console.log("=========================================");
+  console.log(`  ${APP}`);
+  console.log(`  Next.js ${NEXTV} | Node ${NODEV}`);
+  console.log("=========================================");
+  console.log(`IP     : ${ip}`);
+  console.log(`PORT   : ${port}`);
+  console.log(`HOST   : ${host}`);
+  console.log(`LOG    : ${logFile}`);
+  console.log("-----------------------------------------");
+  console.log("CTRL + C untuk menghentikan server");
+  console.log("");
+} 
+// ========================
+// LINUX HEADER (ANSI)
+// ========================
+else {
+  console.log(color.cyan("┌─────────────────────────────────────────────┐"));
+  console.log(color.cyan(`│  ${color.bold(APP)}  │`));
+  console.log(color.cyan(`│  Next ${NEXTV} | Node ${NODEV}               │`));
+  console.log(color.cyan("└─────────────────────────────────────────────┘"));
+  console.log(color.bold("IP: ") + ip);
+  console.log(color.bold("PORT: ") + port);
+  console.log(color.bold("HOST: ") + host);
+  console.log(color.bold("LOG: ") + logFile);
+  console.log("");
+}
 
 const url = `http://${ip}:${port}${basePath}`;
-println(`${c.fg(120, "[START]")} ${c.fg(81, url)}\n`);
+console.log("START:", url);
+append(logFile, `START ${url}\n`);
 
-/* ========= run next (tanpa npx) ========= */
+// run next
 const require = createRequire(import.meta.url);
+function resolveNextBin(r) {
+  try { return r.resolve("next/dist/bin/next"); }
+  catch {
+    console.error("[ERROR] next tidak ditemukan.");
+    process.exit(1);
+  }
+}
 const nextBin = resolveNextBin(require);
 
 const child = spawn(process.execPath, [nextBin, "start", ...passthrough], {
   stdio: ["inherit", "pipe", "pipe"],
 });
 
-child.stdout.on("data", (b) => { const s = b.toString(); process.stdout.write(s); append(logFile, s); });
-child.stderr.on("data", (b) => { const s = b.toString(); process.stderr.write(s); append(logFile, s); });
-child.on("close", (code) => { append(logFile, `\n[END] exited ${code} @ ${new Date().toISOString()}\n`); process.exit(code ?? 0); });
+protectStream(child.stdout);
+protectStream(child.stderr);
 
-/* ========= helpers ========= */
-function stripRange(v){ return String(v).replace(/^[\^~]/, ""); }
-function println(s){ console.log(s); append(logFile, stripAnsiSoft(s) + "\n"); }
-function stripAnsiSoft(s){ return String(s).replace(/\x1b\[[0-9;]*m/g, ""); }
-function append(f, s){ try{ writeFileSync(f, s, { flag:"a" }); }catch{} }
-function safeMkdir(d){ if (!existsSync(d)) mkdirSync(d, { recursive: true }); }
-function safeJson(p){ try{ return JSON.parse(readFileSync(p,"utf8")); } catch { return {}; } }
-function getArg(arr, short, long){ const i = arr.findIndex(x=>x===short||x===long); return i>-1 ? arr[i+1] : null; }
-function normalizeBase(b){ if(!b) return ""; let x=b.startsWith("/")?b:"/"+b; if(x.length>1) x=x.replace(/\/+$/,""); return x; }
-function guessIP(h){ if(h && h!=="0.0.0.0") return h; try{ const nets=os.networkInterfaces(); for(const k of Object.keys(nets)){ for(const n of nets[k]||[]){ if(n.family==="IPv4" && !n.internal) return n.address; } } }catch{} return "localhost"; }
-function resolveNextBin(req){ try{ return req.resolve("next/dist/bin/next"); } catch { console.error("[ERROR] 'next' tidak ditemukan. jalankan: npm i next"); process.exit(1); } }
+child.stdout.on("data", (b) => {
+  const s = b.toString();
+  try { process.stdout.write(s); } catch {}
+  append(logFile, s);
+});
+
+child.stderr.on("data", (b) => {
+  const s = b.toString();
+  try { process.stderr.write(s); } catch {}
+  append(logFile, s);
+});
+
+child.on("close", (code) => {
+  append(logFile, `EXIT ${code}\n`);
+  process.exit(code ?? 0);
+});

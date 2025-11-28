@@ -127,60 +127,86 @@ export default function SettingActivityIdAddPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-3xl border border-cyan-900/40 bg-[#05070d]/70 p-6 shadow-[0_0_35px_rgba(6,182,212,.15)]">
-        <button
-          type="button"
-          onClick={() => router.push("/setting/activityid")}
-          className="inline-flex items-center gap-2 text-sm text-cyan-200/80 hover:text-cyan-50"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Kembali ke List Activity
-        </button>
-        <h1 className="mt-3 text-2xl font-extrabold text-cyan-50">Tambah Activity ID</h1>
-        <p className="mt-2 text-sm text-cyan-100/70">
-          Activity yang ditambahkan akan otomatis tersimpan sesuai group user pilihan dan dipakai pada modul monitoring
-          harian.
-        </p>
-      </section>
+    <div className="relative mt-5 space-y-8 px-4 pb-12 pt-6 sm:px-6 md:px-8 md:pt-8">
+      {/* Ambient glow – sama seperti list page */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute left-[8%] top-[-25%] h-[900px] w-[900px] rounded-full bg-cyan-500/20 blur-[220px]" />
+        <div className="absolute right-[12%] bottom-[-30%] h-[900px] w-[900px] rounded-full bg-fuchsia-600/15 blur-[220px]" />
+      </div>
 
-      <section className="rounded-3xl border border-cyan-900/40 bg-[#05070d]/60 p-5 shadow-[0_0_30px_rgba(6,182,212,.08)]">
-        <div className="grid gap-4 md:grid-cols-2">
-          <Field label="Activity Name">
-            <input
-              value={form.activity}
-              onChange={handleChange("activity")}
-              className="field-input"
-              placeholder="Nama activity"
-            />
-          </Field>
-          <Field label="Group User">
-            <select
-              value={form.group_id}
-              onChange={handleChange("group_id")}
-              className="field-input"
-              disabled={loadingGroups}
+      <section className="rounded-3xl border border-cyan-800/40 bg-[#0b0b1a]/80 shadow-[0_0_34px_#00ffff22] backdrop-blur-xl overflow-hidden">
+        {/* ===== Header mengikuti style halaman list ===== */}
+        <header className="border-b border-cyan-900/50 px-5 py-4">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-3">
+              <span className="inline-block h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_12px_#22d3ee]" />
+              <div>
+                <h1 className="text-base font-semibold tracking-wide text-cyan-200">
+                  Tambah Activity ID
+                </h1>
+                <p className="text-xs text-cyan-200/70">
+                  Mendaftarkan activity baru dan mengaitkannya dengan group level user.
+                </p>
+              </div>
+            </div>
+
+            <div className="ml-auto flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => router.push("/setting/activityid")}
+                className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-[11px] font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                Kembali ke List
+              </button>
+            </div>
+          </div>
+        </header>
+
+        {/* ===== Body: form ===== */}
+        <div className="space-y-6 px-5 py-6">
+          <p className="text-xs text-cyan-200/75">
+            Activity yang ditambahkan akan dipakai sebagai referensi monitoring harian dan
+            dibatasi berdasarkan group user yang dipilih.
+          </p>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <Field label="Activity Name">
+              <input
+                value={form.activity}
+                onChange={handleChange("activity")}
+                className="field-input"
+                placeholder="Nama activity"
+              />
+            </Field>
+            <Field label="Group User">
+              <select
+                value={form.group_id}
+                onChange={handleChange("group_id")}
+                className="field-input"
+                disabled={loadingGroups}
+              >
+                <option value="0">-- Pilih Group --</option>
+                {groups.map((group) => (
+                  <option key={group.user_level} value={group.user_level}>
+                    {group.level_name}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          </div>
+
+          <div className="mt-4 flex justify-end">
+            <button
+              type="button"
+              onClick={() => void handleSubmit()}
+              className="inline-flex items-center gap-2 rounded-2xl border border-emerald-400/50 bg-emerald-500/10 px-5 py-2 text-sm font-semibold text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,.25)] hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 disabled:opacity-60"
+              disabled={submitting}
             >
-              <option value="0">-- Pilih Group --</option>
-              {groups.map((group) => (
-                <option key={group.user_level} value={group.user_level}>
-                  {group.level_name}
-                </option>
-              ))}
-            </select>
-          </Field>
-        </div>
-
-        <div className="mt-6 flex justify-end">
-          <button
-            type="button"
-            onClick={() => void handleSubmit()}
-            className="inline-flex items-center gap-2 rounded-2xl border border-emerald-400/50 bg-emerald-500/10 px-5 py-2 text-sm font-semibold text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,.25)] hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 disabled:opacity-60"
-            disabled={submitting}
-          >
-            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-            Simpan Activity
-          </button>
+              {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+              Simpan Activity
+            </button>
+          </div>
         </div>
       </section>
 
@@ -191,8 +217,9 @@ export default function SettingActivityIdAddPage() {
           title={modal.title}
           message={modal.message}
           onClose={() => {
+            const goBack = modal.goBack;
             setModal(null);
-            if (modal.goBack) router.push("/setting/activityid");
+            if (goBack) router.push("/setting/activityid");
           }}
         />
       )}
@@ -203,9 +230,10 @@ export default function SettingActivityIdAddPage() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="flex flex-col text-sm text-cyan-100/90">
-      <span className="text-xs font-semibold uppercase tracking-wide text-cyan-200/80">{label}</span>
+      <span className="text-xs font-semibold uppercase tracking-wide text-cyan-200/80">
+        {label}
+      </span>
       <div className="mt-1">{children}</div>
     </label>
   );
 }
-
