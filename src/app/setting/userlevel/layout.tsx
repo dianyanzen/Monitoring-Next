@@ -5,11 +5,11 @@ import { SessionProvider } from "@/contexts/session";
 import { readServerSession } from "@/lib/session";
 
 export const metadata = {
-  title: "Monalisa System - User Level Setting",
-  description: "Disdukcapil Kota Bandung | AI-powered System",
+  title: "Monalisa System - Setting User Level",
+  description: "Manajemen level user | Disdukcapil Kota Bandung",
 };
 
-export default async function RootLayout({
+export default async function SettingUserLevelLayout({
   children,
 }: {
   children: React.ReactNode;

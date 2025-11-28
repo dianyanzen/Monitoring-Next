@@ -48,7 +48,7 @@ export default function GlobalFetchOverlay() {
     originalFetch.current = orig;
     (window as any).__monalisaFetchPatched = true;
 
-    window.fetch = (async (...args) => {
+    window.fetch = (async (...args: Parameters<AnyFetch>) => {
       const track = shouldTrack(args[0]);
       if (track) setPending((p) => p + 1);
       try {

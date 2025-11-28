@@ -9,7 +9,7 @@ export const metadata = {
   description: "Pengaturan aplikasi monitoring | Disdukcapil Kota Bandung",
 };
 
-export default async function SettingUserLayout({
+export default async function SettingAppLayout({
   children,
 }: {
   children: React.ReactNode;
