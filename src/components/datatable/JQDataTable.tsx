@@ -2,10 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-// ====== CSS DataTables ======
+// ====== CSS DataTables (styling only; JS modules di-load dinamis) ======
 import "datatables.net-dt/css/dataTables.dataTables.css";
-import "datatables.net-responsive-dt";
-import "datatables.net-buttons-dt";
 import "datatables.net-responsive-dt/css/responsive.dataTables.css";
 import "datatables.net-buttons-dt/css/buttons.dataTables.css";
 
@@ -117,20 +115,30 @@ export default function JQDataTable({
 
       resolvedColumnsRef.current = autoColumns;
 
-      const [{ default: DataTable }, { default: JSZip }] = await Promise.all([
-        import("datatables.net"),
+      const [
+        { default: DataTable },
+        { default: Responsive },
+        { default: Buttons },
+        { default: ButtonsHtml5 },
+        { default: ButtonsPrint },
+        { default: JSZip },
+      ] = await Promise.all([
+        import("datatables.net-dt"),
+        import("datatables.net-responsive-dt"),
+        import("datatables.net-buttons-dt"),
+        import("datatables.net-buttons/js/buttons.html5.mjs"),
+        import("datatables.net-buttons/js/buttons.print.mjs"),
         import("jszip"),
       ]);
 
-      (window as any).DataTable = DataTable;
-      (window as any).JSZip = JSZip;
+      // registrasi plugin ala DataTables v2 (tanpa jQuery)
+      DataTable.use(Responsive);
+      DataTable.use(Buttons);
+      DataTable.use(ButtonsHtml5);
+      DataTable.use(ButtonsPrint);
 
-      await Promise.all([
-        import("datatables.net-responsive"),
-        import("datatables.net-buttons"),
-        import("datatables.net-buttons/js/buttons.html5.mjs"),
-        import("datatables.net-buttons/js/buttons.print.mjs"),
-      ]);
+      // buttons export membutuhkan JSZip di window
+      (window as any).JSZip = JSZip;
 
       if (destroyed) return;
 

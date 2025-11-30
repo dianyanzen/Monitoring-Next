@@ -11,14 +11,15 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 
 export type DateRangePopupProps = {
-  start: string;           // YYYY-MM-DD
-  end: string;             // YYYY-MM-DD
+  start: string; // YYYY-MM-DD
+  end: string; // YYYY-MM-DD
   onChange: (s: string, e: string) => void;
   placeholder?: string;
   className?: string;
-  months?: 1 | 2;          // berapa bulan ditampilkan
-  minWidth?: number;       // px, default 660 agar 2 bulan muat
-  align?: "start" | "center" | "end"; // <— NEW fitur align (belum diimplementasi)
+  months?: 1 | 2; // berapa bulan ditampilkan
+  minWidth?: number; // px, default 660 agar 2 bulan muat
+  align?: "start" | "center" | "end"; // NEW fitur align (belum diimplementasi)
+  preferDown?: boolean; // true = jangan auto-flip ke atas
 };
 
 const pad2 = (n: number) => (n < 10 ? `0${n}` : `${n}`);
@@ -29,7 +30,19 @@ const parseISOlocal = (s: string) => {
 };
 const fmtDMY = (d: Date) => format(d, "dd-MM-yyyy", { locale: idLocale });
 
-const navKeys = new Set(["Backspace","Delete","Tab","Enter","Escape","ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Home","End"]);
+const navKeys = new Set([
+  "Backspace",
+  "Delete",
+  "Tab",
+  "Enter",
+  "Escape",
+  "ArrowLeft",
+  "ArrowRight",
+  "ArrowUp",
+  "ArrowDown",
+  "Home",
+  "End",
+]);
 const maskToDDMMYYYY = (raw: string) => {
   const digits = raw.replace(/\D/g, "").slice(0, 8);
   const dd = digits.slice(0, 2);
@@ -51,10 +64,10 @@ const isValidDDMMYYYY = (s: string) => {
   if (!/^\d{2}-\d{2}-\d{4}$/.test(s)) return false;
   const [dd, mm, yyyy] = s.split("-").map(Number);
   const dt = new Date(yyyy, (mm || 1) - 1, dd || 1, 0, 0, 0, 0);
-  return dt.getFullYear() === yyyy && dt.getMonth() === (mm - 1) && dt.getDate() === dd && yyyy >= 1900 && yyyy <= 2100;
+  return dt.getFullYear() === yyyy && dt.getMonth() === mm - 1 && dt.getDate() === dd && yyyy >= 1900 && yyyy <= 2100;
 };
 const parseDDMMYYYY = (s: string): Date | null =>
-  (isValidDDMMYYYY(s) ? new Date(Number(s.slice(6, 10)), Number(s.slice(3, 5)) - 1, Number(s.slice(0, 2)), 0, 0, 0, 0) : null);
+  isValidDDMMYYYY(s) ? new Date(Number(s.slice(6, 10)), Number(s.slice(3, 5)) - 1, Number(s.slice(0, 2)), 0, 0, 0, 0) : null;
 
 export default function DateRangePopup({
   start,
@@ -64,7 +77,8 @@ export default function DateRangePopup({
   className,
   months = 2,
   minWidth = 700,
-  align = "center", // <— NEW fitur align (belum diimplementasi)
+  align = "center",
+  preferDown = false,
 }: DateRangePopupProps) {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<Range>({ startDate: parseISOlocal(start), endDate: parseISOlocal(end), key: "selection" });
@@ -98,24 +112,23 @@ export default function DateRangePopup({
       const maxAllowed = vw - margin * 2;
       const width = Math.min(ideal, Math.max(360, maxAllowed));
 
-      // Posisi horizontal — CENTER ke trigger, lalu clamp agar tidak keluar layar
+      // Posisi horizontal, lalu clamp agar tidak keluar layar
       let left: number;
       if (align === "start") {
         left = r.left + window.scrollX;
       } else if (align === "end") {
         left = r.right + window.scrollX - width;
       } else {
-        // "center"
         left = r.left + r.width / 2 + window.scrollX - width / 2;
       }
       const minLeft = window.scrollX + margin;
       const maxLeft = window.scrollX + vw - width - margin;
       left = Math.min(Math.max(left, minLeft), Math.max(minLeft, maxLeft));
 
-      // Posisi vertikal, flip ke atas bila perlu
+      // Posisi vertikal, default turun; flip ke atas bila perlu kecuali preferDown = true
       const estHeight = months === 2 ? 520 : 480;
       let top = r.bottom + window.scrollY + margin;
-      if (top + estHeight + margin > window.scrollY + vh) {
+      if (!preferDown && top + estHeight + margin > window.scrollY + vh) {
         top = r.top + window.scrollY - estHeight - margin;
       }
 
@@ -128,7 +141,9 @@ export default function DateRangePopup({
         setOpen(false);
       }
     };
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
 
     relayout();
     document.addEventListener("mousedown", onDocClick, { capture: true });
@@ -141,7 +156,7 @@ export default function DateRangePopup({
       window.removeEventListener("resize", relayout);
       window.removeEventListener("scroll", relayout, true);
     };
-  }, [open, months, minWidth, align]);
+  }, [open, months, minWidth, align, preferDown]);
 
   useEffect(() => {
     if (!draft.startDate || !draft.endDate) return;
@@ -187,8 +202,14 @@ export default function DateRangePopup({
   function apply() {
     const s = parseDDMMYYYY(manualStart);
     const e = parseDDMMYYYY(manualEnd);
-    if (!s || !e) { setManualError("Gunakan format DD-MM-YYYY yang valid."); return; }
-    if (e < s) { setManualError("Tanggal akhir tidak boleh sebelum tanggal awal."); return; }
+    if (!s || !e) {
+      setManualError("Gunakan format DD-MM-YYYY yang valid.");
+      return;
+    }
+    if (e < s) {
+      setManualError("Tanggal akhir tidak boleh sebelum tanggal awal.");
+      return;
+    }
     setManualError("");
     setDraft({ startDate: s, endDate: e, key: "selection" });
     onChange(toISOlocal(s), toISOlocal(e));
@@ -249,15 +270,17 @@ export default function DateRangePopup({
                     Tanggal awal (DD-MM-YYYY)
                     <input
                       value={manualStart}
-                        onChange={onChangeMasked(setManualStart)}
-                        onKeyDown={onKeyDownMasked}
-                        onPaste={onPasteMasked(setManualStart)}
-                        onBlur={onBlurNormalize(setManualStart)}
-                        onKeyUp={(e) => { if (e.key === "Enter") apply(); }}
-                        className={`drp-input ${!isValidDDMMYYYY(manualStart) ? "is-invalid" : ""} px-3 py-2 rounded-lg text-sm`}
-                        placeholder="01-01-2025"
-                        inputMode="numeric"
-                        aria-invalid={!isValidDDMMYYYY(manualStart)}
+                      onChange={onChangeMasked(setManualStart)}
+                      onKeyDown={onKeyDownMasked}
+                      onPaste={onPasteMasked(setManualStart)}
+                      onBlur={onBlurNormalize(setManualStart)}
+                      onKeyUp={(e) => {
+                        if (e.key === "Enter") apply();
+                      }}
+                      className={`drp-input ${!isValidDDMMYYYY(manualStart) ? "is-invalid" : ""} px-3 py-2 rounded-lg text-sm`}
+                      placeholder="01-01-2025"
+                      inputMode="numeric"
+                      aria-invalid={!isValidDDMMYYYY(manualStart)}
                     />
                   </label>
                   <label className="flex flex-col gap-1 text-xs text-cyan-200/80 tracking-wide uppercase">
@@ -268,7 +291,9 @@ export default function DateRangePopup({
                       onKeyDown={onKeyDownMasked}
                       onPaste={onPasteMasked(setManualEnd)}
                       onBlur={onBlurNormalize(setManualEnd)}
-                      onKeyUp={(e) => { if (e.key === "Enter") apply(); }}
+                      onKeyUp={(e) => {
+                        if (e.key === "Enter") apply();
+                      }}
                       className={`drp-input ${!isValidDDMMYYYY(manualEnd) ? "is-invalid" : ""} px-3 py-2 rounded-lg text-sm`}
                       placeholder="31-12-2025"
                       inputMode="numeric"
@@ -280,9 +305,7 @@ export default function DateRangePopup({
                 {manualError ? (
                   <p className="mt-2 text-xs text-rose-300/90">{manualError}</p>
                 ) : (
-                  <p className="mt-2 text-xs text-cyan-200/70">
-                    Ketik manual dengan format DD-MM-YYYY atau gunakan kalender di atas.
-                  </p>
+                  <p className="mt-2 text-xs text-cyan-200/70">Ketik manual dengan format DD-MM-YYYY atau gunakan kalender di atas.</p>
                 )}
 
                 <div className="flex items-center justify-end gap-2 mt-3">
@@ -300,40 +323,40 @@ export default function DateRangePopup({
                 </div>
               </div>
             </div>
-          <style jsx global>{`
-            /* Input manual tanggal */
-            [data-drp-popover] .drp-input{
-              background-color:#0f1629 !important;  /* dark, bukan putih */
-              color:#d1feff !important;
-              border:1px solid rgba(34,211,238,.25) !important; /* cyan-400/25 */
-              outline:none !important;
-            }
-            [data-drp-popover] .drp-input::placeholder{
-              color:rgba(165,243,252,.45) !important; /* cyan-200/45 */
-            }
-            [data-drp-popover] .drp-input:focus{
-              border-color:rgba(34,211,238,.6) !important;
-              box-shadow:0 0 0 2px rgba(34,211,238,.15) !important;
-            }
-            /* State invalid */
-            [data-drp-popover] .drp-input.is-invalid{
-              background-color:#1a1020 !important;
-              color:#ffe4e6 !important; /* rose-100 */
-              border-color:rgba(244,63,94,.45) !important; /* rose-500/45 */
-              box-shadow:0 0 0 2px rgba(244,63,94,.2) !important;
-            }
-            /* Tangkis autofill */
-            [data-drp-popover] .drp-input:-webkit-autofill,
-            [data-drp-popover] .drp-input:-webkit-autofill:hover,
-            [data-drp-popover] .drp-input:-webkit-autofill:focus{
-              -webkit-text-fill-color:#d1feff !important;
-              -webkit-box-shadow:0 0 0px 1000px #0f1629 inset !important;
-              box-shadow:0 0 0px 1000px #0f1629 inset !important;
-              caret-color:#a5f3fc !important;
-            }
-          `}</style>
-        </div>,
-        document.body
+            <style jsx global>{`
+              /* Input manual tanggal */
+              [data-drp-popover] .drp-input {
+                background-color: #0f1629 !important;
+                color: #d1feff !important;
+                border: 1px solid rgba(34, 211, 238, 0.25) !important;
+                outline: none !important;
+              }
+              [data-drp-popover] .drp-input::placeholder {
+                color: rgba(165, 243, 252, 0.45) !important;
+              }
+              [data-drp-popover] .drp-input:focus {
+                border-color: rgba(34, 211, 238, 0.6) !important;
+                box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.15) !important;
+              }
+              /* State invalid */
+              [data-drp-popover] .drp-input.is-invalid {
+                background-color: #1a1020 !important;
+                color: #ffe4e6 !important;
+                border-color: rgba(244, 63, 94, 0.45) !important;
+                box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.2) !important;
+              }
+              /* Tangkis autofill */
+              [data-drp-popover] .drp-input:-webkit-autofill,
+              [data-drp-popover] .drp-input:-webkit-autofill:hover,
+              [data-drp-popover] .drp-input:-webkit-autofill:focus {
+                -webkit-text-fill-color: #d1feff !important;
+                -webkit-box-shadow: 0 0 0px 1000px #0f1629 inset !important;
+                box-shadow: 0 0 0px 1000px #0f1629 inset !important;
+                caret-color: #a5f3fc !important;
+              }
+            `}</style>
+          </div>,
+          document.body
         )}
     </>
   );

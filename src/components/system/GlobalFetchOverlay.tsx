@@ -6,20 +6,31 @@ import { Loader2 } from "lucide-react";
 
 type AnyFetch = typeof fetch;
 
-const SHOW_DELAY_MS = 160; // elak flicker untuk request cepat
+const SHOW_DELAY_MS = 300; // tahan lebih lama supaya tidak muncul di request ringan
 const SUPPRESS_AFTER_ROUTE_MS = 320; // jeda sejenak setelah route overlay hilang
 
-function extractUrl(input: RequestInfo | URL): string {
-  if (typeof input === "string") return input;
-  if (input instanceof URL) return input.href;
-  return (input as Request).url;
+function extractUrl(input: RequestInfo | URL, init?: RequestInit): { href: string; method: string } {
+  let href: string;
+  let method = (init?.method || "GET").toUpperCase();
+  if (typeof input === "string") {
+    href = input;
+  } else if (input instanceof URL) {
+    href = input.href;
+  } else {
+    const req = input as Request;
+    href = req.url;
+    method = req.method?.toUpperCase() || method;
+  }
+  return { href, method };
 }
 
-function shouldTrack(input: RequestInfo | URL) {
+function shouldTrack(input: RequestInfo | URL, init?: RequestInit) {
   if (typeof window === "undefined") return false;
   try {
-    const raw = extractUrl(input);
-    const url = raw.startsWith("http") ? new URL(raw) : new URL(raw, window.location.href);
+    const { href, method } = extractUrl(input, init);
+    // hanya POST/PUT/PATCH/DELETE/OPTIONS yang dianggap krusial; GET diabaikan supaya overlay tidak sering muncul
+    if (method === "GET") return false;
+    const url = href.startsWith("http") ? new URL(href) : new URL(href, window.location.href);
     // abaikan asset/next static, sisanya (relative/same-origin) dilacak
     if (url.origin !== window.location.origin) return false;
     return !url.pathname.startsWith("/_next/");
@@ -49,7 +60,7 @@ export default function GlobalFetchOverlay() {
     (window as any).__monalisaFetchPatched = true;
 
     window.fetch = (async (...args: Parameters<AnyFetch>) => {
-      const track = shouldTrack(args[0]);
+      const track = shouldTrack(args[0], args[1]);
       if (track) setPending((p) => p + 1);
       try {
         return await orig(...args);
