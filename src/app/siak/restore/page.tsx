@@ -82,7 +82,7 @@ function CustomTable<T>({
 
   return (
     <div className="custom-table w-full">
-      <div className="overflow-x-auto rounded-xl border border-slate-200/60 bg-white/80 backdrop-blur dark:border-white/10 dark:bg-slate-900/40">
+      <div className="overflow-x-auto rounded-xl border border-cyan-200/30 bg-[#051021]/95 shadow-[0_24px_40px_rgba(2,8,20,0.55)] backdrop-blur-sm dark:border-white/10 dark:bg-slate-900/40">
         <table className="min-w-full table-fixed">
           <colgroup>
             {columns.map((c) => (
@@ -98,7 +98,7 @@ function CustomTable<T>({
           </colgroup>
 
           {/* HEAD (tanpa sort, tanpa pointer) */}
-          <thead className="sticky top-0 z-20 bg-white/90 text-slate-600 backdrop-blur dark:bg-slate-900/70 dark:text-slate-300">
+          <thead className="sticky top-0 z-20 bg-[#08162c]/95 text-cyan-100 backdrop-blur-md dark:bg-slate-900/70 dark:text-slate-300">
             <tr>
               {columns.map((col) => {
                 const stickyCls =
@@ -150,7 +150,7 @@ function CustomTable<T>({
               rows.map((row, ri) => (
                 <tr
                   key={rowKey(row)}
-                  className="odd:bg-[#fffdf7] even:bg-[#fffaf0] hover:bg-[#fff7dd] dark:odd:bg-[#0d1426]/45 dark:even:bg-[#0b1220]/45 dark:hover:bg-cyan-400/10"
+                  className="odd:bg-[#0b172c] even:bg-[#091324] hover:bg-[#102039] text-cyan-50 dark:odd:bg-[#0d1426]/45 dark:even:bg-[#0b1220]/45 dark:hover:bg-cyan-400/10"
                 >
                   {columns.map((col) => {
                     const stickyCls =

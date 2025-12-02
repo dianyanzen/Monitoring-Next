@@ -4,6 +4,7 @@ import "./globals.css"; // <- sebelumnya "../globals.css" (salah path)
 import "../styles/tokens.css";
 import "../styles/theme-dark.css";
 import "../styles/theme-light.css";
+import "../styles/fallbacks.css";
 import "../styles/layout.css";
 import "../styles/overlays.css";
 import "../styles/utilities.css";
