@@ -115,12 +115,14 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
 .abs-glow-cyan{
   position:absolute;left:14%;top:-18%;
   width:1100px;height:1100px;border-radius:9999px;
-  background: rgba(34,211,238,.14);filter: blur(220px);
+  background: radial-gradient(circle, rgba(59,130,246,.14) 0%, rgba(14,165,233,.10) 42%, transparent 70%);
+  filter: blur(220px);
 }
 .abs-glow-magenta{
   position:absolute;right:16%;bottom:-22%;
   width:1000px;height:1000px;border-radius:9999px;
-  background: rgba(217,70,239,.10);filter: blur(200px);
+  background: radial-gradient(circle, rgba(16,185,129,.12) 0%, rgba(14,165,233,.10) 34%, transparent 70%);
+  filter: blur(210px);
 }
 
 /* ===== Header shell ===== */

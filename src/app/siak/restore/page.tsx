@@ -731,13 +731,15 @@ export default function RestorePage() {
         <div
           className={
             isDark
-              ? "flex items-center justify-center gap-3 rounded-2xl border border-white/5 bg-slate-900/30 p-6 text-sm text-slate-200"
-              : "flex items-center justify-center gap-3 rounded-2xl border border-[color-mix(in_oklab,var(--gold-200),#000_14%)] bg-[color-mix(in_oklab,var(--lux-surface),#fff_10%)] p-6 text-sm text-[color-mix(in_oklab,#1a1d21,#000_8%)] shadow-[0_12px_30px_rgba(210,182,138,0.25)]"
+              ? "restore-loading flex items-center justify-center gap-3 rounded-2xl border border-white/5 bg-slate-900/30 p-6 text-sm text-slate-200"
+              : "restore-loading flex items-center justify-center gap-3 rounded-2xl border border-[color-mix(in_oklab,var(--gold-200),#000_14%)] bg-[color-mix(in_oklab,var(--lux-surface),#fff_10%)] p-6 text-sm text-[color-mix(in_oklab,#1a1d21,#000_8%)] shadow-[0_12px_30px_rgba(210,182,138,0.25)]"
           }
         >
           <Loader2
             className={
-              isDark ? "h-4 w-4 animate-spin text-cyan-300" : "h-4 w-4 animate-spin text-[color-mix(in_oklab,var(--gold-400),#000_5%)]"
+              isDark
+                ? "restore-loading__icon h-4 w-4 animate-spin text-cyan-300"
+                : "restore-loading__icon h-4 w-4 animate-spin text-[color-mix(in_oklab,var(--gold-400),#000_5%)]"
             }
           />
           <span>Menyiapkan data biodata dan keluarga…</span>
@@ -786,8 +788,8 @@ export default function RestorePage() {
                         : PLACEHOLDER_MALE_LIGHT;
 
                       const phWrapClass = isDark
-                        ? "bg-[color-mix(in_oklab,#0b1220,#fff_0%)] ring-1 ring-white/10"
-                        : "bg-[color-mix(in_oklab,var(--lux-surface),#000_6%)] ring-1 ring-[color-mix(in_oklab,var(--gold-400),#000_12%)]/35";
+                        ? "restore-photo-placeholder bg-[color-mix(in_oklab,#0b1220,#fff_0%)] ring-1 ring-white/10"
+                        : "restore-photo-placeholder bg-[color-mix(in_oklab,var(--lux-surface),#000_6%)] ring-1 ring-[color-mix(in_oklab,var(--gold-400),#000_12%)]/35";
 
                       return (
                         <div className={`absolute inset-0 grid place-items-center ${phWrapClass}`}>

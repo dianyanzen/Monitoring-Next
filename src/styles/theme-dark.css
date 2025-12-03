@@ -1330,12 +1330,80 @@ html:not([data-theme="light"]) .metric-bump{
 .abs-glow-cyan{
   position:absolute;left:14%;top:-18%;
   width:1100px;height:1100px;border-radius:9999px;
-  background: rgba(34,211,238,.14);filter: blur(220px);
+  background: radial-gradient(circle, rgba(59,130,246,.14) 0%, rgba(14,165,233,.10) 42%, transparent 70%);
+  filter: blur(220px);
 }
 .abs-glow-magenta{
   position:absolute;right:16%;bottom:-22%;
   width:1000px;height:1000px;border-radius:9999px;
-  background: rgba(217,70,239,.10);filter: blur(200px);
+  background: radial-gradient(circle, rgba(16,185,129,.12) 0%, rgba(14,165,233,.10) 34%, transparent 70%);
+  filter: blur(210px);
+}
+
+/* === Pemanfaatan (dark): calmer blue/teal palette === */
+html:not([data-theme="light"]) .pemanfaatan-shell{
+  border:1px solid rgba(94,234,212,.18);
+  background:
+    radial-gradient(880px 240px at 18% -10%, rgba(56,189,248,.12), transparent 60%),
+    radial-gradient(860px 240px at 82% -12%, rgba(16,185,129,.10), transparent 60%),
+    linear-gradient(160deg, rgba(8,13,24,.95), rgba(5,9,18,.94));
+  box-shadow: 0 32px 70px rgba(0,0,0,.65), 0 0 44px rgba(56,189,248,.15);
+}
+html:not([data-theme="light"]) .pemanfaatan-shell::before{
+  content:"";
+  position:absolute; inset:1px; border-radius:inherit;
+  border:1px solid rgba(148,210,255,.10);
+  pointer-events:none;
+}
+html:not([data-theme="light"]) .pemanfaatan-group-block{
+  border:1px solid rgba(94,234,212,.14);
+  background:linear-gradient(150deg, rgba(10,16,28,.9), rgba(7,12,22,.88));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03), 0 24px 48px rgba(2,6,14,.7);
+}
+html:not([data-theme="light"]) .collapsible{
+  border:1px solid rgba(94,234,212,.16);
+  border-radius:1rem;
+  padding:.7rem .7rem 1rem;
+  background:rgba(8,13,24,.85);
+}
+html:not([data-theme="light"]) .group-chip--button{
+  display:flex;align-items:center;gap:.6rem;width:100%;text-align:left;padding:.55rem .85rem;border-radius:.9rem;
+  background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.22);color:#dbeafe;
+}
+html:not([data-theme="light"]) .group-chip--button:hover{background:rgba(56,189,248,.12)}
+html:not([data-theme="light"]) .group-chip--button .caret{margin-left:auto;transition:transform .18s ease;opacity:.85}
+html:not([data-theme="light"]) .collapsible.is-open .group-chip--button{border-color:rgba(94,234,212,.28);box-shadow:0 12px 26px rgba(56,189,248,.12)}
+html:not([data-theme="light"]) .collapsible-body{margin-top:.6rem}
+html:not([data-theme="light"]) .summary-card--clickable{cursor:pointer;transition:transform .12s ease,box-shadow .12s ease;border-color:rgba(94,234,212,.18)}
+html:not([data-theme="light"]) .summary-card--clickable:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(56,189,248,.12);background:rgba(14,20,30,.9)}
+
+html:not([data-theme="light"]) .pemanfaatan-table-panel{
+  border:1px solid rgba(94,234,212,.18);
+  border-radius:28px;
+  padding:1.5rem;
+  background:linear-gradient(155deg, rgba(7,12,22,.94), rgba(5,9,18,.9));
+  box-shadow:0 34px 64px rgba(0,0,0,.62);
+}
+html:not([data-theme="light"]) .pemanfaatan-table-panel__head h3{color:#e0f2fe}
+html:not([data-theme="light"]) .pemanfaatan-table-panel__head p span{color:#7dd3fc}
+html:not([data-theme="light"]) .pemanfaatan-table-panel__eyebrow{color:rgba(125,211,252,.9)}
+html:not([data-theme="light"]) .pemanfaatan-table-panel__stats div{
+  border:1px solid rgba(94,234,212,.16);
+  background:linear-gradient(180deg, rgba(9,15,28,.92), rgba(7,12,24,.88));
+}
+html:not([data-theme="light"]) .pemanfaatan-table-panel__stats span{color:rgba(210,230,255,.72)}
+html:not([data-theme="light"]) .pemanfaatan-table-panel__stats strong{color:#c8fafe;text-shadow:0 0 14px rgba(56,189,248,.25)}
+html:not([data-theme="light"]) .pemanfaatan-table-panel__body{
+  border:1px solid rgba(94,234,212,.14);
+  background:rgba(6,11,22,.9);
+}
+html:not([data-theme="light"]) .pemanfaatan-table-panel__empty{
+  border:1px dashed rgba(94,234,212,.4);
+  background:rgba(6,11,22,.78);
+}
+html:not([data-theme="light"]) .pemanfaatan-table-panel__spinner{
+  border-color: rgba(94,234,212,.25);
+  border-top-color: rgba(94,234,212,.9);
 }
 
 /* ===== Header shell ===== */
@@ -1658,10 +1726,3 @@ html:not([data-theme="light"]) .landscape-hero{ position:relative; width:100%; a
 html:not([data-theme="light"]) .landscape-img{ object-fit:cover; object-position:center; display:block; }
 
 
-html:not([data-theme="light"]) .group-chip--button{display:flex;align-items:center;gap:.6rem;width:100%;text-align:left;padding:.5rem .75rem;border-radius:.8rem;background:rgba(0,255,255,.06);border:1px solid rgba(0,255,255,.18)}
-html:not([data-theme="light"]) .group-chip--button:hover{background:rgba(0,255,255,.10)}
-html:not([data-theme="light"]) .group-chip--button .caret{margin-left:auto;transition:transform .18s ease;opacity:.9}
-html:not([data-theme="light"]) .group-chip--button .caret.rot{transform:rotate(180deg)}
-html:not([data-theme="light"]) .collapsible{border:1px solid rgba(0,255,255,.12);border-radius:1rem;padding:.6rem .6rem 1rem;background:rgba(3,12,22,.35)}
-html:not([data-theme="light"]) .summary-card--clickable{cursor:pointer;transition:transform .12s ease,box-shadow .12s ease}
-html:not([data-theme="light"]) .summary-card--clickable:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(0,255,255,.08)}

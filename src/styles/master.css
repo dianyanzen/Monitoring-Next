@@ -572,98 +572,664 @@ html[data-theme="light"] .contact-refresh:hover {
 }
 
 html[data-theme="light"] .master-card {
-  background: #ffffff;
-  border: 1px solid color-mix(in oklab, var(--gold-300), #fff 58%);
-  box-shadow: 0 22px 45px rgba(27, 39, 72, 0.16);
+  background: rgba(10, 14, 26, 0.92);
+  border: 1px solid rgba(34, 211, 238, 0.18);
+  box-shadow: 0 25px 45px rgba(2, 12, 28, 0.55);
 }
 html[data-theme="light"] .master-card:hover {
-  box-shadow: 0 28px 55px rgba(27, 39, 72, 0.18);
+  box-shadow: 0 30px 55px rgba(2, 12, 28, 0.7);
 }
 html[data-theme="light"] .master-card__hero {
-  color: #70511c;
+  color: #e5eefc;
   background-image:
-    linear-gradient(180deg, rgba(255, 247, 232, 0.96), rgba(238, 214, 170, 0.9)),
+    linear-gradient(180deg, rgba(24, 36, 92, 0.95), rgba(15, 22, 60, 0.92)),
     url("/assets/plugins/images/wallpaper2.jpg");
   background-size: cover;
   background-position: center;
 }
 html[data-theme="light"] .master-card__avatar {
-  border-color: #fff;
-  box-shadow: 0 10px 28px rgba(27, 39, 72, 0.24);
+  border-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 22px rgba(2, 12, 28, 0.4);
 }
 html[data-theme="light"] .master-card__body {
-  background: #fff;
-  color: var(--lux-ink);
-  border-top: 1px solid rgba(255, 255, 255, 0.8);
+  background: rgba(5, 10, 20, 0.75);
+  color: #f5fbff;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 html[data-theme="light"] .master-card__stat {
-  border-right: 1px solid color-mix(in oklab, var(--gold-300), #fff 50%);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 html[data-theme="light"] .master-card__name {
-  background-image: linear-gradient(90deg, #e8c885 0%, #c39840 60%, #f0d99c 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent !important;
-  text-shadow: 0 12px 24px rgba(209, 177, 112, 0.45);
+  color: #7ef9ff;
+  background: none;
+  text-shadow: 0 0 12px rgba(6, 214, 255, 0.55);
 }
 html[data-theme="light"] .master-card__office {
-  color: rgba(112, 81, 28, 0.8) !important;
+  color: rgba(229, 238, 252, 0.7) !important;
   text-shadow: none;
 }
 html[data-theme="light"] .master-card__stat-label {
-  color: rgba(126, 92, 32, 0.75) !important;
+  color: rgba(163, 248, 255, 0.75) !important;
   font-weight: 600;
   letter-spacing: 0.22em;
   text-shadow: none;
 }
 html[data-theme="light"] .master-card__stat-value {
-  color: #b27a21 !important;
-  font-weight: 800;
-  text-shadow: 0 10px 20px rgba(194, 150, 57, 0.35);
+  color: #a9fbff !important;
+  font-weight: 600;
+  text-shadow: 0 0 14px rgba(0, 229, 255, 0.45);
 }
 html[data-theme="light"] .master-card__footer {
-  background: linear-gradient(180deg, #fff, #fff8ec);
-  border-top: 1px solid color-mix(in oklab, var(--gold-300), #fff 55%);
-  color: rgba(112, 81, 28, 0.78) !important;
+  background: rgba(255, 255, 255, 0.04);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(220, 234, 255, 0.7) !important;
 }
 html[data-theme="light"] .master-card__nik-label {
-  color: rgba(126, 92, 32, 0.65) !important;
+  color: rgba(220, 234, 255, 0.7) !important;
   letter-spacing: 0.28em;
 }
 html[data-theme="light"] .master-card__nik-value {
-  color: #c9a971 !important;
-  font-weight: 800;
-  text-shadow: 0 10px 22px rgba(189, 133, 50, 0.35);
+  color: #83f7ff !important;
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(0, 219, 255, 0.35);
 }
 html[data-theme="light"] .master-card__user {
-  color: rgba(124, 88, 30, 0.65) !important;
+  color: rgba(126, 249, 255, 0.85) !important;
   font-weight: 600;
   text-shadow: none;
 }
 html[data-theme="light"] .master-card--skeleton .master-card__hero {
   background-image:
-    linear-gradient(180deg, #ffffff, #f6eddb),
+    linear-gradient(180deg, rgba(24, 36, 92, 0.95), rgba(15, 22, 60, 0.92)),
     url("/assets/plugins/images/wallpaper2.jpg");
-  color: rgba(62, 46, 18, 0.85);
+  color: rgba(220, 236, 252, 0.86);
 }
 html[data-theme="light"] .master-card__avatar--skeleton {
-  box-shadow: 0 14px 28px rgba(58, 44, 24, 0.22), 0 0 0 6px rgba(255, 255, 255, 0.35);
+  box-shadow: 0 14px 28px rgba(2, 12, 28, 0.22), 0 0 0 6px rgba(255, 255, 255, 0.35);
   background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(242, 229, 200, 0.75) 60%, rgba(233, 212, 177, 0.6) 100%);
 }
 html[data-theme="light"] .master-card--skeleton .master-card__body {
-  background: #ffffff;
+  background: rgba(5, 10, 20, 0.75);
 }
 html[data-theme="light"] .master-card--skeleton .master-card__stat {
-  border: 1px solid rgba(224, 197, 143, 0.32);
-  background: linear-gradient(180deg, #ffffff, #f7ead2);
-  box-shadow: 0 14px 24px rgba(184, 142, 69, 0.14);
+  border: 1px solid rgba(34, 211, 238, 0.18);
+  background: linear-gradient(180deg, rgba(24, 36, 92, 0.12), rgba(15, 22, 60, 0.08));
+  box-shadow: 0 10px 20px rgba(2, 12, 28, 0.28);
 }
 html[data-theme="light"] .master-card--skeleton .master-card__footer {
-  background: linear-gradient(180deg, #ffffff, #f8edd8);
-  border-top: 1px solid rgba(224, 197, 143, 0.3);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+  border-top: 1px solid rgba(34, 211, 238, 0.2);
 }
 html[data-theme="light"] .master-card-empty {
-  border-color: rgba(224, 197, 143, 0.36);
-  background: #fff8ed;
-  color: rgba(84, 60, 24, 0.72);
+  border-color: rgba(34, 211, 238, 0.26);
+  background: rgba(8, 14, 26, 0.92);
+  color: rgba(220, 234, 255, 0.78);
+}
+
+/* ============================================================
+   Pemanfaatan: versi kartu yang lebih datar & tanpa wallpaper
+   (hanya memengaruhi halaman pemanfaatan via .pemanfaatan-page)
+   ============================================================ */
+.pemanfaatan-page .attendance-card.master-card {
+  background: linear-gradient(170deg, #101a2b, #0b1322 58%, #0a111d);
+  border: 1px solid rgba(36, 125, 180, 0.35);
+  box-shadow: 0 22px 45px rgba(5, 10, 20, 0.55);
+  backdrop-filter: blur(12px);
+}
+.pemanfaatan-page .attendance-card.master-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 28px 55px rgba(5, 10, 20, 0.65);
+}
+.pemanfaatan-page .attendance-card .landscape-hero {
+  background: linear-gradient(160deg, #0f2238, #0c1a2c);
+  border: 1px solid rgba(52, 183, 230, 0.3);
+  box-shadow: 0 12px 26px rgba(4, 12, 24, 0.55);
+}
+.pemanfaatan-page .attendance-card .master-card__hero {
+  padding: 32px 24px 20px;
+  background: radial-gradient(circle at 18% 15%, rgba(80, 200, 255, 0.08), transparent 45%),
+              radial-gradient(circle at 82% 12%, rgba(255, 120, 180, 0.08), transparent 42%),
+              linear-gradient(185deg, #0f2238, #0c1627);
+  color: #e5f4ff;
+}
+.pemanfaatan-page .attendance-card .master-card__name {
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-shadow: none;
+  color: #dff4ff;
+}
+.pemanfaatan-page .attendance-card .master-card__office {
+  color: rgba(200, 225, 245, 0.75);
+  letter-spacing: 0.22em;
+}
+.pemanfaatan-page .attendance-card .master-card__body {
+  background: rgba(9, 18, 34, 0.9);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 20px;
+  gap: 14px;
+}
+.pemanfaatan-page .attendance-card .master-card__stat {
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding-inline: 10px;
+}
+.pemanfaatan-page .attendance-card .master-card__stat-label {
+  color: rgba(177, 214, 236, 0.82);
+  letter-spacing: 0.16em;
+}
+.pemanfaatan-page .attendance-card .master-card__stat-value {
+  color: #8be7ff;
+  text-shadow: none;
+}
+.pemanfaatan-page .attendance-card .master-card__footer {
+  background: linear-gradient(180deg, rgba(9, 18, 34, 0.95), rgba(7, 14, 28, 0.9));
+  border-top: 1px solid rgba(52, 183, 230, 0.24);
+  color: rgba(195, 224, 242, 0.86);
+}
+.pemanfaatan-page .attendance-card .master-card__nik-value {
+  color: #9ae9ff !important;
+  text-shadow: none;
+}
+.pemanfaatan-page .attendance-card .master-card__user {
+  color: rgba(160, 210, 235, 0.76) !important;
+}
+
+/* ============================================================
+   Report / Absensi (cyber-lux)
+   ============================================================ */
+.absensi-report-page .glass-card {
+  position: relative;
+  border-radius: 22px;
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  background: radial-gradient(circle at 12% 10%, rgba(59, 130, 246, 0.12), transparent 32%),
+    radial-gradient(circle at 86% 6%, rgba(236, 72, 153, 0.1), transparent 30%),
+    linear-gradient(160deg, rgba(11, 16, 32, 0.95), rgba(6, 10, 20, 0.94));
+  box-shadow: 0 26px 52px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(59, 130, 246, 0.08) inset;
+  overflow: hidden;
+}
+.absensi-report-page .glass-card--accent {
+  border-color: rgba(94, 234, 212, 0.42);
+  background: radial-gradient(circle at 30% 0%, rgba(59, 237, 209, 0.2), transparent 40%),
+    radial-gradient(circle at 80% 6%, rgba(14, 165, 233, 0.25), transparent 38%),
+    linear-gradient(150deg, rgba(6, 10, 24, 0.98), rgba(7, 14, 28, 0.95));
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.7), 0 0 18px rgba(34, 197, 235, 0.2);
+}
+.absensi-report-page .glass-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 18px 0;
+}
+.absensi-report-page .glass-card__body {
+  padding: 18px;
+}
+.absensi-report-page .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(148, 221, 255, 0.8);
+}
+.absensi-report-page .eyebrow .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #22d3ee;
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.55);
+}
+.absensi-report-page .status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.55);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.absensi-report-page .status-chip svg {
+  width: 16px;
+  height: 16px;
+}
+.absensi-report-page .status-chip--online {
+  border-color: rgba(52, 211, 153, 0.5);
+  background: rgba(22, 163, 74, 0.12);
+  color: #a7f3d0;
+}
+.absensi-report-page .status-chip--offline {
+  border-color: rgba(248, 113, 113, 0.38);
+  background: rgba(190, 24, 93, 0.12);
+  color: #fecdd3;
+}
+.absensi-report-page .status-chip--idle {
+  border-color: rgba(94, 234, 212, 0.32);
+  background: rgba(45, 212, 191, 0.12);
+  color: #99f6e4;
+}
+.absensi-report-page .stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+.absensi-report-page .stat-block {
+  position: relative;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: linear-gradient(180deg, rgba(14, 22, 36, 0.92), rgba(9, 14, 26, 0.9));
+  box-shadow: 0 18px 36px rgba(3, 7, 18, 0.42);
+}
+.absensi-report-page .stat-block__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(203, 213, 225, 0.82);
+}
+.absensi-report-page .stat-block__value {
+  display: block;
+  margin-top: 8px;
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #8bffff;
+  text-shadow: 0 0 16px rgba(59, 225, 255, 0.35);
+}
+.absensi-report-page .stat-block__hint {
+  font-size: 0.78rem;
+  color: rgba(226, 232, 240, 0.7);
+}
+.absensi-report-page .pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(94, 234, 212, 0.35);
+  background: rgba(15, 186, 196, 0.12);
+  color: #a5f3fc;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+.absensi-report-page .pill .dot {
+  width: 6px;
+  height: 6px;
+  background: #5eead4;
+}
+.absensi-report-page .action-btn,
+.modal .action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(59, 130, 246, 0.38);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.14), rgba(94, 234, 212, 0.12));
+  color: #e2f3ff;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+.absensi-report-page .action-btn:hover,
+.modal .action-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(56, 189, 248, 0.6);
+  box-shadow: 0 14px 26px rgba(56, 189, 248, 0.18);
+}
+.absensi-report-page .action-btn:disabled,
+.modal .action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.absensi-report-page .action-btn--ghost,
+.modal .action-btn--ghost {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(148, 163, 184, 0.3);
+  color: rgba(226, 232, 240, 0.9);
+}
+.absensi-report-page .action-btn--danger,
+.modal .action-btn--danger {
+  border-color: rgba(248, 113, 113, 0.55);
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.14), rgba(244, 63, 94, 0.12));
+  color: #fecdd3;
+}
+.absensi-report-page .action-btn--primary,
+.modal .action-btn--primary {
+  border-color: rgba(59, 225, 255, 0.6);
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.24), rgba(14, 165, 233, 0.18));
+  box-shadow: 0 18px 34px rgba(6, 182, 212, 0.22);
+  color: #e0faff;
+}
+.absensi-report-page .machine-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(7, 11, 22, 0.9);
+}
+.absensi-report-page .machine-row__meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.absensi-report-page .machine-row__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(94, 234, 212, 0.35);
+  background: radial-gradient(circle at 40% 30%, rgba(94, 234, 212, 0.18), rgba(14, 165, 233, 0.12));
+  color: #99f6e4;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.absensi-report-page .machine-row__title {
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #e2e8f0;
+}
+.absensi-report-page .machine-row__ip {
+  font-size: 0.8rem;
+  color: rgba(148, 163, 184, 0.82);
+}
+.absensi-report-page .machine-row__status {
+  font-size: 0.82rem;
+  color: rgba(226, 232, 240, 0.9);
+}
+.absensi-report-page .log-panel {
+  border-radius: 18px;
+  border: 1px dashed rgba(148, 163, 184, 0.35);
+  background: rgba(8, 12, 22, 0.92);
+  padding: 14px 16px;
+  color: rgba(203, 213, 225, 0.88);
+  font-size: 0.92rem;
+}
+.absensi-report-page .timeline {
+  display: grid;
+  gap: 12px;
+}
+.absensi-report-page .timeline__item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.26);
+  background: rgba(5, 9, 18, 0.8);
+}
+.absensi-report-page .timeline__bullet {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 40% 30%, rgba(6, 182, 212, 0.25), rgba(14, 165, 233, 0.14));
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #8be9fd;
+}
+.absensi-report-page .form-grid,
+.modal .form-grid {
+  display: grid;
+  gap: 14px;
+}
+.absensi-report-page .form-grid--2,
+.modal .form-grid--2 {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+.absensi-report-page .field-label,
+.modal .field-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.86rem;
+  color: rgba(226, 232, 240, 0.85);
+  letter-spacing: 0.03em;
+}
+.absensi-report-page .field-input,
+.absensi-report-page .field-select,
+.absensi-report-page .field-textarea,
+.modal .field-input,
+.modal .field-select,
+.modal .field-textarea {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(4, 7, 14, 0.8);
+  padding: 10px 12px;
+  color: #e2e8f0;
+  font-size: 0.95rem;
+}
+.absensi-report-page .field-input:focus,
+.absensi-report-page .field-select:focus,
+.absensi-report-page .field-textarea:focus,
+.modal .field-input:focus,
+.modal .field-select:focus,
+.modal .field-textarea:focus {
+  outline: 2px solid rgba(56, 189, 248, 0.5);
+  outline-offset: 2px;
+}
+.absensi-report-page .field-textarea,
+.modal .field-textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+.absensi-report-page .helper,
+.modal .helper {
+  font-size: 0.86rem;
+  color: rgba(148, 163, 184, 0.86);
+}
+.absensi-report-page .action-log {
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, Menlo, monospace;
+  font-size: 0.9rem;
+  color: #c7d2fe;
+  background: rgba(15, 23, 42, 0.7);
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(99, 102, 241, 0.35);
+}
+.absensi-report-page .divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), transparent);
+  margin: 10px 0;
+}
+html[data-theme="light"] .absensi-report-page .glass-card {
+  background: linear-gradient(160deg, rgba(236, 248, 255, 0.9), rgba(223, 240, 255, 0.9));
+  border-color: rgba(56, 189, 248, 0.25);
+  box-shadow: 0 26px 52px rgba(15, 23, 42, 0.12);
+}
+html[data-theme="light"] .absensi-report-page .glass-card--accent {
+  background: linear-gradient(150deg, rgba(215, 245, 255, 0.94), rgba(232, 249, 255, 0.9));
+  border-color: rgba(6, 182, 212, 0.45);
+  box-shadow: 0 28px 60px rgba(14, 116, 144, 0.08);
+}
+html[data-theme="light"] .absensi-report-page .status-chip {
+  background: rgba(255, 255, 255, 0.8);
+  color: #0f172a;
+  border-color: rgba(148, 163, 184, 0.45);
+}
+html[data-theme="light"] .absensi-report-page .status-chip--online {
+  border-color: rgba(22, 163, 74, 0.38);
+  background: rgba(74, 222, 128, 0.18);
+  color: #064e3b;
+}
+html[data-theme="light"] .absensi-report-page .status-chip--offline {
+  border-color: rgba(190, 24, 93, 0.3);
+  background: rgba(244, 63, 94, 0.15);
+  color: #7f1d1d;
+}
+html[data-theme="light"] .absensi-report-page .stat-block {
+  background: linear-gradient(180deg, rgba(226, 241, 255, 0.9), rgba(214, 232, 252, 0.92));
+  border-color: rgba(148, 163, 184, 0.35);
+}
+html[data-theme="light"] .absensi-report-page .stat-block__label {
+  color: rgba(15, 23, 42, 0.68);
+}
+html[data-theme="light"] .absensi-report-page .stat-block__value {
+  color: #0ea5e9;
+  text-shadow: none;
+}
+html[data-theme="light"] .absensi-report-page .action-btn,
+html[data-theme="light"] .modal .action-btn {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(59, 130, 246, 0.08));
+  color: #0f172a;
+}
+html[data-theme="light"] .absensi-report-page .action-btn--ghost,
+html[data-theme="light"] .modal .action-btn--ghost {
+  background: rgba(255, 255, 255, 0.9);
+  color: #0f172a;
+}
+html[data-theme="light"] .absensi-report-page .machine-row {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(148, 163, 184, 0.32);
+}
+html[data-theme="light"] .absensi-report-page .log-panel {
+  background: rgba(243, 248, 255, 0.9);
+  color: rgba(15, 23, 42, 0.8);
+  border-color: rgba(148, 163, 184, 0.35);
+}
+html[data-theme="light"] .absensi-report-page .timeline__item {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(148, 163, 184, 0.32);
+}
+html[data-theme="light"] .absensi-report-page .timeline__bullet {
+  background: radial-gradient(circle at 40% 30%, rgba(14, 165, 233, 0.18), rgba(6, 182, 212, 0.14));
+}
+
+/* ============================================================
+   Report / Absensi (tailwind-layout light/dark toggle)
+   ============================================================ */
+.absensi-report-page .absensi-card {
+  position: relative;
+  isolation: isolate;
+}
+
+html[data-theme="light"] .absensi-report-page {
+  --absensi-surface: linear-gradient(180deg, #f6fbff, #eef5ff);
+  --absensi-surface-soft: linear-gradient(180deg, #ffffff, #f9fbff);
+  --absensi-border: rgba(56, 189, 248, 0.28);
+  --absensi-shadow: 0 18px 38px rgba(15, 23, 42, 0.12);
+  --absensi-shadow-strong: 0 22px 48px rgba(15, 23, 42, 0.16);
+  --absensi-ink: #0f172a;
+  --absensi-muted: #4b5563;
+}
+html[data-theme="light"] .absensi-report-page .absensi-card {
+  background: var(--absensi-surface);
+  border-color: var(--absensi-border);
+  box-shadow: var(--absensi-shadow);
+  color: var(--absensi-ink);
+}
+html[data-theme="light"] .absensi-report-page .absensi-card--profile {
+  background: linear-gradient(150deg, #f4f9ff, #eef6ff);
+  box-shadow: var(--absensi-shadow-strong);
+}
+html[data-theme="light"] .absensi-report-page .absensi-card--soft {
+  background: var(--absensi-surface-soft);
+}
+html[data-theme="light"] .absensi-report-page .absensi-card--panel {
+  background: #ffffff;
+}
+html[data-theme="light"] .absensi-report-page .absensi-card--clock {
+  background: linear-gradient(180deg, #ffffff, #f4f9ff);
+}
+html[data-theme="light"] .absensi-report-page .absensi-card :is(h1, h2, h3, h4, p, span, label) {
+  color: inherit;
+}
+html[data-theme="light"] .absensi-report-page .absensi-card :is(.text-slate-50, .text-slate-100, .text-slate-200, .text-slate-300, .text-cyan-100, .text-cyan-200, .text-emerald-100, .text-emerald-200, .text-emerald-300, .text-rose-100, .text-rose-200, .text-rose-300) {
+  color: var(--absensi-muted);
+}
+html[data-theme="light"] .absensi-report-page .absensi-card strong {
+  color: var(--absensi-ink);
+}
+
+html[data-theme="light"] .absensi-report-page .absensi-info {
+  border-color: rgba(14, 165, 233, 0.3);
+  background: linear-gradient(135deg, #e8f7ff, #f8fcff);
+  color: var(--absensi-ink);
+  box-shadow: 0 14px 32px rgba(14, 165, 233, 0.16);
+}
+
+html[data-theme="light"] .absensi-report-page .absensi-tile {
+  background: #ffffff;
+  border-color: rgba(148, 163, 184, 0.32);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.1);
+  color: var(--absensi-ink);
+}
+html[data-theme="light"] .absensi-report-page .absensi-tile--cyan {
+  background: linear-gradient(135deg, #e6f9ff, #f7fcff);
+  border-color: rgba(14, 165, 233, 0.3);
+}
+html[data-theme="light"] .absensi-report-page .absensi-tile--emerald {
+  background: linear-gradient(135deg, #e6fff6, #f9fffc);
+  border-color: rgba(16, 185, 129, 0.28);
+}
+html[data-theme="light"] .absensi-report-page .absensi-tile--sky {
+  background: linear-gradient(135deg, #e8f3ff, #f8fbff);
+  border-color: rgba(56, 189, 248, 0.28);
+}
+html[data-theme="light"] .absensi-report-page .absensi-tile--amber {
+  background: linear-gradient(135deg, #fff7e6, #fffdf6);
+  border-color: rgba(234, 179, 8, 0.32);
+  color: #7c5600;
+}
+
+html[data-theme="light"] .absensi-report-page .absensi-clock {
+  color: var(--absensi-ink);
+  box-shadow: 0 18px 32px rgba(15, 23, 42, 0.14);
+}
+html[data-theme="light"] .absensi-report-page .absensi-clock--in {
+  background: linear-gradient(180deg, #e7fff4, #f7fffb);
+  border-color: rgba(16, 185, 129, 0.32);
+}
+html[data-theme="light"] .absensi-report-page .absensi-clock--out {
+  background: linear-gradient(180deg, #fff1f3, #fff8f8);
+  border-color: rgba(244, 63, 94, 0.32);
+}
+
+html[data-theme="light"] .absensi-report-page .absensi-modal__scrim {
+  background: rgba(15, 23, 42, 0.42);
+}
+html[data-theme="light"] .absensi-report-page .absensi-modal {
+  background: #ffffff;
+  border-color: rgba(148, 163, 184, 0.32);
+  box-shadow: 0 22px 44px rgba(15, 23, 42, 0.18);
+  color: var(--absensi-ink);
+}
+html[data-theme="light"] .absensi-report-page .absensi-modal input,
+html[data-theme="light"] .absensi-report-page .absensi-modal select,
+html[data-theme="light"] .absensi-report-page .absensi-modal textarea {
+  background: #f7fbff;
+  border-color: rgba(148, 163, 184, 0.4);
+  color: var(--absensi-ink);
+}
+html[data-theme="light"] .absensi-report-page .absensi-modal input:focus,
+html[data-theme="light"] .absensi-report-page .absensi-modal select:focus,
+html[data-theme="light"] .absensi-report-page .absensi-modal textarea:focus {
+  border-color: rgba(14, 165, 233, 0.5);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+}
+html[data-theme="light"] .absensi-report-page .absensi-modal .text-slate-100 {
+  color: var(--absensi-ink);
+}
+
+html[data-theme="light"] .absensi-report-page :is([class*="bg-slate-9"], [class*="bg-slate-8"]) {
+  background-color: #f7fbff;
+}
+html[data-theme="light"] .absensi-report-page :is([class*="border-slate-9"], [class*="border-slate-8"]) {
+  border-color: rgba(148, 163, 184, 0.32);
 }

@@ -284,6 +284,9 @@ export default function PemanfaatanPage() {
       const data: PemanfaatanRow[] = Array.isArray(j?.data) ? j.data : [];
       if (!ac.signal.aborted) setRows(data);
     } catch (e: any) {
+      if (e?.name === "AbortError") {
+        return; // user/nav aborted: abaikan
+      }
       if (!abortRef.current?.signal.aborted) {
         setRows([]);
         setError(e?.message || "Gagal memuat data pemanfaatan");
@@ -310,6 +313,9 @@ export default function PemanfaatanPage() {
       const data: SummaryRow[] = Array.isArray(j?.data) ? j.data : [];
       setSumRows(data);
     } catch (e: any) {
+      if (e?.name === "AbortError") {
+        return;
+      }
       setSumRows([]);
       setSumError(e?.message || "Gagal memuat ringkasan");
     } finally {
@@ -346,13 +352,13 @@ export default function PemanfaatanPage() {
         <div className="abs-glow-magenta absolute bottom-[-20%] right-[18%] w-[1000px] h-[1000px] blur-[190px] rounded-full" />
       </div>
 
-      <section className="pemanfaatan-shell rounded-2xl border border-cyan-800/40 bg-[#0b0b1a]/80 backdrop-blur-xl shadow-[0_0_34px_#00ffff22] overflow-hidden">
+      <section className="pemanfaatan-shell rounded-3xl border border-slate-800/70 bg-gradient-to-br from-slate-950/90 via-slate-900/85 to-slate-950/90 backdrop-blur-xl shadow-[0_32px_70px_rgba(0,0,0,0.55)] overflow-hidden">
         {/* ===== Header ===== */}
-        <header className="px-5 py-4 border-b border-cyan-900/50 master-head">
+        <header className="px-5 py-4 border-b border-slate-800/70 master-head bg-gradient-to-r from-slate-900/70 via-slate-900/50 to-slate-950/70">
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-3">
             <div className="flex items-center gap-3">
-              <span className="dot inline-block w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_12px_#22d3ee]" />
-              <h1 className="text-base md:text-lg font-semibold tracking-wide text-cyan-200">
+              <span className="dot inline-block w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d39980]" />
+              <h1 className="text-base md:text-lg font-semibold tracking-wide text-slate-100">
                 Master — Pemanfaatan Layanan Online
               </h1>
             </div>
@@ -362,8 +368,8 @@ export default function PemanfaatanPage() {
                 onClick={() => setTab("master")}
                 className={`segbtn inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition ${
                   tab === "master"
-                    ? "is-active bg-cyan-600/30 border border-cyan-400/50 shadow-[0_0_16px_#00ffff66]"
-                    : "bg-white/5 border border-white/10 hover:bg-white/10"
+                    ? "is-active bg-gradient-to-r from-sky-500/25 via-cyan-500/20 to-emerald-400/20 border border-sky-400/50 shadow-[0_0_18px_rgba(56,189,248,0.24)] text-slate-50"
+                    : "bg-white/5 border border-slate-800/70 text-slate-200 hover:bg-white/10"
                 }`}
               >
                 <LayoutGrid className="w-4 h-4" />
@@ -373,8 +379,8 @@ export default function PemanfaatanPage() {
                 onClick={() => setTab("excel")}
                 className={`segbtn inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition ${
                   tab === "excel"
-                    ? "is-active bg-cyan-600/30 border border-cyan-400/50 shadow-[0_0_16px_#00ffff66]"
-                    : "bg-white/5 border border-white/10 hover:bg-white/10"
+                    ? "is-active bg-gradient-to-r from-sky-500/25 via-cyan-500/20 to-emerald-400/20 border border-sky-400/50 shadow-[0_0_18px_rgba(56,189,248,0.24)] text-slate-50"
+                    : "bg-white/5 border border-slate-800/70 text-slate-200 hover:bg-white/10"
                 }`}
               >
                 <ListIcon className="w-4 h-4" />
@@ -384,7 +390,7 @@ export default function PemanfaatanPage() {
               <button
                 type="button"
                 onClick={refreshBoth}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-sm transition-colors"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/70 border border-slate-700 hover:bg-slate-800/50 text-sm text-slate-100 transition-colors"
                 aria-label="Muat ulang data"
               >
                 <RefreshCcw className={`w-4 h-4 ${isBusy ? "animate-spin" : ""}`} />
@@ -397,8 +403,8 @@ export default function PemanfaatanPage() {
         {/* ===== Toolbar ===== */}
         <div className="px-5 pt-4 pb-2">
           <div className="flex flex-col gap-3 lg:grid lg:grid-cols-[auto_1fr_auto] lg:items-center">
-            <label className="inline-flex items-center gap-2 text-sm">
-              <input type="checkbox" checked readOnly className="use-range accent-cyan-500" />
+            <label className="inline-flex items-center gap-2 text-sm text-slate-200">
+              <input type="checkbox" checked readOnly className="use-range accent-sky-500" />
               Rentang Tanggal
             </label>
 
@@ -465,7 +471,7 @@ export default function PemanfaatanPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={refreshBoth}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-600/25 hover:bg-cyan-600/40 border border-cyan-400/40 text-sm shadow-[0_0_14px_#00ffff55] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-sky-500/25 to-emerald-400/20 border border-sky-400/40 text-sm text-slate-50 shadow-[0_0_18px_rgba(56,189,248,0.18)] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={isBusy}
               >
                 <Search className={`w-4 h-4 ${isBusy ? "animate-pulse" : ""}`} />
@@ -473,7 +479,7 @@ export default function PemanfaatanPage() {
               </button>
               <button
                 onClick={onClear}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/20 text-sm transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/70 hover:bg-slate-800/60 border border-slate-700 text-sm text-slate-200 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
                 Clear
@@ -483,7 +489,7 @@ export default function PemanfaatanPage() {
         </div>
 
         {/* Divider */}
-        <div className="mx-5 h-[1px] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
+        <div className="mx-5 h-[1px] bg-gradient-to-r from-transparent via-sky-500/30 to-transparent" />
 
         {/* ===== RINGKASAN PER KATEGORI ===== */}
         <div className="px-5 pt-4">
@@ -553,7 +559,7 @@ function MasterCardGroups({
 
   if (rows.length === 0) {
     return (
-      <div className="rounded-lg border border-cyan-500/40 bg-cyan-500/10 px-4 py-3 text-sm">
+      <div className="rounded-lg border border-sky-400/35 bg-sky-500/10 px-4 py-3 text-sm text-slate-100">
         Tidak ada data untuk rentang ini.
       </div>
     );
@@ -590,10 +596,10 @@ function MasterCardGroups({
               <span
                 className="
                   ml-3 inline-flex flex-col items-center justify-center
-                  rounded-full border border-cyan-400/45
-                  bg-cyan-500/15 px-3 py-1
+                  rounded-full border border-sky-400/40
+                  bg-sky-500/15 px-3 py-1
                   text-[10px] uppercase tracking-[0.16em]
-                  text-cyan-100 text-center
+                  text-slate-100 text-center
                   min-w-[80px]
                 "
               >
@@ -735,10 +741,10 @@ function ExcelDataTable({
             {loading && (
               <div
                 className="pointer-events-none absolute inset-0 grid place-items-center rounded-xl
-                           bg-gradient-to-b from-[#0b0b1a]/40 to-[#0b0b1a]/60 backdrop-blur-[2px]"
+                           bg-gradient-to-b from-slate-950/50 to-slate-950/70 backdrop-blur-[2px]"
                 aria-hidden="true"
               >
-                <div className="flex items-center gap-3 text-cyan-200 text-sm">
+                <div className="flex items-center gap-3 text-slate-200 text-sm">
                   <span className="pemanfaatan-table-panel__spinner" />
                   Memuat ulang tabel…
                 </div>
@@ -760,7 +766,7 @@ function Chip({ onClick, children }: { onClick: () => void; children: React.Reac
   return (
     <button
       onClick={onClick}
-      className="chip text-xs px-2.5 py-1 rounded-md border border-cyan-700/40 bg-cyan-600/10 hover:bg-cyan-600/20 transition-colors"
+      className="chip text-xs px-2.5 py-1 rounded-md border border-sky-900/50 bg-sky-800/15 hover:bg-sky-800/25 text-slate-100 transition-colors"
     >
       {children}
     </button>

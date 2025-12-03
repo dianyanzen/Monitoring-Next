@@ -63,7 +63,7 @@ export default function NeonModal({
       {open && (
         <motion.div
           key="overlay"
-          className="fixed inset-0 z-[200] flex items-center justify-center"
+          className="fixed inset-0 z-[2000] flex items-center justify-center"
           aria-modal="true"
           role="dialog"
           onClick={(e) => e.target === e.currentTarget && onClose()}

@@ -1,0 +1,1366 @@
+/* FILE: src/app/report/absensi/absensi-theme.css */
+
+/* ========================================================================
+   BASE
+   ======================================================================== */
+.absensi-report-page {
+  position: relative;
+  min-height: 420px;
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.absensi-report-page::before,
+.absensi-report-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.absensi-header {
+  position: relative;
+  padding: 14px 18px;
+  border-radius: 18px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.absensi-header::before,
+.absensi-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.absensi-heading {
+  letter-spacing: 0.02em;
+}
+
+.absensi-subtitle {
+  max-width: 760px;
+  line-height: 1.5;
+}
+
+.absensi-pill {
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.absensi-pill--mode {
+  letter-spacing: 0.08em;
+}
+
+.absensi-card {
+  border-radius: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.absensi-card:hover {
+  transform: translateY(-2px);
+}
+
+.absensi-time {
+  border-radius: 0 0 22px 22px;
+  overflow: hidden;
+}
+
+.absensi-time__cell {
+  position: relative;
+}
+
+.absensi-time__cell + .absensi-time__cell {
+  border-left: 1px solid transparent;
+}
+
+.absensi-section-title {
+  letter-spacing: 0.04em;
+}
+
+.absensi-section-subtitle {
+  letter-spacing: 0.12em;
+}
+
+.absensi-mini-card {
+  border-radius: 16px;
+  transition: transform 0.16s ease, box-shadow 0.2s ease;
+}
+
+.absensi-mini-card:hover {
+  transform: translateY(-1px);
+}
+
+.absensi-mini-card__avatar {
+  font-weight: 700;
+}
+
+.absensi-label {
+  letter-spacing: 0.12em;
+}
+
+.absensi-value {
+  letter-spacing: 0.02em;
+}
+
+.absensi-meta {
+  opacity: 0.86;
+}
+
+.absensi-machine {
+  border-radius: 14px;
+  transition: transform 0.14s ease, box-shadow 0.2s ease;
+}
+
+.absensi-machine:hover {
+  transform: translateY(-1px);
+}
+
+.absensi-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.18rem 0.7rem;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+}
+
+.absensi-status--pending {
+  filter: saturate(0.9);
+}
+
+.absensi-tile {
+  text-align: left;
+  border-radius: 18px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.absensi-tile:hover {
+  transform: translateY(-1px);
+}
+
+.absensi-tile__icon {
+  border-radius: 12px;
+}
+
+.absensi-tile__title {
+  letter-spacing: 0.01em;
+}
+
+.absensi-tile__desc {
+  line-height: 1.55;
+}
+
+.absensi-clock {
+  border-radius: 18px;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.absensi-clock__title {
+  letter-spacing: 0.02em;
+}
+
+.absensi-clock__desc {
+  line-height: 1.6;
+}
+
+.absensi-btn {
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  transition: transform 0.16s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.absensi-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.absensi-btn:disabled {
+  cursor: not-allowed;
+}
+
+.absensi-input {
+  border-radius: 12px;
+}
+
+.absensi-input:focus-visible {
+  outline: none;
+}
+
+.absensi-modal__scrim {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.absensi-modal {
+  border-radius: 16px;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.4);
+}
+
+.absensi-icon {
+  stroke-width: 1.8;
+}
+
+/* ========================================================================
+   DARK (default) — align dengan tone dashboard/restore
+   ======================================================================== */
+html:not([data-theme="light"]) .absensi-report-page {
+  color: #e7f0ff;
+  background:
+    radial-gradient(1400px 900px at 12% -18%, rgba(116, 235, 213, 0.24), transparent 70%),
+    radial-gradient(1400px 920px at 85% -22%, rgba(147, 51, 234, 0.26), transparent 68%),
+    linear-gradient(180deg, rgba(12, 19, 40, 0.96) 0%, rgba(4, 10, 22, 0.96) 50%, rgba(3, 7, 16, 0.96) 100%);
+}
+
+html:not([data-theme="light"]) .absensi-report-page::before {
+  background:
+    radial-gradient(1200px 400px at 50% -12%, rgba(34, 211, 238, 0.35), transparent 70%),
+    radial-gradient(1200px 420px at 50% -16%, rgba(126, 34, 206, 0.2), transparent 72%);
+  filter: blur(10px);
+  opacity: 0.75;
+}
+
+html:not([data-theme="light"]) .absensi-report-page::after {
+  background:
+    radial-gradient(900px 420px at 15% 105%, rgba(34, 197, 235, 0.18), transparent 70%),
+    radial-gradient(900px 420px at 85% 108%, rgba(251, 191, 36, 0.16), transparent 70%);
+  opacity: 0.9;
+}
+
+html:not([data-theme="light"]) .absensi-header {
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  background:
+    radial-gradient(circle at 2% 0%, rgba(56, 189, 248, 0.18), transparent 55%),
+    radial-gradient(circle at 98% 0%, rgba(251, 191, 36, 0.15), transparent 55%),
+    linear-gradient(135deg, rgba(10, 20, 36, 0.9), rgba(6, 14, 28, 0.92));
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+}
+
+html:not([data-theme="light"]) .absensi-header::before {
+  background:
+    linear-gradient(90deg, rgba(34, 211, 238, 0.35), rgba(251, 191, 36, 0.35));
+  opacity: 0.35;
+}
+
+html:not([data-theme="light"]) .absensi-header::after {
+  background:
+    radial-gradient(380px 120px at 12% 100%, rgba(34, 211, 238, 0.18), transparent 62%),
+    radial-gradient(420px 120px at 88% 100%, rgba(244, 114, 182, 0.16), transparent 62%);
+  filter: blur(10px);
+  opacity: 0.9;
+}
+
+html:not([data-theme="light"]) .absensi-pill {
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  background: rgba(10, 16, 32, 0.8);
+  color: #ffedd5;
+  box-shadow: 0 0 22px rgba(251, 191, 36, 0.4);
+}
+
+html:not([data-theme="light"]) .absensi-pill--mode {
+  border-color: rgba(34, 211, 238, 0.45);
+  color: #dbeafe;
+  box-shadow: 0 0 22px rgba(34, 211, 238, 0.35);
+}
+
+html:not([data-theme="light"]) .absensi-heading {
+  color: #fefce8;
+  text-shadow: 0 8px 32px rgba(251, 191, 36, 0.2), 0 0 32px rgba(56, 189, 248, 0.22);
+}
+
+html:not([data-theme="light"]) .absensi-subtitle {
+  color: rgba(226, 232, 240, 0.85);
+}
+
+html:not([data-theme="light"]) .absensi-card {
+  border: 1px solid rgba(34, 211, 238, 0.16);
+  background: linear-gradient(160deg, rgba(6, 12, 26, 0.92), rgba(3, 8, 20, 0.92));
+  box-shadow:
+    0 24px 68px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+  color: #e5f2ff;
+}
+
+html:not([data-theme="light"]) .absensi-card--profile {
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(251, 191, 36, 0.16), transparent 62%),
+    radial-gradient(circle at 80% 0%, rgba(56, 189, 248, 0.18), transparent 62%),
+    linear-gradient(150deg, rgba(7, 13, 26, 0.96), rgba(5, 9, 20, 0.92));
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.72),
+    0 0 40px rgba(34, 211, 238, 0.2);
+}
+
+html:not([data-theme="light"]) .absensi-card--soft {
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: linear-gradient(140deg, rgba(10, 18, 34, 0.88), rgba(6, 12, 24, 0.9));
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.7);
+}
+
+html:not([data-theme="light"]) .absensi-card--panel,
+html:not([data-theme="light"]) .absensi-card--clock {
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(34, 211, 238, 0.12), transparent 62%),
+    radial-gradient(circle at 100% 100%, rgba(126, 34, 206, 0.14), transparent 60%),
+    linear-gradient(160deg, rgba(7, 14, 28, 0.92), rgba(4, 9, 20, 0.94));
+  box-shadow:
+    0 22px 62px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+html:not([data-theme="light"]) .absensi-time__cell {
+  background: rgba(7, 12, 24, 0.85);
+  border-top: 1px solid rgba(251, 191, 36, 0.25);
+}
+
+html:not([data-theme="light"]) .absensi-time__cell + .absensi-time__cell {
+  border-left-color: rgba(251, 191, 36, 0.25);
+}
+
+html:not([data-theme="light"]) .absensi-time__label {
+  color: #ffe0a3;
+}
+
+html:not([data-theme="light"]) .absensi-time__value {
+  color: #fdf6b2;
+  text-shadow: 0 0 22px rgba(251, 191, 36, 0.35);
+}
+
+html:not([data-theme="light"]) .absensi-mini-card {
+  border: 1px solid rgba(34, 211, 238, 0.18);
+  background: linear-gradient(135deg, rgba(10, 18, 34, 0.82), rgba(8, 14, 26, 0.9));
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+html:not([data-theme="light"]) .absensi-mini-card__avatar {
+  color: #fef3c7;
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  box-shadow: 0 0 18px rgba(251, 191, 36, 0.25);
+}
+
+html:not([data-theme="light"]) .absensi-label {
+  color: rgba(234, 240, 255, 0.8);
+}
+
+html:not([data-theme="light"]) .absensi-value {
+  color: #f8fafc;
+}
+
+html:not([data-theme="light"]) .absensi-meta {
+  color: rgba(203, 213, 225, 0.88);
+}
+
+html:not([data-theme="light"]) .absensi-machine {
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(8, 12, 24, 0.82);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+html:not([data-theme="light"]) .absensi-machine__label {
+  color: rgba(148, 163, 184, 0.85);
+}
+
+html:not([data-theme="light"]) .absensi-machine__name {
+  color: #e2e8f0;
+}
+
+html:not([data-theme="light"]) .absensi-status {
+  background: rgba(255, 255, 255, 0.04);
+  color: #e5f2ff;
+}
+
+html:not([data-theme="light"]) .absensi-status--online {
+  border-color: rgba(52, 211, 153, 0.5);
+  background: rgba(52, 211, 153, 0.12);
+  color: #bbf7d0;
+}
+
+html:not([data-theme="light"]) .absensi-status--offline {
+  border-color: rgba(248, 113, 113, 0.45);
+  background: rgba(248, 113, 113, 0.12);
+  color: #fecdd3;
+}
+
+html:not([data-theme="light"]) .absensi-status--pending {
+  border-color: rgba(251, 191, 36, 0.45);
+  background: rgba(251, 191, 36, 0.14);
+  color: #fef3c7;
+}
+
+html:not([data-theme="light"]) .absensi-tile {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(140deg, rgba(10, 16, 30, 0.9), rgba(6, 12, 24, 0.92));
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.65);
+  color: #e8f3ff;
+}
+
+html:not([data-theme="light"]) .absensi-tile--cyan {
+  border-color: rgba(34, 211, 238, 0.35);
+  box-shadow: 0 0 45px rgba(34, 211, 238, 0.25);
+}
+
+html:not([data-theme="light"]) .absensi-tile--emerald {
+  border-color: rgba(52, 211, 153, 0.35);
+  box-shadow: 0 0 45px rgba(52, 211, 153, 0.22);
+}
+
+html:not([data-theme="light"]) .absensi-tile--sky {
+  border-color: rgba(244, 114, 182, 0.35);
+  box-shadow: 0 0 45px rgba(244, 114, 182, 0.22);
+}
+
+html:not([data-theme="light"]) .absensi-tile--amber {
+  border-color: rgba(251, 191, 36, 0.35);
+  box-shadow: 0 0 45px rgba(251, 191, 36, 0.25);
+}
+
+html:not([data-theme="light"]) .absensi-tile__icon {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+}
+
+html:not([data-theme="light"]) .absensi-clock {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(10, 16, 30, 0.9), rgba(8, 14, 26, 0.9));
+  color: #f8fafc;
+}
+
+html:not([data-theme="light"]) .absensi-clock--in {
+  border-color: rgba(16, 185, 129, 0.65);
+  box-shadow: 0 0 55px rgba(16, 185, 129, 0.55);
+  background:
+    radial-gradient(circle at 0 0, rgba(16, 185, 129, 0.22), transparent 60%),
+    linear-gradient(180deg, rgba(7, 16, 22, 0.95), rgba(6, 12, 18, 0.95));
+}
+
+html:not([data-theme="light"]) .absensi-clock--out {
+  border-color: rgba(244, 63, 94, 0.65);
+  box-shadow: 0 0 55px rgba(244, 63, 94, 0.48);
+  background:
+    radial-gradient(circle at 0 0, rgba(244, 63, 94, 0.22), transparent 60%),
+    linear-gradient(180deg, rgba(7, 12, 20, 0.95), rgba(5, 10, 16, 0.95));
+}
+
+html:not([data-theme="light"]) .absensi-btn--ghost {
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(10, 16, 30, 0.85);
+  color: #e2e8f0;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+}
+
+html:not([data-theme="light"]) .absensi-btn--primary {
+  border: 1px solid rgba(34, 211, 238, 0.55);
+  background: linear-gradient(120deg, #00e6c3, #38bdf8);
+  color: #0b1021;
+  box-shadow: 0 18px 46px rgba(0, 230, 195, 0.35), 0 0 28px rgba(56, 189, 248, 0.35);
+}
+
+html:not([data-theme="light"]) .absensi-btn--primary:disabled {
+  background: rgba(148, 163, 184, 0.18);
+  border-color: rgba(148, 163, 184, 0.28);
+  color: rgba(226, 232, 240, 0.6);
+  box-shadow: none;
+}
+
+html:not([data-theme="light"]) .absensi-input {
+  background: rgba(15, 23, 42, 0.7);
+  border-color: rgba(148, 163, 184, 0.45);
+  color: #e2e8f0;
+}
+
+html:not([data-theme="light"]) .absensi-input:focus-visible {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.35);
+}
+
+html:not([data-theme="light"]) .absensi-modal__scrim {
+  background: radial-gradient(circle at 0 0, rgba(34, 211, 238, 0.3), transparent 50%),
+    rgba(2, 6, 23, 0.9);
+}
+
+html:not([data-theme="light"]) .absensi-modal {
+  border: 1px solid rgba(148, 163, 184, 0.65);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(34, 211, 238, 0.2), transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(244, 114, 182, 0.18), transparent 60%),
+    #0b1021;
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.9),
+    0 0 50px rgba(34, 211, 238, 0.3);
+}
+
+/* ========================================================================
+   LIGHT — Elegant Luxe (pakai token palette existing)
+   ======================================================================== */
+html[data-theme="light"] .absensi-report-page {
+  color: var(--lux-ink, #a8844c);
+  background:
+    radial-gradient(1200px 620px at 18% -12%, rgba(248, 237, 214, 0.96), transparent 70%),
+    radial-gradient(1200px 820px at 90% 112%, rgba(219, 234, 254, 0.9), transparent 70%),
+    linear-gradient(135deg, #fdfaf5, #f5ece1, #f8fafc);
+}
+
+html[data-theme="light"] .absensi-report-page::before {
+  background:
+    radial-gradient(circle at 12% -10%, rgba(210, 182, 138, 0.55), transparent 60%),
+    radial-gradient(circle at 92% 110%, rgba(56, 189, 248, 0.28), transparent 62%);
+  filter: blur(12px);
+  opacity: 0.8;
+}
+
+html[data-theme="light"] .absensi-report-page::after {
+  background:
+    radial-gradient(circle at 25% 70%, rgba(217, 119, 6, 0.15), transparent 62%),
+    radial-gradient(circle at 80% 25%, rgba(251, 191, 36, 0.18), transparent 60%);
+}
+
+html[data-theme="light"] .absensi-header {
+  border: 1px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 10%);
+  background:
+    linear-gradient(180deg, color-mix(in oklab, #fff, var(--gold-50, #fff8e9) 20%), color-mix(in oklab, #fff, var(--gold-100, #f3e6c5) 8%)),
+    linear-gradient(90deg, rgba(210, 182, 138, 0.22), rgba(210, 182, 138, 0));
+  box-shadow:
+    0 14px 32px rgba(209, 186, 138, 0.22),
+    0 0 0 1px rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(14px);
+}
+
+html[data-theme="light"] .absensi-header::before {
+  background: linear-gradient(90deg, rgba(210, 182, 138, 0.26), rgba(210, 182, 138, 0.06));
+  opacity: 0.7;
+}
+
+html[data-theme="light"] .absensi-header::after {
+  background:
+    radial-gradient(420px 120px at 14% 100%, rgba(210, 182, 138, 0.35), transparent 60%),
+    radial-gradient(420px 120px at 86% 100%, rgba(56, 189, 248, 0.28), transparent 60%);
+  filter: blur(10px);
+  opacity: 0.7;
+}
+
+html[data-theme="light"] .absensi-pill {
+  border: 1px solid var(--lux-border, rgba(212, 175, 55, 0.6));
+  background: color-mix(in oklab, var(--lux-surface, #fff), #f8edd6 12%);
+  color: var(--lux-ink, #a8844c);
+  box-shadow: 0 10px 26px rgba(209, 186, 138, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+html[data-theme="light"] .absensi-pill--mode {
+  border-color: color-mix(in oklab, var(--gold-300, #edd9a2), #000 14%);
+  background: linear-gradient(135deg, #ffffff, #f8edd6);
+  color: var(--accent-ink, #b98532);
+  box-shadow: 0 16px 32px rgba(224, 197, 143, 0.32);
+}
+
+html[data-theme="light"] .absensi-heading {
+  color: var(--accent-ink, #b98532);
+  text-shadow: 0 14px 32px rgba(209, 186, 138, 0.25), 0 0 24px rgba(60, 80, 125, 0.22);
+}
+
+html[data-theme="light"] .absensi-subtitle {
+  color: var(--lux-muted, #8a97b8);
+}
+
+html[data-theme="light"] .absensi-card {
+  border: 1px solid var(--lux-border, rgba(212, 175, 55, 0.6));
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.96), rgba(252, 245, 231, 0.98));
+  box-shadow: 0 18px 42px rgba(48, 39, 21, 0.18);
+  color: var(--lux-ink, #a8844c);
+}
+
+html[data-theme="light"] .absensi-card--profile {
+  border: 1.4px solid color-mix(in oklab, var(--gold-300, #edd9a2), #000 10%);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(253, 230, 138, 0.85), transparent 62%),
+    linear-gradient(135deg, #ffffff, #fdf4d8);
+  box-shadow: 0 24px 60px rgba(209, 186, 138, 0.28);
+}
+
+html[data-theme="light"] .absensi-card--soft {
+  border: 1px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 4%);
+  background: linear-gradient(135deg, #ffffff, color-mix(in oklab, #f5f0e9, #fff 12%));
+}
+
+html[data-theme="light"] .absensi-card--panel,
+html[data-theme="light"] .absensi-card--clock {
+  border: 1px solid color-mix(in oklab, var(--gold-300, #edd9a2), #000 15%);
+  background:
+    radial-gradient(circle at 0 0, rgba(252, 211, 77, 0.2), transparent 60%),
+    linear-gradient(135deg, #ffffff, #faf3e3);
+  box-shadow: 0 22px 48px rgba(209, 186, 138, 0.28);
+}
+
+html[data-theme="light"] .absensi-time__cell {
+  background: color-mix(in oklab, #fff, var(--gold-100, #f3e6c5) 12%);
+  border-top: 1px solid color-mix(in oklab, var(--gold-200, #edd9a2), #000 12%);
+}
+
+html[data-theme="light"] .absensi-time__cell + .absensi-time__cell {
+  border-left: 1px solid color-mix(in oklab, var(--gold-200, #edd9a2), #000 12%);
+}
+
+html[data-theme="light"] .absensi-time__label {
+  color: color-mix(in oklab, var(--gold-400, #d2b68a), #000 12%);
+}
+
+html[data-theme="light"] .absensi-time__value {
+  color: color-mix(in oklab, var(--gold-500, #b88a3d), #000 10%);
+}
+
+html[data-theme="light"] .absensi-mini-card {
+  border: 1px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 8%);
+  background: linear-gradient(135deg, #ffffff, color-mix(in oklab, #f8f3eb, #fff 6%));
+  box-shadow: 0 12px 32px rgba(209, 186, 138, 0.2);
+}
+
+html[data-theme="light"] .absensi-mini-card__avatar {
+  background: color-mix(in oklab, var(--gold-50, #fff8e9), #fff 20%);
+  color: color-mix(in oklab, var(--gold-500, #b88a3d), #000 8%);
+  border: 1px solid color-mix(in oklab, var(--gold-300, #edd9a2), #000 12%);
+}
+
+html[data-theme="light"] .absensi-label {
+  color: var(--lux-ink, #a8844c);
+}
+
+html[data-theme="light"] .absensi-value {
+  color: color-mix(in oklab, var(--lux-ink, #a8844c), #000 12%);
+}
+
+html[data-theme="light"] .absensi-meta {
+  color: var(--lux-muted, #8a97b8);
+}
+
+html[data-theme="light"] .absensi-machine {
+  border: 1px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 12%);
+  background: color-mix(in oklab, var(--lux-surface, #fff), #f8edd6 10%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 12px 24px rgba(209, 186, 138, 0.22);
+}
+
+html[data-theme="light"] .absensi-machine__label {
+  color: color-mix(in oklab, var(--lux-muted, #8a97b8), #000 8%);
+}
+
+html[data-theme="light"] .absensi-machine__name {
+  color: color-mix(in oklab, var(--lux-ink, #a8844c), #000 12%);
+}
+
+html[data-theme="light"] .absensi-status {
+  background: color-mix(in oklab, #fff, var(--gold-50, #fff8e9) 35%);
+  color: color-mix(in oklab, var(--lux-ink, #a8844c), #000 5%);
+  border-color: color-mix(in oklab, var(--lux-border, #d9c8c2), #000 8%);
+}
+
+html[data-theme="light"] .absensi-status--online {
+  background: #f0fff4;
+  border-color: #86efac;
+  color: #166534;
+}
+
+html[data-theme="light"] .absensi-status--offline {
+  background: #fef2f2;
+  border-color: #fecdd3;
+  color: #991b1b;
+}
+
+html[data-theme="light"] .absensi-status--pending {
+  background: #fff7e6;
+  border-color: #fcd34d;
+  color: #92400e;
+}
+
+html[data-theme="light"] .absensi-tile {
+  border: 1px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 8%);
+  background: linear-gradient(135deg, #ffffff, color-mix(in oklab, #fdfaf5, #fff 12%));
+  box-shadow: 0 18px 38px rgba(209, 186, 138, 0.18);
+  color: color-mix(in oklab, var(--lux-ink, #a8844c), #000 10%);
+}
+
+html[data-theme="light"] .absensi-tile--cyan {
+  border-color: rgba(56, 189, 248, 0.42);
+  background: linear-gradient(135deg, #eef9ff, #ffffff);
+  box-shadow: 0 12px 30px rgba(56, 189, 248, 0.18);
+}
+
+html[data-theme="light"] .absensi-tile--emerald {
+  border-color: rgba(52, 211, 153, 0.4);
+  background: linear-gradient(135deg, #ecfdf5, #ffffff);
+  box-shadow: 0 12px 30px rgba(52, 211, 153, 0.15);
+}
+
+html[data-theme="light"] .absensi-tile--sky {
+  border-color: rgba(244, 114, 182, 0.42);
+  background: linear-gradient(135deg, #fdf2ff, #ffffff);
+  box-shadow: 0 12px 30px rgba(244, 114, 182, 0.16);
+}
+
+html[data-theme="light"] .absensi-tile--amber {
+  border-color: rgba(234, 179, 8, 0.5);
+  background: linear-gradient(135deg, #fff7e6, #ffffff);
+  box-shadow: 0 12px 30px rgba(234, 179, 8, 0.16);
+}
+
+html[data-theme="light"] .absensi-tile__icon {
+  background: color-mix(in oklab, #fff, var(--gold-50, #fff8e9) 30%);
+  border: 1px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 8%);
+  color: color-mix(in oklab, var(--lux-ink, #a8844c), #000 5%);
+}
+
+html[data-theme="light"] .absensi-clock {
+  border: 1px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 8%);
+  background: linear-gradient(180deg, #ffffff, color-mix(in oklab, #f5f0e9, #fff 10%));
+  color: color-mix(in oklab, var(--lux-ink, #a8844c), #000 10%);
+  box-shadow: 0 18px 40px rgba(209, 186, 138, 0.18);
+}
+
+html[data-theme="light"] .absensi-clock--in {
+  border-color: rgba(234, 179, 8, 0.7);
+  background:
+    radial-gradient(circle at 0 0, rgba(253, 224, 71, 0.42), transparent 60%),
+    linear-gradient(to bottom, #fff9e6, #fef3c7);
+  box-shadow: 0 0 55px rgba(245, 158, 11, 0.35);
+}
+
+html[data-theme="light"] .absensi-clock--out {
+  border-color: rgba(244, 114, 182, 0.7);
+  background:
+    radial-gradient(circle at 0 0, rgba(244, 114, 182, 0.34), transparent 60%),
+    linear-gradient(to bottom, #fff5fb, #fdf2ff);
+  box-shadow: 0 0 55px rgba(244, 114, 182, 0.32);
+}
+
+html[data-theme="light"] .absensi-btn--ghost {
+  border: 1px solid var(--lux-border, #d9c8c2);
+  background: linear-gradient(180deg, #ffffff, color-mix(in oklab, #f5f0e9, #fff 22%));
+  color: var(--lux-ink, #a8844c);
+  box-shadow: 0 10px 26px rgba(209, 186, 138, 0.22);
+}
+
+html[data-theme="light"] .absensi-btn--primary {
+  border: 1px solid color-mix(in oklab, var(--gold-300, #edd9a2), #000 14%);
+  background: var(--gold-grad, linear-gradient(135deg, #f3e6c5, #edd9a2, #d2b68a));
+  color: #5b3c0a;
+  box-shadow: 0 16px 32px rgba(209, 186, 138, 0.3);
+}
+
+html[data-theme="light"] .absensi-btn--primary:disabled {
+  background: color-mix(in oklab, #e5e7eb, #fff 30%);
+  border-color: color-mix(in oklab, #e5e7eb, #000 8%);
+  color: color-mix(in oklab, #6b7280, #000 10%);
+  box-shadow: none;
+}
+
+html[data-theme="light"] .absensi-input {
+  background: #ffffff;
+  border-color: var(--lux-border, #d9c8c2);
+  color: var(--lux-ink, #a8844c);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+html[data-theme="light"] .absensi-input:focus-visible {
+  border-color: color-mix(in oklab, var(--gold-400, #d2b68a), #000 12%);
+  box-shadow: 0 0 0 3px rgba(210, 182, 138, 0.28);
+}
+
+html[data-theme="light"] .absensi-modal__scrim {
+  background: radial-gradient(circle at 0 0, rgba(252, 211, 77, 0.32), transparent 55%),
+    rgba(15, 23, 42, 0.22);
+}
+
+html[data-theme="light"] .absensi-modal {
+  border: 1px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 8%);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(252, 211, 77, 0.35), transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.28), transparent 60%),
+    #ffffff;
+  box-shadow:
+    0 26px 70px rgba(148, 123, 76, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.85);
+}
+
+/* FILE: src/app/report/absensi/absensi-theme.css */
+/* ========================================================================
+   OVERRIDE V2 – STRONGER CYBERPUNK & LUX
+   Letakkan blok ini DI PALING BAWAH file untuk menimpa style lama
+   ======================================================================== */
+
+/* ========================= DARK / CYBERPUNK ============================ */
+
+html:not([data-theme="light"]) .absensi-report-page {
+  color: #e5f3ff;
+  /* base benar-benar gelap, neon cuma di pinggir */
+  background:
+    radial-gradient(1200px 900px at 5% -20%, rgba(56, 189, 248, 0.16), transparent 65%),
+    radial-gradient(1200px 900px at 95% -25%, rgba(236, 72, 153, 0.18), transparent 65%),
+    radial-gradient(1200px 900px at 50% 120%, rgba(56, 189, 248, 0.12), transparent 65%),
+    linear-gradient(180deg, #020617 0%, #020617 50%, #020617 100%);
+}
+
+html:not([data-theme="light"]) .absensi-report-page::before {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(15, 23, 42, 0.4),
+      rgba(15, 23, 42, 0.8),
+      rgba(3, 7, 18, 0.95)
+    ),
+    /* subtle scanline / grid vibe */
+    linear-gradient(
+      to bottom,
+      rgba(15, 23, 42, 0.7) 0,
+      rgba(15, 23, 42, 0.7) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  background-size: 100% 100%, 100% 4px;
+  opacity: 0.9;
+  filter: none;
+}
+
+html:not([data-theme="light"]) .absensi-report-page::after {
+  background:
+    radial-gradient(900px 420px at 15% 105%, rgba(34, 197, 235, 0.18), transparent 70%),
+    radial-gradient(900px 420px at 85% 108%, rgba(236, 72, 153, 0.2), transparent 70%);
+  opacity: 0.85;
+}
+
+/* HEADER – lebih mirip navbar utama (deep blue + gradien cyan-magenta) */
+html:not([data-theme="light"]) .absensi-header {
+  border: 1px solid rgba(34, 211, 238, 0.5);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(34, 211, 238, 0.3), transparent 55%),
+    radial-gradient(circle at 100% 0%, rgba(244, 114, 182, 0.28), transparent 55%),
+    linear-gradient(135deg, #020617, #020617, #020617);
+  box-shadow:
+    0 26px 80px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(15, 23, 42, 0.9);
+}
+
+html:not([data-theme="light"]) .absensi-header::before {
+  background: linear-gradient(
+    90deg,
+    rgba(34, 211, 238, 0.25),
+    rgba(251, 191, 36, 0.12),
+    rgba(244, 114, 182, 0.22)
+  );
+  opacity: 0.45;
+}
+
+html:not([data-theme="light"]) .absensi-header::after {
+  background:
+    radial-gradient(380px 120px at 12% 100%, rgba(34, 211, 238, 0.16), transparent 62%),
+    radial-gradient(420px 120px at 88% 100%, rgba(244, 114, 182, 0.18), transparent 62%);
+  opacity: 0.9;
+}
+
+html:not([data-theme="light"]) .absensi-heading {
+  color: #fefce8;
+  text-shadow:
+    0 0 26px rgba(34, 211, 238, 0.45),
+    0 0 36px rgba(236, 72, 153, 0.4);
+}
+
+html:not([data-theme="light"]) .absensi-subtitle {
+  color: rgba(203, 213, 225, 0.9);
+}
+
+/* Pill "Report / Absensi" + mode switch */
+html:not([data-theme="light"]) .absensi-pill {
+  border: 1px solid rgba(251, 191, 36, 0.6);
+  background: radial-gradient(circle at 0 50%, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.8));
+  color: #ffedd5;
+  box-shadow: 0 0 22px rgba(251, 191, 36, 0.5);
+}
+
+html:not([data-theme="light"]) .absensi-pill--mode {
+  border-color: rgba(34, 211, 238, 0.7);
+  background: radial-gradient(
+    circle at 0 50%,
+    rgba(15, 23, 42, 0.95),
+    rgba(15, 23, 42, 0.85)
+  );
+  color: #e0f2fe;
+  box-shadow:
+    0 0 26px rgba(34, 211, 238, 0.8),
+    0 0 36px rgba(236, 72, 153, 0.4);
+}
+
+/* CARD DASAR: lebih gelap, neon cuma di kontur */
+html:not([data-theme="light"]) .absensi-card {
+  border: 1px solid rgba(15, 118, 255, 0.16);
+  background:
+    radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.16), transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.18), transparent 60%),
+    linear-gradient(145deg, #020617 0%, #020617 55%, #020617 100%);
+  box-shadow:
+    0 20px 70px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(15, 23, 42, 0.9);
+  color: #e5f3ff;
+}
+
+/* Banner profil – lebih “megah” */
+html:not([data-theme="light"]) .absensi-card--profile {
+  border: 1px solid rgba(251, 191, 36, 0.65);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(251, 191, 36, 0.18), transparent 60%),
+    radial-gradient(circle at 80% 0%, rgba(56, 189, 248, 0.2), transparent 60%),
+    linear-gradient(145deg, #020617 0%, #020617 55%, #020617 100%);
+  box-shadow:
+    0 36px 110px rgba(0, 0, 0, 0.95),
+    0 0 42px rgba(34, 211, 238, 0.35);
+}
+
+/* Card soft (My User Control) */
+html:not([data-theme="light"]) .absensi-card--soft {
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: linear-gradient(140deg, #020617, #020617, #020617);
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.95);
+}
+
+/* Panel & clock container */
+html:not([data-theme="light"]) .absensi-card--panel,
+html:not([data-theme="light"]) .absensi-card--clock {
+  border: 1px solid rgba(34, 211, 238, 0.4);
+  background:
+    radial-gradient(circle at 0 0, rgba(34, 211, 238, 0.14), transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.16), transparent 60%),
+    linear-gradient(150deg, #020617 0%, #020617 55%, #020617 100%);
+  box-shadow:
+    0 26px 90px rgba(0, 0, 0, 0.95),
+    0 0 0 1px rgba(15, 23, 42, 0.9);
+}
+
+/* Time strip */
+html:not([data-theme="light"]) .absensi-time__cell {
+  background: radial-gradient(circle at 50% 0, rgba(251, 191, 36, 0.18), rgba(15, 23, 42, 0.96));
+  border-top: 1px solid rgba(251, 191, 36, 0.4);
+}
+html:not([data-theme="light"]) .absensi-time__cell + .absensi-time__cell {
+  border-left-color: rgba(251, 191, 36, 0.4);
+}
+
+/* Mini-card (My SIAK / Monitoring) */
+html:not([data-theme="light"]) .absensi-mini-card {
+  border: 1px solid rgba(34, 211, 238, 0.28);
+  background:
+    radial-gradient(circle at 0 0, rgba(34, 211, 238, 0.16), transparent 55%),
+    linear-gradient(145deg, #020617, #020617);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85);
+}
+
+/* Mesin absensi */
+html:not([data-theme="light"]) .absensi-machine {
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.9));
+}
+
+/* Neon status chip */
+html:not([data-theme="light"]) .absensi-status {
+  background: rgba(15, 23, 42, 0.9);
+}
+html:not([data-theme="light"]) .absensi-status--online {
+  border-color: rgba(45, 212, 191, 0.8);
+  background: radial-gradient(circle at 50% 0, rgba(45, 212, 191, 0.28), rgba(15, 23, 42, 0.96));
+  color: #bbf7d0;
+  box-shadow: 0 0 24px rgba(45, 212, 191, 0.5);
+}
+html:not([data-theme="light"]) .absensi-status--offline {
+  border-color: rgba(248, 113, 113, 0.8);
+  background: radial-gradient(circle at 50% 0, rgba(248, 113, 113, 0.26), rgba(15, 23, 42, 0.96));
+  color: #fecaca;
+  box-shadow: 0 0 24px rgba(248, 113, 113, 0.45);
+}
+
+/* Panel tiles */
+html:not([data-theme="light"]) .absensi-tile {
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background:
+    radial-gradient(circle at 0 0, rgba(34, 211, 238, 0.12), transparent 60%),
+    linear-gradient(135deg, #020617, #020617);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95);
+}
+
+html:not([data-theme="light"]) .absensi-tile--cyan {
+  border-color: rgba(34, 211, 238, 0.7);
+  box-shadow: 0 0 40px rgba(34, 211, 238, 0.55);
+}
+html:not([data-theme="light"]) .absensi-tile--emerald {
+  border-color: rgba(52, 211, 153, 0.7);
+  box-shadow: 0 0 40px rgba(52, 211, 153, 0.55);
+}
+html:not([data-theme="light"]) .absensi-tile--sky {
+  border-color: rgba(56, 189, 248, 0.7);
+  box-shadow: 0 0 40px rgba(56, 189, 248, 0.5);
+}
+html:not([data-theme="light"]) .absensi-tile--amber {
+  border-color: rgba(251, 191, 36, 0.75);
+  box-shadow: 0 0 40px rgba(251, 191, 36, 0.5);
+}
+
+/* Clock cards – fokus glow cyan & magenta */
+html:not([data-theme="light"]) .absensi-clock {
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: radial-gradient(circle at 50% 0, rgba(30, 64, 175, 0.5), rgba(15, 23, 42, 0.96));
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.95);
+}
+
+html:not([data-theme="light"]) .absensi-clock--in {
+  border-color: rgba(34, 211, 238, 0.8);
+  background:
+    radial-gradient(circle at 15% 0, rgba(56, 189, 248, 0.45), transparent 60%),
+    linear-gradient(180deg, #020617, #020617);
+  box-shadow:
+    0 0 70px rgba(34, 211, 238, 0.8),
+    0 22px 80px rgba(0, 0, 0, 0.95);
+}
+
+html:not([data-theme="light"]) .absensi-clock--out {
+  border-color: rgba(244, 63, 94, 0.8);
+  background:
+    radial-gradient(circle at 15% 0, rgba(244, 63, 94, 0.4), transparent 60%),
+    linear-gradient(180deg, #020617, #020617);
+  box-shadow:
+    0 0 70px rgba(244, 63, 94, 0.8),
+    0 22px 80px rgba(0, 0, 0, 0.95);
+}
+
+/* Buttons – neon primary, gelap untuk ghost */
+html:not([data-theme="light"]) .absensi-btn--ghost {
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.9));
+  color: #e2e8f0;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.8);
+}
+
+html:not([data-theme="light"]) .absensi-btn--primary {
+  border: 1px solid rgba(56, 189, 248, 0.8);
+  background: linear-gradient(120deg, #0ea5e9, #22d3ee, #22c55e);
+  color: #020617;
+  box-shadow:
+    0 0 50px rgba(56, 189, 248, 0.9),
+    0 18px 50px rgba(0, 0, 0, 0.9);
+}
+
+/* Modal */
+html:not([data-theme="light"]) .absensi-modal__scrim {
+  background:
+    radial-gradient(circle at 0 0, rgba(34, 211, 238, 0.4), transparent 60%),
+    rgba(2, 6, 23, 0.9);
+}
+
+html:not([data-theme="light"]) .absensi-modal {
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(34, 211, 238, 0.25), transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.25), transparent 60%),
+    #020617;
+  box-shadow:
+    0 32px 90px rgba(0, 0, 0, 0.98),
+    0 0 60px rgba(34, 211, 238, 0.4);
+}
+
+/* ============================ LIGHT / LUX ============================== */
+
+html[data-theme="light"] .absensi-report-page {
+  color: var(--lux-ink, #a46c2e);
+  background:
+    radial-gradient(1200px 620px at 18% -12%, rgba(252, 244, 219, 0.96), transparent 70%),
+    radial-gradient(1200px 820px at 90% 112%, rgba(226, 232, 240, 0.9), transparent 70%),
+    linear-gradient(135deg, #fffdf8, #f9f0e0, #fdfaf5);
+}
+
+/* Header: lebih “sertifikat emas” */
+html[data-theme="light"] .absensi-header {
+  border: 1.5px solid color-mix(in oklab, var(--gold-400, #d2b68a), #000 14%);
+  background:
+    linear-gradient(180deg, #fffdf6, #fdf3d6),
+    linear-gradient(90deg, rgba(210, 182, 138, 0.25), rgba(210, 182, 138, 0));
+  box-shadow:
+    0 18px 40px rgba(209, 186, 138, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.95);
+}
+
+html[data-theme="light"] .absensi-heading {
+  color: color-mix(in oklab, var(--gold-700, #b98532), #000 8%);
+  text-shadow:
+    0 18px 36px rgba(209, 186, 138, 0.4),
+    0 0 26px rgba(148, 121, 73, 0.45);
+}
+
+html[data-theme="light"] .absensi-subtitle {
+  color: var(--lux-muted, #7b88aa);
+}
+
+/* Pill */
+html[data-theme="light"] .absensi-pill {
+  border: 1.3px solid color-mix(in oklab, var(--gold-400, #d2b68a), #000 16%);
+  background: linear-gradient(135deg, #fffef8, #f9ecd2);
+  color: color-mix(in oklab, var(--gold-700, #b98532), #000 6%);
+  box-shadow: 0 14px 30px rgba(209, 186, 138, 0.4);
+}
+
+html[data-theme="light"] .absensi-pill--mode {
+  border-color: color-mix(in oklab, var(--gold-500, #c1923e), #000 12%);
+  background: linear-gradient(135deg, #ffffff, #f6e3be);
+  color: #8b5a16;
+  box-shadow:
+    0 16px 32px rgba(209, 186, 138, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.95);
+}
+
+/* Card umum */
+html[data-theme="light"] .absensi-card {
+  border: 1.4px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 12%);
+  background: linear-gradient(145deg, #ffffff, #fdf5e5);
+  box-shadow: 0 20px 44px rgba(148, 121, 73, 0.25);
+}
+
+/* Profil banner – paling “emas” */
+html[data-theme="light"] .absensi-card--profile {
+  border: 1.8px solid color-mix(in oklab, var(--gold-500, #c1923e), #000 10%);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(253, 224, 138, 0.9), transparent 60%),
+    linear-gradient(135deg, #fffdf4, #f7e2b9);
+  box-shadow:
+    0 24px 60px rgba(209, 186, 138, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.95);
+}
+
+/* Soft card (My User Control) */
+html[data-theme="light"] .absensi-card--soft {
+  border: 1.4px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 10%);
+  background: linear-gradient(145deg, #ffffff, #fbf3e6);
+  box-shadow: 0 18px 42px rgba(209, 186, 138, 0.35);
+}
+
+/* Panel & clock container */
+html[data-theme="light"] .absensi-card--panel,
+html[data-theme="light"] .absensi-card--clock {
+  border: 1.6px solid color-mix(in oklab, var(--gold-400, #d2b68a), #000 18%);
+  background:
+    radial-gradient(circle at 0 0, rgba(252, 211, 77, 0.22), transparent 60%),
+    linear-gradient(135deg, #ffffff, #fdf4dd);
+  box-shadow: 0 22px 48px rgba(209, 186, 138, 0.4);
+}
+
+/* Mini card */
+html[data-theme="light"] .absensi-mini-card {
+  border: 1.3px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 10%);
+  background: linear-gradient(135deg, #ffffff, #fbf2e2);
+}
+
+/* Mesin & status */
+html[data-theme="light"] .absensi-machine {
+  border: 1.3px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 12%);
+  background: linear-gradient(135deg, #fffdf8, #f8ebd6);
+}
+
+html[data-theme="light"] .absensi-status {
+  background: color-mix(in oklab, #fffdfa, var(--gold-50, #fff8e9) 45%);
+  border-color: color-mix(in oklab, var(--lux-border, #d9c8c2), #000 10%);
+  color: color-mix(in oklab, var(--lux-ink, #a8844c), #000 10%);
+}
+
+/* Tiles */
+html[data-theme="light"] .absensi-tile {
+  border: 1.4px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 12%);
+  background: linear-gradient(135deg, #ffffff, #fdf6e9);
+  box-shadow: 0 18px 40px rgba(209, 186, 138, 0.32);
+}
+
+html[data-theme="light"] .absensi-tile--cyan {
+  border-color: rgba(56, 189, 248, 0.55);
+  background: linear-gradient(135deg, #eff6ff, #ffffff);
+}
+
+html[data-theme="light"] .absensi-tile--emerald {
+  border-color: rgba(52, 211, 153, 0.55);
+  background: linear-gradient(135deg, #ecfdf5, #ffffff);
+}
+
+html[data-theme="light"] .absensi-tile--sky {
+  border-color: rgba(244, 114, 182, 0.6);
+  background: linear-gradient(135deg, #fdf2ff, #ffffff);
+}
+
+html[data-theme="light"] .absensi-tile--amber {
+  border-color: rgba(234, 179, 8, 0.65);
+  background: linear-gradient(135deg, #fff7e6, #ffffff);
+}
+
+/* Clock cards – pastel mewah */
+html[data-theme="light"] .absensi-clock {
+  border: 1.5px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 12%);
+  background: linear-gradient(180deg, #ffffff, #fbf3e5);
+  box-shadow: 0 20px 44px rgba(209, 186, 138, 0.35);
+}
+
+html[data-theme="light"] .absensi-clock--in {
+  border-color: rgba(234, 179, 8, 0.8);
+  background:
+    radial-gradient(circle at 0 0, rgba(253, 224, 71, 0.45), transparent 60%),
+    linear-gradient(to bottom, #fff9e6, #fef3c7);
+}
+
+html[data-theme="light"] .absensi-clock--out {
+  border-color: rgba(244, 114, 182, 0.9);
+  background:
+    radial-gradient(circle at 0 0, rgba(244, 114, 182, 0.45), transparent 60%),
+    linear-gradient(to bottom, #fff5fb, #fdf2ff);
+}
+
+/* Tombol */
+html[data-theme="light"] .absensi-btn--ghost {
+  border: 1.4px solid var(--lux-border, #d9c8c2);
+  background: linear-gradient(180deg, #ffffff, #fbf3e4);
+  color: var(--lux-ink, #a8844c);
+  box-shadow: 0 14px 30px rgba(209, 186, 138, 0.35);
+}
+
+html[data-theme="light"] .absensi-btn--primary {
+  border: 1.6px solid color-mix(in oklab, var(--gold-400, #d2b68a), #000 18%);
+  background: linear-gradient(135deg, #f9e7c4, #f3d59b, #d2b68a);
+  color: #5b3c0a;
+  box-shadow:
+    0 20px 40px rgba(209, 186, 138, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+/* Modal */
+html[data-theme="light"] .absensi-modal__scrim {
+  background:
+    radial-gradient(circle at 0 0, rgba(252, 211, 77, 0.3), transparent 55%),
+    rgba(15, 23, 42, 0.28);
+}
+
+html[data-theme="light"] .absensi-modal {
+  border: 1.4px solid color-mix(in oklab, var(--lux-border, #d9c8c2), #000 12%);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(252, 211, 77, 0.35), transparent 60%),
+    radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.2), transparent 60%),
+    #ffffff;
+  box-shadow:
+    0 30px 80px rgba(148, 121, 73, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.95);
+}
+
+/* FILE: src/app/report/absensi/absensi-theme.css */
+/* ===== Strip teks profil agar selalu terbaca ===== */
+
+.absensi-profile-bar {
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  backdrop-filter: blur(16px);
+  background: linear-gradient(
+    90deg,
+    rgba(3, 7, 18, 0.88),
+    rgba(15, 23, 42, 0.7),
+    transparent
+  );
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(15, 23, 42, 0.9);
+}
+
+/* teks di strip profil — dark & light default ke putih */
+.absensi-profile-bar .absensi-office,
+.absensi-profile-bar .absensi-name,
+.absensi-profile-bar .absensi-ip {
+  color: #ffffff !important;
+  text-shadow:
+    0 0 6px rgba(0, 0, 0, 0.9),
+    0 0 18px rgba(0, 0, 0, 0.9);
+}
+
+/* Tema Lux: strip hangat, mewah, tapi tetap kontras tinggi */
+html[data-theme="light"] .absensi-profile-bar {
+  background: linear-gradient(
+    90deg,
+    rgba(91, 60, 18, 0.9),
+    rgba(91, 60, 18, 0.65),
+    transparent
+  );
+  box-shadow:
+    0 20px 48px rgba(148, 99, 34, 0.52),
+    0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+html[data-theme="light"] .absensi-profile-bar .absensi-office,
+html[data-theme="light"] .absensi-profile-bar .absensi-name,
+html[data-theme="light"] .absensi-profile-bar .absensi-ip {
+  color: #fffef7 !important;
+  text-shadow:
+    0 0 4px rgba(0, 0, 0, 0.9),
+    0 0 14px rgba(0, 0, 0, 0.9);
+}
+
+/* FILE: src/app/report/absensi/absensi-theme.css */
+/* ===== Strip teks profil agar selalu terbaca ===== */
+
+.absensi-profile-bar {
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  backdrop-filter: blur(16px);
+  background: linear-gradient(
+    90deg,
+    rgba(3, 7, 18, 0.88),
+    rgba(15, 23, 42, 0.7),
+    transparent
+  );
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(15, 23, 42, 0.9);
+}
+
+/* teks di strip profil — dark & light default ke putih */
+.absensi-profile-bar .absensi-office,
+.absensi-profile-bar .absensi-name,
+.absensi-profile-bar .absensi-ip {
+  color: #ffffff !important;
+  text-shadow:
+    0 0 6px rgba(0, 0, 0, 0.9),
+    0 0 18px rgba(0, 0, 0, 0.9);
+}
+
+/* Tema Lux: strip hangat, mewah, tapi tetap kontras tinggi */
+html[data-theme="light"] .absensi-profile-bar {
+  background: linear-gradient(
+    90deg,
+    rgba(91, 60, 18, 0.9),
+    rgba(91, 60, 18, 0.65),
+    transparent
+  );
+  box-shadow:
+    0 20px 48px rgba(148, 99, 34, 0.52),
+    0 0 0 1px rgba(255, 255, 255, 0.9);
+}
+
+html[data-theme="light"] .absensi-profile-bar .absensi-office,
+html[data-theme="light"] .absensi-profile-bar .absensi-name,
+html[data-theme="light"] .absensi-profile-bar .absensi-ip {
+  color: #fffef7 !important;
+  text-shadow:
+    0 0 4px rgba(0, 0, 0, 0.9),
+    0 0 14px rgba(0, 0, 0, 0.9);
+}

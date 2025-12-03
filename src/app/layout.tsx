@@ -56,6 +56,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: `(function(){try{var d=document.documentElement;var path=location.pathname||'';var stored=localStorage.getItem('theme');var preferred=stored==='light'?'light':'dark';var mode=path.startsWith('/login')?'dark':preferred;d.dataset.theme=mode;if(mode==='dark'){d.classList.add('dark');}else{d.classList.remove('dark');}}catch(e){}})();`,
           }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var ok=false;if(window.CSS&&CSS.supports){ok=CSS.supports('color','color-mix(in oklab, #000, #fff)')||CSS.supports('color','color-mix(in srgb, #000 50%, #fff 50%)');}if(!ok){document.documentElement.dataset.noColormix='1';}}catch(e){}})();`,
+          }}
+        />
         <link
           rel="stylesheet"
           href="/assets/material-design-iconic-font/css/materialdesignicons.min.css"
