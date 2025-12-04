@@ -1,4 +1,4 @@
-﻿# DOKUMENTASI ARSITEKTUR DAN STRATEGI MIGRASI
+# DOKUMENTASI ARSITEKTUR DAN STRATEGI MIGRASI
 
 ## Sistem Monitoring Layanan Kependudukan (MONALISA)
 
@@ -9,7 +9,7 @@
 **Repositori Modern (Next.js):** [https://gitlab.com/dianyanzen/monitoring-next](https://gitlab.com/dianyanzen/monitoring-next)   
 **Repositori Legacy (Laravel):** [https://gitlab.com/dianyanzen/monitoring-laravel](https://gitlab.com/dianyanzen/monitoring-laravel) 
 
-> âš ï¸ **Catatan Peringatan Implementasi** \> Repositori ini dapat memuat kredensial *dummy* pada `.env.local` untuk tujuan pengembangan. Kredensial rahasia wajib diganti di semua lingkungan non-pengembangan dan tidak boleh di-*commit* ke repositori produksi. 
+> ⚠️ **Catatan Peringatan Implementasi** \> Repositori ini dapat memuat kredensial *dummy* pada `.env.local` untuk tujuan pengembangan. Kredensial rahasia wajib diganti di semua lingkungan non-pengembangan dan tidak boleh di-*commit* ke repositori produksi. 
 
 -----
 
@@ -28,7 +28,7 @@ Bahasa dokumentasi ini sengaja lugas dan tajam: **teknis yang membumi**, **UX ya
 
 ## ABSTRAK
 
-Monalisa Monitoring merepresentasikan modernisasi arsitektur antarmuka untuk monitoring layanan kependudukan di Disdukcapil Kota Bandung. Pengembangan ini mentransformasi *stack* teknologi *legacy* (Laravel 6 + Oracle)  menjadi *stack* modern (Next.js 15 (App Router) + TypeScript + Oracle). Sistem ini mengonsolidasikan beragam modulâ€”mencakup *dashboard*, modul *master data*, monitoring KTP-el, perpesanan internal, dan utilitas operasionalâ€”ke dalam satu bahasa visual yang konsisten dengan kapabilitas *auditability* yang kuat. Interaksi dengan basis data Oracle SIAK difasilitasi melalui API Routes (Next.js), menerapkan *binding* variabel yang ketat dan *logging* berjejak harian. Hasil yang dituju mencakup peningkatan waktu tanggap sistem, percepatan pengambilan keputusan operasional, reduksi beban kognitif petugas, dan tersedianya jejak keputusan yang siap diaudit. Indikator Kinerja Utama (KPI) yang ditargetkan antara lain TTI \< 2.5s, latensi API median \< 250 ms, dan penurunan *bounce rate* â‰¥ 30%.
+Monalisa Monitoring merepresentasikan modernisasi arsitektur antarmuka untuk monitoring layanan kependudukan di Disdukcapil Kota Bandung. Pengembangan ini mentransformasi *stack* teknologi *legacy* (Laravel 6 + Oracle)  menjadi *stack* modern (Next.js 15 (App Router) + TypeScript + Oracle). Sistem ini mengonsolidasikan beragam modul—mencakup *dashboard*, modul *master data*, monitoring KTP-el, perpesanan internal, dan utilitas operasional—ke dalam satu bahasa visual yang konsisten dengan kapabilitas *auditability* yang kuat. Interaksi dengan basis data Oracle SIAK difasilitasi melalui API Routes (Next.js), menerapkan *binding* variabel yang ketat dan *logging* berjejak harian. Hasil yang dituju mencakup peningkatan waktu tanggap sistem, percepatan pengambilan keputusan operasional, reduksi beban kognitif petugas, dan tersedianya jejak keputusan yang siap diaudit. Indikator Kinerja Utama (KPI) yang ditargetkan antara lain TTI \< 2.5s, latensi API median \< 250 ms, dan penurunan *bounce rate* ≥ 30%.
 
 ## RINGKASAN ANALISIS IMPLEMENTASI (A-Z)
 
@@ -130,7 +130,7 @@ Monalisa Monitoring merepresentasikan modernisasi arsitektur antarmuka untuk mon
       * [Lampiran G: Struktur Direktori Lengkap (project_structure.txt)](https://www.google.com/search?q=%23lampiran-g-struktur-direktori-lengkap-project_structuretxt)
 
 
-### ðŸ§­ Navigasi Cepat
+### 🧭 Navigasi Cepat
 
   * [Ringkasan Eksekutif](https://www.google.com/search?q=%23ringkasan-eksekutif)
   * [Identitas & Narasi Penulis](https://www.google.com/search?q=%23identitas--narasi-penulis)
@@ -158,7 +158,7 @@ Fragmentasi modul dan variasi gaya antarmuka memecah konteks operasional.
 Angka-angka statistik tanpa narasi tindakan menambah beban kognitif petugas, sementara perubahan cepat (mis. status KTP-el) menuntut antarmuka yang **mengantar aksi**, bukan sekadar menampilkan data.   
 Sisi akuntabilitas publik menuntut **jejak keputusan** yang mudah ditelusuri. 
 
-**Hipotesis produk:** \> Satu bahasa visual + arsitektur API terukur â†’ beban kognitif turun â†’ kualitas keputusan naik â†’ pelayanan lebih cepat. 
+**Hipotesis produk:** \> Satu bahasa visual + arsitektur API terukur → beban kognitif turun → kualitas keputusan naik → pelayanan lebih cepat. 
 
 ### 1.2 Rumusan Masalah
 
@@ -174,23 +174,23 @@ Bagian ini mendefinisikan sasaran, batasan, dan kaidah dasar yang memandu pengem
 
 #### Tujuan, Ruang Lingkup, & Prinsip
 
-##### ðŸŽ¯ Tujuan
+##### 🎯 Tujuan
 
   * Menyatukan monitoring & utilitas operasional dalam UI konsisten. 
   * Mengubah data menjadi **tindakan** dan **jejak keputusan**. 
   * Menyediakan alat bantu operasi (push ulang, filter wilayah, ekspor, chat) yang dekat dengan data. 
 
-##### ðŸ“¦ Ruang Lingkup
+##### 📦 Ruang Lingkup
 
   * **Front-end:** Next.js 15 (App Router), React 19, Tailwind 3, Framer Motion, MUI, Chart.js, DataTables, Grid.js. 
-  * **Back-end:** Next.js **API Routes** â†’ Oracle (multi-alias pool); logging harian. 
+  * **Back-end:** Next.js **API Routes** → Oracle (multi-alias pool); logging harian. 
   * **Modul:** Dashboard, Master, Check KTP-el, Chat, Activity, Template. 
 
-##### ðŸ›¡ï¸ Prinsip
+##### 🛡️ Prinsip
 
   * **Clarity First**, **Honest Motion**, **Progressive Disclosure**. 
   * **Cognitive Economy**: pola berulang dan konsisten. 
-  * **Audit-Ready by Design** â€” setiap keputusan dapat dilacak. 
+  * **Audit-Ready by Design** — setiap keputusan dapat dilacak. 
 
 -----
 
@@ -202,7 +202,7 @@ Bab ini menguraikan metodologi yang digunakan untuk transisi dari sistem *legacy
 
 Pemahaman mendalam terhadap sistem *legacy* adalah fondasi dari strategi migrasi.
 
-#### ðŸ“œ Legacy (Laravel 6)
+#### 📜 Legacy (Laravel 6)
 
   * Laravel ^6.2 (PHP ^7.2) dengan `yajra/laravel-oci8`. 
   * Session Laravel + **Passport (OAuth2)** untuk API Android *ePunten*. 
@@ -213,33 +213,33 @@ Pemahaman mendalam terhadap sistem *legacy* adalah fondasi dari strategi migrasi
 
 Arsitektur modern dirancang untuk mengatasi keterbatasan sistem *legacy* sambil memperkenalkan kapabilitas baru.
 
-#### âœ¨ Modern (Next.js)
+#### ✨ Modern (Next.js)
 
-  * **Controller â†’ API Route:** langsung dipetakan ke `src/app/api/*`. 
-  * **Passport â†’ Cookie HMAC:** sesi internal berbasis `session_user + session_sig`. 
-  * **Blade/jQuery â†’ React 19:** semua komponen modular dan reaktif. 
+  * **Controller → API Route:** langsung dipetakan ke `src/app/api/*`. 
+  * **Passport → Cookie HMAC:** sesi internal berbasis `session_user + session_sig`. 
+  * **Blade/jQuery → React 19:** semua komponen modular dan reaktif. 
   * **Queue/Service:** diganti job scheduler Node.js atau bridge Windows Service bila perlu. 
 
 ### 2.3 Strategi Migrasi Bertahap
 
 Migrasi tidak dilakukan sebagai *big-bang*, melainkan melalui pendekatan bertahap yang terkontrol.
 
-#### ðŸ“¦ Strategi Migrasi Bertahap
+#### 📦 Strategi Migrasi Bertahap
 
-1.  **Inventarisasi modul legacy** â†’ target halaman Next.js. 
-2.  **Audit schema & query** â†’ validasi indeks, normalisasi transaksi. 
-3.  **Kontrak API** â†’ gunakan JSON, status, dan paging konsisten. 
-4.  **Transisi autentikasi** â†’ sesi HMAC; peran dan level pengguna disesuaikan. 
+1.  **Inventarisasi modul legacy** → target halaman Next.js. 
+2.  **Audit schema & query** → validasi indeks, normalisasi transaksi. 
+3.  **Kontrak API** → gunakan JSON, status, dan paging konsisten. 
+4.  **Transisi autentikasi** → sesi HMAC; peran dan level pengguna disesuaikan. 
 5.  **Replikasi UX/Paritas UI** + penambahan A11y (aksesibilitas). 
-6.  **Validasi & Masking PII** â†’ sesuai pedoman data governance. 
-7.  **Release bertahap (canary)** â†’ monitor log dan telemetri. 
+6.  **Validasi & Masking PII** → sesuai pedoman data governance. 
+7.  **Release bertahap (canary)** → monitor log dan telemetri. 
 8.  **Sunset modul lama** setelah Next.js stabil sepenuhnya. 
 
 ### 2.4 Peta Jalan (Roadmap) Produk
 
 Strategi migrasi diimplementasikan melalui peta jalan pengembangan yang terbagi menjadi empat fase utama.
 
-#### ðŸ—ºï¸ Roadmap Produk
+#### 🗺️ Roadmap Produk
 
 > **Progress Update (Desember 2025):** Migrasi fitur legacy ke Next.js selesai (Tahap I-III). Semua modul operasional sudah berjalan di stack modern; Laravel dipertahankan hanya sebagai arsip/read-only. Fokus berikutnya: penguatan lapisan prediktif (Tahap IV). 
 
@@ -249,23 +249,23 @@ Strategi migrasi diimplementasikan melalui peta jalan pengembangan yang terbagi 
   * Integrasi data: pool multi-alias Oracle (DB5/DB221/DB222) aktif dengan logging harian terstruktur dan runbook DRP siap pakai.
   * Operasional: Next.js menjadi jalur utama di staging/produksi; Laravel 6 berada di mode arsip/read-only sebagai referensi regresi.
 
-##### 1ï¸âƒ£ Tahap I â€” Core Modernization (âœ…)
+##### 1️⃣ Tahap I — Core Modernization (✅)
 
   * Migrasi Login, Session, Dashboard, Menu, dan Check KTP-el ke Next.js. 
   * Implementasi pool Oracle multi-alias dengan binding ketat. 
   * Logging harian + error telemetry. 
-  * Desain sistem darkâ€“light mode konsisten (Cyberpunk / Lux). 
+  * Desain sistem dark–light mode konsisten (Cyberpunk / Lux). 
 
-##### 2ï¸âƒ£ Tahap II â€” Operasional & Observabilitas (âœ… Selesai â€” Oktober 2025)
+##### 2️⃣ Tahap II — Operasional & Observabilitas (✅ Selesai — Oktober 2025)
 
-  * Aktivasi chat & messages (socket fallback â†’ polling teroptimasi). 
+  * Aktivasi chat & messages (socket fallback → polling teroptimasi). 
   * Audit activity log dengan filter & search. 
   * Dashboard supervisor interaktif (wilayah, capaian, anomaly trend). 
   * Monitoring API latency (middleware internal). 
   * Build modular: `/components/layout`, `/components/system`. 
   * Release note: modul chat, activity log, dashboard supervisor, dan latency monitor sudah stabil di staging. 
 
-##### 3ï¸âƒ£ Tahap III â€” Integrasi & Automasi (âœ… Selesai â€” Desember 2025)
+##### 3️⃣ Tahap III — Integrasi & Automasi (✅ Selesai — Desember 2025)
 
   * Integrasi **E-Punten API** (mutasi keluar/datang online) selesai; mapping payload dan token sudah digunakan di jalur produksi. 
   * Integrasi **TTE** (KK, Akta, Surat Pernyataan) aktif bersama BSrE & eSign. 
@@ -273,19 +273,19 @@ Strategi migrasi diimplementasikan melalui peta jalan pengembangan yang terbagi 
   * Sinkronisasi warehouse PDIP (via view Oracle) rutin dan terdokumentasi di log harian. 
   * Job Scheduler Node menjalankan rekap otomatis & daily digest; status tercatat di `logs/YYYY-MM/DD/log.txt`. 
 
-##### 4ï¸âƒ£ Tahap IV â€” Predictive & Cognitive Layer (ðŸ“ Draft)
+##### 4️⃣ Tahap IV — Predictive & Cognitive Layer (📝 Draft)
 
   * Deteksi anomali pelayanan berbasis data historis (AI monitor). 
-  * Insight naratif otomatis: â€œWilayah dengan rasio cetak KTP rendah minggu ini adalah ...â€. 
+  * Insight naratif otomatis: "Wilayah dengan rasio cetak KTP rendah minggu ini adalah ...". 
   * Voice assistant untuk query data operasional (experimental). 
 
 ### 2.5 Playbook dan Matriks Migrasi Modul
 
 Eksekusi strategi migrasi didokumentasikan dalam *playbook* dan matriks pemetaan modul berikut.
 
-#### ðŸ“˜ Playbook Migrasi Per-Modul
+#### 📘 Playbook Migrasi Per-Modul
 
-##### ðŸ“ Konvensi Umum (Next.js)
+##### 📝 Konvensi Umum (Next.js)
 
   * Cookie: `session_user` (payload terenkripsi) + `session_sig` (HMAC-SHA256). 
   * `httpOnly`, `SameSite=Lax`, `Secure:true` di produksi. 
@@ -296,27 +296,27 @@ Eksekusi strategi migrasi didokumentasikan dalam *playbook* dan matriks pemetaan
   * Paging: `?page=1&per_page=25` atau `?limit=25&offset=0`. 
   * Tanggal format ISO 8601 (UTC). 
   * Error:
-      * `200 (success:false)` â†’ validasi. 
-      * `401/403` â†’ akses ditolak. 
-      * `500` â†’ error tak terduga. 
+      * `200 (success:false)` → validasi. 
+      * `401/403` → akses ditolak. 
+      * `500` → error tak terduga. 
 
-##### ðŸ—ºï¸ Matriks Mapping Modul
+##### 🗺️ Matriks Mapping Modul
 
 | Modul | Laravel (Legacy) | Next.js (Modern) | Method | Autentikasi | Catatan |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Login / Session** | `AuthController@login`, `ping` | `/api/login`, `/api/session*` | POST / GET | âœ… | Cookie HMAC, sliding session |
-| **Menu** | `MenuController@index` | `/api/menu` | GET | âœ… | Cache per level 300s, `buildTree()` |
-| **Dashboard** | `DashboardController@*` | `/api/dashboard/*` | GET | âœ… | Metrik KTP-el/DKB/Geulis |
-| **Check KTP-el** | `KtpController@*` | `/api/check/ktpel/*` | GET/POST | âœ… | Filter wilayah/tanggal, push massal |
-| **Master: List** | `Master\ListController@*` | `/api/master/list` | GET | âœ… | Virtualized table |
-| **Master: Request** | `Master\RequestController@*` | `/api/master/request` | GET | âœ… | Ekspor CSV/Excel |
-| **Master: Contact** | `Master\ContactController@*` | `/api/master/contact` | GET | âœ… | Fitur pencarian |
-| **Master: Absensi** | `Master\AbsensiController@*` | `/api/master/absensi` | GET | âœ… | Integrasi ZKTeco |
-| **Master: Salam** | `Master\SalamController@*` | `/api/master/salaman` | GET | âœ… | Layanan online |
-| **Chat / Messages** | `ChatController@*`, `Message@*` | `/api/chat/*`, `/api/messages/*` | GET/POST | âœ… | Optimistic send |
-| **Activity Log** | `ActivityController@save` | `/api/activity/do_save` | POST | âœ… | Audit trail |
-| **Account Password** | `AccountController@password` | `/api/account/password` | POST | âœ… | Upgrade hash bcrypt |
-| **User Profile** | `UserController@show` | `/api/user` | GET | âœ… | Minimal PII |
+| **Login / Session** | `AuthController@login`, `ping` | `/api/login`, `/api/session*` | POST / GET | ✅ | Cookie HMAC, sliding session |
+| **Menu** | `MenuController@index` | `/api/menu` | GET | ✅ | Cache per level 300s, `buildTree()` |
+| **Dashboard** | `DashboardController@*` | `/api/dashboard/*` | GET | ✅ | Metrik KTP-el/DKB/Geulis |
+| **Check KTP-el** | `KtpController@*` | `/api/check/ktpel/*` | GET/POST | ✅ | Filter wilayah/tanggal, push massal |
+| **Master: List** | `Master\ListController@*` | `/api/master/list` | GET | ✅ | Virtualized table |
+| **Master: Request** | `Master\RequestController@*` | `/api/master/request` | GET | ✅ | Ekspor CSV/Excel |
+| **Master: Contact** | `Master\ContactController@*` | `/api/master/contact` | GET | ✅ | Fitur pencarian |
+| **Master: Absensi** | `Master\AbsensiController@*` | `/api/master/absensi` | GET | ✅ | Integrasi ZKTeco |
+| **Master: Salam** | `Master\SalamController@*` | `/api/master/salaman` | GET | ✅ | Layanan online |
+| **Chat / Messages** | `ChatController@*`, `Message@*` | `/api/chat/*`, `/api/messages/*` | GET/POST | ✅ | Optimistic send |
+| **Activity Log** | `ActivityController@save` | `/api/activity/do_save` | POST | ✅ | Audit trail |
+| **Account Password** | `AccountController@password` | `/api/account/password` | POST | ✅ | Upgrade hash bcrypt |
+| **User Profile** | `UserController@show` | `/api/user` | GET | ✅ | Minimal PII |
 
 
 
@@ -332,7 +332,7 @@ Analisis kebutuhan pengguna dilakukan melalui pendefinisian persona dan pemetaan
 
 #### Persona, Journey, & Kebutuhan Pengguna
 
-##### ðŸ‘¤ Persona Utama
+##### 👤 Persona Utama
 
 | Peran | Tujuan | Kebutuhan |
 | :--- | :--- | :--- |
@@ -343,7 +343,7 @@ Analisis kebutuhan pengguna dilakukan melalui pendefinisian persona dan pemetaan
 
 
 
-##### ðŸ—ºï¸ Journey Ringkas (Check KTP-el)
+##### 🗺️ Journey Ringkas (Check KTP-el)
 
 1.  Pilih **wilayah** & **rentang waktu**. 
 2.  Lihat **kartu metrik** (status, error, progress). 
@@ -359,17 +359,17 @@ Analisis kebutuhan pengguna dilakukan melalui pendefinisian persona dan pemetaan
 
 Desain antarmuka didasarkan pada filosofi yang berpusat pada aksi dan kejelasan, diimplementasikan melalui dua tema visual utama.
 
-#### ðŸŽ¨ Filosofi Desain & Tema Visual
+#### 🎨 Filosofi Desain & Tema Visual
 
   * **Angka besar untuk status utama**, teks pendukung hemat dan informatif. 
   * **Motion jujur:** hanya untuk menandai transisi atau perubahan state, bukan dekorasi. 
   * **Empty state** bukan ruang kosong, tapi panduan langkah selanjutnya. 
-  * Visual mengantar **aksi**, bukan sekadar â€œpamer dataâ€. 
+  * Visual mengantar **aksi**, bukan sekadar "pamer data". 
 
-##### Tema 1 â€” **Neon Cyberpunk** (default operasional)
+##### Tema 1 — **Neon Cyberpunk** (default operasional)
 
 Menampilkan atmosfer ruang kendali; aksen neon dipakai untuk *state/accent*, bukan sebagai latar.   
-Rasio neon : netral â‰ˆ **1 : 4** 
+Rasio neon : netral ≈ **1 : 4** 
 
 ```css
 /* FILE: src/styles/theme-dark.css (cuplikan) */
@@ -386,7 +386,7 @@ html:not([data-theme="light"]) {
 
 
 
-##### Tema 2 â€” **Elegant Lux** (narasi/presentasi)
+##### Tema 2 — **Elegant Lux** (narasi/presentasi)
 
 Palet seperti kertas marmer hangat dan tinta pekat, dengan aksen emas untuk detail prestige (bukan fill besar). 
 
@@ -402,18 +402,18 @@ html[data-theme="light"] {
 
 
 
-**Kontras target:** WCAG AA untuk teks â‰¥ 14 px reguler / 12 px bold. 
+**Kontras target:** WCAG AA untuk teks ≥ 14 px reguler / 12 px bold. 
 
 ### 3.3 Desain Arsitektur Sistem (C4, Kontainer, Sekuens)
 
 Arsitektur sistem didokumentasikan menggunakan model C4 (Context, Container, Component, Code) untuk memvisualisasikan dekomposisi sistem.
 
-#### ðŸ—ï¸ Arsitektur Sistem (C4, Kontainer, Sekuens, Deployment)
+#### 🏗️ Arsitektur Sistem (C4, Kontainer, Sekuens, Deployment)
 
 **Stack Inti**
 
   * **Front-end:** Next.js 15, React 19, Tailwind 3, Framer Motion, MUI, Chart.js, DataTables, Grid.js. 
-  * **API:** Next.js API Routes â†’ node-oracledb (pool multi-alias). 
+  * **API:** Next.js API Routes → node-oracledb (pool multi-alias). 
   * **Auth:** Cookie HMAC-SHA256 (`session_user` + `session_sig`) + middleware halaman dan API. 
   * **Logging:** `logs/YYYY-MM/DD/log.txt` otomatis, payload dipangkas. 
 
@@ -449,7 +449,7 @@ flowchart TB
   end
 
   %% ===== External DB =====
-  db["Oracle â€” SIAK schema<br/>SIAK_USER_PLUS, SIAK_SESSION_PLUS, VW_SIAK_MENU, ..."]
+  db["Oracle — SIAK schema<br/>SIAK_USER_PLUS, SIAK_SESSION_PLUS, VW_SIAK_MENU, ..."]
 
   %% ===== Relations =====
   ui -->|"fetch JSON (credentials: include)"| api
@@ -460,7 +460,7 @@ flowchart TB
 
 
 
-##### Diagram Sekuens (Login â†’ Session)
+##### Diagram Sekuens (Login → Session)
 
 ```mermaid
 sequenceDiagram
@@ -520,26 +520,26 @@ flowchart TB
 
 Arsitektur data mencakup skema relasi entitas (ERD) yang disederhanakan dan serangkaian pedoman interaksi basis data (SQL).
 
-#### ðŸ—ƒï¸ Database & Pedoman SQL
+#### 🗃️ Database & Pedoman SQL
 
-##### ðŸ·ï¸ Alias Database
+##### 🏷️ Alias Database
 
 `DB`, `DB222`, `DB221`, `WEBDB`, `EPUNTEN`, `WEBPUNTEN`, dsb (diatur dari `.env`). 
 
-##### ðŸ”‘ Konvensi Utama
+##### 🔑 Konvensi Utama
 
-1.  **Penamaan:** tabel & kolom â†’ `UPPER_SNAKE_CASE`. 
+1.  **Penamaan:** tabel & kolom → `UPPER_SNAKE_CASE`. 
 2.  **Binding:** wajib gunakan `:b_*` (tanpa interpolasi string). 
 3.  **Waktu:** gunakan `SYSDATE / SYSTIMESTAMP` untuk DML. 
 4.  **Format hasil:** `OUT_FORMAT_OBJECT`. 
 5.  **Transaksi:** auto-commit per statement, atau eksplisit bila batch. 
 6.  **Session tracking:** `SIAK_SESSION_PLUS` (SESSION\_ID, USER\_ID, IP, USER\_AGENT, LAST\_ACTIVITY, IS\_ACTIVE). 
 7.  **Expiry aplikasi:** sumber dari `SIAK_MASTER` (`SYSTEM_TYPE='INIT_SETING'`, `SYSTEM_CODE='EXP'`). 
-8.  **Password:** legacy MD5 â†’ migrasi bertahap ke Argon2/BCrypt. 
+8.  **Password:** legacy MD5 → migrasi bertahap ke Argon2/BCrypt. 
 9.  **Cookie:** `session_user` hanya simpan SESSION\_ID; profil diambil server-side. 
 10. **Keamanan tambahan:** opsional IP check, rate limit login, audit gagal. 
 
-##### ðŸ’¡ Rekomendasi Indeks
+##### 💡 Rekomendasi Indeks
 
 | Tabel | Indeks Disarankan |
 | :--- | :--- |
@@ -550,7 +550,7 @@ Arsitektur data mencakup skema relasi entitas (ERD) yang disederhanakan dan sera
 | `ABSENSI_LOG` | IDX `(NIP, CHECK_IN)` |
 
 
-##### ðŸ“ Contoh Pola SQL (Bind Variables)
+##### 📝 Contoh Pola SQL (Bind Variables)
 
 ```sql
 -- FILE: sql/session_keepalive.sql
@@ -603,11 +603,11 @@ SELECT m.*
 
 
 
-#### ðŸ“Š ERD & SQL Audit
+#### 📊 ERD & SQL Audit
 
 > Skema entitas inti dan indeks yang paling sering digunakan (disederhanakan dari SIAK schema). 
 
-##### ðŸ“Š ER Diagram (Mermaid)
+##### 📊 ER Diagram (Mermaid)
 
 ```mermaid
 erDiagram
@@ -735,7 +735,7 @@ erDiagram
 
 
 
-##### ðŸ”Ž Contoh Query Audit
+##### 🔎 Contoh Query Audit
 
 ```sql
 -- FILE: sql/activity_log_insert.sql
@@ -775,7 +775,7 @@ DELETE FROM SIAK_SESSION_PLUS
 
 
 
-##### âš–ï¸ Audit Policy
+##### ⚖️ Audit Policy
 
   * Semua query penting ditulis di folder `/sql/` dengan penamaan konsisten. 
   * Struktur log memuat waktu, alias DB, durasi eksekusi, dan hasil. 
@@ -822,7 +822,7 @@ monitoring-next/
 
   * Jangan ubah `lib/oracle.ts`, `lib/db.ts`, `lib/http.ts` tanpa izin khusus. 
   * Semua snippet dokumentasi wajib mencantumkan **lokasi file**. 
-  * Modul SIAK baru harus mengikuti pola layout ï¿½+' page seperti contoh di bawah.
+  * Modul SIAK baru harus mengikuti pola layout + page seperti contoh di bawah.
 
 #### Modul SIAK: Restore & Repair Local Biometric
 
@@ -979,11 +979,11 @@ src/
 
 Implementasi desain sistem UI mencakup definisi *design tokens* dan kode implementasi tema.
 
-#### ðŸ–Œï¸ Desain Sistem UI (Tokens, Theming, Tipografi, A11y)
+#### 🖌️ Desain Sistem UI (Tokens, Theming, Tipografi, A11y)
 
   * **Tokens:** `src/styles/tokens.css` berisi variabel semantik (surface, ink, accent, border, shadow, radius, motion, focus). 
   * **Tema:** `theme-dark.css` (Neon Cyberpunk) & `theme-light.css` (Elegant Lux). Gunakan `data-theme="light"` untuk switch. 
-  * **Tipografi:** font Inter, skala responsif, panjang baris ideal 65â€“80 karakter. 
+  * **Tipografi:** font Inter, skala responsif, panjang baris ideal 65–80 karakter. 
   * **A11y:** fokus ring jelas, kontras AA, menghormati `prefers-reduced-motion`. 
 
 <!-- end list -->
@@ -998,7 +998,7 @@ import "../styles/theme-light.css"
 
 
 
-#### ðŸŽ¨ Design Tokens & Dua Tema (Kode Penuh)
+#### 🎨 Design Tokens & Dua Tema (Kode Penuh)
 
 ```css
 /* FILE: src/styles/tokens.css */
@@ -1105,14 +1105,14 @@ export default function PrestigeCard({ title, subtitle, actions, children }: Pro
 
 Standarisasi komunikasi antara *front-end* dan *back-end* diatur dalam kontrak API yang ketat.
 
-#### ðŸ“œ Kontrak API & Konvensi
+#### 📜 Kontrak API & Konvensi
 
-##### ðŸ”— Konvensi URL & Verba
+##### 🔗 Konvensi URL & Verba
 
   * Resource nouns dengan `GET/POST` dominan (sesuai App Router best-practice). 
-  * Query **selalu menggunakan bind di server (Oracle)** â€” tidak boleh interpolasi string mentah. 
+  * Query **selalu menggunakan bind di server (Oracle)** — tidak boleh interpolasi string mentah. 
 
-##### âœ‰ï¸ Envelope JSON
+##### ✉️ Envelope JSON
 
 ```json
 { "success": true, "message": "OK", "data": {} }
@@ -1120,13 +1120,13 @@ Standarisasi komunikasi antara *front-end* dan *back-end* diatur dalam kontrak A
 
 
 
-##### âš ï¸ Status & Error
+##### ⚠️ Status & Error
 
   * HTTP 200 dengan `success:false` untuk error yang bisa dipahami klien. 
   * 401 / 403 untuk akses ditolak; 500 untuk error tak terduga. 
   * Semua error ditulis ke log dengan scope relevan (API / DB / Session). 
 
-##### ðŸ“Ÿ Contoh cURL
+##### 📟 Contoh cURL
 
 ```bash
 # Login
@@ -1164,26 +1164,26 @@ curl -i -X POST http://localhost:3000/api/restore/bio-wni \
 
 Implementasi keamanan berfokus pada autentikasi, manajemen data sensitif, dan *logging* audit.
 
-#### ðŸ”’ Keamanan & Data Governance
+#### 🔒 Keamanan & Data Governance
 
-##### ðŸ—ï¸ Autentikasi
+##### 🏗️ Autentikasi
 
   * Cookie HMAC-SHA256 (`session_user`, `session_sig`) 
   * `httpOnly`, `Secure`, `SameSite=Lax`, durasi 8 jam 
   * Middleware proteksi di semua halaman kecuali `/login` 
 
-##### ðŸ¤« Data Sensitif
+##### 🤫 Data Sensitif
 
   * Masking NIK pada tampilan publik / semi-publik 
   * Log hanya menyimpan metadata (tanpa payload sensitif) 
   * Akses ekspor data hanya untuk user berizin 
 
-##### ðŸ“‹ Audit Log
+##### 📋 Audit Log
 
   * Semua query penting dicatat: waktu, durasi, alias, dan bind yang disamarkan. 
   * File log per hari: `logs/YYYY-MM/DD/log.txt` 
 
-##### ðŸ›¡ï¸ Header Keamanan
+##### 🛡️ Header Keamanan
 
 Disarankan melalui reverse proxy (Nginx/Traefik):
 
@@ -1191,7 +1191,7 @@ Disarankan melalui reverse proxy (Nginx/Traefik):
   * `Content-Security-Policy: default-src 'self';` 
   * `X-Frame-Options: SAMEORIGIN` 
 
-#### ðŸ›¡ï¸ Audit & Masking
+#### 🛡️ Audit & Masking
 
   * **NIK:** dimasking `******####` pada UI umum; tampil penuh hanya untuk peran tertentu. 
   * **Log:** menyingkat payload panjang & tidak menyimpan PII utuh. 
@@ -1201,42 +1201,42 @@ Disarankan melalui reverse proxy (Nginx/Traefik):
 
 Bagian ini mendefinisikan target kinerja non-fungsional dan metodologi pengujian yang digunakan untuk jaminan kualitas.
 
-#### ðŸš€ Kinerja & Observabilitas
+#### 🚀 Kinerja & Observabilitas
 
-##### ðŸŽ¯ Target
+##### 🎯 Target
 
 | Metrik | Nilai |
 | :--- | :--- |
 | TTI | \< 2.5s |
 | Median API | \< 250 ms |
 | Error 5xx | \< 0.5% / minggu |
-| Bounce rate turun | â‰¥ 30% |
-| Aksi terarah naik | â‰¥ 20% / triwulan |
+| Bounce rate turun | ≥ 30% |
+| Aksi terarah naik | ≥ 20% / triwulan |
 
 
-##### ðŸ—ºï¸ Strategi
+##### 🗺️ Strategi
 
   * Lazy load, cache strategis, virtualized table. 
   * Hindari N+1 query; gunakan join & paginasi efisien. 
   * Gunakan `unstable_cache()` untuk data statis. 
   * Stream data panjang agar tidak blocking. 
 
-##### ðŸ©º Log & Health Check
+##### 🩺 Log & Health Check
 
   * Struktur log harian: `logs/YYYY-MM/DD/log.txt`. 
-  * Jika gagal menulis log â†’ fallback ke `stderr`. 
+  * Jika gagal menulis log → fallback ke `stderr`. 
   * Endpoint `/api/session/ping` untuk liveness & sliding session. 
 
-#### ðŸ§ª Pengujian & Kualitas
+#### 🧪 Pengujian & Kualitas
 
-##### ðŸ”¬ Jenis Pengujian
+##### 🔬 Jenis Pengujian
 
 | Tipe | Fokus | Tools |
 | :--- | :--- | :--- |
 | Static Check | Lint & type safety | ESLint, TypeScript |
 | Unit Test | Fungsi utilitas (log, session, builder menu) | Vitest / Jest |
 | Integration | API Routes (login, menu, session) | Supertest |
-| E2E | Alur login â†’ dashboard â†’ aksi | Playwright |
+| E2E | Alur login → dashboard → aksi | Playwright |
 | Load Test | Endpoint kritikal (menu, KTP-el) | k6 / Artillery |
 | A11y Test | Fokus, kontras, motion | axe-core |
 
@@ -1247,9 +1247,9 @@ Bagian ini mendefinisikan target kinerja non-fungsional dan metodologi pengujian
 
 Proses rilis diotomatisasi menggunakan *pipeline* CI/CD dan didukung oleh pedoman operasional yang jelas.
 
-#### âš™ï¸ CI/CD, Release, & Operasional
+#### ⚙️ CI/CD, Release, & Operasional
 
-##### âœ‰ï¸ Contoh `.gitlab-ci.yml`
+##### ✉️ Contoh `.gitlab-ci.yml`
 
 ```yaml
 # FILE: .gitlab-ci.yml
@@ -1292,7 +1292,7 @@ build:
 
 
 
-##### ðŸ—ï¸ Operasional
+##### 🏗️ Operasional
 
   * Reverse proxy HTTPS (`X-Forwarded-Proto` diset). 
   * Log rotation & permission ketat untuk `LOG_DIR`. 
@@ -1305,18 +1305,18 @@ build:
 
 Dokumen ini telah memaparkan secara komprehensif arsitektur dan strategi migrasi sistem Monalisa Monitoring. Kesimpulan dari pengembangan ini dirangkum dalam filosofi penutup berikut.
 
-### ðŸ Penutup
+### 🏁 Penutup
 
-> â€œWeb bukan sekadar alat kerja â€” ia adalah **refleksi etika pelayanan publik**.  
-> Kecepatan bukan hanya soal milidetik, tapi tentang **bagaimana setiap klik memanusiakan data**.â€
+> "Web bukan sekadar alat kerja — ia adalah **refleksi etika pelayanan publik**.  
+> Kecepatan bukan hanya soal milidetik, tapi tentang **bagaimana setiap klik memanusiakan data**."
 >
-> â€” *Dian Septian, S.Tr.Kom., M.M.* \> Administrator Database Kependudukan Ahli Pertama  
+> — *Dian Septian, S.Tr.Kom., M.M.* \> Administrator Database Kependudukan Ahli Pertama  
 > Disdukcapil Kota Bandung
 > 
 
-#### âš–ï¸ Lisensi & Kepemilikan
+#### ⚖️ Lisensi & Kepemilikan
 
-Hak cipta Â© 2025 **Dinas Kependudukan dan Pencatatan Sipil Kota Bandung**.   
+Hak cipta © 2025 **Dinas Kependudukan dan Pencatatan Sipil Kota Bandung**.   
 Dibangun oleh **Dian Septian, S.Tr.Kom., M.M.** Segala kode sumber, dokumentasi, dan aset visual merupakan bagian dari inisiatif modernisasi internal *Monalisa Monitoring* Disdukcapil Bandung. 
 
 > Distribusi ulang sebagian atau seluruh dokumen ini tanpa izin tertulis dilarang.  
@@ -1328,7 +1328,7 @@ Dibangun oleh **Dian Septian, S.Tr.Kom., M.M.** Segala kode sumber, dokumentasi,
 
 Bagian ini merujuk pada sumber daya teknis eksternal yang digunakan dalam pengembangan.
 
-### ðŸ“š Referensi & Sumber Teknis
+### 📚 Referensi & Sumber Teknis
 
   * **Oracle DB Driver:** [https://oracle.github.io/node-oracledb/](https://oracle.github.io/node-oracledb/) 
   * **Next.js Docs:** [https://nextjs.org/docs](https://nextjs.org/docs) 
@@ -1347,11 +1347,11 @@ Bagian ini berisi artefak teknis pendukung yang terperinci, termasuk catatan kep
 
 ### Lampiran A: Catatan Keputusan Arsitektur (ADR)
 
-#### âš–ï¸ ADR â€” Architecture Decision Record
+#### ⚖️ ADR — Architecture Decision Record
 
 | No | Keputusan | Alasan |
 | :--- | :--- | :--- |
-| **ADR-001** | Migrasi Laravel â†’ Next.js 15 | Menghapus ketergantungan PHP/Apache, memperkuat SSR/CSR hybrid, dan memusatkan API. |
+| **ADR-001** | Migrasi Laravel → Next.js 15 | Menghapus ketergantungan PHP/Apache, memperkuat SSR/CSR hybrid, dan memusatkan API. |
 | **ADR-002** | Node-oracledb (bind variabel wajib) | Keamanan & kinerja: mencegah SQL injection, menekan parsing overhead. |
 | **ADR-003** | Logging harian file-based | Jejak audit tidak tergantung DB; aman di mode read-only. |
 | **ADR-004** | Theming Dual (Cyberpunk/Lux) | Dua konteks kerja: operasional cepat vs presentasi publik elegan. |
@@ -1363,15 +1363,15 @@ Bagian ini berisi artefak teknis pendukung yang terperinci, termasuk catatan kep
 
 ### Lampiran B: Rencana Pemulihan Bencana (DRP)
 
-#### ðŸ›¡ï¸ Disaster Recovery Plan (DRP)
+#### 🛡️ Disaster Recovery Plan (DRP)
 
 | Risiko | Dampak | Mitigasi |
 | :--- | :--- | :--- |
 | **Server crash / OS corrupt** | Layanan berhenti | Snapshot harian (Oracle & Node), auto-restore |
-| **Kegagalan koneksi Oracle** | API timeout | Pool fallback â†’ alias cadangan |
+| **Kegagalan koneksi Oracle** | API timeout | Pool fallback → alias cadangan |
 | **Kehilangan log** | Audit tidak utuh | Backup `logs/` mingguan ke NAS lokal |
 | **Error build Next.js** | Front-end tidak aktif | Rollback otomatis build `.next/prev` |
-| **Session rusak** | Logout massal | Middleware fallback â†’ redirect login |
+| **Session rusak** | Logout massal | Middleware fallback → redirect login |
 | **Load tinggi** | API delay | Auto-scale ringan (PM2 cluster / Docker) |
 
 
@@ -1383,47 +1383,47 @@ Bagian ini berisi artefak teknis pendukung yang terperinci, termasuk catatan kep
 
 ### Lampiran C: Runbook Operasional
 
-#### ðŸƒ Runbook Operasional
+#### 🏃 Runbook Operasional
 
-##### 1ï¸âƒ£ 1. Login & Sesi
+##### 1️⃣ 1. Login & Sesi
 
   * File: `src/app/api/login/route.ts` 
-  * Validasi: MD5 (legacy) â†’ Argon2 (migrasi). 
+  * Validasi: MD5 (legacy) → Argon2 (migrasi). 
   * Cookie `session_user` + `session_sig`, masa aktif 8 jam. 
   * Middleware: `src/middleware.ts`. 
 
-##### 2ï¸âƒ£ 2. Dashboard
+##### 2️⃣ 2. Dashboard
 
   * File: `src/app/api/dashboard/route.ts` 
   * Query Oracle (agregat harian/mingguan). 
   * Metrik: KTP-el, DKB, Kelahiran, Kematian, dan WNI/WNA. 
 
-##### 3ï¸âƒ£ 3. Monitoring KTP-el
+##### 3️⃣ 3. Monitoring KTP-el
 
   * File: `src/app/api/check/ktpel/route.ts` 
   * Filter wilayah, tanggal; push ulang & ekspor CSV. 
   * Pencatatan log ke `logs/YYYY-MM-DD/`. 
 
-##### 4ï¸âƒ£ 4. Chat / Messages
+##### 4️⃣ 4. Chat / Messages
 
   * File: `src/app/api/messages/route.ts` 
-  * Optimistic update (local â†’ confirm). 
-  * Interval polling: 5â€“10 detik. 
+  * Optimistic update (local → confirm). 
+  * Interval polling: 5–10 detik. 
   * Struktur pesan: `{ id, sender, receiver, text, has_img, created_at }`. 
 
-##### 5ï¸âƒ£ 5. Master Data
+##### 5️⃣ 5. Master Data
 
   * Folder: `src/app/api/master/*` 
   * Submodul: List, Request, Absensi, Contact, Salaman, TTE. 
   * Semua dengan pagination dan filter Oracle efisien. 
 
-##### 6ï¸âƒ£ 6. Aktivitas
+##### 6️⃣ 6. Aktivitas
 
   * Folder: `src/app/api/activity/*` 
   * Simpan semua aksi user sebagai log audit JSON. 
   * Kolom: USER\_ID, ACTION, META\_JSON, CREATED\_AT. 
 
-##### 7ï¸âƒ£ 7. Setting
+##### 7️⃣ 7. Setting
 
   * Folder: `src/app/api/setting/*` 
   * ACL berbasis level user; cache & prefetch untuk Sidebar. 
@@ -1431,7 +1431,7 @@ Bagian ini berisi artefak teknis pendukung yang terperinci, termasuk catatan kep
 
 ### Lampiran D: Inventori Modul Legacy Tambahan
 
-#### ðŸ—‚ï¸ Inventori Menu Tambahan (dari Legacy Excel)
+#### 🗂️ Inventori Menu Tambahan (dari Legacy Excel)
 
 > Berikut daftar menu tambahan yang sebelumnya belum tercantum dalam README lama.
 > Semua dikelompokkan berdasarkan Level-1 menu.
@@ -1439,18 +1439,18 @@ Bagian ini berisi artefak teknis pendukung yang terperinci, termasuk catatan kep
 
 ##### **Dashboard**
 
-  * **User KTP-EL** â€” `Dashboard/Userktp`
+  * **User KTP-EL** — `Dashboard/Userktp`
       * Dashboard KTP-el, Biodata, Mobilitas
-  * **Dashboard Capil** â€” `Dashboard/Capil`
-  * **Dashboard Kemarin** â€” `Dashboard/demogh`
-  * **User Perekaman** â€” `Dashboard/Userrekam`
+  * **Dashboard Capil** — `Dashboard/Capil`
+  * **Dashboard Kemarin** — `Dashboard/demogh`
+  * **User Perekaman** — `Dashboard/Userrekam`
     
 
 ##### **Aktivitas**
 
-  * **Rekap Aktivitas Siak** â€” `ActivityRekap`
-  * **Aktivitas KK** â€” `KK/Rekap`, `KK/Detail`, `KK/Bulanan`
-  * **Aktivitas Kedatangan** â€” `ActivityKedatangan`
+  * **Rekap Aktivitas Siak** — `ActivityRekap`
+  * **Aktivitas KK** — `KK/Rekap`, `KK/Detail`, `KK/Bulanan`
+  * **Aktivitas Kedatangan** — `ActivityKedatangan`
     
 
 ##### **Master Menu**
@@ -1496,12 +1496,12 @@ Bagian ini berisi artefak teknis pendukung yang terperinci, termasuk catatan kep
 
 ### Lampiran E: Implementasi Seeder Menu
 
-#### ðŸ—‚ï¸ Menu Master dari Excel (JSON & Integrasi)
+#### 🗂️ Menu Master dari Excel (JSON & Integrasi)
 
-**Sumber:** `Menu Monitoring.xlsx` â†’ dinormalisasi ke **tree JSON** â†’ `menu.normalized.json`   
+**Sumber:** `Menu Monitoring.xlsx` → dinormalisasi ke **tree JSON** → `menu.normalized.json`   
 **Lokasi:** `data/menu/menu.normalized.json` (repo) atau sementara di `.env` via `MENU_JSON_PATH` untuk mode dev. 
 
-##### ðŸ—ï¸ Integrasi `/api/menu` (Fallback Dev)
+##### 🏗️ Integrasi `/api/menu` (Fallback Dev)
 
 ```ts
 // FILE: src/app/api/menu/route.ts (fallback DEV)
@@ -1512,13 +1512,13 @@ export async function GET() {
     const json = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), menuJsonPath), "utf-8"));
     return Response.json({ success: true, data: { items: json.items } });
   }
-  // TODO: production â†’ query Oracle (APP_MENU / VW_SIAK_MENU)
+  // TODO: production → query Oracle (APP_MENU / VW_SIAK_MENU)
 }
 ```
 
 
 
-##### ðŸ§¾ Schema Oracle (Seed)
+##### 🧾 Schema Oracle (Seed)
 
 ```sql
 -- FILE: sql/app_menu_schema.sql
@@ -1537,7 +1537,7 @@ CREATE INDEX IX_APP_MENU_LEVEL  ON APP_MENU(MIN_LEVEL);
 
 
 
-##### ðŸŒ± Seeder Node
+##### 🌱 Seeder Node
 
 ```ts
 // FILE: scripts/seed-menu.ts
@@ -1566,11 +1566,11 @@ async function flatten(items:any[], parent:any=null, acc:any[]=[]){
 
 ### Lampiran F: Dokumentasi Tambahan (Lampiran Modernisasi Lengkap)
 
-#### ðŸ“¦ Lampiran Modernisasi Lengkap
+#### 📦 Lampiran Modernisasi Lengkap
 
-*(Tambahan dokumentasi komprehensif â€“ konten asli di atas tetap dipertahankan utuh sesuai permintaan.)* 
+*(Tambahan dokumentasi komprehensif – konten asli di atas tetap dipertahankan utuh sesuai permintaan.)* 
 
-##### ðŸ§± Tumpukan Teknis & Arsitektur Singkat
+##### 🧱 Tumpukan Teknis & Arsitektur Singkat
 
 | Lapisan | Rekomendasi Implementasi |
 | :--- | :--- |
@@ -1581,12 +1581,12 @@ async function flatten(items:any[], parent:any=null, acc:any[]=[]){
 | Animasi | Framer Motion 12 |
 | Backend | Next.js API Routes (runtime Node.js), `src/lib/db.ts` + `src/lib/oracle.ts` |
 | Database | Oracle SIAK (multi-alias pool, Instant Client 21+) |
-| Logging | `src/lib/log.ts` â†’ `logs/YYYY-MM/DD/log.txt` (JSON ringkas) |
+| Logging | `src/lib/log.ts` → `logs/YYYY-MM/DD/log.txt` (JSON ringkas) |
 | Auth | Cookie HMAC (`session_user` + `session_sig`), middleware halaman & API |
 | Build | Turbopack (`npm run dev/build/start`) |
 
 
-##### ðŸ—ï¸ Arsitektur Solusi (Rekap)
+##### 🏗️ Arsitektur Solusi (Rekap)
 
   * **App Shell**: `src/app/layout.tsx` memuat semua stylesheet global, script preferensi tema, dan membungkus anak melalui `ResponsiveAppShell` + `Sidebar` + `Topbar`. 
   * **Middleware**: `src/middleware.ts` (routing halaman) dan `src/middleware.api.ts` (proteksi semua `/api/*`). 
@@ -1594,7 +1594,7 @@ async function flatten(items:any[], parent:any=null, acc:any[]=[]){
   * **Session**: `src/lib/session.ts` mengelola encoding JSON + HMAC, sliding refresh, dan audit login/logout. 
   * **Audit**: Semua endpoint penting menulis log melalui `Log.info/warn/error` untuk memudahkan penelusuran. 
 
-##### ðŸš€ Memulai (Setup Developer)
+##### 🚀 Memulai (Setup Developer)
 
 1.  **Prasyarat**: Node.js 20+, npm 10+, Oracle Instant Client 21+ (set PATH/LD\_LIBRARY\_PATH sesuai OS). 
 2.  **Instalasi**:
@@ -1604,32 +1604,32 @@ async function flatten(items:any[], parent:any=null, acc:any[]=[]){
     ```
     
 3.  **Build Produksi**: `npm run build && npm run start`. 
-4.  **Lingkungan**: duplikasi `.env.local` â†’ `.env.local.example` sebelum berbagi repo. 
+4.  **Lingkungan**: duplikasi `.env.local` → `.env.local.example` sebelum berbagi repo. 
 
-##### ðŸ”‘ Variabel Lingkungan (Ringkasan)
+##### 🔑 Variabel Lingkungan (Ringkasan)
 
   * `APP_*`, `SESSION_*`, `LOG_DIR`: identitas app & sesi. 
-  * Alias Oracle mengikuti pola `<ALIAS>_{USERNAME,PASSWORD,CONN}` â€“ contoh `DB222_USERNAME`, `DB222_CONN`, dll. 
+  * Alias Oracle mengikuti pola `<ALIAS>_{USERNAME,PASSWORD,CONN}` – contoh `DB222_USERNAME`, `DB222_CONN`, dll. 
   * Integrasi opsional: Redis (`REDIS_HOST/PORT`), Pusher, FCM, AWS, Socket (`SOCKET_URL`). 
   * Modul KTP-el mendukung override melalui `KTPEL_*` (alias master, wilayah default, push target). 
 
-##### ðŸ“ Struktur Direktori (Highlight)
+##### 📁 Struktur Direktori (Highlight)
 
 ```
 src/
-â”œâ”€ app/              # App Router, halaman, API Routes
-â”œâ”€ components/       # Layout shell, dashboard widgets, tabel, UI util
-â”œâ”€ contexts/         # SessionProvider (user + unread chat)
-â”œâ”€ hooks/            # useDashboard*, useMaster*, useNotrecordOptions, dst
-â”œâ”€ lib/              # db/oracle/http/session/auth/log utilities
-â”œâ”€ styles/           # tokens, theme dark/light, modul komponen
-â”œâ”€ middleware(.api).ts
-â””â”€ styles/components/ (sidebar, topbar, tables, forms, toast, dll)
+├─ app/              # App Router, halaman, API Routes
+├─ components/       # Layout shell, dashboard widgets, tabel, UI util
+├─ contexts/         # SessionProvider (user + unread chat)
+├─ hooks/            # useDashboard*, useMaster*, useNotrecordOptions, dst
+├─ lib/              # db/oracle/http/session/auth/log utilities
+├─ styles/           # tokens, theme dark/light, modul komponen
+├─ middleware(.api).ts
+└─ styles/components/ (sidebar, topbar, tables, forms, toast, dll)
 ```
 
 
 
-##### ðŸ“Š Modul Aplikasi (Ikhtisar)
+##### 📊 Modul Aplikasi (Ikhtisar)
 
   * **Dashboard**: `src/app/dashboard/**` menampilkan metrik KTP-el, capaian, DKB, penduduk efektif, geulis/non-geulis. Hooks utama `useDashboardData`, `useCapaian`, `usePopulation`, dll. 
   * **Monitoring Check**: `src/app/check/**` mencakup KTP-el (mode rekam/hist/wktp), duplicate, PRR/SFE, cetak, akta, not-record (DAPODIK), rekam historis. 
@@ -1638,9 +1638,9 @@ src/
   * **Activity & Audit**: `src/app/Activity/setting/page.tsx`, endpoint `/api/activity/do_save` untuk mencatat aksi. 
   * **Pengaturan**: `src/app/setting/**` memproses user level, penambahan user, pemetaan grup via `/api/setting/*`. 
   * **Template Playground**: `src/app/template/**` sebagai kerangka cepat modul baru. 
-  * **Login**: `src/app/login/LoginClient.tsx` â†’ `/api/login` (MD5 legacy + bypass dev + pembaruan `SIAK_SESSION_PLUS`). 
+  * **Login**: `src/app/login/LoginClient.tsx` → `/api/login` (MD5 legacy + bypass dev + pembaruan `SIAK_SESSION_PLUS`). 
 
-##### ðŸ”Œ Permukaan API (Kategorisasi Cepat)
+##### 🔌 Permukaan API (Kategorisasi Cepat)
 
   * **Auth & Session**: `/api/login`, `/api/logout`, `/api/session`, `/api/session/{ping,verify}`, `/api/account/password`. 
   * **Dashboard**: `/api/dashboard/m1..m8`, `/api/dashboard/time`, `/api/dashboard/capaian`, `/api/dashboard/user{ktp,rekam}/*`, dsb. 
@@ -1649,7 +1649,7 @@ src/
   * **Chat & Pesan**: `/api/chat/{contacts,messages,send}`, `/api/messages/{previews,unread}`. 
   * **Pengaturan**: `/api/setting/{get_user_level,check_lvl,save_lvl,get_group}`, `/api/menu`, `/api/user`. 
 
-##### ðŸ—‚ï¸ Inventaris Menu App Router (Next.js)
+##### 🗂️ Inventaris Menu App Router (Next.js)
 
   * **Dashboard & Supervisor**: `/dashboard`, `/dashboard/userktp`, `/dashboard/userktp/[user]`, `/dashboard/userrekam`, `/dashboard/userrekam/[user]`. 
   * **Monitoring Check (KTP-el & kualitas)**: `/check/{ktpel,duplicate,prr,sfe,failure,rekam,history,cetak,akte,kk,notrecord}`. 
@@ -1662,7 +1662,7 @@ src/
   * **Pengaturan Admin**: `/setting/{user,userlevel,menuuser,activityid,pejabat,helpdesk,app}`. 
   * **SIAK Utilities & Template**: `/siak/repair_local_biometric`, `/siak/restore`, `/template`, `/template/template`, `/dummy`. 
 
-##### ðŸ›°ï¸ Inventaris API Routes (per Domain)
+##### 🛰️ Inventaris API Routes (per Domain)
 
   * **Auth & Session**: `/api/login`, `/api/logout`, `/api/session{,/ping,/verify}`, `/api/account/password`, `/api/utils/my-ip`. 
   * **Dashboard & Supervisor**: `/api/dashboard/{m1..m8,time,capaian,period,population,geulis,nongeulis,update_prr,update_sfe,userktp/*,userrekam/*,dkb/{ref,summary}}`. 
@@ -1676,7 +1676,7 @@ src/
   * **Setting & Menu**: `/api/setting/{userlevel/*,users/*,menuuser/*,helpdesk/*,pejabat/*,activityid/*,app,check_lvl,get_user_level,save_lvl,get_group,get_group_tree_one,get_user_level,parents}`, `/api/menu{,/check}`, `/api/user`. 
   * **SIAK & Utilitas**: `/api/siak/repair_local_biometric/{scan,delete}`, `/api/restore/bio-wni`, `/api/wilayah/{provinsi,kabupaten,kecamatan,kelurahan}`. 
 
-##### âœ… Paritas Migrasi Laravel â†’ Next.js (Status per Domain)
+##### ✅ Paritas Migrasi Laravel → Next.js (Status per Domain)
 
 | Domain | Halaman Next.js | API Next.js | Status |
 | :--- | :--- | :--- | :--- |
@@ -1691,13 +1691,13 @@ src/
 | Pengaturan & Menu | `/setting/*` | `/api/setting/*`, `/api/menu*` | Selesai, ACL diterapkan |
 | SIAK & Utilitas | `/siak/*`, `/template`, `/dummy` | `/api/siak/*`, `/api/restore/bio-wni`, `/api/utils/my-ip`, `/api/wilayah/*` | Selesai, util siap pakai |
 
-##### ðŸ§¬ Lapisan Data & Logging
+##### 🧬 Lapisan Data & Logging
 
-  * Pool Oracle di-cache global â†’ hindari recreate saat hot reload. 
+  * Pool Oracle di-cache global → hindari recreate saat hot reload. 
   * Helper `summarizeSql` memangkas query \> 800 karakter pada log. 
   * Log disimpan per hari (folder `logs/YYYY-MM/DD`), format JSON 1 baris/entry, payload dibatasi 4000 karakter. 
 
-##### ðŸŽ¨ Sistem Desain & Aset
+##### 🎨 Sistem Desain & Aset
 
   * Token warna & tipografi di `src/styles/tokens.css`. 
   * Tema gelap `theme-dark.css` (Neon Cyberpunk), tema terang `theme-light.css` (Elegant Lux). 
@@ -1705,30 +1705,30 @@ src/
   * DataTables override: `datatable-{dark,light,cyberpunk}.css`. 
   * Aset statis: `public/assets/` (logo, ikon, plugin), executable `public/app/KTPel_x.exe`. 
 
-##### ðŸ§ª Kualitas & Operasional
+##### 🧪 Kualitas & Operasional
 
   * **Lint & Types**: `npx prettier -c .`, `npm run lint`, `tsc --noEmit`. 
   * **Pengujian**: siapkan Vitest/Jest untuk util, Supertest untuk API, Playwright untuk alur penting. 
   * **Deploy**: Node 20+, Instant Client tersedia, `LOG_DIR` writable, reverse proxy serahkan header `X-Forwarded-*`. 
   * **Monitoring**: pantau `tookMs` di log, error rate, latensi median/p95, ukuran bundle Next.js. 
 
-##### ðŸ›¡ï¸ Roadmap & Operasi Tambahan
+##### 🛡️ Roadmap & Operasi Tambahan
 
-  * **Tahap Iâ€“II** (selesai): modernisasi inti, chat, activity log, dashboard supervisor, latency monitor. 
+  * **Tahap I–II** (selesai): modernisasi inti, chat, activity log, dashboard supervisor, latency monitor. 
   * **Tahap III** (berjalan): integrasi E-Punten API, BSrE TTE, rekonsiliasi DEMOGRAPHICS vs FINGERS, scheduler rekap otomatis. 
   * **Tahap IV** (rencana): deteksi anomali, narasi otomatis, voice assistant eksperimen. 
   * **DRP Singkat**: backup schema Oracle harian, salin `.next`, `.env`, `logs`, `data/menu`; uji restore kuartalan; siapkan fallback alias jika koneksi utama gagal. 
 
-##### ðŸ“š Lampiran Teknis (Ringkas)
+##### 📚 Lampiran Teknis (Ringkas)
 
-  * **Lampiran A** â€“ Matriks environment & alias Oracle. 
-  * **Lampiran B** â€“ Peta alias vs modul (DB, DB222, DB5CETAK, WEBDB, DBSMS, EPUNTEN, dsb). 
-  * **Lampiran C** â€“ Daftar library UI/data (Next.js, Tailwind, DataTables, Grid.js, Chart.js, Framer Motion, Radix, Lucide, date-fns, react-date-range, jszip, pdfmake, oracledb). 
-  * **Lampiran D** â€“ ADR, DRP, & Playbook Ringkas. 
+  * **Lampiran A** – Matriks environment & alias Oracle. 
+  * **Lampiran B** – Peta alias vs modul (DB, DB222, DB5CETAK, WEBDB, DBSMS, EPUNTEN, dsb). 
+  * **Lampiran C** – Daftar library UI/data (Next.js, Tailwind, DataTables, Grid.js, Chart.js, Framer Motion, Radix, Lucide, date-fns, react-date-range, jszip, pdfmake, oracledb). 
+  * **Lampiran D** – ADR, DRP, & Playbook Ringkas. 
 
-> ðŸ’¡ *Gunakan lampiran ini sebagai pendamping dokumentasi utama di atas. Seluruh isi tambahan disusun untuk melengkapi, bukan menggantikan, narasi README asli.* 
+> 💡 *Gunakan lampiran ini sebagai pendamping dokumentasi utama di atas. Seluruh isi tambahan disusun untuk melengkapi, bukan menggantikan, narasi README asli.* 
 
-##### Lampiran A â€“ Matriks Environment (Detil)
+##### Lampiran A – Matriks Environment (Detil)
 
 | Kategori | Variabel | Penjelasan |
 | :--- | :--- | :--- |
@@ -1746,7 +1746,7 @@ src/
 | Lainnya | `APP_KEY`, `APP_DEBUG` | Menjaga kompatibilitas historis dengan repo Laravel. |
 
 
-##### Lampiran B â€“ Peta Alias Oracle & Penggunaan
+##### Lampiran B – Peta Alias Oracle & Penggunaan
 
 | Alias | Target DB | Digunakan oleh |
 | :--- | :--- | :--- |
@@ -1761,7 +1761,7 @@ src/
 | `KTPEL_*` | Alias khusus KTP-el | Diatur via environment sesuai kebutuhan modul. |
 
 
-##### Lampiran C â€“ Library UI & Data
+##### Lampiran C – Library UI & Data
 
   * **Next.js 15**, **React 19**, **TypeScript 5** 
   * **Tailwind CSS 3**, modul CSS custom, **Framer Motion 12** 
@@ -1773,7 +1773,7 @@ src/
   * **oracledb 6.9**, **node-oracledb Instant Client 21** 
   * **prettier**, **eslint-config-next**, **prettier-plugin-tailwindcss** 
 
-##### Lampiran D â€“ ADR, DRP, & Playbook Ringkas
+##### Lampiran D – ADR, DRP, & Playbook Ringkas
 
   * **ADR-001 s.d. ADR-008**: migrasi ke Next.js, penggunaan node-oracledb, logging harian, theming dual, cookie HMAC, konfigurasi alias, App Router, logging terstruktur. 
   * **DRP**: snapshot schema Oracle harian, backup `logs/`, `.env`, `.next`, `data/menu`; uji restore kuartalan; siapkan fallback alias jika koneksi utama gagal. 
