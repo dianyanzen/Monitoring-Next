@@ -179,7 +179,13 @@ Strategi migrasi diimplementasikan melalui peta jalan pengembangan yang terbagi 
 
 #### 🗺️ Roadmap Produk
 
-> **Progress Update (Oktober 2025):** Tahap II selesai (chat, activity log, dashboard supervisor, dan latency monitor telah dirilis) dan fokus berpindah ke orkestrasi integrasi Tahap III. 
+> **Progress Update (Desember 2025):** Migrasi fitur legacy ke Next.js selesai (Tahap I-III). Semua modul operasional sudah berjalan di stack modern; Laravel dipertahankan hanya sebagai arsip/read-only. Fokus berikutnya: penguatan lapisan prediktif (Tahap IV). 
+
+##### Rekap Progres Migrasi (Desember 2025)
+
+  * Paritas modul legacy tercapai: login, menu, dashboard, check KTP-el, master (list/request/contact/absensi/salaman), chat/messages, activity log, password/profile, laporan cetak/rekam, permohonan KTP (hilang, rusak, pindah, perubahan), serta utilitas operasional terkait laporan/arsip.
+  * Integrasi data: pool multi-alias Oracle (DB5/DB221/DB222) aktif dengan logging harian terstruktur dan runbook DRP siap pakai.
+  * Operasional: Next.js menjadi jalur utama di staging/produksi; Laravel 6 berada di mode arsip/read-only sebagai referensi regresi.
 
 ##### 1️⃣ Tahap I — Core Modernization (✅)
 
@@ -197,13 +203,13 @@ Strategi migrasi diimplementasikan melalui peta jalan pengembangan yang terbagi 
   * Build modular: `/components/layout`, `/components/system`. 
   * Release note: modul chat, activity log, dashboard supervisor, dan latency monitor sudah stabil di staging. 
 
-##### 3️⃣ Tahap III — Integrasi & Automasi (⏳ Berjalan)
+##### 3️⃣ Tahap III — Integrasi & Automasi (✅ Selesai — Desember 2025)
 
-  * Integrasi **E-Punten API** (mutasi keluar/datang online) — kickoff, mapping payload, dan persiapan auth token berlangsung. 
-  * Integrasi **TTE** (KK, Akta, Surat Pernyataan) dengan BSrE & eSign. 
-  * Rekonsiliasi database **DEMOGRAPHICS@DB5** vs **FINGERS@DB5**. 
-  * Sinkronisasi warehouse PDIP (via view Oracle). 
-  * Job Scheduler Node untuk rekap otomatis & daily digest. 
+  * Integrasi **E-Punten API** (mutasi keluar/datang online) selesai; mapping payload dan token sudah digunakan di jalur produksi. 
+  * Integrasi **TTE** (KK, Akta, Surat Pernyataan) aktif bersama BSrE & eSign. 
+  * Rekonsiliasi database **DEMOGRAPHICS@DB5** vs **FINGERS@DB5** berjalan terjadwal dengan pencatatan deviasi. 
+  * Sinkronisasi warehouse PDIP (via view Oracle) rutin dan terdokumentasi di log harian. 
+  * Job Scheduler Node menjalankan rekap otomatis & daily digest; status tercatat di `logs/YYYY-MM/DD/log.txt`. 
 
 ##### 4️⃣ Tahap IV — Predictive & Cognitive Layer (📝 Draft)
 
@@ -1580,6 +1586,48 @@ src/
   * **Master & Activity**: `/api/master/{list,request,absensi,contact,salaman}`, `/api/activity/do_save`. 
   * **Chat & Pesan**: `/api/chat/{contacts,messages,send}`, `/api/messages/{previews,unread}`. 
   * **Pengaturan**: `/api/setting/{get_user_level,check_lvl,save_lvl,get_group}`, `/api/menu`, `/api/user`. 
+
+##### 🗂️ Inventaris Menu App Router (Next.js)
+
+  * **Dashboard & Supervisor**: `/dashboard`, `/dashboard/userktp`, `/dashboard/userktp/[user]`, `/dashboard/userrekam`, `/dashboard/userrekam/[user]`. 
+  * **Monitoring Check (KTP-el & kualitas)**: `/check/{ktpel,duplicate,prr,sfe,failure,rekam,history,cetak,akte,kk,notrecord}`. 
+  * **Blangko & Cetak Dinas**: `/blangko/{blangko_in,blangko_out,blangko_rekap}`, `/cetak_dinas/{input_cetak,input_ludo,cek_cetak_dinas,rekap_cetak_dinas}`. 
+  * **Laporan Dafduk & Lampid**: `/laporan_cetak`, `/laporan_rekam`, `/laporanperpindahan`, `/laporankedatangan`, `/laporanbnbakelahiran`, `/laporanbnbakemeatian`, `/laporanbnbalampid`. 
+  * **Report Absensi & Rekap**: `/report/{absensi,absensi_v,absensi_vr,absensibulanan,laporandaily,laporanabsen,Rekap,RekapDaily,GetDaily(+print),laporanabsen/[userId],laporandaily/[userId]}`. 
+  * **Permohonan & Pelacakan e-KTP**: `/reqktphilang`, `/reqktprusak`, `/reqktppindahan`, `/reqktpperubahan`, `/inputkehilangan`, `/pengajuan_ld`, `/search_req/{dktp,dktp_f,uktp,uktp_f,req_bio,delete_req}`. 
+  * **Master Data & Salam**: `/master/{list,request,contact,absensi,salaman,pemanfaatan}`. 
+  * **Chat, Activity, & Audit**: `/chat`, `/Activity/setting`. 
+  * **Pengaturan Admin**: `/setting/{user,userlevel,menuuser,activityid,pejabat,helpdesk,app}`. 
+  * **SIAK Utilities & Template**: `/siak/repair_local_biometric`, `/siak/restore`, `/template`, `/template/template`, `/dummy`. 
+
+##### 🛰️ Inventaris API Routes (per Domain)
+
+  * **Auth & Session**: `/api/login`, `/api/logout`, `/api/session{,/ping,/verify}`, `/api/account/password`, `/api/utils/my-ip`. 
+  * **Dashboard & Supervisor**: `/api/dashboard/{m1..m8,time,capaian,period,population,geulis,nongeulis,update_prr,update_sfe,userktp/*,userrekam/*,dkb/{ref,summary}}`. 
+  * **Monitoring KTP-el & Kualitas**: `/api/check/ktpel{,/meta,/push,/kabupaten,/kecamatan,/kelurahan}`, `/api/check/{duplicate,prr,sfe,failure,rekam,history,cetak,akte,kk/status}`, `/api/check/notrecord/{get-nik,list,report,sekolah,summary}`. 
+  * **Blangko & Cetak Dinas**: `/api/blangko/{get_data,get_all_data,get_allin_data,doin_save,do_save,do_save_dis,get_hist_dist,get_histkec_dist,get_will,rekap}`, `/api/cetak_dinas/{cek_cetak_dinas,do_save_cetak,do_save_ludo,get_ludo,get_nik,get_nik_kia,rekap_cetak_dinas}`. 
+  * **Laporan Dafduk/Lampid**: `/api/laporan/{cetak,rekam,kedatangan,perpindahan}`, `/api/laporan/bnba/{kelahiran,kematian,lampid}`. 
+  * **Report Absensi**: `/api/report/absensi/{clock,daily,daily-options,init,sync}`, `/api/report/absensi-v{,/[dailyId]/accept,/[dailyId]/reject}`, `/api/report/absensi-vr{,/users}`, `/api/report/absensibulanan`, `/api/report/laporandaily{,/[userId]}`, `/api/report/laporanabsen{,/[userId]}`, `/api/report/rekap-absensi`, `/api/report/rekap-daily{,/[dailyId]}`, `/api/report/getdaily{,/pdf2}`. 
+  * **Permohonan & Pelacakan e-KTP**: `/api/req/ektp/{kehilangan/list,kehilangan/update,perubahan/{ajukan,list,list-ditolak,list-ditolak-dt,list-dt},pindahan/{ajukan,detail,meta}}`, `/api/search_req/{dktp,dktp_f,uktp,uktp_f,req_bio,delete_req,do_delete}`. 
+  * **Master & Activity**: `/api/master/{list,request,absensi,contact,salaman,pemanfaatan{,/summary}}`, `/api/activity/do_save`. 
+  * **Chat & Pesan**: `/api/chat/{contacts,messages,send}`, `/api/messages/{previews,unread}`. 
+  * **Setting & Menu**: `/api/setting/{userlevel/*,users/*,menuuser/*,helpdesk/*,pejabat/*,activityid/*,app,check_lvl,get_user_level,save_lvl,get_group,get_group_tree_one,get_user_level,parents}`, `/api/menu{,/check}`, `/api/user`. 
+  * **SIAK & Utilitas**: `/api/siak/repair_local_biometric/{scan,delete}`, `/api/restore/bio-wni`, `/api/wilayah/{provinsi,kabupaten,kecamatan,kelurahan}`. 
+
+##### ✅ Paritas Migrasi Laravel → Next.js (Status per Domain)
+
+| Domain | Halaman Next.js | API Next.js | Status |
+| :--- | :--- | :--- | :--- |
+| Dashboard & Supervisor | `/dashboard`, `/dashboard/user{ktp,rekam}` | `/api/dashboard/*` | Selesai, live Next.js |
+| Monitoring KTP-el & Kualitas | `/check/{ktpel,duplicate,prr,sfe,failure,rekam,history,cetak,akte,kk,notrecord}` | `/api/check/*` | Selesai, paritas + logging |
+| Master & Salam | `/master/{list,request,contact,absensi,salaman,pemanfaatan}` | `/api/master/*` | Selesai, parity & paging |
+| Chat & Activity | `/chat`, `/Activity/setting` | `/api/chat/*`, `/api/messages/*`, `/api/activity/do_save` | Selesai, audit-ready |
+| Blangko & Cetak Dinas | `/blangko/*`, `/cetak_dinas/*` | `/api/blangko/*`, `/api/cetak_dinas/*` | Selesai, rekap aktif |
+| Laporan Dafduk/Lampid | `/laporan_*`, `/laporanbnb*` | `/api/laporan/*` | Selesai, terjadwal |
+| Report Absensi & Rekap | `/report/*` (absensi, daily, rekap, print) | `/api/report/*` | Selesai, jalur utama |
+| Permohonan & Pelacakan e-KTP | `/reqktp*`, `/inputkehilangan`, `/pengajuan_ld`, `/search_req/*` | `/api/req/ektp/*`, `/api/search_req/*` | Selesai, production |
+| Pengaturan & Menu | `/setting/*` | `/api/setting/*`, `/api/menu*` | Selesai, ACL diterapkan |
+| SIAK & Utilitas | `/siak/*`, `/template`, `/dummy` | `/api/siak/*`, `/api/restore/bio-wni`, `/api/utils/my-ip`, `/api/wilayah/*` | Selesai, util siap pakai |
 
 ##### 🧬 Lapisan Data & Logging
 
