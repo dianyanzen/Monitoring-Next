@@ -7,7 +7,8 @@ import Topbar from "@/components/layout/Topbar";
 import Footer from "@/components/layout/Footer";
 import RouteChangeOverlay from "@/components/system/RouteChangeOverlay";
 
-const DESKTOP_QUERY = "(min-width: 1280px)";
+// Selaraskan dengan breakpoint Tailwind `lg` (1024px) supaya logika JS = kelas CSS.
+const DESKTOP_QUERY = "(min-width: 1024px)";
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState<boolean>(() => {
