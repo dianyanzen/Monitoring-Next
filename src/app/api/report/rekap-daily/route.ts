@@ -10,7 +10,6 @@ export const dynamic = "force-dynamic";
 
 const ORACLE_ALIAS = process.env.DB_ALIAS_MONITORING ?? "DB";
 const AT = "/api/report/rekap-daily";
-const MAX_ROWS = 250;
 
 type DailyRow = {
   DAILY_ID: number;
@@ -99,7 +98,6 @@ export async function POST(req: NextRequest) {
       LEFT JOIN SIAK_ACTIVITY B ON A.ACTIVITY_ID = B.ACTIVITY_ID
       ${whereSql}
       ORDER BY A.CREATED_DT DESC, A.DAILY_ID DESC
-      FETCH FIRST ${MAX_ROWS} ROWS ONLY
       `,
       binds,
       {},
@@ -141,7 +139,6 @@ export async function POST(req: NextRequest) {
       items,
       recordsTotal: items.length,
       recordsFiltered: items.length,
-      max: MAX_ROWS,
     });
   } catch (e: any) {
     await Log.error({

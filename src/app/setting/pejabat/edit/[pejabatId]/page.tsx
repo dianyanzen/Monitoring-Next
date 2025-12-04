@@ -27,7 +27,8 @@ const initialForm: FormState = {
   is_struktural: "0",
 };
 
-export default function SettingPejabatEditPage({ params }: { params: { pejabatId: string } }) {
+export default function SettingPejabatEditPage(props: any) {
+  const { params } = props || {};
   const router = useRouter();
   const [form, setForm] = useState<FormState>(initialForm);
   const [loading, setLoading] = useState(true);

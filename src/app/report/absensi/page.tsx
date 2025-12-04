@@ -108,6 +108,13 @@ const defaultMachines: MachineStatus[] = [
 
 /* ========= Helper ========= */
 
+const normalizeIp = (ip?: string | null) => {
+  if (!ip) return ip ?? "-";
+  const trimmed = ip.trim();
+  if (!trimmed) return "-";
+  return trimmed.replace(/^::ffff:/i, "");
+};
+
 function buildSnapshot(user: ReturnType<typeof useSession>["user"]): PresenceSnapshot {
   return {
     userId: user?.S_USER_ID?.toString() ?? "",
@@ -115,7 +122,7 @@ function buildSnapshot(user: ReturnType<typeof useSession>["user"]): PresenceSna
     name: user?.S_NAMA_LGKP ?? "Petugas Monitoring",
     kantor: user?.S_NAMA_KANTOR ?? "Disdukcapil Kota Bandung",
     level: Number(user?.S_USER_LEVEL ?? 0),
-    ipAbsen: (user as any)?.S_IP_ADDRESS ?? "-",
+    ipAbsen: normalizeIp((user as any)?.S_IP_ADDRESS) ?? "-",
     clockIn: "-",
     clockOut: "-",
     monevUser: "-",
@@ -143,6 +150,7 @@ function formatDDMMYYYYFromISO(iso: string) {
 export default function ReportAbsensiPage() {
   const { user } = useSession();
   const [hydrated, setHydrated] = useState(false);
+  const [browserIp, setBrowserIp] = useState("-");
 
   const [presence, setPresence] = useState<PresenceSnapshot>(
     () => buildSnapshot(user)
@@ -200,15 +208,15 @@ export default function ReportAbsensiPage() {
         clockIn: data.clock_in || prev.clockIn,
         clockOut: data.clock_out || prev.clockOut,
         monevUser: data.user_id ?? prev.monevUser,
-        monevIp: data.monev_ip ?? prev.monevIp,
+        monevIp: normalizeIp(data.monev_ip) ?? prev.monevIp,
         monevLast: data.monev_last ?? prev.monevLast,
         monevStatus:
-          data.monev_ip && data.monev_ip !== "-" ? "online" : "offline",
+          data.monev_ip && normalizeIp(data.monev_ip) !== "-" ? "online" : "offline",
         siakUser: data.user_siak ?? prev.siakUser,
-        siakIp: data.siak_ip ?? prev.siakIp,
+        siakIp: normalizeIp(data.siak_ip) ?? prev.siakIp,
         siakLast: data.siak_last ?? prev.siakLast,
         siakStatus:
-          data.siak_ip && data.siak_ip !== "-" ? "online" : "offline",
+          data.siak_ip && normalizeIp(data.siak_ip) !== "-" ? "online" : "offline",
       }));
     } catch {
       // ignore
@@ -228,6 +236,18 @@ export default function ReportAbsensiPage() {
   /* Initial fetch: clock in/out + user online info + opsi daily (API Next.js) */
   useEffect(() => {
     if (!hydrated || !userId) return;
+
+    const fetchBrowserIp = async () => {
+      try {
+        const res = await fetch("/api/utils/my-ip");
+        if (!res.ok) return;
+        const raw: any = await res.json();
+        const ip = normalizeIp(raw?.data?.ip || raw?.ip || "");
+        if (ip) setBrowserIp(ip);
+      } catch {
+        // ignore
+      }
+    };
 
     const fetchDailyOptions = async () => {
       try {
@@ -256,6 +276,7 @@ export default function ReportAbsensiPage() {
       }
     };
 
+    void fetchBrowserIp();
     void reloadInit();
     void fetchDailyOptions();
   }, [hydrated, userId, reloadInit]);
@@ -366,7 +387,11 @@ export default function ReportAbsensiPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mode,
-          ip_override: presence.monevIp || presence.ipAbsen || undefined,
+          ip_override:
+            displayBrowserIp ||
+            normalizeIp(presence.monevIp) ||
+            normalizeIp(presence.ipAbsen) ||
+            undefined,
         }),
       });
 
@@ -398,12 +423,9 @@ export default function ReportAbsensiPage() {
     }
   };
 
-  /* Rekap Absensi & Rekap Daily -> buka legacy (sesuai laravel) */
-  const legacyBase = process.env.NEXT_PUBLIC_LEGACY_BASE || "";
-
   const goRekapAbsensi = () => {
     if (typeof window !== "undefined") {
-      const url = `${legacyBase}/Report/Rekap`;
+      const url = `/report/Rekap`;
       window.open(url, "_blank", "noopener");
     } else {
       setModal({
@@ -540,7 +562,9 @@ export default function ReportAbsensiPage() {
     ? `/assets/upload/pp/${presence.nik}.jpg`
     : fallbackAvatar;
 
-  const displayIp = presence.monevIp || presence.ipAbsen || "-";
+  const displayBrowserIp = normalizeIp(
+    browserIp || presence.monevIp || presence.ipAbsen || "-"
+  );
 
   return (
     <div className="absensi-report-page relative mt-20 space-y-6 px-6 pb-12 pt-6 md:space-y-8 md:px-8">
@@ -612,7 +636,7 @@ export default function ReportAbsensiPage() {
                       {presence.name}
                     </h2>
                     <p className="absensi-ip text-xs">
-                      IP Absensi: {displayIp}
+                      IP Absensi: {displayBrowserIp}
                     </p>
                   </div>
                 </div>

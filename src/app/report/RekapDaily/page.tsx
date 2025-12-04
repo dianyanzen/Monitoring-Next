@@ -17,6 +17,7 @@ import {
 import SettingPageHeader from "@/components/setting/SettingPageHeader";
 import DateRangePopup from "@/components/ui/DateRangePopup";
 import { DataShell } from "@/components/ui/LoadingOverlay";
+import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
 import { useSession } from "@/contexts/session";
 
 const JQDataTable = dynamic(() => import("@/components/datatable/JQDataTable"), {
@@ -70,6 +71,22 @@ export default function RekapDailyPage() {
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const tableContainerRef = useRef<HTMLElement | null>(null);
+  const [modal, setModal] = useState<{
+    open: boolean;
+    kind: ModalKind;
+    title: string;
+    message: string;
+  }>({
+    open: false,
+    kind: "info",
+    title: "Notifikasi",
+    message: "",
+  });
+  const [confirmDelete, setConfirmDelete] = useState<{
+    open: boolean;
+    target: { id: number; label: string } | null;
+    loading: boolean;
+  }>({ open: false, target: null, loading: false });
 
   const rangeInvalid = useMemo(() => {
     const s = new Date(start);
@@ -127,7 +144,7 @@ export default function RekapDailyPage() {
     const id = Number(btn.getAttribute("data-daily-id") || "0");
     const label = btn.getAttribute("data-daily-label") || "";
     if (!id || Number.isNaN(id)) return;
-    void handleDelete(id, label);
+    openDeleteConfirm(id, label);
   };
 
   const handleApiReady = (api: any | null) => {
@@ -197,17 +214,28 @@ export default function RekapDailyPage() {
       if (!mapped.length) setMessage("Tidak ada data untuk rentang ini.");
     } catch (e: any) {
       setRows([]);
-      setError(e?.message || "Gagal memuat rekap daily");
+      const msg = e?.message || "Gagal memuat rekap daily";
+      setError(msg);
+      setModal({
+        open: true,
+        kind: "error",
+        title: "Rekap Daily",
+        message: msg,
+      });
     } finally {
       setLoading(false);
       setReloading(false);
     }
   };
 
-  const handleDelete = async (id: number, label: string) => {
-    const note = label ? `"${label}"` : `ID ${id}`;
-    const sure = window.confirm(`Apakah Anda yakin ingin menghapus daily report ${note}?`);
-    if (!sure) return;
+  const openDeleteConfirm = (id: number, label: string) => {
+    setConfirmDelete({ open: true, target: { id, label }, loading: false });
+  };
+
+  const performDelete = async () => {
+    if (!confirmDelete.target) return;
+    const { id, label } = confirmDelete.target;
+    setConfirmDelete((prev) => ({ ...prev, loading: true }));
     setDeletingId(id);
     setMessage(null);
     setError(null);
@@ -215,12 +243,29 @@ export default function RekapDailyPage() {
       const res = await fetch(`/api/report/rekap-daily/${id}`, { method: "DELETE" });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || json.success === false) throw new Error(json.message || "Gagal menghapus daily report");
-      setMessage(json.message || "Daily report berhasil dihapus");
+      const successMsg =
+        json.message ||
+        (label ? `Daily report "${label}" berhasil dihapus.` : "Daily report berhasil dihapus.");
+      setMessage(successMsg);
+      setModal({
+        open: true,
+        kind: "success",
+        title: "Daily Report",
+        message: successMsg,
+      });
       await fetchRows(false);
     } catch (e: any) {
-      setError(e?.message || "Gagal menghapus daily report");
+      const msg = e?.message || "Gagal menghapus daily report";
+      setError(msg);
+      setModal({
+        open: true,
+        kind: "error",
+        title: "Daily Report",
+        message: msg,
+      });
     } finally {
       setDeletingId(null);
+      setConfirmDelete({ open: false, target: null, loading: false });
     }
   };
 
@@ -234,6 +279,35 @@ export default function RekapDailyPage() {
 
   return (
     <div className="relative mt-5 space-y-8 px-4 pb-12 pt-6 sm:px-6 md:px-8 md:pt-8">
+      {modal.open && (
+        <NeonModal
+          open={modal.open}
+          kind={modal.kind}
+          title={modal.title}
+          message={modal.message}
+          onClose={() => setModal((prev) => ({ ...prev, open: false }))}
+        />
+      )}
+
+      {confirmDelete.open && confirmDelete.target && (
+        <NeonModal
+          open={confirmDelete.open}
+          kind="confirm"
+          title="Hapus Daily Report?"
+          message={`Apakah Anda yakin ingin menghapus daily report ${
+            confirmDelete.target.label ? `"${confirmDelete.target.label}"` : `ID ${confirmDelete.target.id}`
+          }?`}
+          confirmText="Ya, hapus"
+          cancelText="Batal"
+          loading={confirmDelete.loading}
+          onConfirm={() => void performDelete()}
+          onClose={() => {
+            if (confirmDelete.loading) return;
+            setConfirmDelete({ open: false, target: null, loading: false });
+          }}
+        />
+      )}
+
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-[12%] top-[-18%] h-[900px] w-[900px] rounded-full bg-cyan-500/12 blur-[220px]" />
         <div className="absolute right-[10%] bottom-[-18%] h-[860px] w-[860px] rounded-full bg-fuchsia-600/10 blur-[200px]" />
