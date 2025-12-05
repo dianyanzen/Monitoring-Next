@@ -17,6 +17,18 @@ const nextConfig: NextConfig = {
       { source: "/Report/Absensi_vr", destination: "/report/absensi_vr" },
       { source: "/Report/GetDaily", destination: "/report/GetDaily" },
       { source: "/Report/GetDaily/Pdf2", destination: "/api/report/getdaily/pdf2" },
+      { source: "/Barang/MasterBarang", destination: "/barang/master" },
+      { source: "/Barang/MasterBarang/Edit/:id*", destination: "/barang/master" },
+      { source: "/Barang/MasterBarang_in/Edit/:id*", destination: "/barang/masuk" },
+      { source: "/Barang/MasterBarang_out/Edit/:id*", destination: "/barang/keluar" },
+      { source: "/Barang/InputMasuk", destination: "/barang/masuk" },
+      { source: "/Barang/InputKeluar", destination: "/barang/keluar" },
+      { source: "/Barang/CekBarang", destination: "/barang/status" },
+      { source: "/Barang/Laporan", destination: "/barang/laporan" },
+      { source: "/Barang/MasterAset", destination: "/barang/masteraset" },
+      { source: "/Barang/InputAset", destination: "/barang/inputaset" },
+      { source: "/Barang/CekAset", destination: "/barang/cekaset" },
+      { source: "/Barang/LaporanAset", destination: "/barang/laporanaset" },
     ];
   },
 };
