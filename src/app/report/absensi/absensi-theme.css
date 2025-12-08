@@ -215,6 +215,89 @@
   stroke-width: 1.8;
 }
 
+.absensi-toast-stack {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.absensi-toast {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  min-width: 260px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 94, 89, 0.9));
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  animation: absensi-toast-pop 0.22s ease, absensi-toast-fade 0.22s ease 4.6s forwards;
+}
+
+.absensi-toast--success {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(21, 128, 61, 0.9));
+}
+
+.absensi-toast--error {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(185, 28, 28, 0.9));
+}
+
+.absensi-toast--info {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(59, 130, 246, 0.9));
+}
+
+.absensi-toast__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #c084fc;
+  box-shadow: 0 0 12px rgba(192, 132, 252, 0.9);
+}
+
+.absensi-toast--success .absensi-toast__dot {
+  background: #34d399;
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.9);
+}
+
+.absensi-toast--error .absensi-toast__dot {
+  background: #f87171;
+  box-shadow: 0 0 12px rgba(248, 113, 113, 0.9);
+}
+
+.absensi-toast--info .absensi-toast__dot {
+  background: #60a5fa;
+  box-shadow: 0 0 12px rgba(96, 165, 250, 0.9);
+}
+
+.absensi-toast__msg {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+@keyframes absensi-toast-pop {
+  from {
+    transform: translateY(-6px) scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes absensi-toast-fade {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
 /* ========================================================================
    DARK (default) — align dengan tone dashboard/restore
    ======================================================================== */

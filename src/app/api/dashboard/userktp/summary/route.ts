@@ -7,6 +7,14 @@ import { readServerSession } from "@/lib/session";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+interface Row {
+  USER_ID: string;
+  TGL: string;
+  MULAI: string;
+  SELESAI: string;
+  JML: number;
+}
+
 function isoToDDMMYYYY(iso: string) {
   const [y, m, d] = iso.split("-");
   if (!y || !m || !d) throw new Error("Invalid ISO date");
@@ -34,34 +42,56 @@ export async function GET(req: Request) {
         scope: "API",
         msg: "Missing date range in query",
         at: "/api/dashboard/userktp/summary",
-        user, ip, ua,
+        user,
+        ip,
+        ua,
         extra: { startIso, endIso },
         tookMs: Date.now() - t0,
       });
-      return badRequest("Missing date range (?start=YYYY-MM-DD&end=YYYY-MM-DD)");
+      return badRequest(
+        "Missing date range (?start=YYYY-MM-DD&end=YYYY-MM-DD)"
+      );
     }
 
-    const b_start = isoToDDMMYYYY(startIso);
-    const b_end = isoToDDMMYYYY(endIso);
+    const b_start = isoToDDMMYYYY(startIso); // 08-12-2025
+    const b_end = isoToDDMMYYYY(endIso);     // 08-12-2025
 
     const sql = `
       SELECT USER_ID, TGL, MULAI, SELESAI, JML
       FROM (
         /* —— Baris per user dari CARD_MANAGEMENT —— */
         SELECT
-          /* 1 */ CASE
-                    WHEN LOWER(A.LAST_UPDATED_USERNAME) IS NULL
-                      THEN LOWER(TO_CHAR(A.CREATED_USERNAME))
-                    ELSE LOWER(TO_CHAR(A.LAST_UPDATED_USERNAME))
-                  END AS USER_ID,
-          /* 2 */ CAST(:b_start || ' - ' || :b_end AS VARCHAR2(21)) AS TGL,
-          /* 3 */ CAST(:b_start AS VARCHAR2(10)) AS MULAI,
-          /* 4 */ CAST(:b_end   AS VARCHAR2(10)) AS SELESAI,
-          /* 5 */ COUNT(1) AS JML
+          /* 1: user id */
+          CASE
+            WHEN LOWER(A.LAST_UPDATED_USERNAME) IS NULL
+              THEN LOWER(TO_CHAR(A.CREATED_USERNAME))
+            ELSE LOWER(TO_CHAR(A.LAST_UPDATED_USERNAME))
+          END AS USER_ID,
+          /* 2: label range tanggal */
+          CAST(:b_start || ' - ' || :b_end AS VARCHAR2(21)) AS TGL,
+          /* 3: jam mulai (MIN HH24:MI) */
+          MIN(
+            CASE
+              WHEN A.LAST_UPDATE IS NULL
+                THEN TO_CHAR(A.PERSONALIZED_DATE, 'HH24:MI')
+              ELSE TO_CHAR(A.LAST_UPDATE, 'HH24:MI')
+            END
+          ) AS MULAI,
+          /* 4: jam selesai (MAX HH24:MI) */
+          MAX(
+            CASE
+              WHEN A.LAST_UPDATE IS NULL
+                THEN TO_CHAR(A.PERSONALIZED_DATE, 'HH24:MI')
+              ELSE TO_CHAR(A.LAST_UPDATE, 'HH24:MI')
+            END
+          ) AS SELESAI,
+          /* 5: jumlah cetak */
+          COUNT(1) AS JML
         FROM CARD_MANAGEMENT@DB5CETAK A
         WHERE
           CASE
-            WHEN TRUNC(A.LAST_UPDATE) IS NULL THEN TRUNC(A.PERSONALIZED_DATE)
+            WHEN TRUNC(A.LAST_UPDATE) IS NULL
+              THEN TRUNC(A.PERSONALIZED_DATE)
             ELSE TRUNC(A.LAST_UPDATE)
           END BETWEEN TO_DATE(:b_start,'DD-MM-YYYY')
                 AND TO_DATE(:b_end,'DD-MM-YYYY') + 1 - (1/86400)
@@ -69,45 +99,60 @@ export async function GET(req: Request) {
                 WHEN UPPER(A.LAST_UPDATED_USERNAME) IS NULL
                   THEN UPPER(TO_CHAR(A.CREATED_USERNAME))
                 ELSE UPPER(TO_CHAR(A.LAST_UPDATED_USERNAME))
-              END NOT IN (SELECT UPPER(USER_BCARD) FROM SIAK_CETAK_GOIB WHERE IS_ACTIVE = 1)
+              END NOT IN (
+                SELECT UPPER(USER_BCARD)
+                FROM SIAK_CETAK_GOIB
+                WHERE IS_ACTIVE = 1
+              )
         GROUP BY
           CASE
             WHEN LOWER(A.LAST_UPDATED_USERNAME) IS NULL
               THEN LOWER(TO_CHAR(A.CREATED_USERNAME))
             ELSE LOWER(TO_CHAR(A.LAST_UPDATED_USERNAME))
-          END
+          END,
+          CAST(:b_start || ' - ' || :b_end AS VARCHAR2(21))
 
         UNION ALL
 
         /* —— Baris khusus LUDO —— */
         SELECT
           /* 1 */ '32730000ludo' AS USER_ID,
-          /* 2 */ TO_CHAR(SYSDATE,'DD-MM-YYYY') AS TGL,
+          /* 2 */ CAST(:b_start || ' - ' || :b_end AS VARCHAR2(21)) AS TGL,
           /* 3 */ CAST('-' AS VARCHAR2(10)) AS MULAI,
           /* 4 */ CAST('-' AS VARCHAR2(10)) AS SELESAI,
           /* 5 */ (D.AMBIL - D.RUSAK - D.PENGEMBALIAN) AS JML
         FROM SIAK_MONEV_BLANGKO_LUDO D
-        WHERE TRUNC(D.TANGGAL) = TRUNC(SYSDATE)
+        WHERE
+          TRUNC(D.TANGGAL) BETWEEN TO_DATE(:b_start,'DD-MM-YYYY')
+                               AND TO_DATE(:b_end,'DD-MM-YYYY')
       )
       ORDER BY JML DESC
     `;
 
     const binds = { b_start, b_end };
-    const rows = await execRows(sql, binds);
+    const rows = await execRows<Row>(sql, binds);
 
     const took = Date.now() - t0;
     await Log.info({
       scope: "DB",
       msg: "Fetch summary user KTP",
       at: "CARD_MANAGEMENT@DB5CETAK → summary",
-      user, ip, ua, tookMs: took,
-      sql, binds, extra: { rowCount: rows.length },
+      user,
+      ip,
+      ua,
+      tookMs: took,
+      sql,
+      binds,
+      extra: { rowCount: rows.length },
     });
     await Log.info({
       scope: "API",
       msg: "Summary user KTP served",
       at: "/api/dashboard/userktp/summary",
-      user, ip, ua, tookMs: took,
+      user,
+      ip,
+      ua,
+      tookMs: took,
       extra: { startIso, endIso, rowCount: rows.length },
     });
 
@@ -118,8 +163,15 @@ export async function GET(req: Request) {
       scope: "API",
       msg: "Error summary user KTP",
       at: "/api/dashboard/userktp/summary",
-      user, ip, ua, tookMs: took,
-      err: { name: e?.name || "Error", message: e?.message || String(e), stack: e?.stack },
+      user,
+      ip,
+      ua,
+      tookMs: took,
+      err: {
+        name: e?.name || "Error",
+        message: e?.message || String(e),
+        stack: e?.stack,
+      },
       extra: { startIso, endIso },
     });
     return err(e?.message || "Failed to load summary", 500);

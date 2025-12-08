@@ -34,31 +34,37 @@ export async function GET(req: Request) {
         scope: "API",
         msg: "Missing date range in query",
         at: "/api/dashboard/userrekam/summary",
-        user, ip, ua,
+        user,
+        ip,
+        ua,
         extra: { startIso, endIso },
         tookMs: Date.now() - t0,
       });
-      return badRequest("Missing date range (?start=YYYY-MM-DD&end=YYYY-MM-DD)");
+      return badRequest(
+        "Missing date range (?start=YYYY-MM-DD&end=YYYY-MM-DD)"
+      );
     }
 
     if (endIso < startIso) {
       return badRequest("Invalid range: end must be >= start");
     }
 
-    const b_start = isoToDDMMYYYY(startIso);
-    const b_end = isoToDDMMYYYY(endIso);
+    const b_start = isoToDDMMYYYY(startIso); // 08-12-2025
+    const b_end = isoToDDMMYYYY(endIso);     // 08-12-2025
 
-    // ✅ Optimized range filter (keeps index on B.CREATED usable).
     const sql = `
       SELECT
-        LOWER(A.CREATED_USERNAME)               AS USER_ID,
-        (:b_start || ' - ' || :b_end)           AS TGL,
-        COUNT(*)                                 AS JML,
-        CAST(:b_start AS VARCHAR2(10))           AS MULAI,
-        CAST(:b_end   AS VARCHAR2(10))           AS SELESAI
+        LOWER(A.CREATED_USERNAME)                 AS USER_ID,
+        (:b_start || ' - ' || :b_end)             AS TGL,
+        COUNT(*)                                   AS JML,
+        /* jam rekam pertama di range (HH24:MI) */
+        TO_CHAR(MIN(B.CREATED), 'HH24:MI')        AS MULAI,
+        /* jam rekam terakhir di range (HH24:MI) */
+        TO_CHAR(MAX(B.CREATED), 'HH24:MI')        AS SELESAI
       FROM DEMOGRAPHICS@DB5 A
       JOIN FINGERS@DB5      B ON A.NIK = B.NIK
-      WHERE B.CREATED >= TO_DATE(:b_start, 'DD-MM-YYYY')
+      WHERE
+        B.CREATED >= TO_DATE(:b_start, 'DD-MM-YYYY')
         AND B.CREATED <  TO_DATE(:b_end,   'DD-MM-YYYY') + 1
       GROUP BY LOWER(A.CREATED_USERNAME)
       ORDER BY JML DESC
@@ -72,14 +78,22 @@ export async function GET(req: Request) {
       scope: "DB",
       msg: "Fetch summary user rekam",
       at: "FINGERS@DB5 → summary by CREATED_USERNAME",
-      user, ip, ua, tookMs: took,
-      sql, binds, extra: { rowCount: rows.length },
+      user,
+      ip,
+      ua,
+      tookMs: took,
+      sql,
+      binds,
+      extra: { rowCount: rows.length },
     });
     await Log.info({
       scope: "API",
       msg: "Summary user rekam served",
       at: "/api/dashboard/userrekam/summary",
-      user, ip, ua, tookMs: took,
+      user,
+      ip,
+      ua,
+      tookMs: took,
       extra: { startIso, endIso, rowCount: rows.length },
     });
 
@@ -90,8 +104,15 @@ export async function GET(req: Request) {
       scope: "API",
       msg: "Error summary user rekam",
       at: "/api/dashboard/userrekam/summary",
-      user, ip, ua, tookMs: took,
-      err: { name: e?.name || "Error", message: e?.message || String(e), stack: e?.stack },
+      user,
+      ip,
+      ua,
+      tookMs: took,
+      err: {
+        name: e?.name || "Error",
+        message: e?.message || String(e),
+        stack: e?.stack,
+      },
       extra: { startIso, endIso },
     });
     return err(e?.message || "Failed to load summary", 500);

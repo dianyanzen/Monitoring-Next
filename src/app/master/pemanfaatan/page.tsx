@@ -390,7 +390,7 @@ export default function PemanfaatanPage() {
               <button
                 type="button"
                 onClick={refreshBoth}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/70 border border-slate-700 hover:bg-slate-800/50 text-sm text-slate-100 transition-colors"
+                className="lux-btn lux-btn--ghost inline-flex items-center gap-2 text-sm"
                 aria-label="Muat ulang data"
               >
                 <RefreshCcw className={`w-4 h-4 ${isBusy ? "animate-spin" : ""}`} />
@@ -471,15 +471,15 @@ export default function PemanfaatanPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={refreshBoth}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-sky-500/25 to-emerald-400/20 border border-sky-400/40 text-sm text-slate-50 shadow-[0_0_18px_rgba(56,189,248,0.18)] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                className="lux-btn lux-btn--primary inline-flex items-center gap-2 text-sm"
                 disabled={isBusy}
               >
                 <Search className={`w-4 h-4 ${isBusy ? "animate-pulse" : ""}`} />
-                {isBusy && !firstLoad ? "Loading…" : "Search"}
+                {isBusy && !firstLoad ? "Loading..." : "Search"}
               </button>
               <button
                 onClick={onClear}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/70 hover:bg-slate-800/60 border border-slate-700 text-sm text-slate-200 transition-colors"
+                className="lux-btn lux-btn--ghost inline-flex items-center gap-2 text-sm"
               >
                 <Trash2 className="w-4 h-4" />
                 Clear

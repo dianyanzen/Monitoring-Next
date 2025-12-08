@@ -8,6 +8,7 @@ type AnyFetch = typeof fetch;
 
 const SHOW_DELAY_MS = 300; // tahan lebih lama supaya tidak muncul di request ringan
 const SUPPRESS_AFTER_ROUTE_MS = 320; // jeda sejenak setelah route overlay hilang
+const IGNORE_FETCH_PATHS = ["/api/report/absensi/sync"]; // request yang tidak perlu overlay
 
 function extractUrl(input: RequestInfo | URL, init?: RequestInit): { href: string; method: string } {
   let href: string;
@@ -33,6 +34,7 @@ function shouldTrack(input: RequestInfo | URL, init?: RequestInit) {
     const url = href.startsWith("http") ? new URL(href) : new URL(href, window.location.href);
     // abaikan asset/next static, sisanya (relative/same-origin) dilacak
     if (url.origin !== window.location.origin) return false;
+    if (IGNORE_FETCH_PATHS.some((p) => url.pathname.startsWith(p))) return false;
     return !url.pathname.startsWith("/_next/");
   } catch {
     return true;

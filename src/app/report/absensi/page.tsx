@@ -64,7 +64,49 @@ type DailyForm = {
   keterangan: string;
 };
 
+type ToastKind = "success" | "error" | "info";
+type ToastItem = {
+  id: string;
+  kind: ToastKind;
+  message: string;
+};
+
+type SyncBanner = {
+  kind: "pending" | "success" | "error";
+  message: string;
+  key: MachineKey | null;
+};
+
 const fallbackAvatar = "/assets/plugins/images/calming-cat.gif";
+
+const defaultMachines: MachineStatus[] = [
+  {
+    key: "MIM",
+    name: "Machine MIM",
+    ip: "-",
+    status: "offline",
+    lastSync: "Belum pernah",
+    message: "Menunggu sinkronisasi pertama.",
+  },
+  {
+    key: "FCL",
+    name: "Machine FCL",
+    ip: "-",
+    status: "offline",
+    lastSync: "Belum pernah",
+    message: "Menunggu sinkronisasi pertama.",
+  },
+  {
+    key: "DINAS",
+    name: "Machine DINAS",
+    ip: "-",
+    status: "offline",
+    lastSync: "Belum pernah",
+    message: "Menunggu sinkronisasi pertama.",
+  },
+];
+
+/* ========= Helper ========= */
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
@@ -79,40 +121,26 @@ const extractMessage = (raw: any) => {
   return "";
 };
 
-const defaultMachines: MachineStatus[] = [
-  {
-    key: "DINAS",
-    name: "Mesin DINAS",
-    ip: "172.16.16.25",
-    status: "offline",
-    lastSync: "-",
-    message: "Mesin Absensi DINAS belum dicek.",
-  },
-  {
-    key: "MIM",
-    name: "Mesin MIM",
-    ip: "32.73.31.200",
-    status: "offline",
-    lastSync: "-",
-    message: "Mesin Absensi MIM belum dicek.",
-  },
-  {
-    key: "FCL",
-    name: "Mesin FCL",
-    ip: "32.73.0.182",
-    status: "offline",
-    lastSync: "-",
-    message: "Mesin Absensi FCL belum dicek.",
-  },
-];
-
-/* ========= Helper ========= */
+/**
+ * Override khusus kalau akses via localhost.
+ * Kalau tidak mau dipaksa, boleh dikosongkan jadi "".
+ */
+const DEV_LOCALHOST_REAL_IP = "172.16.16.213";
 
 const normalizeIp = (ip?: string | null) => {
   if (!ip) return ip ?? "-";
   const trimmed = ip.trim();
   if (!trimmed) return "-";
-  return trimmed.replace(/^::ffff:/i, "");
+
+  // hilangkan prefix ::ffff:
+  const cleaned = trimmed.replace(/^::ffff:/i, "");
+
+  // kalau loopback, paksa ke IP LAN yang diinginkan (khusus dev di mesin sendiri)
+  if (cleaned === "::1" || cleaned === "127.0.0.1") {
+    return DEV_LOCALHOST_REAL_IP || cleaned;
+  }
+
+  return cleaned;
 };
 
 function buildSnapshot(user: ReturnType<typeof useSession>["user"]): PresenceSnapshot {
@@ -122,6 +150,7 @@ function buildSnapshot(user: ReturnType<typeof useSession>["user"]): PresenceSna
     name: user?.S_NAMA_LGKP ?? "Petugas Monitoring",
     kantor: user?.S_NAMA_KANTOR ?? "Disdukcapil Kota Bandung",
     level: Number(user?.S_USER_LEVEL ?? 0),
+    // IP dari session (hasil getClientInfo di server)
     ipAbsen: normalizeIp((user as any)?.S_IP_ADDRESS) ?? "-",
     clockIn: "-",
     clockOut: "-",
@@ -150,7 +179,6 @@ function formatDDMMYYYYFromISO(iso: string) {
 export default function ReportAbsensiPage() {
   const { user } = useSession();
   const [hydrated, setHydrated] = useState(false);
-  const [browserIp, setBrowserIp] = useState("-");
 
   const [presence, setPresence] = useState<PresenceSnapshot>(
     () => buildSnapshot(user)
@@ -181,11 +209,20 @@ export default function ReportAbsensiPage() {
     title: "Notifikasi",
     message: "",
   });
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [syncBanner, setSyncBanner] = useState<SyncBanner>({
+    kind: "pending",
+    message: "",
+    key: null,
+  });
 
   const userId = useMemo(
     () => (presence.userId || user?.S_USER_ID?.toString() || "").trim(),
     [presence.userId, user]
   );
+
+  // IP yang dipakai ABSENSI: ambil dari session / monev, tidak lagi dari /api/utils/my-ip
+  const ipAbsensi = normalizeIp(presence.ipAbsen || presence.monevIp || "-");
 
   const notify = useCallback(
     (msg: string, kind: ModalKind = "info", title = "Notifikasi") => {
@@ -237,18 +274,6 @@ export default function ReportAbsensiPage() {
   useEffect(() => {
     if (!hydrated || !userId) return;
 
-    const fetchBrowserIp = async () => {
-      try {
-        const res = await fetch("/api/utils/my-ip");
-        if (!res.ok) return;
-        const raw: any = await res.json();
-        const ip = normalizeIp(raw?.data?.ip || raw?.ip || "");
-        if (ip) setBrowserIp(ip);
-      } catch {
-        // ignore
-      }
-    };
-
     const fetchDailyOptions = async () => {
       try {
         const res = await fetch("/api/report/absensi/daily-options", {
@@ -276,7 +301,6 @@ export default function ReportAbsensiPage() {
       }
     };
 
-    void fetchBrowserIp();
     void reloadInit();
     void fetchDailyOptions();
   }, [hydrated, userId, reloadInit]);
@@ -331,6 +355,11 @@ export default function ReportAbsensiPage() {
     };
 
     setSyncingKey(key);
+    setSyncBanner({
+      key,
+      kind: "pending",
+      message: "Memproses permintaan... Mohon tunggu, sistem sedang bekerja.",
+    });
 
     try {
       const res = await fetch("/api/report/absensi/sync", {
@@ -365,12 +394,38 @@ export default function ReportAbsensiPage() {
         )
       );
 
-      setModal({ open: true, kind: "error", title: "Sync Mesin", message: msg });
+      setSyncBanner({
+        key,
+        kind: res.ok ? "success" : "error",
+        message: msg,
+      });
+      setToasts((prev) => [
+        ...prev,
+        {
+          id: `${Date.now()}-${key}`,
+          kind: res.ok ? "success" : "error",
+          message: msg,
+        },
+      ]);
     } catch {
       const msg = "Gagal menghubungi mesin absensi.";
-      setModal({ open: true, kind: "error", title: "Sync Mesin", message: msg });
+      setSyncBanner({
+        key,
+        kind: "error",
+        message: msg,
+      });
+      setToasts((prev) => [
+        ...prev,
+        { id: `${Date.now()}-${key}`, kind: "error", message: msg },
+      ]);
     } finally {
       setSyncingKey(null);
+      // auto-hide banner after a few seconds
+      setTimeout(() => {
+        setSyncBanner((prev) =>
+          prev.key === key ? { ...prev, message: "" } : prev
+        );
+      }, 5500);
     }
   };
 
@@ -387,11 +442,8 @@ export default function ReportAbsensiPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mode,
-          ip_override:
-            displayBrowserIp ||
-            normalizeIp(presence.monevIp) ||
-            normalizeIp(presence.ipAbsen) ||
-            undefined,
+          // kirim IP yang sama dengan yang ditampilkan (dari session / monev)
+          ip_override: ipAbsensi !== "-" ? ipAbsensi : undefined,
         }),
       });
 
@@ -468,7 +520,12 @@ export default function ReportAbsensiPage() {
       return;
     }
     if (!userId) {
-      setModal({ open: true, kind: "error", title: "Daily Report", message: "User ID tidak ditemukan di sesi." });
+      setModal({
+        open: true,
+        kind: "error",
+        title: "Daily Report",
+        message: "User ID tidak ditemukan di sesi.",
+      });
       return;
     }
     const tanggalReport = formatDDMMYYYYFromISO(dailyForm.tanggal);
@@ -562,10 +619,6 @@ export default function ReportAbsensiPage() {
     ? `/assets/upload/pp/${presence.nik}.jpg`
     : fallbackAvatar;
 
-  const displayBrowserIp = normalizeIp(
-    browserIp || presence.monevIp || presence.ipAbsen || "-"
-  );
-
   return (
     <div className="absensi-report-page relative mt-20 space-y-6 px-6 pb-12 pt-6 md:space-y-8 md:px-8">
       <NeonModal
@@ -575,6 +628,22 @@ export default function ReportAbsensiPage() {
         message={modal.message}
         onClose={() => setModal((prev) => ({ ...prev, open: false }))}
       />
+      {toasts.length > 0 && (
+        <div className="absensi-toast-stack">
+          {toasts.map((t) => (
+            <div
+              key={t.id}
+              className={`absensi-toast absensi-toast--${t.kind}`}
+              onAnimationEnd={() =>
+                setToasts((prev) => prev.filter((x) => x.id !== t.id))
+              }
+            >
+              <div className="absensi-toast__dot" />
+              <div className="absensi-toast__msg">{t.message}</div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Header */}
       <header className="absensi-header flex flex-wrap items-center justify-between gap-3">
@@ -611,7 +680,6 @@ export default function ReportAbsensiPage() {
               />
               <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-[#0f172a]/55 to-transparent" />
               <div className="relative flex h-full items-end px-4 pb-4">
-                {/*  ⬇️ tambahkan class absensi-profile-bar di sini  */}
                 <div className="absensi-profile-bar flex items-center gap-3">
                   <div className="relative">
                     <Image
@@ -636,7 +704,7 @@ export default function ReportAbsensiPage() {
                       {presence.name}
                     </h2>
                     <p className="absensi-ip text-xs">
-                      IP Absensi: {displayBrowserIp}
+                      IP Absensi: {ipAbsensi}
                     </p>
                   </div>
                 </div>
@@ -829,6 +897,23 @@ export default function ReportAbsensiPage() {
                   Sync DINAS
                 </button>
               </div>
+              {syncBanner.message && (
+                <div
+                  className={`absensi-inline-banner absensi-inline-banner--${syncBanner.kind}`}
+                >
+                  {syncBanner.kind === "pending" ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Sparkles className="h-3.5 w-3.5" />
+                  )}
+                  <div className="flex flex-col">
+                    <span className="text-[11px] uppercase tracking-[0.12em]">
+                      {syncBanner.key ? `Sync ${syncBanner.key}` : "Sync Mesin"}
+                    </span>
+                    <span className="text-xs">{syncBanner.message}</span>
+                  </div>
+                </div>
+              )}
             </div>
           </section>
         </div>
@@ -1161,8 +1246,3 @@ export default function ReportAbsensiPage() {
     </div>
   );
 }
-
-
-
-
-

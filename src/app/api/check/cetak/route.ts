@@ -35,9 +35,9 @@ export async function POST(req: NextRequest) {
 
     const no_kec = Number(body?.no_kec ?? 0) || 0;
     const no_kel = Number(body?.no_kel ?? 0) || 0;
-    const user   = String(body?.user ?? "").trim();
+    const user = String(body?.user ?? "").trim();
     const tgl_start = String(body?.tgl_start ?? "").trim(); // "DD-MM-YYYY"
-    const tgl_end   = String(body?.tgl_end   ?? "").trim(); // "DD-MM-YYYY"
+    const tgl_end = String(body?.tgl_end ?? "").trim(); // "DD-MM-YYYY"
 
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, "0");
@@ -60,8 +60,14 @@ export async function POST(req: NextRequest) {
       b_tgl_end: end,
     };
 
-    if (no_kec) { where.push("B.NO_KEC = :b_no_kec"); binds.b_no_kec = no_kec; }
-    if (no_kel) { where.push("B.NO_KEL = :b_no_kel"); binds.b_no_kel = no_kel; }
+    if (no_kec) {
+      where.push("B.NO_KEC = :b_no_kec");
+      binds.b_no_kec = no_kec;
+    }
+    if (no_kel) {
+      where.push("B.NO_KEL = :b_no_kel");
+      binds.b_no_kel = no_kel;
+    }
     if (user) {
       // CASE user cetak (LAST_UPDATED_USERNAME / CREATED_USERNAME)
       where.push(`
@@ -164,7 +170,13 @@ export async function POST(req: NextRequest) {
         ) WHERE RNK = 1
       ) I ON I.NIK = A.NIK
       WHERE ${where.join(" AND ")}
-      ORDER BY A.PERSONALIZED_DATE DESC, B.NO_KEL, B.NO_RW, B.NO_RT
+      ORDER BY 
+        A.PERSONALIZED_DATE DESC,
+        B.NO_KEC,
+        B.NO_KEL,
+        B.NO_RW,
+        B.NO_RT,
+        B.NAMA_LGKP
     `;
 
     const raw = await execRows(SQL, binds, {}, ORACLE_ALIAS);
@@ -177,9 +189,11 @@ export async function POST(req: NextRequest) {
       tookMs: Date.now() - t0,
       extra: {
         total: rows.length,
-        no_kec, no_kel,
+        no_kec,
+        no_kel,
         used_user: !!user,
-        start, end,
+        start,
+        end,
       },
     });
 
