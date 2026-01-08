@@ -90,7 +90,7 @@ export async function GET(req: NextRequest) {
         FROM USERS A
         JOIN MODEL_HAS_ROLES B ON A.ID = B.MODEL_ID
         JOIN ROLES C ON B.ROLE_ID = C.ID
-        WHERE C.NAME = 'RUMAH SAKIT' AND A.NAMA_INSTANSI IS NOT NULL AND A.DELETED_AT IS NULL
+        WHERE C.NAME = 'PELANA' AND A.NAMA_INSTANSI IS NOT NULL AND A.DELETED_AT IS NULL
       ),
       U_PADUKA AS (
         SELECT A.NIK
@@ -150,7 +150,7 @@ export async function GET(req: NextRequest) {
         FROM U_BIDAN U LEFT JOIN CNT C ON C.NIK = U.NIK
       ),
       S_RS AS (
-        SELECT 'RUMAH SAKIT' AS KATEGORI,
+        SELECT 'PELANA' AS KATEGORI,
                COUNT(*) AS TOTAL_INSTANSI,
                SUM(NVL(C.BARU,0)) AS BARU,
                SUM(NVL(C.MELENGKAPI,0)) AS MELENGKAPI,
@@ -215,7 +215,7 @@ export async function GET(req: NextRequest) {
       "KUA",
       "SIAP PA",
       "BIDAN",
-      "RUMAH SAKIT",
+      "PELANA",
       "PADUKA",
       "HOTLINE",
     ];

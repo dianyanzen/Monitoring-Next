@@ -9,6 +9,7 @@ type AnyFetch = typeof fetch;
 const SHOW_DELAY_MS = 300; // tahan lebih lama supaya tidak muncul di request ringan
 const SUPPRESS_AFTER_ROUTE_MS = 320; // jeda sejenak setelah route overlay hilang
 const IGNORE_FETCH_PATHS = ["/api/report/absensi/sync"]; // request yang tidak perlu overlay
+const SUPPRESS_OVERLAY_PATHS: RegExp[] = [/^\/laporan_harian/]; // halaman yang tidak perlu overlay global
 
 function extractUrl(input: RequestInfo | URL, init?: RequestInit): { href: string; method: string } {
   let href: string;
@@ -27,6 +28,8 @@ function extractUrl(input: RequestInfo | URL, init?: RequestInit): { href: strin
 
 function shouldTrack(input: RequestInfo | URL, init?: RequestInit) {
   if (typeof window === "undefined") return false;
+  const path = window.location?.pathname || "";
+  if (SUPPRESS_OVERLAY_PATHS.some((re) => re.test(path))) return false;
   try {
     const { href, method } = extractUrl(input, init);
     // hanya POST/PUT/PATCH/DELETE/OPTIONS yang dianggap krusial; GET diabaikan supaya overlay tidak sering muncul
@@ -124,6 +127,13 @@ export default function GlobalFetchOverlay() {
   }, [hasPending, routeOverlayVisible]);
 
   const overlay = useMemo(() => {
+    const suppressedByPath = (() => {
+      if (typeof window === "undefined") return false;
+      const path = window.location?.pathname || "";
+      return SUPPRESS_OVERLAY_PATHS.some((re) => re.test(path));
+    })();
+    if (suppressedByPath) return null;
+
     const suppressedByRoute =
       routeOverlayVisible ||
       (routeHiddenAtRef.current !== null &&

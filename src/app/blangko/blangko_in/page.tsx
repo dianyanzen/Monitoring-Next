@@ -5,6 +5,7 @@ import { Loader2, RefreshCcw, Save, Trash2 } from "lucide-react";
 import SettingPageHeader from "@/components/setting/SettingPageHeader";
 
 type Summary = { MASUK: number; KELUAR: number; RUSAK: number; SISA: number };
+type HistoryItem = { TANGGAL: string; JUMLAH: number; KET: string; CREATED_BY: string };
 
 const toDMY = (d: Date) => {
   const dd = String(d.getDate()).padStart(2, "0");
@@ -20,8 +21,11 @@ export default function BlangkoInPage() {
   const [summary, setSummary] = useState<Summary>({ MASUK: 0, KELUAR: 0, RUSAK: 0, SISA: 0 });
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [historyLoading, setHistoryLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [prefilled, setPrefilled] = useState<HistoryItem | null>(null);
 
   const totalInfo = useMemo(
     () => [
@@ -32,6 +36,23 @@ export default function BlangkoInPage() {
     ],
     [summary]
   );
+
+  const normalizeHistoryItem = (row: any): HistoryItem => ({
+    TANGGAL:
+      typeof row?.TANGGAL === "string"
+        ? row.TANGGAL
+        : typeof row?.tanggal === "string"
+          ? row.tanggal
+          : "-",
+    JUMLAH: Number(row?.JUMLAH ?? row?.jumlah ?? 0) || 0,
+    KET: typeof row?.KET === "string" ? row.KET : typeof row?.keterangan === "string" ? row.keterangan : "",
+    CREATED_BY:
+      typeof row?.CREATED_BY === "string"
+        ? row.CREATED_BY
+        : typeof row?.created_by === "string"
+          ? row.created_by
+          : "-",
+  });
 
   const fetchSummary = async () => {
     setLoading(true);
@@ -54,23 +75,71 @@ export default function BlangkoInPage() {
     }
   };
 
+  const fetchHistory = async (targetDate?: string) => {
+    const tgl = targetDate && /^\d{2}-\d{2}-\d{4}$/.test(targetDate) ? targetDate : null;
+    if (!tgl) return;
+
+    setHistoryLoading(true);
+    try {
+      const res = await fetch("/api/blangko/get_hist_in", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ tanggal: tgl }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || json.success === false) throw new Error(json.message || "Gagal memuat histori blangko");
+      const data = json.data ?? json;
+      const itemsRaw = data.items ?? data.history ?? [];
+      const parsed = Array.isArray(itemsRaw) ? itemsRaw.map(normalizeHistoryItem) : [];
+      setHistory(parsed);
+
+      const todayRaw = data.today ?? data.existing ?? null;
+      const todayNormalized = todayRaw ? normalizeHistoryItem(todayRaw) : null;
+      if (todayNormalized && todayNormalized.TANGGAL === tgl) {
+        setPrefilled(todayNormalized);
+        setJumlah(String(todayNormalized.JUMLAH));
+        setKeterangan(todayNormalized.KET);
+      } else {
+        setPrefilled(null);
+      }
+    } catch (e: any) {
+      setError(e?.message || "Gagal memuat histori blangko");
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
   useEffect(() => {
     void fetchSummary();
   }, []);
 
+  useEffect(() => {
+    if (!/^\d{2}-\d{2}-\d{4}$/.test(tanggal)) {
+      setPrefilled(null);
+      return;
+    }
+    void fetchHistory(tanggal);
+  }, [tanggal]);
+
   const handleClear = () => {
-    setTanggal(toDMY(new Date()));
+    const today = toDMY(new Date());
+    setTanggal(today);
     setJumlah("0");
     setKeterangan("");
     setMessage(null);
     setError(null);
-    void fetchSummary();
+    void Promise.all([fetchSummary(), fetchHistory(today)]);
   };
 
   const handleSave = async () => {
     const qty = Number(jumlah);
     if (!Number.isFinite(qty) || qty <= 0) {
       setError("Input blangko harus lebih dari 0.");
+      return;
+    }
+    if (!/^\d{2}-\d{2}-\d{4}$/.test(tanggal)) {
+      setError("Tanggal tidak valid (DD-MM-YYYY).");
       return;
     }
     setSaving(true);
@@ -86,7 +155,7 @@ export default function BlangkoInPage() {
       const json = await res.json().catch(() => ({}));
       if (!res.ok || json.success === false) throw new Error(json.message || "Gagal menyimpan blangko");
       setMessage(json.message || "Berhasil disimpan");
-      await fetchSummary();
+      await Promise.all([fetchSummary(), fetchHistory(tanggal)]);
     } catch (e: any) {
       setError(e?.message || "Gagal menyimpan blangko");
     } finally {
@@ -139,6 +208,13 @@ export default function BlangkoInPage() {
               />
             </div>
 
+            {prefilled ? (
+              <div className="flex items-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-50">
+                Tanggal {prefilled.TANGGAL} sudah pernah diinput (
+                {prefilled.JUMLAH.toLocaleString("id-ID")} blangko). Form otomatis terisi agar tidak dobel.
+              </div>
+            ) : null}
+
             {message ? (
               <div className="flex items-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-50">
                 {message}
@@ -169,7 +245,10 @@ export default function BlangkoInPage() {
               </button>
               <button
                 type="button"
-                onClick={() => void fetchSummary()}
+                onClick={() => {
+                  setLoading(true);
+                  Promise.all([fetchSummary(), fetchHistory(tanggal)]).finally(() => setLoading(false));
+                }}
                 className="inline-flex items-center gap-2 rounded-lg border border-cyan-800/50 bg-cyan-500/10 px-3 py-2 text-xs font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
               >
                 <RefreshCcw className="h-4 w-4" /> Reload
@@ -192,6 +271,62 @@ export default function BlangkoInPage() {
           </div>
         </section>
       </div>
+
+      <section className="rounded-2xl border border-cyan-800/50 bg-[#0c1220]/70 p-5 shadow-[0_0_24px_#00ffff22]">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="text-sm font-semibold text-cyan-100">Histori Input Blangko (5 terbaru)</h3>
+            <p className="text-xs text-cyan-200/70">Melihat catatan terakhir dan mencegah input ganda di tanggal yang sama.</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => void fetchHistory(tanggal)}
+            className="inline-flex items-center gap-2 rounded-lg border border-cyan-800/50 bg-cyan-500/10 px-3 py-2 text-xs font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
+          >
+            {historyLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCcw className="h-4 w-4" />}
+            Refresh
+          </button>
+        </div>
+
+        <div className="mt-3 overflow-auto rounded-xl border border-cyan-800/40">
+          <table className="min-w-full text-sm text-cyan-100">
+            <thead className="bg-white/5 text-xs uppercase tracking-wide text-cyan-200/70">
+              <tr>
+                <th className="px-3 py-2 text-left">#</th>
+                <th className="px-3 py-2 text-left">Tanggal</th>
+                <th className="px-3 py-2 text-left">Jumlah</th>
+                <th className="px-3 py-2 text-left">Input Oleh</th>
+                <th className="px-3 py-2 text-left">Keterangan</th>
+              </tr>
+            </thead>
+            <tbody>
+              {historyLoading ? (
+                <tr>
+                  <td className="px-3 py-3" colSpan={5}>
+                    Memuat histori...
+                  </td>
+                </tr>
+              ) : history.length === 0 ? (
+                <tr>
+                  <td className="px-3 py-3" colSpan={5}>
+                    Belum ada histori blangko masuk.
+                  </td>
+                </tr>
+              ) : (
+                history.map((row, idx) => (
+                  <tr key={`${row.TANGGAL}-${idx}`} className="border-t border-cyan-900/40">
+                    <td className="px-3 py-2">{idx + 1}</td>
+                    <td className="px-3 py-2">{row.TANGGAL}</td>
+                    <td className="px-3 py-2">{row.JUMLAH.toLocaleString("id-ID")}</td>
+                    <td className="px-3 py-2">{row.CREATED_BY}</td>
+                    <td className="px-3 py-2">{row.KET || "-"}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 }

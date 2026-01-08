@@ -190,7 +190,7 @@ export async function GET(req: NextRequest) {
       `;
 
     const sqlBidan   = makeSqlRole("BIDAN",           "BIDAN");
-    const sqlRS      = makeSqlRole("RUMAH SAKIT",     "RUMAH SAKIT");
+    const sqlRS      = makeSqlRole("PELANA",     "PELANA");
     const sqlPaduka  = makeSqlRole("PADUKA",          "PADUKA", "AND A.NAMA_INSTANSI NOT LIKE '%KELURAHAN%'");
     const sqlHotline = makeSqlRole("Salaman Hotline", "HOTLINE");
     const sqlSiapPA  = makeSqlRole("SIAP PA",         "SIAP PA", "AND A.NAMA_INSTANSI NOT LIKE '%KUA%'");
