@@ -189,11 +189,11 @@ export async function GET(req: NextRequest) {
         ORDER BY U.NAMA_INSTANSI
       `;
 
-    const sqlBidan   = makeSqlRole("BIDAN",           "BIDAN");
-    const sqlRS      = makeSqlRole("PELANA",     "PELANA");
-    const sqlPaduka  = makeSqlRole("PELITA HATI",          "PELITA HATI", "AND A.NAMA_INSTANSI NOT LIKE '%KELURAHAN%'");
+    const sqlBidan   = makeSqlRole("PELANA","BIDAN","AND A.NAMA_INSTANSI LIKE '%BIDAN%'");
+    const sqlRS      = makeSqlRole("PELANA","PELANA","AND A.NAMA_INSTANSI NOT LIKE '%BIDAN%'");
+    const sqlPaduka  = makeSqlRole("PELITA HATI","PADUKA", "AND A.NAMA_INSTANSI NOT LIKE '%KELURAHAN%'");
     const sqlHotline = makeSqlRole("Salaman Hotline", "HOTLINE");
-    const sqlSiapPA  = makeSqlRole("SIAP PA",         "SIAP PA", "AND A.NAMA_INSTANSI NOT LIKE '%KUA%'");
+    const sqlSiapPA  = makeSqlRole("SIAP PA","SIAP PA", "AND A.NAMA_INSTANSI NOT LIKE '%KUA%'");
 
     const binds = { b_start: start, b_end: endExclusive } as const;
 
