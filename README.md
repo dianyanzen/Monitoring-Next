@@ -78,7 +78,7 @@ Monalisa Monitoring merepresentasikan modernisasi arsitektur antarmuka untuk mon
 - **Konvensi API & error**: Respons dibungkus helper `ok/fail/err/badRequest/unauthorized/forbidden` sehingga klien konsisten membaca `success`/`message`/`data`. Validasi input masih minim; beberapa endpoint hanya regex sederhana (tanggal). Tidak ada schema validator terpusat. Kueri besar (laporan, rekap) belum menerapkan pagination server-side; DataTables memuat penuh di klien.
 - **Sesi & middleware**: `middleware.ts` memproteksi halaman, redirect root ke dashboard/laporanpindah, dan menormalkan akses `/login`. `middleware.api.ts` memverifikasi HMAC, menolak dan menghapus cookie invalid, serta mencatat log unauthorized. Cookie `secure` adaptif pada X-Forwarded-Proto/NODE_ENV; di HTTP polos cookie bisa ditolak jika secure aktif (ENV `SESSION_COOKIE_SECURE=0` untuk lokal). Sliding refresh hanya lewat helper, belum otomatis per request.
 - **Frontend & UX**: Kerangka shell di `ResponsiveAppShell` (sidebar/topbar/footer) dengan overlay transisi `RouteChangeOverlay` dan overlay fetch global yang mem-patch `fetch` non-GET. Session context (`contexts/session.tsx`) memuat unread chat berkala dan memerlukan wrapper pada layout yang butuh user. DataTables jQuery di-load dinamis untuk tabel besar (mis. `report/laporandaily`), mendukung ekspor CSV/Excel/Print; Excel helper `excelCustomizeTextCols` menjaga kolom teks. Styling memakai token CSS (theme dark/light, layout, utilities, komponen) dengan estetika neon/cyberpunk konsisten.
-- **Modul & cakupan fitur**: Dashboard (capaian/salaman/ktp-el/geulis/time/population), report (absensi harian/bulanan, rekap daily, PDF getdaily), master (pemanfaatan, wilayah, menu/user/role), check/rekam/req (ktp/kk/akte/rekam/notrecord/duplicate), pengajuan LD, cetak dinas, siak (repair biometrik/restore), activity, chat/messages, template, setting (activityid/app/helpdesk/menuuser/pejabat/user/userlevel), util my-ip. Banyak rute meniru struktur Laravel lama agar paritas tercapai.
+- **Modul & cakupan fitur**: Dashboard (capaian/salaman/ktp-el/geulis/time/population), report (absensi harian/bulanan, rekap daily, PDF getdaily), laporan (cetak/harian/rekam/kedatangan/perpindahan/bnba), master (pemanfaatan, wilayah, menu/user/role), barang & aset (master, masuk/keluar, status, cek, laporan), blangko (in/out, rekap, distribusi), check/rekam/req (ktp/kk/akte/rekam/notrecord/duplicate), pengajuan LD, cetak dinas, siak (repair biometrik/restore), activity, chat/messages, template, setting (activityid/app/helpdesk/menuuser/pejabat/user/userlevel), util my-ip. Banyak rute meniru struktur Laravel lama agar paritas tercapai.
 - **Keamanan & kepatuhan data**: PII (NIK, nama, wilayah) sering dibawa dalam cookie dan log; log disimpan ke disk `logs/<yyyy-mm>/<dd>/log.txt` tanpa retensi/rotasi otomatis. Tidak ada masking/obfuscation PII di log SQL/binds. Tidak ada rate limit login/API. Tidak ada CSRF/token anti-replay. Session secret dan kredensial DB harus dijaga di ENV (repo mencantumkan catatan dummy di `.env.local`).
 - **Kinerja & observabilitas**: Oracle pool kecil (0-10) dan statement cache 40; cukup untuk beban ringan, perlu tuning untuk beban tinggi. Cache 30 detik di beberapa dashboard endpoint. Overlay fetch menahan 300 ms untuk menghindari flicker. DataTables client-side bisa berat untuk dataset besar. Logger memotong SQL ke 800 karakter dan JSON ke 4000. Tidak ada tracing/metrics terintegrasi; health check Oracle tersedia di `checkOracleHealth` tapi belum di-wire ke endpoint monitor.
 - **Build & operasi**: Skrip `npm run dev`, `npm run build`, `npm run start`, `npm run start:3273` (pretty-start). Tidak ada CI/CD atau lint/test script berjalan otomatis. Struktur App Router sudah mengikuti konvensi di `PANDUAN_PENULISAN.md`. Aset ikon MDI di-load via link statis; tema ditentukan melalui script inline (localStorage + path /login).
@@ -1634,47 +1634,60 @@ src/
   * **Dashboard**: `src/app/dashboard/**` menampilkan metrik KTP-el, capaian, DKB, penduduk efektif, geulis/non-geulis. Hooks utama `useDashboardData`, `useCapaian`, `usePopulation`, dll. 
   * **Monitoring Check**: `src/app/check/**` mencakup KTP-el (mode rekam/hist/wktp), duplicate, PRR/SFE, cetak, akta, not-record (DAPODIK), rekam historis. 
   * **Master Data**: `src/app/master/**` (list, request, absensi, contact, salaman). Hooks `useMaster*` menstandardisasi fetch + state loading. 
+  * **Barang & Aset**: `src/app/barang/**` untuk master, input masuk/keluar/aset, cek aset/barang, status, dan laporan; memakai `/api/barang/*`. 
+  * **Blangko & Distribusi**: `src/app/blangko/**` (in/out, rekap, distribusi) memakai `/api/blangko/*` dan `/api/blangko/distribution/*`. 
+  * **Laporan & Report**: `src/app/laporan_*` + `src/app/report/**` (harian, rekam, cetak, BNBA, absensi, rekap, GetDaily/print) dengan `/api/laporan/*` dan `/api/report/*`. 
+  * **Permohonan & Tracking e-KTP**: `src/app/reqktp*`, `src/app/search_req/**`, `src/app/inputkehilangan`, `src/app/pengajuan_ld` dengan `/api/req/ektp/*` dan `/api/search_req/*`. 
   * **Chat & Messages**: `src/app/chat/page.tsx` + `/api/chat/*` + `/api/messages/*`, dengan polling unread setiap 15 menit dari `SessionProvider`. 
   * **Activity & Audit**: `src/app/Activity/setting/page.tsx`, endpoint `/api/activity/do_save` untuk mencatat aksi. 
   * **Pengaturan**: `src/app/setting/**` memproses user level, penambahan user, pemetaan grup via `/api/setting/*`. 
+  * **SIAK & Utilitas**: `src/app/siak/**`, `/api/restore/bio-wni`, `/api/utils/my-ip`, `/api/wilayah/*`. 
   * **Template Playground**: `src/app/template/**` sebagai kerangka cepat modul baru. 
   * **Login**: `src/app/login/LoginClient.tsx` → `/api/login` (MD5 legacy + bypass dev + pembaruan `SIAK_SESSION_PLUS`). 
 
 ##### 🔌 Permukaan API (Kategorisasi Cepat)
 
   * **Auth & Session**: `/api/login`, `/api/logout`, `/api/session`, `/api/session/{ping,verify}`, `/api/account/password`. 
-  * **Dashboard**: `/api/dashboard/m1..m8`, `/api/dashboard/time`, `/api/dashboard/capaian`, `/api/dashboard/user{ktp,rekam}/*`, dsb. 
-  * **Monitoring**: `/api/check/ktpel`, `/api/check/ktpel/{meta,push,kabupaten,kecamatan,kelurahan}`, `/api/check/{duplicate,notrecord,prr,sfe,failure,akte}`. 
-  * **Master & Activity**: `/api/master/{list,request,absensi,contact,salaman}`, `/api/activity/do_save`. 
+  * **Dashboard**: `/api/dashboard/m1..m8`, `/api/dashboard/{time,capaian,period,population,geulis,nongeulis,salaman}`, `/api/dashboard/dkb/{ref,summary}`, `/api/dashboard/user{ktp,rekam}/{summary,detail,detail/kec,detail/kel}`, `/api/dashboard/update_{prr,sfe}`. 
+  * **Monitoring**: `/api/check/ktpel{,/meta,/push,/kabupaten,/kecamatan,/kelurahan}`, `/api/check/{duplicate{,/meta},notrecord,prr,sfe,failure,rekam,history,cetak,akte/status,kk/status}`. 
+  * **Barang & Aset**: `/api/barang/{aset,aset-options,cekaset,master,masuk,keluar,status,laporan,laporanaset,options}`. 
+  * **Blangko & Distribusi**: `/api/blangko/*`, `/api/blangko/distribution/*`, `/api/cetak_dinas/*`. 
+  * **Laporan & Report**: `/api/laporan/*`, `/api/report/*`. 
+  * **Permohonan & Tracking e-KTP**: `/api/req/ektp/*`, `/api/search_req/*`. 
+  * **Master & Activity**: `/api/master/{list,request,absensi,contact,salaman,pemanfaatan{,/summary}}`, `/api/activity/do_save`. 
   * **Chat & Pesan**: `/api/chat/{contacts,messages,send}`, `/api/messages/{previews,unread}`. 
-  * **Pengaturan**: `/api/setting/{get_user_level,check_lvl,save_lvl,get_group}`, `/api/menu`, `/api/user`. 
+  * **Pengaturan**: `/api/setting/{app,check_lvl,save_lvl,get_user_level,get_group,get_group_tree_one}`, `/api/setting/{activityid,menuuser,helpdesk,pejabat,users,userlevel}/*`, `/api/menu`, `/api/user`. 
+  * **SIAK & Utilitas**: `/api/siak/repair_local_biometric/*`, `/api/restore/bio-wni`, `/api/wilayah/*`, `/api/utils/my-ip`. 
 
 ##### 🗂️ Inventaris Menu App Router (Next.js)
 
+  * **Auth & Akses**: `/login`. 
   * **Dashboard & Supervisor**: `/dashboard`, `/dashboard/userktp`, `/dashboard/userktp/[user]`, `/dashboard/userrekam`, `/dashboard/userrekam/[user]`. 
   * **Monitoring Check (KTP-el & kualitas)**: `/check/{ktpel,duplicate,prr,sfe,failure,rekam,history,cetak,akte,kk,notrecord}`. 
-  * **Blangko & Cetak Dinas**: `/blangko/{blangko_in,blangko_out,blangko_rekap}`, `/cetak_dinas/{input_cetak,input_ludo,cek_cetak_dinas,rekap_cetak_dinas}`. 
-  * **Laporan Dafduk & Lampid**: `/laporan_cetak`, `/laporan_rekam`, `/laporanperpindahan`, `/laporankedatangan`, `/laporanbnbakelahiran`, `/laporanbnbakemeatian`, `/laporanbnbalampid`. 
+  * **Barang & Aset**: `/barang/{aset,cekaset,cekbarang,inputaset,inputkeluar,inputmasuk,keluar,laporan,laporanaset,master,masteraset,masterbarang,masuk,status}`. 
+  * **Blangko & Cetak Dinas**: `/blangko/{blangko_in,blangko_out,blangko_rekap,distribution_out,distribution_rekap}`, `/cetak_dinas/{input_cetak,input_ludo,cek_cetak_dinas,rekap_cetak_dinas}`. 
+  * **Laporan Dafduk & Lampid**: `/laporan_cetak`, `/laporan_harian`, `/laporan_rekam`, `/laporanperpindahan`, `/laporankedatangan`, `/laporanbnbakelahiran`, `/laporanbnbakemeatian`, `/laporanbnbalampid`. 
   * **Report Absensi & Rekap**: `/report/{absensi,absensi_v,absensi_vr,absensibulanan,laporandaily,laporanabsen,Rekap,RekapDaily,GetDaily(+print),laporanabsen/[userId],laporandaily/[userId]}`. 
   * **Permohonan & Pelacakan e-KTP**: `/reqktphilang`, `/reqktprusak`, `/reqktppindahan`, `/reqktpperubahan`, `/inputkehilangan`, `/pengajuan_ld`, `/search_req/{dktp,dktp_f,uktp,uktp_f,req_bio,delete_req}`. 
   * **Master Data & Salam**: `/master/{list,request,contact,absensi,salaman,pemanfaatan}`. 
   * **Chat, Activity, & Audit**: `/chat`, `/Activity/setting`. 
-  * **Pengaturan Admin**: `/setting/{user,userlevel,menuuser,activityid,pejabat,helpdesk,app}`. 
+  * **Pengaturan Admin**: `/setting/{user,userlevel,menuuser,activityid,pejabat,helpdesk,app}`, `/setting/user/{add,edit/[userId],lihat/[userId]}`, `/setting/userlevel/{add,edit/[code],delete/[code],change/[code],lihat/[code]}`, `/setting/activityid/{add,edit/[activityId],lihat/[activityId]}`, `/setting/menuuser/{edit/[menuId],lihat/[menuId]}`, `/setting/helpdesk/{add,edit/[helpdeskId],lihat/[helpdeskId]}`, `/setting/pejabat/{add,edit/[pejabatId]}`. 
   * **SIAK Utilities & Template**: `/siak/repair_local_biometric`, `/siak/restore`, `/template`, `/template/template`, `/dummy`. 
 
 ##### 🛰️ Inventaris API Routes (per Domain)
 
   * **Auth & Session**: `/api/login`, `/api/logout`, `/api/session{,/ping,/verify}`, `/api/account/password`, `/api/utils/my-ip`. 
-  * **Dashboard & Supervisor**: `/api/dashboard/{m1..m8,time,capaian,period,population,geulis,nongeulis,update_prr,update_sfe,userktp/*,userrekam/*,dkb/{ref,summary}}`. 
-  * **Monitoring KTP-el & Kualitas**: `/api/check/ktpel{,/meta,/push,/kabupaten,/kecamatan,/kelurahan}`, `/api/check/{duplicate,prr,sfe,failure,rekam,history,cetak,akte,kk/status}`, `/api/check/notrecord/{get-nik,list,report,sekolah,summary}`. 
-  * **Blangko & Cetak Dinas**: `/api/blangko/{get_data,get_all_data,get_allin_data,doin_save,do_save,do_save_dis,get_hist_dist,get_histkec_dist,get_will,rekap}`, `/api/cetak_dinas/{cek_cetak_dinas,do_save_cetak,do_save_ludo,get_ludo,get_nik,get_nik_kia,rekap_cetak_dinas}`. 
-  * **Laporan Dafduk/Lampid**: `/api/laporan/{cetak,rekam,kedatangan,perpindahan}`, `/api/laporan/bnba/{kelahiran,kematian,lampid}`. 
+  * **Dashboard & Supervisor**: `/api/dashboard/{m1..m8,time,capaian,period,population,geulis,nongeulis,salaman,update_prr,update_sfe}`, `/api/dashboard/dkb/{ref,summary}`, `/api/dashboard/userktp/{summary,detail,detail/kec,detail/kel}`, `/api/dashboard/userrekam/{summary,detail,detail/kec,detail/kel}`. 
+  * **Monitoring KTP-el & Kualitas**: `/api/check/ktpel{,/meta,/push,/kabupaten,/kecamatan,/kelurahan}`, `/api/check/{duplicate{,/meta},prr,sfe,failure,rekam,history,cetak,akte/status,kk/status}`, `/api/check/notrecord/{get-nik,list,report,sekolah,summary}`. 
+  * **Barang & Aset**: `/api/barang/{aset,aset-options,cekaset,master,masuk,keluar,status,laporan,laporanaset,options}`. 
+  * **Blangko & Cetak Dinas**: `/api/blangko/{get_data,get_all_data,get_allin_data,doin_save,do_save,do_save_dis,get_hist_dist,get_hist_in,get_histkec_dist,get_will,rekap}`, `/api/blangko/distribution/{by_barang,by_wilayah,do_save_in,do_save_out,get_barang,get_stock,stockreport}`, `/api/cetak_dinas/{cek_cetak_dinas,do_save_cetak,do_save_ludo,get_ludo,get_nik,get_nik_kia,rekap_cetak_dinas}`. 
+  * **Laporan Dafduk/Lampid**: `/api/laporan/{cetak,rekam,harian,kedatangan,perpindahan}`, `/api/laporan/bnba/{kelahiran,kematian,lampid}`. 
   * **Report Absensi**: `/api/report/absensi/{clock,daily,daily-options,init,sync}`, `/api/report/absensi-v{,/[dailyId]/accept,/[dailyId]/reject}`, `/api/report/absensi-vr{,/users}`, `/api/report/absensibulanan`, `/api/report/laporandaily{,/[userId]}`, `/api/report/laporanabsen{,/[userId]}`, `/api/report/rekap-absensi`, `/api/report/rekap-daily{,/[dailyId]}`, `/api/report/getdaily{,/pdf2}`. 
   * **Permohonan & Pelacakan e-KTP**: `/api/req/ektp/{kehilangan/list,kehilangan/update,perubahan/{ajukan,list,list-ditolak,list-ditolak-dt,list-dt},pindahan/{ajukan,detail,meta}}`, `/api/search_req/{dktp,dktp_f,uktp,uktp_f,req_bio,delete_req,do_delete}`. 
   * **Master & Activity**: `/api/master/{list,request,absensi,contact,salaman,pemanfaatan{,/summary}}`, `/api/activity/do_save`. 
   * **Chat & Pesan**: `/api/chat/{contacts,messages,send}`, `/api/messages/{previews,unread}`. 
-  * **Setting & Menu**: `/api/setting/{userlevel/*,users/*,menuuser/*,helpdesk/*,pejabat/*,activityid/*,app,check_lvl,get_user_level,save_lvl,get_group,get_group_tree_one,get_user_level,parents}`, `/api/menu{,/check}`, `/api/user`. 
-  * **SIAK & Utilitas**: `/api/siak/repair_local_biometric/{scan,delete}`, `/api/restore/bio-wni`, `/api/wilayah/{provinsi,kabupaten,kecamatan,kelurahan}`. 
+  * **Setting & Menu**: `/api/setting/{app,check_lvl,save_lvl,get_user_level,get_group,get_group_tree_one}`, `/api/setting/activityid{,/[activityId],/groups}`, `/api/setting/menuuser{,/[menuId],/parents}`, `/api/setting/helpdesk{,/[helpdeskId],/options}`, `/api/setting/pejabat{,/[pejabatId]}`, `/api/setting/users{,/[userId],/check,/default-password,/levels,/[userId]/reset-password}`, `/api/setting/userlevel/{change,delete,head,save_access,users}`, `/api/menu{,/check}`, `/api/user`. 
+  * **SIAK & Utilitas**: `/api/siak/repair_local_biometric/{scan,delete}`, `/api/restore/bio-wni`, `/api/wilayah/{provinsi,kabupaten,kecamatan,kelurahan}`, `/api/utils/my-ip`, `/api/dummy`. 
 
 ##### ✅ Paritas Migrasi Laravel → Next.js (Status per Domain)
 
@@ -1683,9 +1696,10 @@ src/
 | Dashboard & Supervisor | `/dashboard`, `/dashboard/user{ktp,rekam}` | `/api/dashboard/*` | Selesai, live Next.js |
 | Monitoring KTP-el & Kualitas | `/check/{ktpel,duplicate,prr,sfe,failure,rekam,history,cetak,akte,kk,notrecord}` | `/api/check/*` | Selesai, paritas + logging |
 | Master & Salam | `/master/{list,request,contact,absensi,salaman,pemanfaatan}` | `/api/master/*` | Selesai, parity & paging |
+| Barang & Aset | `/barang/*` (master, aset, masuk/keluar, cek, status, laporan) | `/api/barang/*` | Selesai, inventory aktif |
 | Chat & Activity | `/chat`, `/Activity/setting` | `/api/chat/*`, `/api/messages/*`, `/api/activity/do_save` | Selesai, audit-ready |
-| Blangko & Cetak Dinas | `/blangko/*`, `/cetak_dinas/*` | `/api/blangko/*`, `/api/cetak_dinas/*` | Selesai, rekap aktif |
-| Laporan Dafduk/Lampid | `/laporan_*`, `/laporanbnb*` | `/api/laporan/*` | Selesai, terjadwal |
+| Blangko & Cetak Dinas | `/blangko/{blangko_*,distribution_*}`, `/cetak_dinas/*` | `/api/blangko/*`, `/api/blangko/distribution/*`, `/api/cetak_dinas/*` | Selesai, rekap aktif |
+| Laporan Dafduk/Lampid | `/laporan_*` (cetak, harian, rekam, kedatangan, perpindahan), `/laporanbnb*` | `/api/laporan/*` | Selesai, terjadwal |
 | Report Absensi & Rekap | `/report/*` (absensi, daily, rekap, print) | `/api/report/*` | Selesai, jalur utama |
 | Permohonan & Pelacakan e-KTP | `/reqktp*`, `/inputkehilangan`, `/pengajuan_ld`, `/search_req/*` | `/api/req/ektp/*`, `/api/search_req/*` | Selesai, production |
 | Pengaturan & Menu | `/setting/*` | `/api/setting/*`, `/api/menu*` | Selesai, ACL diterapkan |
