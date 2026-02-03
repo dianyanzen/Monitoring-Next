@@ -128,6 +128,7 @@ Monalisa Monitoring merepresentasikan modernisasi arsitektur antarmuka untuk mon
       * [Lampiran E: Implementasi Seeder Menu](https://www.google.com/search?q=%23lampiran-e-implementasi-seeder-menu)
       * [Lampiran F: Dokumentasi Tambahan (Lampiran Modernisasi Lengkap)](https://www.google.com/search?q=%23lampiran-f-dokumentasi-tambahan-lampiran-modernisasi-lengkap)
       * [Lampiran G: Struktur Direktori Lengkap (project_structure.txt)](https://www.google.com/search?q=%23lampiran-g-struktur-direktori-lengkap-project_structuretxt)
+      * [Lampiran H: Artefak Tambahan di Repo (Non-Inti)](https://www.google.com/search?q=%23lampiran-h-artefak-tambahan-di-repo-non-inti)
 
 
 ### 🧭 Navigasi Cepat
@@ -1835,3 +1836,16 @@ monitoring-next/
 ```
 
 </details>
+
+### Lampiran H: Artefak Tambahan di Repo (Non-Inti)
+
+Bagian ini mencatat item yang ada di repo namun belum dijelaskan di bagian utama README.
+
+  * **scripts/**: `pretty-start.mjs` (launcher Next + log start ke `log/` atau `LOG_DIR`), `ansi.mjs` (helper ANSI CLI), `wsq_to_png.py` (konversi WSQ->PNG; butuh `pip install pillow wsq`, contoh: `cat input.wsq | python scripts/wsq_to_png.py > out.png`), `laporan_harian.sql` (query rekap harian manual dengan parameter tanggal).
+  * **start-3273.bat**: wrapper Windows yang set `PORT=3273`, `HOST=0.0.0.0`, `NEXT_BASEPATH=/monitoring`, lalu memanggil `scripts/pretty-start.mjs`.
+  * **log/**: log start server yang dibuat `scripts/pretty-start.mjs` (berbeda dari `logs/` yang dipakai `src/lib/log.ts`).
+  * **_tmp_monitoring_laravel/**: snapshot lokal proyek Laravel (composer, assets, service) untuk referensi; tidak dipakai build Next.js dan sebaiknya dipisah saat rilis.
+  * **README.md.pdf** dan **README.md · Tesis.pdf**: export PDF untuk arsip/offline; tidak dipakai aplikasi.
+  * **Manifest & TypeScript scaffolding**: `package.json`, `package-lock.json`, `tsconfig.json`, `global.d.ts`, `next-env.d.ts`, `.gitignore` (script tambahan: `dev:turbo`, `build:turbo`).
+  * **Artefak build lokal**: `tsconfig.tsbuildinfo` (hasil incremental TypeScript; aman dihapus, akan dibuat ulang).
+  * **Public assets tambahan**: `public/*.svg` (ikon default Next), `public/assets/material-design-iconic-font/`, `public/assets/plugins/`, `public/assets/upload/` (TTD, avatar, foto profil) - pastikan sanitasi PII sebelum publikasi.
