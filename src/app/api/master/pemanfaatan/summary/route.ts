@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
                SUM(CASE WHEN H.PROC_STAT IN (3,4) THEN 1 ELSE 0 END) AS SELESAI,
                COUNT(*) AS JUMLAH
         FROM HDR H
-        WHERE ${whereRange}
+       WHERE ${whereRange}
         GROUP BY H.FROM_USER_ID
       ),
       /* === Mapping user per kategori === */
@@ -90,7 +90,27 @@ export async function GET(req: NextRequest) {
         FROM USERS A
         JOIN MODEL_HAS_ROLES B ON A.ID = B.MODEL_ID
         JOIN ROLES C ON B.ROLE_ID = C.ID
-        WHERE C.NAME = 'PELANA' AND A.NAMA_INSTANSI NOT LIKE '%BIDAN%' AND A.DELETED_AT IS NULL
+        WHERE C.NAME = 'PELANA' AND (A.NAMA_INSTANSI LIKE '%RS %' 
+                            OR A.NAMA_INSTANSI LIKE '%RSU %' 
+                            OR A.NAMA_INSTANSI LIKE '%RSUD %'
+                            OR A.NAMA_INSTANSI LIKE '%RSB %'
+                            OR A.NAMA_INSTANSI LIKE '%RSUP %'
+                            ) 
+    AND A.DELETED_AT IS NULL
+      ),
+      U_KLINIK AS (
+        SELECT A.NIK
+        FROM USERS A
+        JOIN MODEL_HAS_ROLES B ON A.ID = B.MODEL_ID
+        JOIN ROLES C ON B.ROLE_ID = C.ID
+        WHERE C.NAME = 'PELANA' AND A.NAMA_INSTANSI LIKE '%KLINIK%' AND A.DELETED_AT IS NULL
+      ),
+      U_PUSKESMAS AS (
+        SELECT A.NIK
+        FROM USERS A
+        JOIN MODEL_HAS_ROLES B ON A.ID = B.MODEL_ID
+        JOIN ROLES C ON B.ROLE_ID = C.ID
+        WHERE C.NAME = 'PELANA' AND A.NAMA_INSTANSI LIKE '%PUSKESMAS %' AND A.DELETED_AT IS NULL
       ),
       U_PADUKA AS (
         SELECT A.NIK
@@ -150,7 +170,7 @@ export async function GET(req: NextRequest) {
         FROM U_BIDAN U LEFT JOIN CNT C ON C.NIK = U.NIK
       ),
       S_RS AS (
-        SELECT 'PELANA' AS KATEGORI,
+        SELECT 'PELANA RS' AS KATEGORI,
                COUNT(*) AS TOTAL_INSTANSI,
                SUM(NVL(C.BARU,0)) AS BARU,
                SUM(NVL(C.MELENGKAPI,0)) AS MELENGKAPI,
@@ -159,6 +179,28 @@ export async function GET(req: NextRequest) {
                SUM(NVL(C.SELESAI,0)) AS SELESAI,
                SUM(NVL(C.JUMLAH,0)) AS JUMLAH
         FROM U_RS U LEFT JOIN CNT C ON C.NIK = U.NIK
+      ),
+      S_KLINIK AS (
+        SELECT 'PELANA KLINIK' AS KATEGORI,
+               COUNT(*) AS TOTAL_INSTANSI,
+               SUM(NVL(C.BARU,0)) AS BARU,
+               SUM(NVL(C.MELENGKAPI,0)) AS MELENGKAPI,
+               SUM(NVL(C.BATAL,0)) AS BATAL,
+               SUM(NVL(C.SUDAH_DIVERIFIKASI,0)) AS SUDAH_DIVERIFIKASI,
+               SUM(NVL(C.SELESAI,0)) AS SELESAI,
+               SUM(NVL(C.JUMLAH,0)) AS JUMLAH
+        FROM U_KLINIK U LEFT JOIN CNT C ON C.NIK = U.NIK
+      ),
+      S_PUSKESMAS AS (
+        SELECT 'PELANA PUSKESMAS' AS KATEGORI,
+               COUNT(*) AS TOTAL_INSTANSI,
+               SUM(NVL(C.BARU,0)) AS BARU,
+               SUM(NVL(C.MELENGKAPI,0)) AS MELENGKAPI,
+               SUM(NVL(C.BATAL,0)) AS BATAL,
+               SUM(NVL(C.SUDAH_DIVERIFIKASI,0)) AS SUDAH_DIVERIFIKASI,
+               SUM(NVL(C.SELESAI,0)) AS SELESAI,
+               SUM(NVL(C.JUMLAH,0)) AS JUMLAH
+        FROM U_PUSKESMAS U LEFT JOIN CNT C ON C.NIK = U.NIK
       ),
       S_PADUKA AS (
         SELECT 'PADUKA' AS KATEGORI,  -- ⟵ kunci untuk frontend
@@ -198,6 +240,8 @@ export async function GET(req: NextRequest) {
       UNION ALL SELECT * FROM S_SIAPPA
       UNION ALL SELECT * FROM S_BIDAN
       UNION ALL SELECT * FROM S_RS
+      UNION ALL SELECT * FROM S_KLINIK
+      UNION ALL SELECT * FROM S_PUSKESMAS
       UNION ALL SELECT * FROM S_PADUKA
       UNION ALL SELECT * FROM S_HOTLINE
     `;
@@ -215,7 +259,9 @@ export async function GET(req: NextRequest) {
       "KUA",
       "SIAP PA",
       "BIDAN",
-      "PELANA",
+      "PELANA RS",
+      "PELANA KLINIK",
+      "PELANA PUSKESMAS",
       "PADUKA",
       "HOTLINE",
     ];

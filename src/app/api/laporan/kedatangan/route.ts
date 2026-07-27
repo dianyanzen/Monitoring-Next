@@ -118,8 +118,6 @@ export async function POST(req: NextRequest) {
     `A.TGL_DATANG < TO_DATE(:b_end_date,'DD-MM-YYYY') + 1`,
     `A.NO_PROP_TUJUAN = 32`,
     `A.NO_KAB_TUJUAN = 73`,
-    `A.KLASIFIKASI_PINDAH NOT LIKE '%1%'`,
-    `A.KLASIFIKASI_PINDAH NOT LIKE '%2%'`,
   ];
 
   if (noKec > 0) {

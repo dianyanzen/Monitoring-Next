@@ -190,7 +190,9 @@ export async function GET(req: NextRequest) {
       `;
 
     const sqlBidan   = makeSqlRole("PELANA","BIDAN","AND A.NAMA_INSTANSI LIKE '%BIDAN%'");
-    const sqlRS      = makeSqlRole("PELANA","PELANA","AND A.NAMA_INSTANSI NOT LIKE '%BIDAN%'");
+    const sqlRS      = makeSqlRole("PELANA","PELANA RS","AND (A.NAMA_INSTANSI LIKE '%RS %' OR A.NAMA_INSTANSI LIKE '%RSU %'  OR A.NAMA_INSTANSI LIKE '%RSUD %' OR A.NAMA_INSTANSI LIKE '%RSB %' OR A.NAMA_INSTANSI LIKE '%RSUP %') ");
+    const sqlKlinik  = makeSqlRole("PELANA","PELANA KLINIK","AND A.NAMA_INSTANSI LIKE '%KLINIK%'");
+    const sqlPuskesmas = makeSqlRole("PELANA","PELANA PUSKESMAS","AND A.NAMA_INSTANSI LIKE '%PUSKESMAS%'");
     const sqlPaduka  = makeSqlRole("PELITA HATI","PADUKA", "AND A.NAMA_INSTANSI NOT LIKE '%KELURAHAN%'");
     const sqlHotline = makeSqlRole("Salaman Hotline", "HOTLINE");
     const sqlSiapPA  = makeSqlRole("SIAP PA","SIAP PA", "AND A.NAMA_INSTANSI NOT LIKE '%KUA%'");
@@ -198,11 +200,13 @@ export async function GET(req: NextRequest) {
     const binds = { b_start: start, b_end: endExclusive } as const;
 
     // ⬇️ Pakai alias WEBDB di setiap execRows
-    const [kua, kel, bidan, rs, paduka, hotline, siap] = await Promise.all([
+    const [kua, kel, bidan, rs, klinik, puskesmas, paduka, hotline, siap] = await Promise.all([
       execRows(sqlKUA, binds, {}, ALIAS),
       execRows(sqlKel, binds, {}, ALIAS),
       execRows(sqlBidan, binds, {}, ALIAS),
       execRows(sqlRS, binds, {}, ALIAS),
+      execRows(sqlKlinik, binds, {}, ALIAS),
+      execRows(sqlPuskesmas, binds, {}, ALIAS),
       execRows(sqlPaduka, binds, {}, ALIAS),
       execRows(sqlHotline, binds, {}, ALIAS),
       execRows(sqlSiapPA, binds, {}, ALIAS),
@@ -213,6 +217,8 @@ export async function GET(req: NextRequest) {
       ...(kel ?? []),
       ...(bidan ?? []),
       ...(rs ?? []),
+      ...(klinik ?? []),
+      ...(puskesmas ?? []),
       ...(paduka ?? []),
       ...(hotline ?? []),
       ...(siap ?? []),

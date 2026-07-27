@@ -6,6 +6,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/layout/Topbar";
 import Footer from "@/components/layout/Footer";
 import RouteChangeOverlay from "@/components/system/RouteChangeOverlay";
+import FloatingAiChat from "@/components/ai/FloatingAiChat";
 
 // Selaraskan dengan breakpoint Tailwind `lg` (1024px) supaya logika JS = kelas CSS.
 const DESKTOP_QUERY = "(min-width: 1024px)";
@@ -116,6 +117,8 @@ export default function ResponsiveAppShell({ children, mainClassName = "flex-1 o
         <main className={mainClassName}>{children}</main>
         <Footer />
       </div>
+
+      <FloatingAiChat />
 
       <AnimatePresence>
         {!sidebarShouldRenderPinned && sidebarOverlayOpen && (

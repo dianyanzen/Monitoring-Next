@@ -117,8 +117,6 @@ export async function POST(req: NextRequest) {
     `A.TGL_PINDAH < TO_DATE(:b_end_date,'DD-MM-YYYY') + 1`,
     `A.NO_PROP_ASAL = 32`,
     `A.NO_KAB_ASAL = 73`,
-    `A.KLASIFIKASI_PINDAH NOT LIKE '%1%'`,
-    `A.KLASIFIKASI_PINDAH NOT LIKE '%2%'`,
   ];
 
   if (noKec > 0) {

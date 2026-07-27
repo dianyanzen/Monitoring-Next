@@ -69,7 +69,9 @@ type InovasiKey =
   | "KUA"
   | "SIAP PA"
   | "BIDAN"
-  | "PELANA"
+  | "PELANA RS"
+  | "PELANA KLINIK"
+  | "PELANA PUSKESMAS"
   | "PADUKA"
   | "HOTLINE";
 
@@ -79,7 +81,9 @@ const PLACEHOLDER_MAP: Record<InovasiKey, { dark: string; light: string }> = {
   KUA: { dark: P("inovasi-kompakkang.png"), light: P("inovasi-kompakkang-lux.png") },
   PADUKA: { dark: P("inovasi-paduka.png"), light: P("inovasi-paduka-lux.png") },
   BIDAN: { dark: P("inovasi-pelanabidan.png"), light: P("inovasi-pelanabidan-lux.png") },
-  "PELANA": { dark: P("inovasi-pelanarumahsakit.png"), light: P("inovasi-pelanarumahsakit-lux.png") },
+  "PELANA RS": { dark: P("inovasi-pelanarumahsakit.png"), light: P("inovasi-pelanarumahsakit-lux.png") },
+  "PELANA KLINIK": { dark: P("inovasi-pelanarumahsakit.png"), light: P("inovasi-pelanarumahsakit-lux.png") },
+  "PELANA PUSKESMAS": { dark: P("inovasi-pelanarumahsakit.png"), light: P("inovasi-pelanarumahsakit-lux.png") },
   KELURAHAN: { dark: P("inovasi-pelitahati.png"), light: P("inovasi-pelitahati-lux.png") },
   "SIAP PA": { dark: P("inovasi-siappa.png"), light: P("inovasi-siappa-lux.png") },
 };
@@ -112,7 +116,9 @@ const ORDER_KEYS = [
   "KUA",
   "SIAP PA",
   "BIDAN",
-  "PELANA", // tampil: RS/Klinik/Puskesmas
+  "PELANA RS", // tampil: RS
+  "PELANA KLINIK", // tampil: Klinik
+  "PELANA PUSKESMAS", // tampil: Puskesmas
   "PADUKA",
   "HOTLINE",
 ] as const;
@@ -122,7 +128,9 @@ const LABEL_MAP: Record<string, string> = {
   KUA: "INOVASI KOMPAK KANG (KUA)",
   "SIAP PA": "INOVASI SIAP PA (PENGADILAN AGAMA)",
   BIDAN: "INOVASI PELANA (BIDAN)",
-  "PELANA": "INOVASI PELANA (RS, KLINIK, DAN PUSKESMAS)",
+  "PELANA RS": "INOVASI PELANA (RS)",
+  "PELANA KLINIK": "INOVASI PELANA (KLINIK)",
+  "PELANA PUSKESMAS": "INOVASI PELANA (PUSKESMAS)",
   PADUKA: "INOVASI PADUKA (PADUKA)",
   HOTLINE: "HOTLINE",
 };
@@ -882,7 +890,7 @@ function SummaryStrip({
   error: string | null;
   onJump: (kategoriKey: string) => void;
 }) {
-  const order: InovasiKey[] = ["KELURAHAN", "KUA", "SIAP PA", "BIDAN", "PELANA", "PADUKA", "HOTLINE"];
+  const order: InovasiKey[] = ["KELURAHAN", "KUA", "SIAP PA", "BIDAN", "PELANA RS", "PELANA KLINIK", "PELANA PUSKESMAS", "PADUKA", "HOTLINE"];
   const map = new Map(rows.map((r) => [r.kategori, r]));
   const data = order.map(
     (k) =>
