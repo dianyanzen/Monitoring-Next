@@ -4,6 +4,7 @@ import { useEffect, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, Save } from "lucide-react";
 import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 type FormState = {
   nip: string;
@@ -157,22 +158,22 @@ export default function SettingPejabatEditPage(props: any) {
                 <input
                   value={form.nip}
                   onChange={handleChange("nip")}
-                  className="field-input"
+                 
                   inputMode="numeric"
                   maxLength={30}
                 />
               </Field>
               <Field label="Nama Pejabat">
-                <input value={form.nama} onChange={handleChange("nama")} className="field-input" />
+                <input value={form.nama} onChange={handleChange("nama")} />
               </Field>
               <Field label="Jabatan">
-                <input value={form.jabatan} onChange={handleChange("jabatan")} className="field-input" />
+                <input value={form.jabatan} onChange={handleChange("jabatan")} />
               </Field>
               <Field label="Pejabat Struktural">
-                <select value={form.is_struktural} onChange={handleChange("is_struktural")} className="field-input">
+                <TypeableSelect value={form.is_struktural} onChange={handleChange("is_struktural")}>
                   <option value="1">YA</option>
                   <option value="0">TIDAK</option>
-                </select>
+                </TypeableSelect>
               </Field>
             </div>
 
@@ -216,3 +217,5 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     </label>
   );
 }
+
+

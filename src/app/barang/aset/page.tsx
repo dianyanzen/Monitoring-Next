@@ -6,6 +6,7 @@ import { AlertCircle, CheckCircle2, Loader2, Plus, RefreshCcw, Save, Undo2 } fro
 import SettingPageHeader from "@/components/setting/SettingPageHeader";
 import { DataShell } from "@/components/ui/LoadingOverlay";
 import NeonModal from "@/components/ui/NeonModal";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 const JQDataTable = dynamic(() => import("@/components/datatable/JQDataTable"), {
   ssr: false,
@@ -243,7 +244,7 @@ export default function BarangAsetPage() {
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
             <label className="text-xs uppercase tracking-[0.2em] text-cyan-200/70">Kategori</label>
-            <select
+            <TypeableSelect
               value={kategori}
               onChange={(e) => setKategori(Number(e.target.value))}
               className="w-full rounded-xl border border-cyan-800/60 bg-[#0c1224] px-3 py-2 text-sm text-cyan-50 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
@@ -253,7 +254,7 @@ export default function BarangAsetPage() {
                   {k.label}
                 </option>
               ))}
-            </select>
+            </TypeableSelect>
           </div>
           <div className="space-y-2">
             <label className="text-xs uppercase tracking-[0.2em] text-cyan-200/70">Keterangan</label>
@@ -347,3 +348,4 @@ export default function BarangAsetPage() {
     </div>
   );
 }
+

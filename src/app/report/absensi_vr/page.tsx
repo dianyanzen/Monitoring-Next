@@ -16,6 +16,7 @@ import DateRangePopup from "@/components/ui/DateRangePopup";
 import { DataShell } from "@/components/ui/LoadingOverlay";
 import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
 import { useSession } from "@/contexts/session";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 const JQDataTable = dynamic(() => import("@/components/datatable/JQDataTable"), {
   ssr: false,
@@ -294,7 +295,7 @@ export default function AbsensiVrPage() {
           </div>
           <div className="space-y-2">
             <p className="text-[11px] uppercase tracking-[0.2em] text-cyan-200/70">Petugas</p>
-            <select
+            <TypeableSelect
               className="w-full rounded-lg border border-cyan-700/50 bg-white/5 px-3 py-2 text-sm text-cyan-100 outline-none ring-0"
               value={selectedUser}
               onChange={(e) => setSelectedUser(e.target.value)}
@@ -305,11 +306,11 @@ export default function AbsensiVrPage() {
                   {opt.label}
                 </option>
               ))}
-            </select>
+            </TypeableSelect>
           </div>
           <div className="space-y-2">
             <p className="text-[11px] uppercase tracking-[0.2em] text-cyan-200/70">Status Verifikasi</p>
-            <select
+            <TypeableSelect
               className="w-full rounded-lg border border-cyan-700/50 bg-white/5 px-3 py-2 text-sm text-cyan-100 outline-none ring-0"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
@@ -318,7 +319,7 @@ export default function AbsensiVrPage() {
               <option value="0">1. Belum Diverifikasi</option>
               <option value="1">2. Sudah Diverifikasi</option>
               <option value="2">3. Ditolak</option>
-            </select>
+            </TypeableSelect>
           </div>
         </div>
 
@@ -445,3 +446,4 @@ export default function AbsensiVrPage() {
     </div>
   );
 }
+

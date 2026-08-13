@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Loader2, RefreshCcw, Save, Trash2 } from "lucide-react";
 import SettingPageHeader from "@/components/setting/SettingPageHeader";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 type Wilayah = { NO_WIL: string; NAMA_WIL: string };
 type HistDist = { NO_KEC: string; NAMA_KEC: string; PENERIMA: string; UPDATE_DT: string };
@@ -325,7 +326,7 @@ const fetchPrrSfe = async () => {
                     <input type="checkbox" checked readOnly className="lux-checkbox" />
                     Request
                   </label>
-                  <select
+                  <TypeableSelect
                     value={noKecReq}
                     onChange={(e) => setNoKecReq(e.target.value)}
                     className="w-full rounded-lg border border-cyan-700/50 bg-[#10192d] px-3 py-2 text-sm text-cyan-50 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
@@ -335,7 +336,7 @@ const fetchPrrSfe = async () => {
                         {w.NAMA_WIL}
                       </option>
                     ))}
-                  </select>
+                  </TypeableSelect>
                 </div>
 
                 <div className="space-y-2">
@@ -458,7 +459,7 @@ const fetchPrrSfe = async () => {
               <div className="space-y-3">
                 <div>
                   <label className="text-xs uppercase tracking-[0.2em] text-cyan-200/70">Kecamatan</label>
-                  <select
+                  <TypeableSelect
                     value={noKecDis}
                     onChange={(e) => setNoKecDis(e.target.value)}
                     className="mt-1 w-full rounded-lg border border-cyan-700/50 bg-[#10192d] px-3 py-2 text-sm text-cyan-50 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
@@ -469,7 +470,7 @@ const fetchPrrSfe = async () => {
                         {w.NAMA_WIL}
                       </option>
                     ))}
-                  </select>
+                  </TypeableSelect>
                 </div>
                 <div>
                   <label className="text-xs uppercase tracking-[0.2em] text-cyan-200/70">Tanggal</label>
@@ -653,3 +654,4 @@ const fetchPrrSfe = async () => {
     </div>
   );
 }
+

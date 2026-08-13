@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, Loader2, Pencil, RefreshCcw, Shield, Layers3 } from "lucide-react";
 import NeonModal from "@/components/ui/NeonModal";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 type Row = {
   menu_id: number;
@@ -193,7 +194,7 @@ export default function SettingMenuUserPage() {
                 <span className="text-xs font-semibold uppercase tracking-wide text-cyan-200/80">
                   Level Menu
                 </span>
-                <select
+                <TypeableSelect
                   value={filterLevel}
                   onChange={(e) => {
                     setFilterLevel(e.target.value);
@@ -206,7 +207,7 @@ export default function SettingMenuUserPage() {
                   <option value="1">Level 1</option>
                   <option value="2">Level 2</option>
                   <option value="3">Level 3</option>
-                </select>
+                </TypeableSelect>
               </label>
             </div>
 
@@ -245,3 +246,4 @@ export default function SettingMenuUserPage() {
     </div>
   );
 }
+

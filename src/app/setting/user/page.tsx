@@ -1,4 +1,4 @@
-﻿// FILE: src/app/setting/user/page.tsx
+// FILE: src/app/setting/user/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useSession } from "@/contexts/session";
 import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 type LevelOption = { user_level: string; level_name: string; group_name?: string };
 type UserRow = {
@@ -330,7 +331,7 @@ export default function SettingUserPage() {
                   value={filterUserId}
                   onChange={(e) => setFilterUserId(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && void fetchRows()}
-                  className="field-input"
+                 
                   placeholder="Cari User ID"
                 />
               </Field>
@@ -341,17 +342,17 @@ export default function SettingUserPage() {
                   value={filterUserNm}
                   onChange={(e) => setFilterUserNm(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && void fetchRows()}
-                  className="field-input"
+                 
                   placeholder="Masukkan nama user"
                 />
               </Field>
               <Field label="Level User" hint={levelsError ? <span>{levelsError}</span> : undefined}>
-                <select
+                <TypeableSelect
                   id="filter-level"
                   value={filterLevel}
                   onChange={(e) => setFilterLevel(e.target.value)}
                   disabled={levelsLoading}
-                  className="field-input"
+                 
                 >
                   <option value="0">-- Semua Level --</option>
                   {levels.map((lvl) => (
@@ -359,7 +360,7 @@ export default function SettingUserPage() {
                       {lvl.user_level} - {lvl.level_name}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
             </div>
           </div>
@@ -528,3 +529,5 @@ function Field({ label, children, hint }: { label: string; children: ReactNode; 
     </label>
   );
 }
+
+

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Loader2, RefreshCcw, Save, Trash2 } from "lucide-react";
 import SettingPageHeader from "@/components/setting/SettingPageHeader";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 type Wilayah = { NO_WIL: string; NAMA_WIL: string };
 type Barang = { JENIS_BARANG: number; NAMA_BARANG: string };
@@ -303,7 +304,7 @@ export default function DistributionOutPage() {
                     <input type="checkbox" checked readOnly className="lux-checkbox" />
                     Request (Kecamatan)
                   </label>
-                  <select
+                  <TypeableSelect
                     value={noKecIn}
                     onChange={(e) => setNoKecIn(e.target.value)}
                     className="w-full rounded-lg border border-cyan-700/50 bg-[#10192d] px-3 py-2 text-sm text-cyan-50 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
@@ -313,7 +314,7 @@ export default function DistributionOutPage() {
                         {w.NAMA_WIL}
                       </option>
                     ))}
-                  </select>
+                  </TypeableSelect>
                 </div>
 
                 <div className="space-y-2">
@@ -321,7 +322,7 @@ export default function DistributionOutPage() {
                     <input type="checkbox" checked readOnly className="lux-checkbox" />
                     Jenis Barang
                   </label>
-                  <select
+                  <TypeableSelect
                     value={jnsIn}
                     onChange={(e) => setJnsIn(e.target.value)}
                     className="w-full rounded-lg border border-cyan-700/50 bg-[#10192d] px-3 py-2 text-sm text-cyan-50 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
@@ -332,7 +333,7 @@ export default function DistributionOutPage() {
                         {b.JENIS_BARANG}. {b.NAMA_BARANG}
                       </option>
                     ))}
-                  </select>
+                  </TypeableSelect>
                 </div>
 
                 <div className="space-y-2">
@@ -465,7 +466,7 @@ export default function DistributionOutPage() {
                     <input type="checkbox" checked readOnly className="lux-checkbox" />
                     Request (Kecamatan)
                   </label>
-                  <select
+                  <TypeableSelect
                     value={noKecOut}
                     onChange={(e) => setNoKecOut(e.target.value)}
                     className="w-full rounded-lg border border-cyan-700/50 bg-[#10192d] px-3 py-2 text-sm text-cyan-50 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
@@ -475,7 +476,7 @@ export default function DistributionOutPage() {
                         {w.NAMA_WIL}
                       </option>
                     ))}
-                  </select>
+                  </TypeableSelect>
                 </div>
 
                 <div className="space-y-2">
@@ -483,7 +484,7 @@ export default function DistributionOutPage() {
                     <input type="checkbox" checked readOnly className="lux-checkbox" />
                     Jenis Barang
                   </label>
-                  <select
+                  <TypeableSelect
                     value={jnsOut}
                     onChange={(e) => setJnsOut(e.target.value)}
                     className="w-full rounded-lg border border-cyan-700/50 bg-[#10192d] px-3 py-2 text-sm text-cyan-50 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
@@ -494,7 +495,7 @@ export default function DistributionOutPage() {
                         {b.JENIS_BARANG}. {b.NAMA_BARANG}
                       </option>
                     ))}
-                  </select>
+                  </TypeableSelect>
                 </div>
 
                 <div className="space-y-2">
@@ -623,3 +624,4 @@ export default function DistributionOutPage() {
     </div>
   );
 }
+

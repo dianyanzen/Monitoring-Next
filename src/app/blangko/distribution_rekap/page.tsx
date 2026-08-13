@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { RefreshCcw, Search } from "lucide-react";
 import SettingPageHeader from "@/components/setting/SettingPageHeader";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 type Wilayah = { NO_WIL: string; NAMA_WIL: string };
 type Barang = { JENIS_BARANG: number; NAMA_BARANG: string };
@@ -211,7 +212,7 @@ export default function DistributionRekapPage() {
             </button>
           </div>
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
-            <select
+            <TypeableSelect
               value={filterBarang}
               onChange={(e) => setFilterBarang(e.target.value)}
               className="w-full rounded-lg border border-cyan-700/50 bg-[#10192d] px-3 py-2 text-sm text-cyan-50 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
@@ -222,7 +223,7 @@ export default function DistributionRekapPage() {
                   {b.JENIS_BARANG}. {b.NAMA_BARANG}
                 </option>
               ))}
-            </select>
+            </TypeableSelect>
             <button
               type="button"
               onClick={() => void loadByBarang()}
@@ -282,7 +283,7 @@ export default function DistributionRekapPage() {
             </button>
           </div>
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
-            <select
+            <TypeableSelect
               value={filterWil}
               onChange={(e) => setFilterWil(e.target.value)}
               className="w-full rounded-lg border border-cyan-700/50 bg-[#10192d] px-3 py-2 text-sm text-cyan-50 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
@@ -293,7 +294,7 @@ export default function DistributionRekapPage() {
                   {w.NAMA_WIL}
                 </option>
               ))}
-            </select>
+            </TypeableSelect>
             <button
               type="button"
               onClick={() => void loadByWilayah()}
@@ -369,7 +370,7 @@ export default function DistributionRekapPage() {
               className="w-full rounded-lg border border-cyan-700/50 bg-[#10192d] px-3 py-2 text-sm text-cyan-50 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
             />
           </div>
-          <select
+          <TypeableSelect
             value={filterWil2}
             onChange={(e) => setFilterWil2(e.target.value)}
             className="w-full rounded-lg border border-cyan-700/50 bg-[#10192d] px-3 py-2 text-sm text-cyan-50 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
@@ -380,8 +381,8 @@ export default function DistributionRekapPage() {
                 {w.NAMA_WIL}
               </option>
             ))}
-          </select>
-          <select
+          </TypeableSelect>
+          <TypeableSelect
             value={filterBarang2}
             onChange={(e) => setFilterBarang2(e.target.value)}
             className="w-full rounded-lg border border-cyan-700/50 bg-[#10192d] px-3 py-2 text-sm text-cyan-50 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
@@ -392,8 +393,8 @@ export default function DistributionRekapPage() {
                 {b.JENIS_BARANG}. {b.NAMA_BARANG}
               </option>
             ))}
-          </select>
-          <select
+          </TypeableSelect>
+          <TypeableSelect
             value={filterKat}
             onChange={(e) => setFilterKat(e.target.value)}
             className="w-full rounded-lg border border-cyan-700/50 bg-[#10192d] px-3 py-2 text-sm text-cyan-50 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
@@ -401,7 +402,7 @@ export default function DistributionRekapPage() {
             <option value="-">Semua Kategori</option>
             <option value="IN">Penerimaan (IN)</option>
             <option value="OUT">Pengeluaran (OUT)</option>
-          </select>
+          </TypeableSelect>
         </div>
         <div className="mt-3">
           <button
@@ -451,3 +452,4 @@ export default function DistributionRekapPage() {
     </div>
   );
 }
+

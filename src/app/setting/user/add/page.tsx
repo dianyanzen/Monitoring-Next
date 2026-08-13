@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, Save } from "lucide-react";
 import { useSession } from "@/contexts/session";
 import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 /* ===== Types ===== */
 
@@ -274,7 +275,7 @@ export default function AddUserPage() {
         if (stop) return;
 
         setLevels(rows);
-        // ⬇️ RESET SELALU SAAT LEVEL USER BERGANTI
+        // â¬‡ï¸ RESET SELALU SAAT LEVEL USER BERGANTI
         setForm((prev) => ({
           ...prev,
           user_level: rows[0]?.user_level ?? "",
@@ -651,7 +652,7 @@ export default function AddUserPage() {
           no_rt: "0",
         },
         akun: { ...form.akun },
-        // flags dikirim sebagai boolean → backend yang mengubah ke 0/1
+        // flags dikirim sebagai boolean â†’ backend yang mengubah ke 0/1
         flags: Object.fromEntries(
           Object.entries(form.flags).map(([k, v]) => [k, v === "1"])
         ) as Record<string, boolean>,
@@ -826,7 +827,7 @@ export default function AddUserPage() {
                       akun: { ...prev.akun, user_siak: nik },
                     }));
                   }}
-                  className="field-input"
+                 
                   maxLength={16}
                   inputMode="numeric"
                 />
@@ -849,7 +850,7 @@ export default function AddUserPage() {
                 <input
                   value={form.tgl_lhr}
                   onChange={handleBirthDateChange}
-                  className="field-input"
+                 
                   placeholder="31-12-1990"
                   maxLength={10}
                   inputMode="numeric"
@@ -857,31 +858,31 @@ export default function AddUserPage() {
               </Field>
 
               <Field label="Jenis Kelamin">
-                <select
+                <TypeableSelect
                   value={form.jenis_klmin}
                   onChange={handleChange("jenis_klmin")}
-                  className="field-input"
+                 
                 >
                   {genderOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>
                       {opt.label}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
 
               <Field label="Golongan Darah">
-                <select
+                <TypeableSelect
                   value={form.gol_drh}
                   onChange={handleChange("gol_drh")}
-                  className="field-input"
+                 
                 >
                   {bloodOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>
                       {opt.label}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
             </div>
           </div>
@@ -896,7 +897,7 @@ export default function AddUserPage() {
                 <input
                   value={form.telp}
                   onChange={handleChange("telp")}
-                  className="field-input"
+                 
                 />
               </Field>
 
@@ -950,10 +951,10 @@ export default function AddUserPage() {
             </h2>
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Level User">
-                <select
+                <TypeableSelect
                   value={form.level_group}
                   onChange={handleChange("level_group")}
-                  className="field-input"
+                 
                 >
                   <option value="">-- Pilih Level User --</option>
                   {levelGroups.map((g) => (
@@ -961,14 +962,14 @@ export default function AddUserPage() {
                       {g.level_name}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
 
               <Field label="Group User">
-                <select
+                <TypeableSelect
                   value={form.user_level}
                   onChange={handleChange("user_level")}
-                  className="field-input"
+                 
                 >
                   <option value="">-- Pilih Group User --</option>
                   {levels.map((lvl) => (
@@ -976,14 +977,14 @@ export default function AddUserPage() {
                       {lvl.user_level} - {lvl.level_name}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
 
               <Field label="Provinsi">
-                <select
+                <TypeableSelect
                   value={form.wilayah.no_prop}
                   onChange={handleWilayahChange("no_prop")}
-                  className="field-input"
+                 
                   disabled={loadingLocation}
                 >
                   <option value="">-- Pilih Provinsi --</option>
@@ -992,14 +993,14 @@ export default function AddUserPage() {
                       ({opt.no_prop}) {opt.nama_prop}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
 
               <Field label="Kab/Kota">
-                <select
+                <TypeableSelect
                   value={form.wilayah.no_kab}
                   onChange={handleWilayahChange("no_kab")}
-                  className="field-input"
+                 
                 >
                   <option value="">-- Pilih Kab/Kota --</option>
                   {kabOptions.map((opt) => (
@@ -1007,14 +1008,14 @@ export default function AddUserPage() {
                       ({opt.no_kab}) {opt.nama_kab}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
 
               <Field label="Kecamatan">
-                <select
+                <TypeableSelect
                   value={form.wilayah.no_kec}
                   onChange={handleWilayahChange("no_kec")}
-                  className="field-input"
+                 
                   disabled={isKab}
                 >
                   <option value="">-- Pilih Kecamatan --</option>
@@ -1023,14 +1024,14 @@ export default function AddUserPage() {
                       ({opt.no_kec}) {opt.nama_kec}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
 
               <Field label="Kelurahan">
-                <select
+                <TypeableSelect
                   value={form.wilayah.no_kel}
                   onChange={handleWilayahChange("no_kel")}
-                  className="field-input"
+                 
                   disabled={isKab || isKec}
                 >
                   <option value="">-- Pilih Kelurahan --</option>
@@ -1039,7 +1040,7 @@ export default function AddUserPage() {
                       ({opt.no_kel}) {opt.nama_kel}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
             </div>
           </div>
@@ -1067,7 +1068,7 @@ export default function AddUserPage() {
                       akun: { ...prev.akun, user_bcard: e.target.value },
                     }))
                   }
-                  className="field-input"
+                 
                 />
               </Field>
               <Field label="Akun Biomorf Enrol">
@@ -1079,7 +1080,7 @@ export default function AddUserPage() {
                       akun: { ...prev.akun, user_benrol: e.target.value },
                     }))
                   }
-                  className="field-input"
+                 
                 />
               </Field>
             </div>
@@ -1093,17 +1094,17 @@ export default function AddUserPage() {
             <div className="grid gap-4 md:grid-cols-3">
               {Object.entries(form.flags).map(([key, value]) => (
                 <Field key={key} label={key.replace(/_/g, " ").toUpperCase()}>
-                  <select
+                  <TypeableSelect
                     value={value}
                     onChange={handleFlagsChange(key as keyof FormState["flags"])}
-                    className="field-input"
+                   
                   >
                     {yesNoOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
                         {opt.label}
                       </option>
                     ))}
-                  </select>
+                  </TypeableSelect>
                 </Field>
               ))}
             </div>
@@ -1116,7 +1117,7 @@ export default function AddUserPage() {
             </h2>
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Atasan Satu">
-                <select
+                <TypeableSelect
                   value={form.supervisors.pejabat_satu}
                   onChange={(e) =>
                     setForm((prev) => ({
@@ -1127,7 +1128,7 @@ export default function AddUserPage() {
                       },
                     }))
                   }
-                  className="field-input"
+                 
                   disabled={loadingPejabat}
                 >
                   <option value="">-- Pilih Atasan --</option>
@@ -1136,11 +1137,11 @@ export default function AddUserPage() {
                       {opt.label}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
 
               <Field label="Atasan Dua">
-                <select
+                <TypeableSelect
                   value={form.supervisors.pejabat_dua}
                   onChange={(e) =>
                     setForm((prev) => ({
@@ -1151,7 +1152,7 @@ export default function AddUserPage() {
                       },
                     }))
                   }
-                  className="field-input"
+                 
                   disabled={loadingPejabat}
                 >
                   <option value="">-- Pilih Atasan --</option>
@@ -1160,7 +1161,7 @@ export default function AddUserPage() {
                       {opt.label}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
             </div>
           </div>
@@ -1176,7 +1177,7 @@ export default function AddUserPage() {
                   type="password"
                   value={form.password}
                   onChange={handleChange("password")}
-                  className="field-input"
+                 
                 />
               </Field>
               <Field label="Re-Password">
@@ -1184,7 +1185,7 @@ export default function AddUserPage() {
                   type="password"
                   value={form.re_password}
                   onChange={handleChange("re_password")}
-                  className="field-input"
+                 
                 />
               </Field>
             </div>
@@ -1254,3 +1255,5 @@ function Field({
     </label>
   );
 }
+
+

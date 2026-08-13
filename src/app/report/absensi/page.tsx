@@ -1,4 +1,5 @@
-﻿// FILE: src/app/report/absensi/page.tsx
+﻿import TypeableSelect from "@/components/ui/TypeableSelect";
+// FILE: src/app/report/absensi/page.tsx
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -1103,7 +1104,7 @@ export default function ReportAbsensiPage() {
                 <label className="text-xs font-semibold uppercase tracking-[0.18em]">
                   Aktivitas
                 </label>
-                <select
+                <TypeableSelect
                   className="absensi-input w-full rounded-xl border px-3 py-2 text-sm outline-none ring-0 transition"
                   value={dailyForm.aktivitas}
                   onChange={(e) =>
@@ -1123,7 +1124,7 @@ export default function ReportAbsensiPage() {
                       </option>
                     ))
                   )}
-                </select>
+                </TypeableSelect>
               </div>
 
               {/* Jumlah */}
@@ -1246,3 +1247,4 @@ export default function ReportAbsensiPage() {
     </div>
   );
 }
+

@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Plus, RefreshCcw, Pencil, Trash2, Shield, Eye } from "lucide-react";
 import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 type GroupOption = {
   user_level: number;
@@ -264,7 +265,7 @@ export default function SettingActivityIdPage() {
                 <span className="text-xs font-semibold uppercase tracking-wide text-cyan-200/80">
                   Pilih Group User
                 </span>
-                <select
+                <TypeableSelect
                   value={filters.group_id}
                   onChange={(e) => handleGroupChange(e.target.value)}
                   className="field-input mt-1"
@@ -276,7 +277,7 @@ export default function SettingActivityIdPage() {
                       {g.level_name}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </label>
             </div>
 
@@ -410,4 +411,5 @@ export default function SettingActivityIdPage() {
     </div>
   );
 }
+
 

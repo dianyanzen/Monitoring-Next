@@ -1,4 +1,4 @@
-﻿// FILE: src/app/setting/user/edit/[userId]/page.tsx
+// FILE: src/app/setting/user/edit/[userId]/page.tsx
 "use client";
 
 import { useCallback, useEffect, useMemo, useState, type ChangeEvent } from "react";
@@ -6,6 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, Save } from "lucide-react";
 import { useSession } from "@/contexts/session";
 import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 type LevelOption = { user_level: string; level_name: string };
 type Option = { value: string; label: string };
@@ -509,7 +510,7 @@ export default function EditUserPage() {
                 />
               </Field>
               <Field label="NIK">
-                <input value={form.nik} onChange={(e) => setForm((prev) => ({ ...prev, nik: e.target.value.replace(/[^\d]/g, "").slice(0, 16) }))} className="field-input" maxLength={16} />
+                <input value={form.nik} onChange={(e) => setForm((prev) => ({ ...prev, nik: e.target.value.replace(/[^\d]/g, "").slice(0, 16) }))} maxLength={16} />
               </Field>
               <Field label="Tempat Lahir">
                 <input
@@ -524,25 +525,25 @@ export default function EditUserPage() {
                 <input
                   value={form.tgl_lhr}
                   onChange={handleBirthDateChange}
-                  className="field-input"
+                 
                   placeholder="31-12-1990"
                   maxLength={10}
                   inputMode="numeric"
                 />
               </Field>
               <Field label="Jenis Kelamin">
-                <select value={form.jenis_klmin} onChange={handleChange("jenis_klmin")} className="field-input">
+                <TypeableSelect value={form.jenis_klmin} onChange={handleChange("jenis_klmin")}>
                   {genderOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
               <Field label="Golongan Darah">
-                <select value={form.gol_drh} onChange={handleChange("gol_drh")} className="field-input">
+                <TypeableSelect value={form.gol_drh} onChange={handleChange("gol_drh")}>
                   {bloodOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
             </div>
           </div>
@@ -560,7 +561,7 @@ export default function EditUserPage() {
                 />
               </Field>
               <Field label="Telepon Kantor">
-                <input value={form.telp} onChange={handleChange("telp")} className="field-input" />
+                <input value={form.telp} onChange={handleChange("telp")} />
               </Field>
               <Field label="Alamat Kantor" full>
                 <textarea
@@ -589,60 +590,60 @@ export default function EditUserPage() {
             <h2 className="mb-4 text-sm font-semibold text-cyan-200/90">Level & Wilayah</h2>
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Level User">
-                <select value={form.user_level} onChange={handleChange("user_level")} className="field-input">
+                <TypeableSelect value={form.user_level} onChange={handleChange("user_level")}>
                   <option value="">-- Pilih Level --</option>
                   {levels.map((lvl) => (
                     <option key={lvl.user_level} value={lvl.user_level}>
                       {lvl.user_level} - {lvl.level_name}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
               <Field label="Provinsi">
-                <select value={form.wilayah.no_prop} onChange={handleWilayahChange("no_prop")} className="field-input">
+                <TypeableSelect value={form.wilayah.no_prop} onChange={handleWilayahChange("no_prop")}>
                   <option value="">-- Pilih Provinsi --</option>
                   {provOptions.map((opt) => (
                     <option key={opt.no_prop} value={opt.no_prop}>
                       ({opt.no_prop}) {opt.nama_prop}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
               <Field label="Kab/Kota">
-                <select value={form.wilayah.no_kab} onChange={handleWilayahChange("no_kab")} className="field-input">
+                <TypeableSelect value={form.wilayah.no_kab} onChange={handleWilayahChange("no_kab")}>
                   <option value="">-- Pilih Kab/Kota --</option>
                   {kabOptions.map((opt) => (
                     <option key={opt.no_kab} value={opt.no_kab}>
                       ({opt.no_kab}) {opt.nama_kab}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
               <Field label="Kecamatan">
-                <select value={form.wilayah.no_kec} onChange={handleWilayahChange("no_kec")} className="field-input">
+                <TypeableSelect value={form.wilayah.no_kec} onChange={handleWilayahChange("no_kec")}>
                   <option value="">-- Pilih Kecamatan --</option>
                   {kecOptions.map((opt) => (
                     <option key={opt.no_kec} value={opt.no_kec}>
                       ({opt.no_kec}) {opt.nama_kec}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
               <Field label="Kelurahan">
-                <select value={form.wilayah.no_kel} onChange={handleWilayahChange("no_kel")} className="field-input">
+                <TypeableSelect value={form.wilayah.no_kel} onChange={handleWilayahChange("no_kel")}>
                   <option value="">-- Pilih Kelurahan --</option>
                   {kelOptions.map((opt) => (
                     <option key={opt.no_kel} value={opt.no_kel}>
                       ({opt.no_kel}) {opt.nama_kel}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
               <Field label="RW">
-                <input value={form.wilayah.no_rw} onChange={handleWilayahChange("no_rw")} className="field-input" />
+                <input value={form.wilayah.no_rw} onChange={handleWilayahChange("no_rw")} />
               </Field>
               <Field label="RT">
-                <input value={form.wilayah.no_rt} onChange={handleWilayahChange("no_rt")} className="field-input" />
+                <input value={form.wilayah.no_rt} onChange={handleWilayahChange("no_rt")} />
               </Field>
             </div>
           </div>
@@ -651,13 +652,13 @@ export default function EditUserPage() {
             <h2 className="mb-4 text-sm font-semibold text-cyan-200/90">Akun Layanan</h2>
             <div className="grid gap-4 md:grid-cols-3">
               <Field label="Akun SIAK">
-                <input value={form.akun.user_siak} onChange={(e) => setForm((prev) => ({ ...prev, akun: { ...prev.akun, user_siak: e.target.value } }))} className="field-input" />
+                <input value={form.akun.user_siak} onChange={(e) => setForm((prev) => ({ ...prev, akun: { ...prev.akun, user_siak: e.target.value } }))} />
               </Field>
               <Field label="Akun Biomorf Card">
-                <input value={form.akun.user_bcard} onChange={(e) => setForm((prev) => ({ ...prev, akun: { ...prev.akun, user_bcard: e.target.value } }))} className="field-input" />
+                <input value={form.akun.user_bcard} onChange={(e) => setForm((prev) => ({ ...prev, akun: { ...prev.akun, user_bcard: e.target.value } }))} />
               </Field>
               <Field label="Akun Biomorf Enrol">
-                <input value={form.akun.user_benrol} onChange={(e) => setForm((prev) => ({ ...prev, akun: { ...prev.akun, user_benrol: e.target.value } }))} className="field-input" />
+                <input value={form.akun.user_benrol} onChange={(e) => setForm((prev) => ({ ...prev, akun: { ...prev.akun, user_benrol: e.target.value } }))} />
               </Field>
             </div>
           </div>
@@ -667,11 +668,11 @@ export default function EditUserPage() {
             <div className="grid gap-4 md:grid-cols-3">
               {Object.entries(form.flags).map(([key, value]) => (
                 <Field key={key} label={key.replace(/_/g, " ").toUpperCase()}>
-                  <select value={value} onChange={handleFlagsChange(key as keyof FormState["flags"])} className="field-input">
+                  <TypeableSelect value={value} onChange={handleFlagsChange(key as keyof FormState["flags"])}>
                     {yesNoOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
                     ))}
-                  </select>
+                  </TypeableSelect>
                 </Field>
               ))}
             </div>
@@ -682,10 +683,10 @@ export default function EditUserPage() {
             {pejabatError ? <p className="mb-3 text-xs text-amber-300">{pejabatError}</p> : null}
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Atasan Satu">
-                <select
+                <TypeableSelect
                   value={form.supervisors.pejabat_satu}
                   onChange={(e) => setForm((prev) => ({ ...prev, supervisors: { ...prev.supervisors, pejabat_satu: e.target.value } }))}
-                  className="field-input"
+                 
                   disabled={loadingPejabat}
                 >
                   <option value="">-- Pilih Atasan --</option>
@@ -694,13 +695,13 @@ export default function EditUserPage() {
                       {opt.label}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
               <Field label="Atasan Dua">
-                <select
+                <TypeableSelect
                   value={form.supervisors.pejabat_dua}
                   onChange={(e) => setForm((prev) => ({ ...prev, supervisors: { ...prev.supervisors, pejabat_dua: e.target.value } }))}
-                  className="field-input"
+                 
                   disabled={loadingPejabat}
                 >
                   <option value="">-- Pilih Atasan --</option>
@@ -709,7 +710,7 @@ export default function EditUserPage() {
                       {opt.label}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
               </Field>
             </div>
           </div>
@@ -761,3 +762,5 @@ function Field({ label, children, full }: { label: string; children: React.React
     </label>
   );
 }
+
+

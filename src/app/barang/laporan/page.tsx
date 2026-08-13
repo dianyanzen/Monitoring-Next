@@ -6,6 +6,7 @@ import { AlertCircle, CalendarRange, Loader2, RefreshCcw, Search, Trash2 } from 
 import SettingPageHeader from "@/components/setting/SettingPageHeader";
 import { DataShell } from "@/components/ui/LoadingOverlay";
 import DateRangePopup from "@/components/ui/DateRangePopup";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 const JQDataTable = dynamic(() => import("@/components/datatable/JQDataTable"), {
   ssr: false,
@@ -160,7 +161,7 @@ export default function BarangLaporanPage() {
             <CalendarRange className="h-4 w-4" /> {isoToDMY(startIso)} s/d {isoToDMY(endIso)}
           </span>
 
-          <select
+          <TypeableSelect
             value={barangId}
             onChange={(e) => setBarangId(e.target.value)}
             className="rounded-xl border border-cyan-800/60 bg-[#0c1224] px-3 py-2 text-sm text-cyan-50 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
@@ -171,7 +172,7 @@ export default function BarangLaporanPage() {
                 {o.BARANG_ID}. {o.JENIS_BARANG}
               </option>
             ))}
-          </select>
+          </TypeableSelect>
 
           <div className="flex flex-wrap items-center gap-2">
             <button
@@ -245,3 +246,4 @@ export default function BarangLaporanPage() {
     </div>
   );
 }
+

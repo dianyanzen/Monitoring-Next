@@ -14,6 +14,7 @@ import {
 import SettingPageHeader from "@/components/setting/SettingPageHeader";
 import { DataShell } from "@/components/ui/LoadingOverlay";
 import NeonModal from "@/components/ui/NeonModal";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 const JQDataTable = dynamic(() => import("@/components/datatable/JQDataTable"), {
   ssr: false,
@@ -290,7 +291,7 @@ export default function BarangKeluarPage() {
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <div className="space-y-2">
             <label className="text-xs uppercase tracking-[0.2em] text-cyan-200/70">Jenis Barang</label>
-            <select
+            <TypeableSelect
               value={barangId}
               onChange={(e) => setBarangId(e.target.value)}
               className="w-full rounded-xl border border-cyan-800/60 bg-[#0c1224] px-3 py-2 text-sm text-cyan-50 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-300/30"
@@ -301,7 +302,7 @@ export default function BarangKeluarPage() {
                   {o.BARANG_ID}. {o.JENIS_BARANG}
                 </option>
               ))}
-            </select>
+            </TypeableSelect>
           </div>
           <div className="space-y-2">
             <label className="text-xs uppercase tracking-[0.2em] text-cyan-200/70">Jumlah</label>
@@ -412,3 +413,4 @@ export default function BarangKeluarPage() {
     </div>
   );
 }
+

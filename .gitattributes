@@ -1,0 +1,20 @@
+# Normalize text files and use CRLF in working tree (Windows-friendly)
+* text=auto eol=crlf
+
+# Keep shell scripts with LF for Unix compatibility
+*.sh text eol=lf
+
+# Common binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.7z binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary

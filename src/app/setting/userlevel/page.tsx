@@ -1,4 +1,5 @@
-﻿// FILE: src/app/setting/userlevel/page.tsx
+﻿import TypeableSelect from "@/components/ui/TypeableSelect";
+// FILE: src/app/setting/userlevel/page.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -147,7 +148,7 @@ export default function UserLevelPage() {
                 Group
               </label>
               <div className="relative">
-                <select
+                <TypeableSelect
                   value={groupId}
                   onChange={(e) => setGroupId(e.target.value)}
                   disabled={loadingGroup}
@@ -160,7 +161,7 @@ export default function UserLevelPage() {
                       {g.level_name}
                     </option>
                   ))}
-                </select>
+                </TypeableSelect>
                 <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-cyan-300/70">
                   ▾
                 </span>
@@ -309,3 +310,4 @@ export default function UserLevelPage() {
     </div>
   );
 }
+

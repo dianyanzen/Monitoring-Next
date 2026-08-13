@@ -4,6 +4,7 @@ import { useEffect, useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, Save } from "lucide-react";
 import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 type GroupOption = {
   user_level: number;
@@ -128,7 +129,7 @@ export default function SettingActivityIdAddPage() {
 
   return (
     <div className="relative mt-5 space-y-8 px-4 pb-12 pt-6 sm:px-6 md:px-8 md:pt-8">
-      {/* Ambient glow – sama seperti list page */}
+      {/* Ambient glow â€“ sama seperti list page */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-[8%] top-[-25%] h-[900px] w-[900px] rounded-full bg-cyan-500/20 blur-[220px]" />
         <div className="absolute right-[12%] bottom-[-30%] h-[900px] w-[900px] rounded-full bg-fuchsia-600/15 blur-[220px]" />
@@ -175,15 +176,15 @@ export default function SettingActivityIdAddPage() {
               <input
                 value={form.activity}
                 onChange={handleChange("activity")}
-                className="field-input"
+               
                 placeholder="Nama activity"
               />
             </Field>
             <Field label="Group User">
-              <select
+              <TypeableSelect
                 value={form.group_id}
                 onChange={handleChange("group_id")}
-                className="field-input"
+               
                 disabled={loadingGroups}
               >
                 <option value="0">-- Pilih Group --</option>
@@ -192,7 +193,7 @@ export default function SettingActivityIdAddPage() {
                     {group.level_name}
                   </option>
                 ))}
-              </select>
+              </TypeableSelect>
             </Field>
           </div>
 
@@ -237,3 +238,5 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     </label>
   );
 }
+
+

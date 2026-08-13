@@ -17,7 +17,7 @@ import {
 import { useSession } from "@/contexts/session";
 import DateRangePopup from "@/components/ui/DateRangePopup";
 import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
-import SelectDark from "@/components/ui/SelectDark";
+import SelectFancy, { type Option as SelectFancyOption } from "@/components/ui/SelectFancy";
 import SettingPageHeader from "@/components/setting/SettingPageHeader";
 import { filterLocationsByOffice } from "@/lib/tracking/office-location";
 
@@ -143,6 +143,9 @@ const RECEIPT_HEADER = {
 
 const TRACKING_SUPERADMIN_USER = "ASSIST_YZ";
 const BBL_EXTRA_NOTE = "BBL";
+const RESI_CONTACT_ONLY_PRODUCT_CODES = new Set(["KAS", "PCS", "LEG"]);
+const RESI_CONTACT_ONLY_NOTE_HTML =
+  '<li>Untuk memperoleh informasi lebih lanjut atau menyampaikan pengaduan, silakan menghubungi <strong>Call Center 0852-0888-1945</strong>.</li>';
 
 const actionIcons = {
   print: `<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V4h12v5"/><rect x="6" y="13" width="12" height="7" rx="2"/><path d="M6 17H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-1"/><path d="M9 17h6"/></svg>`,
@@ -419,6 +422,54 @@ export default function TrackingPengajuanPage() {
     [currentKelurahanOptions]
   );
 
+  const selectFancyThemeVars =
+    "[--accent:#22d3ee] [--panel-bg:#0f172a] [--surface-1:#0f172a] [--panel-border:rgba(34,211,238,0.35)] [--panel-shadow:0_12px_28px_rgba(0,0,0,0.45)] [--ink:#e0f2fe] [--ink-muted:#a5c9df]";
+
+  const inputLocationSelectFancyOptions = useMemo<SelectFancyOption[]>(
+    () => inputLocations.map((item) => ({ value: String(item.locationId), label: `${item.code} - ${item.name}` })),
+    [inputLocations]
+  );
+
+  const inputProductSelectFancyOptions = useMemo<SelectFancyOption[]>(
+    () => productsByLocation.map((item) => ({ value: String(item.productId), label: `${item.code} - ${item.name}` })),
+    [productsByLocation]
+  );
+
+  const filterLocationSelectFancyOptions = useMemo<SelectFancyOption[]>(
+    () => filteredLocations.map((item) => ({ value: String(item.locationId), label: `${item.code} - ${item.name}` })),
+    [filteredLocations]
+  );
+
+  const filterProductSelectFancyOptions = useMemo<SelectFancyOption[]>(
+    () => filterProducts.map((item) => ({ value: String(item.productId), label: item.name })),
+    [filterProducts]
+  );
+
+  const filterStatusSelectFancyOptions = useMemo<SelectFancyOption[]>(
+    () => STATUSES.map((status) => ({ value: status, label: statusLabel(status) })),
+    []
+  );
+
+  const quickLocationSelectFancyOptions = useMemo<SelectFancyOption[]>(
+    () => filteredLocations.map((item) => ({ value: String(item.locationId), label: `${item.code} - ${item.name}` })),
+    [filteredLocations]
+  );
+
+  const quickProductSelectFancyOptions = useMemo<SelectFancyOption[]>(
+    () => quickTrackingProducts.map((item) => ({ value: String(item.productId), label: item.name })),
+    [quickTrackingProducts]
+  );
+
+  const kecamatanSelectFancyOptions = useMemo<SelectFancyOption[]>(
+    () => kecamatanSelectOptions.map((item) => ({ value: item.value, label: item.label })),
+    [kecamatanSelectOptions]
+  );
+
+  const kelurahanSelectFancyOptions = useMemo<SelectFancyOption[]>(
+    () => kelurahanSelectOptions.map((item) => ({ value: item.value, label: item.label })),
+    [kelurahanSelectOptions]
+  );
+
   const editKelurahanOptions = useMemo(() => {
     return kelurahanCache[editForm.noKec] ?? [];
   }, [editForm.noKec, kelurahanCache]);
@@ -445,6 +496,16 @@ export default function TrackingPengajuanPage() {
   const editKelurahanSelectOptions = useMemo(
     () => mergeOptions(editKelurahanOptions, true, "-- Pilih Kelurahan --"),
     [editKelurahanOptions]
+  );
+
+  const editKecamatanSelectFancyOptions = useMemo<SelectFancyOption[]>(
+    () => kecamatanSelectOptions.map((item) => ({ value: item.value, label: item.label })),
+    [kecamatanSelectOptions]
+  );
+
+  const editKelurahanSelectFancyOptions = useMemo<SelectFancyOption[]>(
+    () => editKelurahanSelectOptions.map((item) => ({ value: item.value, label: item.label })),
+    [editKelurahanSelectOptions]
   );
 
   const isEditSaveEnabled = Boolean(
@@ -1412,6 +1473,10 @@ export default function TrackingPengajuanPage() {
     const nikDisplayLabel = isKelahiran ? "NIK Bayi" : isKematian ? "NIK Almarhum" : "NIK Pemohon";
     const namaDisplayLabel = isKelahiran ? "Nama Bayi" : isKematian ? "Nama Almarhum" : "Nama Pemohon";
     const isPindahKeluar = ["PINDAH KELUAR", "SURAT PINDAH", "SKPWNI"].some((keyword) => productName.includes(keyword));
+    const productCode = String(row.productCode || "")
+      .trim()
+      .toUpperCase();
+    const isContactOnlyService = RESI_CONTACT_ONLY_PRODUCT_CODES.has(productCode);
     const isKtpelOrIkdService = [
       "KTP-EL",
       "KTP EL",
@@ -1724,7 +1789,9 @@ export default function TrackingPengajuanPage() {
                 <div class="title-note">CATATAN:</div>
                 <ul>
                   ${
-                    isKiaService
+                    isContactOnlyService
+                      ? RESI_CONTACT_ONLY_NOTE_HTML
+                      : isKiaService
                       ? `<li>Jika Anda sudah menerima email <strong>SIAK Online</strong> dari <strong>Ditjen Dukcapil Kemendagri</strong>, silakan <strong>pindai atau klik QR Code yang terdapat pada email tersebut</strong> untuk mengakses dokumen KIA.</li>
                   <li>Untuk pencetakan KIA, masyarakat dapat <strong>memilih cara yang paling sesuai dan mudah</strong>, baik dengan mencetak secara mandiri melalui <strong>Anjungan Dukcapil Mandiri (ADM)</strong> terdekat, mencetak melalui <strong>Gerai Geulis</strong> terdekat, maupun mengambil KIA melalui <strong>Loket Pengambilan Disdukcapil</strong> dengan membawa <strong>resi asli</strong> ini.</li>
                   <li>Untuk memperoleh informasi lebih lanjut atau menyampaikan pengaduan, silakan menghubungi <strong>Call Center 0852-0888-1945</strong>.</li>`
@@ -1874,7 +1941,9 @@ export default function TrackingPengajuanPage() {
             <div class="notes-title">CATATAN</div>
             <ul>
               ${
-                isKiaService
+                isContactOnlyService
+                  ? RESI_CONTACT_ONLY_NOTE_HTML
+                  : isKiaService
                   ? `<li>Jika Anda sudah menerima email <strong>SIAK Online</strong> dari <strong>Ditjen Dukcapil Kemendagri</strong>, silakan <strong>pindai atau klik QR Code yang terdapat pada email tersebut</strong> untuk mengakses dokumen KIA.</li>
               <li>Untuk pencetakan KIA, masyarakat dapat <strong>memilih cara yang paling sesuai dan mudah</strong>, baik dengan mencetak secara mandiri melalui <strong>Anjungan Dukcapil Mandiri (ADM)</strong> terdekat, mencetak melalui <strong>Gerai Geulis</strong> terdekat, maupun mengambil KIA melalui <strong>Loket Pengambilan Disdukcapil</strong> dengan membawa <strong>resi asli</strong> ini.</li>
               <li>Untuk memperoleh informasi lebih lanjut atau menyampaikan pengaduan, silakan menghubungi <strong>Call Center 0852-0888-1945</strong>.</li>`
@@ -2027,14 +2096,21 @@ export default function TrackingPengajuanPage() {
             <h2 className="text-sm font-semibold">Input Pengajuan</h2>
           </div>
           <div className="grid gap-3">
-            <select value={form.locationId} onChange={(e) => setForm({ ...form, locationId: e.target.value })} className="rounded-xl border border-cyan-800/60 bg-[#0f172a] px-3 py-2 text-sm text-cyan-50 outline-none">
-              <option value="">Pilih Lokasi Layanan</option>
-              {inputLocations.map((item) => <option key={item.locationId} value={item.locationId}>{item.code} - {item.name}</option>)}
-            </select>
-            <select value={form.productId} onChange={(e) => setForm({ ...form, productId: e.target.value })} className="rounded-xl border border-cyan-800/60 bg-[#0f172a] px-3 py-2 text-sm text-cyan-50 outline-none">
-              <option value="">Pilih Jenis Pelayanan</option>
-              {productsByLocation.map((item) => <option key={item.productId} value={item.productId}>{item.code} - {item.name}</option>)}
-            </select>
+            <SelectFancy
+              value={form.locationId}
+              onValueChange={(value) => setForm((prev) => ({ ...prev, locationId: value }))}
+              options={inputLocationSelectFancyOptions}
+              placeholder="Pilih Lokasi Layanan"
+              className={`w-full ${selectFancyThemeVars}`}
+            />
+            <SelectFancy
+              value={form.productId}
+              onValueChange={(value) => setForm((prev) => ({ ...prev, productId: value }))}
+              options={inputProductSelectFancyOptions}
+              placeholder="Pilih Jenis Pelayanan"
+              className={`w-full ${selectFancyThemeVars}`}
+              isDisabled={!form.locationId}
+            />
             <input
               value={form.nik}
               onChange={(e) =>
@@ -2081,30 +2157,26 @@ export default function TrackingPengajuanPage() {
               </label>
             ) : null}
             <div className="grid gap-3 sm:grid-cols-2">
-              <SelectDark
+              <SelectFancy
                 value={form.noKec}
-                onChange={(e) => void handleKecamatanChange(e.target.value)}
-                disabled={!isDetailFieldsEnabled}
-                className="rounded-xl"
-              >
-                {kecamatanSelectOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </SelectDark>
-              <SelectDark
+                onValueChange={(value) => void handleKecamatanChange(value)}
+                options={kecamatanSelectFancyOptions}
+                isDisabled={!isDetailFieldsEnabled}
+                placeholder="Pilih Kecamatan"
+                className={`w-full ${selectFancyThemeVars}`}
+              />
+              <SelectFancy
                 value={form.noKel}
-                onChange={(e) => handleKelurahanChange(e.target.value)}
-                disabled={!isDetailFieldsEnabled || form.noKec === "0" || kelurahanLoadingKey === form.noKec}
-                className="rounded-xl"
-              >
-                {kelurahanSelectOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {kelurahanLoadingKey === form.noKec && opt.value === "0" ? "Memuat kelurahan..." : opt.label}
-                  </option>
-                ))}
-              </SelectDark>
+                onValueChange={(value) => handleKelurahanChange(value)}
+                options={kelurahanSelectFancyOptions.map((opt) => ({
+                  value: opt.value,
+                  label: kelurahanLoadingKey === form.noKec && opt.value === "0" ? "Memuat kelurahan..." : opt.label,
+                }))}
+                isDisabled={!isDetailFieldsEnabled || form.noKec === "0" || kelurahanLoadingKey === form.noKec}
+                isLoading={kelurahanLoadingKey === form.noKec}
+                placeholder="Pilih Kelurahan"
+                className={`w-full ${selectFancyThemeVars}`}
+              />
             </div>
             <textarea
               value={form.alamat}
@@ -2171,18 +2243,30 @@ export default function TrackingPengajuanPage() {
           <div className="rounded-3xl border border-cyan-900/50 bg-[#05070d]/80 p-5 shadow-[0_0_34px_#00ffff22]">
             <div className="flex flex-wrap items-center gap-3">
               <DateRangePopup start={filters.start} end={filters.end} onChange={(start, end) => setFilters({ ...filters, start, end })} months={2} minWidth={660} className="min-w-0" />
-              <select value={filters.locationId} onChange={(e) => setFilters({ ...filters, locationId: e.target.value })} className="min-w-0 w-full sm:w-auto rounded-xl border border-cyan-800/60 bg-[#0f172a] px-3 py-2 text-sm text-cyan-50">
-                <option value="">Semua Lokasi</option>
-                {filteredLocations.map((item) => <option key={item.locationId} value={item.locationId}>{item.code} - {item.name}</option>)}
-              </select>
-              <select value={filters.productId} onChange={(e) => setFilters({ ...filters, productId: e.target.value })} className="min-w-0 w-full sm:w-auto rounded-xl border border-cyan-800/60 bg-[#0f172a] px-3 py-2 text-sm text-cyan-50">
-                <option value="">Semua Pelayanan</option>
-                {filterProducts.map((item) => <option key={item.productId} value={item.productId}>{item.name}</option>)}
-              </select>
-              <select value={filters.status} onChange={(e) => setFilters({ ...filters, status: e.target.value })} className="min-w-0 w-full sm:w-auto rounded-xl border border-cyan-800/60 bg-[#0f172a] px-3 py-2 text-sm text-cyan-50">
-                <option value="">Semua Status</option>
-                {STATUSES.map((status) => <option key={status} value={status}>{statusLabel(status)}</option>)}
-              </select>
+              <SelectFancy
+                value={filters.locationId}
+                onValueChange={(value) => setFilters((prev) => ({ ...prev, locationId: value }))}
+                options={filterLocationSelectFancyOptions}
+                placeholder="Semua Lokasi"
+                isClearable
+                className={`min-w-0 w-full sm:w-[260px] ${selectFancyThemeVars}`}
+              />
+              <SelectFancy
+                value={filters.productId}
+                onValueChange={(value) => setFilters((prev) => ({ ...prev, productId: value }))}
+                options={filterProductSelectFancyOptions}
+                placeholder="Semua Pelayanan"
+                isClearable
+                className={`min-w-0 w-full sm:w-[260px] ${selectFancyThemeVars}`}
+              />
+              <SelectFancy
+                value={filters.status}
+                onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value }))}
+                options={filterStatusSelectFancyOptions}
+                placeholder="Semua Status"
+                isClearable
+                className={`min-w-0 w-full sm:w-[220px] ${selectFancyThemeVars}`}
+              />
               <input value={filters.petugas} onChange={(e) => setFilters({ ...filters, petugas: e.target.value })} placeholder="Petugas" className="min-w-0 w-full sm:w-32 rounded-xl border border-cyan-800/60 bg-[#0f172a] px-3 py-2 text-sm text-cyan-50" />
               <input value={filters.nik} onChange={(e) => setFilters({ ...filters, nik: normalizeDigits(e.target.value) })} placeholder="NIK" className="min-w-0 w-full sm:w-40 rounded-xl border border-cyan-800/60 bg-[#0f172a] px-3 py-2 text-sm text-cyan-50" />
               <input value={filters.registrationNo} onChange={(e) => setFilters({ ...filters, registrationNo: e.target.value.toUpperCase() })} placeholder="Nomor Registrasi" className="min-w-0 w-full sm:w-56 rounded-xl border border-cyan-800/60 bg-[#0f172a] px-3 py-2 text-sm text-cyan-50" />
@@ -2254,22 +2338,21 @@ export default function TrackingPengajuanPage() {
           </div>
         </div>
         <div className="mt-3 grid gap-2 md:grid-cols-6">
-          <select
+          <SelectFancy
             value={quickTracking.locationId}
-            onChange={(e) => setQuickTracking((prev) => ({ ...prev, locationId: e.target.value }))}
-            className="min-w-0 rounded-xl border border-cyan-800/60 bg-[#0f172a] px-3 py-2 text-sm text-cyan-50 md:col-span-2"
-          >
-            <option value="">Pilih Lokasi</option>
-            {filteredLocations.map((item) => <option key={item.locationId} value={item.locationId}>{item.code} - {item.name}</option>)}
-          </select>
-          <select
+            onValueChange={(value) => setQuickTracking((prev) => ({ ...prev, locationId: value }))}
+            options={quickLocationSelectFancyOptions}
+            placeholder="Pilih Lokasi"
+            className={`min-w-0 md:col-span-2 ${selectFancyThemeVars}`}
+          />
+          <SelectFancy
             value={quickTracking.productId}
-            onChange={(e) => setQuickTracking((prev) => ({ ...prev, productId: e.target.value }))}
-            className="min-w-0 rounded-xl border border-cyan-800/60 bg-[#0f172a] px-3 py-2 text-sm text-cyan-50 md:col-span-2"
-          >
-            <option value="">Pilih Produk</option>
-            {quickTrackingProducts.map((item) => <option key={item.productId} value={item.productId}>{item.name}</option>)}
-          </select>
+            onValueChange={(value) => setQuickTracking((prev) => ({ ...prev, productId: value }))}
+            options={quickProductSelectFancyOptions}
+            placeholder="Pilih Produk"
+            className={`min-w-0 md:col-span-2 ${selectFancyThemeVars}`}
+            isDisabled={!quickTracking.locationId}
+          />
           <input
             type="date"
             value={quickTracking.date}
@@ -2473,25 +2556,25 @@ export default function TrackingPengajuanPage() {
                   <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-cyan-100/70">Kelurahan</p>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <SelectDark value={editForm.noKec} onChange={(e) => void handleEditKecamatanChange(e.target.value)} className="rounded-xl">
-                    {kecamatanSelectOptions.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </SelectDark>
-                  <SelectDark
+                  <SelectFancy
+                    value={editForm.noKec}
+                    onValueChange={(value) => void handleEditKecamatanChange(value)}
+                    options={editKecamatanSelectFancyOptions}
+                    placeholder="Pilih Kecamatan"
+                    className={`w-full ${selectFancyThemeVars}`}
+                  />
+                  <SelectFancy
                     value={editForm.noKel}
-                    onChange={(e) => setEditForm((prev) => ({ ...prev, noKel: e.target.value }))}
-                    disabled={editForm.noKec === "0" || kelurahanLoadingKey === editForm.noKec}
-                    className="rounded-xl"
-                  >
-                    {editKelurahanSelectOptions.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {kelurahanLoadingKey === editForm.noKec && opt.value === "0" ? "Memuat kelurahan..." : opt.label}
-                      </option>
-                    ))}
-                  </SelectDark>
+                    onValueChange={(value) => setEditForm((prev) => ({ ...prev, noKel: value }))}
+                    options={editKelurahanSelectFancyOptions.map((opt) => ({
+                      value: opt.value,
+                      label: kelurahanLoadingKey === editForm.noKec && opt.value === "0" ? "Memuat kelurahan..." : opt.label,
+                    }))}
+                    isDisabled={editForm.noKec === "0" || kelurahanLoadingKey === editForm.noKec}
+                    isLoading={kelurahanLoadingKey === editForm.noKec}
+                    placeholder="Pilih Kelurahan"
+                    className={`w-full ${selectFancyThemeVars}`}
+                  />
                 </div>
                 <div className="grid gap-1 sm:grid-cols-2 sm:gap-3">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-cyan-100/70">No HP</p>

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, type ChangeEvent, type ReactNode } from "
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, Save, Layers3 } from "lucide-react";
 import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
+import TypeableSelect from "@/components/ui/TypeableSelect";
 
 type Detail = {
   menu_id: string;
@@ -235,13 +236,13 @@ export default function SettingMenuUserEditPage() {
             <>
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Menu ID">
-                  <input value={detail.menu_id} className="field-input" readOnly />
+                  <input value={detail.menu_id} readOnly />
                 </Field>
                 <Field label="Parent Menu">
-                  <select
+                  <TypeableSelect
                     value={detail.parent_id}
                     onChange={handleChange("parent_id")}
-                    className="field-input"
+                   
                     disabled={saving || parents.length === 0}
                   >
                     {parents.length === 0 ? (
@@ -253,30 +254,30 @@ export default function SettingMenuUserEditPage() {
                         </option>
                       ))
                     )}
-                  </select>
+                  </TypeableSelect>
                 </Field>
                 <div className="md:col-span-2">
                   <Field label="Title">
-                    <input value={detail.title} onChange={handleChange("title")} className="field-input" />
+                    <input value={detail.title} onChange={handleChange("title")} />
                   </Field>
                 </div>
                 <Field label="Menu Level">
-                  <select
+                  <TypeableSelect
                     value={detail.menu_level}
                     onChange={handleChange("menu_level")}
-                    className="field-input"
+                   
                     disabled={saving}
                   >
                     <option value="1">Level 1</option>
                     <option value="2">Level 2</option>
                     <option value="3">Level 3</option>
-                  </select>
+                  </TypeableSelect>
                 </Field>
                 <Field label="Level Head">
-                  <input value={detail.level_head} onChange={handleChange("level_head")} className="field-input" />
+                  <input value={detail.level_head} onChange={handleChange("level_head")} />
                 </Field>
                 <Field label="Level Sub">
-                  <input value={detail.level_sub} onChange={handleChange("level_sub")} className="field-input" />
+                  <input value={detail.level_sub} onChange={handleChange("level_sub")} />
                 </Field>
               </div>
 
@@ -325,3 +326,5 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
     </label>
   );
 }
+
+
