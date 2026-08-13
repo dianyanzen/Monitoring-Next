@@ -232,7 +232,7 @@ export default function DateRangePopup({
         ref={triggerRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className={`w-[360px] flex items-center gap-2 px-3 py-2 rounded-lg border border-cyan-800/60 bg-[#0e0e1c]/70 text-sm text-cyan-100 shadow-[inset_0_0_12px_#00ffff11] ${className ?? ""}`}
+        className={`w-full max-w-[360px] min-w-0 flex items-center gap-2 px-3 py-2 rounded-lg border border-cyan-800/60 bg-[#0e0e1c]/70 text-sm text-cyan-100 shadow-[inset_0_0_12px_#00ffff11] ${className ?? ""}`}
         aria-haspopup="dialog"
         aria-expanded={open}
       >

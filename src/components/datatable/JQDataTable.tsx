@@ -145,9 +145,13 @@ export default function JQDataTable({
       dtRef.current = new DataTable(tableRef.current!, {
         data,
         columns: resolvedColumnsRef.current!,
-        responsive: false,
+        responsive: {
+          details: {
+            type: "inline",
+          },
+        },
         scrollX: true,
-        autoWidth: false,
+        autoWidth: true,
         deferRender: true,
         pageLength,
         lengthMenu: [
@@ -241,8 +245,8 @@ export default function JQDataTable({
       <table
         id={id}
         ref={tableRef}
-        className={`display nowrap stripe hover order-column cell-border ${tableClassName}`}
-        style={{ width: "100%", minWidth }}
+        className={`display stripe hover order-column cell-border ${tableClassName}`}
+        style={{ width: "100%", ...(minWidth ? { minWidth } : {}) }}
       >
         <thead></thead>
         <tbody></tbody>

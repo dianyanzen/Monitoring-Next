@@ -18,12 +18,21 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const ORACLE_ALIAS = process.env.DB_ALIAS_TRACKING ?? "DB";
+const TRACKING_SUPERADMIN_USER = "ASSIST_YZ";
 
 type Params = { params: Promise<{ trackingId: string }> };
 
 function statusLabel(status: unknown) {
   const key = normalizeUpper(status) as keyof typeof TRACKING_STATUS_LABELS;
   return TRACKING_STATUS_LABELS[key] || normalizeText(status);
+}
+
+function normalizeUserKey(value: unknown) {
+  return normalizeUpper(String(value ?? "")).trim();
+}
+
+function isTrackingSuperadminUser(value: unknown) {
+  return normalizeUserKey(value) === TRACKING_SUPERADMIN_USER;
 }
 
 export async function POST(req: NextRequest, ctx: Params) {
@@ -39,7 +48,9 @@ export async function POST(req: NextRequest, ctx: Params) {
 
     const body = await req.json().catch(() => ({}));
     const status = normalizeUpper(body.status);
+    const description = normalizeText(body.description ?? "").slice(0, 500);
     if (!isTrackingStatus(status)) return badRequest("Status tidak valid.");
+    if (status === "BATAL" && !description) return badRequest("Catatan petugas wajib diisi untuk status Batal.");
 
     let updated: any = null;
 
@@ -47,7 +58,7 @@ export async function POST(req: NextRequest, ctx: Params) {
       async (conn) => {
         const curRes = await conn.execute(
           `
-          SELECT REQUEST_ID, STATUS
+          SELECT REQUEST_ID, STATUS, CREATED_BY
           FROM M_TRACKING_REQUEST
           WHERE REQUEST_ID = :b_request_id
             AND IS_ACTIVE = 'Y'
@@ -58,6 +69,11 @@ export async function POST(req: NextRequest, ctx: Params) {
         );
         const current = (curRes.rows?.[0] as any) || null;
         if (!current) throw new Error("Data tracking tidak ditemukan.");
+        if (!isTrackingSuperadminUser(session.S_USER_ID) && normalizeUserKey(current.CREATED_BY) !== normalizeUserKey(session.S_USER_ID)) {
+          const forbidden = new Error("Hanya petugas penginput yang dapat memperbarui status data ini.");
+          (forbidden as any).status = 403;
+          throw forbidden;
+        }
 
         const currentStatus = normalizeUpper(current.STATUS) as TrackingStatus;
         const allowed = nextAllowedStatuses(currentStatus);
@@ -69,11 +85,17 @@ export async function POST(req: NextRequest, ctx: Params) {
           `
           UPDATE M_TRACKING_REQUEST
           SET STATUS = :b_status,
+              NOTES = CASE WHEN :b_notes IS NULL THEN NOTES ELSE :b_notes END,
               UPDATED_BY = :b_user,
               UPDATED_AT = SYSDATE
           WHERE REQUEST_ID = :b_request_id
           `,
-          { b_status: status, b_user: session.S_USER_ID, b_request_id: requestId },
+          {
+            b_status: status,
+            b_notes: description || null,
+            b_user: session.S_USER_ID,
+            b_request_id: requestId,
+          },
           { autoCommit: false }
         );
 
@@ -87,6 +109,7 @@ export async function POST(req: NextRequest, ctx: Params) {
             T.NIK,
             T.APPLICANT_NAME,
             T.STATUS,
+            T.NOTES,
             TO_CHAR(T.UPDATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS UPDATED_AT
           FROM M_TRACKING_REQUEST T
           JOIN M_TRACKING_LOCATION L ON L.LOCATION_ID = T.LOCATION_ID
@@ -108,6 +131,7 @@ export async function POST(req: NextRequest, ctx: Params) {
           applicantName: normalizeText(row.APPLICANT_NAME),
           status: normalizeText(row.STATUS),
           statusLabel: statusLabel(row.STATUS),
+          notes: normalizeText(row.NOTES),
           updatedAt: normalizeText(row.UPDATED_AT),
         };
       },
@@ -136,6 +160,6 @@ export async function POST(req: NextRequest, ctx: Params) {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memperbarui status tracking");
+    return err(e?.message || "Gagal memperbarui status tracking", Number(e?.status || 500));
   }
 }

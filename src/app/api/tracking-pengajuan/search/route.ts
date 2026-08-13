@@ -4,6 +4,7 @@ import { badRequest, err, ok, unauthorized } from "@/lib/http";
 import { execRows } from "@/lib/db";
 import { getClientInfo, readServerSession } from "@/lib/session";
 import { Log } from "@/lib/log";
+import { syncAutoCompletedTracking } from "@/lib/tracking/auto-complete";
 import { normalizeDigits, normalizeText, normalizeUpper, TRACKING_STATUS_LABELS } from "@/lib/tracking/constants";
 
 export const runtime = "nodejs";
@@ -23,6 +24,8 @@ export async function GET(req: NextRequest) {
     const session = await readServerSession();
     if (!session?.S_USER_ID) return unauthorized("Unauthorized");
 
+    const syncResult = await syncAutoCompletedTracking();
+
     const q = normalizeText(req.nextUrl.searchParams.get("q"));
     const registrationNo = normalizeUpper(req.nextUrl.searchParams.get("registrationNo") || q);
     const nik = normalizeDigits(req.nextUrl.searchParams.get("nik") || q, 16);
@@ -41,6 +44,9 @@ export async function GET(req: NextRequest) {
         T.REGISTRATION_NO,
         T.APPLICANT_NAME,
         T.NIK,
+        T.EXTRA_NOTE,
+        T.NOTES,
+        T.CREATED_BY,
         P.PRODUCT_NAME,
         L.LOCATION_NAME,
         TO_CHAR(T.CREATED_AT, 'DD-MM-YYYY') AS CREATED_DATE,
@@ -71,7 +77,7 @@ export async function GET(req: NextRequest) {
       ip,
       ua,
       tookMs: Date.now() - started,
-      extra: { count: rows.length },
+      extra: { count: rows.length, autoCompleted: syncResult.updatedCount },
     });
 
     return ok(
@@ -83,6 +89,9 @@ export async function GET(req: NextRequest) {
           name: normalizeText(row.APPLICANT_NAME),
           applicantName: normalizeText(row.APPLICANT_NAME),
           nik: normalizeText(row.NIK),
+          extraNote: normalizeText(row.EXTRA_NOTE),
+          createdBy: normalizeText(row.CREATED_BY),
+          notes: normalizeText(row.NOTES),
           productName: normalizeText(row.PRODUCT_NAME),
           locationName: normalizeText(row.LOCATION_NAME),
           date: normalizeText(row.CREATED_DATE),
