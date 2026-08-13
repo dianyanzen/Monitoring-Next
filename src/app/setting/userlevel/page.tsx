@@ -1,7 +1,7 @@
-﻿import TypeableSelect from "@/components/ui/TypeableSelect";
-// FILE: src/app/setting/userlevel/page.tsx
-"use client";
+﻿"use client";
 
+import TypeableSelect from "@/components/ui/TypeableSelect";
+// FILE: src/app/setting/userlevel/page.tsx
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Plus, Eye, Pencil, Trash2, Users, RefreshCcw, KeyRound  } from "lucide-react";

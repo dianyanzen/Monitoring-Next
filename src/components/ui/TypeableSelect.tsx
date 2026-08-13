@@ -21,7 +21,7 @@ function readOptionText(node: React.ReactNode): string {
       parts.push(String(child));
       return;
     }
-    if (isValidElement(child)) {
+    if (isValidElement<{ children?: React.ReactNode }>(child)) {
       parts.push(readOptionText(child.props.children));
     }
   });
@@ -31,7 +31,7 @@ function readOptionText(node: React.ReactNode): string {
 function extractOptions(children: React.ReactNode): NativeOption[] {
   const options: NativeOption[] = [];
   Children.forEach(children, (child) => {
-    if (!isValidElement(child)) return;
+    if (!isValidElement<{ value?: unknown; children?: React.ReactNode }>(child)) return;
 
     const tag = typeof child.type === "string" ? child.type.toLowerCase() : "";
     if (tag === "option") {

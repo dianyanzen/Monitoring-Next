@@ -13,6 +13,53 @@
 
 -----
 
+## PEMBARUAN TERBARU (AGUSTUS 2026)
+
+Bagian ini merangkum perubahan penting terbaru yang sudah aktif di repositori modernisasi.
+
+### Ringkasan Perubahan
+
+| Area | Pembaruan | Dampak |
+| --- | --- | --- |
+| Stack | Next.js `^15.5.7`, React `^19.1.0`, TypeScript `^5`, OracleDB `^6.9.0` | Kompatibilitas versi lebih baik dan stabil untuk pengembangan lanjutan |
+| Performa Dev/Build | Skrip Turbopack: `dev:turbo`, `build:turbo` | Iterasi lokal lebih cepat saat pengembangan |
+| Startup Operasional | Skrip `start:3273` (host `0.0.0.0`, port `3273`) | Menyamakan cara run layanan di environment operasional |
+| Tracking Pengajuan | Perbaikan field wilayah dan alur edit | Konsistensi data tracking dan alur kerja petugas |
+| Otomasi Tracking | Auto-`SELESAI` berbasis tanggal cetak/umur layanan | Mengurangi pekerjaan manual pada status layanan |
+
+### Detail Tracking Pengajuan
+
+1. Tracking Oracle menggunakan kolom `NO_KEC` dan `NO_KEL` pada tabel `M_TRACKING_REQUEST` (bukan DISTRICT/VILLAGE).
+2. Alur edit data dilakukan via modal PATCH agar tidak bentrok dengan alur simpan data baru.
+3. Field opsional No. Dokumen disimpan ke kolom `NO_DOK` dan ditampilkan kondisional sesuai jenis produk.
+4. Flag Bayi Baru Lahir BPJS disimpan ke `EXTRA_NOTE = "BBL"`; untuk akta kelahiran gerai, NIK bayi wajib 16 digit dan tetap tercetak di resi.
+
+### Otomasi Status Tracking
+
+1. Layanan KTP-el akan otomatis menjadi `SELESAI` jika tanggal cetak KTP lebih baru dari tanggal resi.
+2. Layanan non-KTP-el akan otomatis menjadi `SELESAI` jika umur layanan melebihi 7 hari.
+3. Endpoint cron manual tersedia di `/api/cron/tracking-auto-complete`.
+
+### Perintah Cepat
+
+```bash
+npm install
+npm run dev
+npm run dev:turbo
+npm run build
+npm run build:turbo
+npm run start:3273
+```
+
+### Checklist Verifikasi Singkat
+
+- Pastikan endpoint `/api/cron/tracking-auto-complete` mengembalikan respons sukses.
+- Pastikan data tracking tersimpan ke kolom `NO_KEC`, `NO_KEL`, `NO_DOK`, dan `EXTRA_NOTE` sesuai rule.
+- Pastikan alur edit data tracking berjalan lewat modal PATCH, bukan menimpa alur create.
+- Pastikan skrip `dev:turbo`, `build:turbo`, dan `start:3273` dapat dijalankan tanpa error.
+
+-----
+
 ## KATA PENGANTAR
 
 Dokumen ini disusun sebagai naskah arsitektur komprehensif untuk proyek modernisasi sistem Monalisa Monitoring. Bagian berikut memuat narasi personal dari penulis, yang memberikan konteks terhadap filosofi di balik penyusunan dokumen ini.

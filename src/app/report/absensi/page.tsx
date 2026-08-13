@@ -1,7 +1,7 @@
-﻿import TypeableSelect from "@/components/ui/TypeableSelect";
-// FILE: src/app/report/absensi/page.tsx
-"use client";
+﻿"use client";
 
+import TypeableSelect from "@/components/ui/TypeableSelect";
+// FILE: src/app/report/absensi/page.tsx
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useSession } from "@/contexts/session";
