@@ -246,7 +246,7 @@ export async function PATCH(req: NextRequest, ctx: Params) {
     const item = await withTransaction(async (conn) => {
       const currentRes = await conn.execute(
         `
-        SELECT REQUEST_ID, STATUS, IS_ACTIVE, CREATED_BY
+        SELECT REQUEST_ID, STATUS, IS_ACTIVE, LOCATION_ID
         FROM M_TRACKING_REQUEST
         WHERE REQUEST_ID = :b_request_id
         FOR UPDATE
@@ -256,8 +256,20 @@ export async function PATCH(req: NextRequest, ctx: Params) {
       );
       const current = (currentRes.rows?.[0] as any) || null;
       if (!current || normalizeText(current.IS_ACTIVE) !== "Y") throw new Error("Data tracking tidak ditemukan.");
-      if (!isTrackingSuperadminUser(session.S_USER_ID) && normalizeUserKey(current.CREATED_BY) !== normalizeUserKey(session.S_USER_ID)) {
-        const forbidden = new Error("Hanya petugas penginput yang dapat mengubah data ini.");
+
+      const existingLocationRes = await conn.execute(
+        `
+        SELECT LOCATION_CODE, LOCATION_NAME
+        FROM M_TRACKING_LOCATION
+        WHERE LOCATION_ID = :b_location_id
+        `,
+        { b_location_id: Number(current.LOCATION_ID ?? 0) },
+        { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: false }
+      );
+      const existingLocation = (existingLocationRes.rows?.[0] as any) || null;
+      if (!existingLocation) throw new Error("Lokasi layanan tracking tidak ditemukan.");
+      if (!isTrackingSuperadminUser(session.S_USER_ID) && !isOfficeAllowedForLocation(session.S_NAMA_KANTOR, existingLocation.LOCATION_CODE, existingLocation.LOCATION_NAME)) {
+        const forbidden = new Error("Anda tidak memiliki hak akses lokasi untuk mengubah data ini.");
         (forbidden as any).status = 403;
         throw forbidden;
       }
@@ -400,7 +412,7 @@ export async function DELETE(_req: NextRequest, ctx: Params) {
     const deleted = await withTransaction(async (conn) => {
       const currentRes = await conn.execute(
         `
-        SELECT REQUEST_ID, REGISTRATION_NO, IS_ACTIVE, CREATED_BY
+        SELECT REQUEST_ID, REGISTRATION_NO, IS_ACTIVE, LOCATION_ID
         FROM M_TRACKING_REQUEST
         WHERE REQUEST_ID = :b_request_id
         FOR UPDATE
@@ -410,8 +422,20 @@ export async function DELETE(_req: NextRequest, ctx: Params) {
       );
       const current = (currentRes.rows?.[0] as any) || null;
       if (!current || normalizeText(current.IS_ACTIVE) !== "Y") throw new Error("Data tracking tidak ditemukan.");
-      if (!isTrackingSuperadminUser(session.S_USER_ID) && normalizeUserKey(current.CREATED_BY) !== normalizeUserKey(session.S_USER_ID)) {
-        const forbidden = new Error("Hanya petugas penginput yang dapat menghapus data ini.");
+
+      const existingLocationRes = await conn.execute(
+        `
+        SELECT LOCATION_CODE, LOCATION_NAME
+        FROM M_TRACKING_LOCATION
+        WHERE LOCATION_ID = :b_location_id
+        `,
+        { b_location_id: Number(current.LOCATION_ID ?? 0) },
+        { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: false }
+      );
+      const existingLocation = (existingLocationRes.rows?.[0] as any) || null;
+      if (!existingLocation) throw new Error("Lokasi layanan tracking tidak ditemukan.");
+      if (!isTrackingSuperadminUser(session.S_USER_ID) && !isOfficeAllowedForLocation(session.S_NAMA_KANTOR, existingLocation.LOCATION_CODE, existingLocation.LOCATION_NAME)) {
+        const forbidden = new Error("Anda tidak memiliki hak akses lokasi untuk menghapus data ini.");
         (forbidden as any).status = 403;
         throw forbidden;
       }

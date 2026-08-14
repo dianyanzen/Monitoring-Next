@@ -1629,6 +1629,37 @@ html[data-theme="light"] .badge.mono.code-glow:focus::after{
   html[data-theme="light"] .badge.mono.code-glow::after{ transition: opacity .2s ease }
 }
 
+/* ===== Tracking Pengajuan — light harmonization ===== */
+html[data-theme="light"] .tracking-pengajuan-page [class*="bg-[#05070d]/80"] {
+  background: #fff !important;
+  border-color: var(--lux-border) !important;
+  box-shadow: var(--lux-shadow) !important;
+}
+
+html[data-theme="light"] .tracking-pengajuan-page [class*="bg-[#0b0f1c]"],
+html[data-theme="light"] .tracking-pengajuan-page [class*="bg-[#0f172a]/80"] {
+  background: #fffdfa !important;
+  color: var(--lux-ink) !important;
+  border-color: var(--lux-border) !important;
+  box-shadow: var(--lux-shadow) !important;
+}
+
+html[data-theme="light"] .tracking-pengajuan-page [class*="text-cyan-"] {
+  color: var(--lux-ink) !important;
+}
+
+html[data-theme="light"] .tracking-pengajuan-page button[class*="bg-slate-700"][disabled],
+html[data-theme="light"] .tracking-pengajuan-page button[class*="bg-slate-900"][disabled] {
+  background: #f1ebe2 !important;
+  color: #9c8a73 !important;
+  border: 1px solid var(--lux-border) !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .tracking-pengajuan-page [class*="bg-black/70"] {
+  background: rgba(25, 33, 45, 0.32) !important;
+}
+
 /* FILE: src/styles/theme-light.css */
 /* ========== Light Patch v3 — Repair Local Biometric ========== */
 

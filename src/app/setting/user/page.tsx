@@ -331,7 +331,7 @@ export default function SettingUserPage() {
                   value={filterUserId}
                   onChange={(e) => setFilterUserId(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && void fetchRows()}
-                 
+                  className="field-input"
                   placeholder="Cari User ID"
                 />
               </Field>
@@ -342,7 +342,7 @@ export default function SettingUserPage() {
                   value={filterUserNm}
                   onChange={(e) => setFilterUserNm(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && void fetchRows()}
-                 
+                  className="field-input"
                   placeholder="Masukkan nama user"
                 />
               </Field>

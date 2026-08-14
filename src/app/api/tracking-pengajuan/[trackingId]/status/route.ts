@@ -13,6 +13,7 @@ import {
   TRACKING_STATUS_LABELS,
   type TrackingStatus,
 } from "@/lib/tracking/constants";
+import { isOfficeAllowedForLocation } from "@/lib/tracking/office-location";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -58,7 +59,7 @@ export async function POST(req: NextRequest, ctx: Params) {
       async (conn) => {
         const curRes = await conn.execute(
           `
-          SELECT REQUEST_ID, STATUS, CREATED_BY
+          SELECT REQUEST_ID, STATUS, LOCATION_ID
           FROM M_TRACKING_REQUEST
           WHERE REQUEST_ID = :b_request_id
             AND IS_ACTIVE = 'Y'
@@ -69,8 +70,20 @@ export async function POST(req: NextRequest, ctx: Params) {
         );
         const current = (curRes.rows?.[0] as any) || null;
         if (!current) throw new Error("Data tracking tidak ditemukan.");
-        if (!isTrackingSuperadminUser(session.S_USER_ID) && normalizeUserKey(current.CREATED_BY) !== normalizeUserKey(session.S_USER_ID)) {
-          const forbidden = new Error("Hanya petugas penginput yang dapat memperbarui status data ini.");
+
+        const existingLocationRes = await conn.execute(
+          `
+          SELECT LOCATION_CODE, LOCATION_NAME
+          FROM M_TRACKING_LOCATION
+          WHERE LOCATION_ID = :b_location_id
+          `,
+          { b_location_id: Number(current.LOCATION_ID ?? 0) },
+          { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: false }
+        );
+        const existingLocation = (existingLocationRes.rows?.[0] as any) || null;
+        if (!existingLocation) throw new Error("Lokasi layanan tracking tidak ditemukan.");
+        if (!isTrackingSuperadminUser(session.S_USER_ID) && !isOfficeAllowedForLocation(session.S_NAMA_KANTOR, existingLocation.LOCATION_CODE, existingLocation.LOCATION_NAME)) {
+          const forbidden = new Error("Anda tidak memiliki hak akses lokasi untuk memperbarui status data ini.");
           (forbidden as any).status = 403;
           throw forbidden;
         }

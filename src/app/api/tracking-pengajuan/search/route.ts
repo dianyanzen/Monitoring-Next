@@ -12,6 +12,41 @@ export const dynamic = "force-dynamic";
 
 const ORACLE_ALIAS = process.env.DB_ALIAS_TRACKING ?? "DB";
 
+function parseSearchTerms(raw: string) {
+  const chunks = raw
+    .split(",")
+    .map((item) => normalizeText(item))
+    .filter(Boolean);
+
+  const registrationNos = new Set<string>();
+  const niks = new Set<string>();
+  const invalidTerms: string[] = [];
+
+  for (const chunk of chunks) {
+    const reg = normalizeUpper(chunk);
+    const nik = normalizeDigits(chunk, 16);
+    const numericOnly = /^\d+$/.test(chunk);
+
+    if (reg.startsWith("REG-")) {
+      registrationNos.add(reg);
+      continue;
+    }
+    if (nik.length === 16) {
+      niks.add(nik);
+      continue;
+    }
+    if (numericOnly || reg) {
+      invalidTerms.push(chunk);
+    }
+  }
+
+  return {
+    registrationNos: Array.from(registrationNos),
+    niks: Array.from(niks),
+    invalidTerms,
+  };
+}
+
 function statusLabel(status: unknown) {
   const key = normalizeUpper(status) as keyof typeof TRACKING_STATUS_LABELS;
   return TRACKING_STATUS_LABELS[key] || normalizeText(status);
@@ -27,15 +62,42 @@ export async function GET(req: NextRequest) {
     const syncResult = await syncAutoCompletedTracking();
 
     const q = normalizeText(req.nextUrl.searchParams.get("q"));
-    const registrationNo = normalizeUpper(req.nextUrl.searchParams.get("registrationNo") || q);
-    const nik = normalizeDigits(req.nextUrl.searchParams.get("nik") || q, 16);
+    const registrationNoParam = normalizeText(req.nextUrl.searchParams.get("registrationNo"));
+    const nikParam = normalizeText(req.nextUrl.searchParams.get("nik"));
 
-    const registrationBind = registrationNo.startsWith("REG-") ? registrationNo : "";
-    const nikBind = nik.length === 16 ? nik : "";
+    const mergedRaw = [q, registrationNoParam, nikParam].filter(Boolean).join(",");
+    if (!mergedRaw) return badRequest("Nomor registrasi atau NIK wajib diisi.");
 
-    if (!registrationNo && !nik) return badRequest("Nomor registrasi atau NIK wajib diisi.");
-    if (q && /^\d+$/.test(q) && q.length !== 16) return badRequest("NIK wajib 16 digit.");
-    if (!registrationBind && !nikBind) return badRequest("Masukkan nomor registrasi REG-... atau NIK 16 digit.");
+    const parsed = parseSearchTerms(mergedRaw);
+    if (parsed.invalidTerms.length) {
+      return badRequest(
+        `Format pencarian tidak valid: ${parsed.invalidTerms.join(", ")}. Gunakan nomor registrasi REG-... atau NIK 16 digit.`
+      );
+    }
+    if (!parsed.registrationNos.length && !parsed.niks.length) {
+      return badRequest("Masukkan nomor registrasi REG-... atau NIK 16 digit.");
+    }
+
+    const binds: Record<string, string | null> = {};
+    const clauses: string[] = [];
+
+    if (parsed.registrationNos.length) {
+      const regPlaceholders = parsed.registrationNos.map((value, idx) => {
+        const key = `b_reg_${idx}`;
+        binds[key] = value;
+        return `:${key}`;
+      });
+      clauses.push(`UPPER(T.REGISTRATION_NO) IN (${regPlaceholders.join(",")})`);
+    }
+
+    if (parsed.niks.length) {
+      const nikPlaceholders = parsed.niks.map((value, idx) => {
+        const key = `b_nik_${idx}`;
+        binds[key] = value;
+        return `:${key}`;
+      });
+      clauses.push(`T.NIK IN (${nikPlaceholders.join(",")})`);
+    }
 
     const rows = await execRows<any>(
       `
@@ -55,16 +117,10 @@ export async function GET(req: NextRequest) {
       JOIN M_TRACKING_LOCATION L ON L.LOCATION_ID = T.LOCATION_ID
       JOIN M_TRACKING_PRODUCT P ON P.PRODUCT_ID = T.PRODUCT_ID
       WHERE T.IS_ACTIVE = 'Y'
-        AND (
-          (:b_registration_no IS NOT NULL AND UPPER(T.REGISTRATION_NO) = :b_registration_no)
-          OR (:b_nik IS NOT NULL AND T.NIK = :b_nik)
-        )
+        AND (${clauses.join(" OR ")})
       ORDER BY T.CREATED_AT DESC, T.REQUEST_ID DESC
       `,
-      {
-        b_registration_no: registrationBind || null,
-        b_nik: nikBind || null,
-      },
+      binds,
       {},
       ORACLE_ALIAS
     );

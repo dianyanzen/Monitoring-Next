@@ -158,16 +158,16 @@ export default function SettingPejabatEditPage(props: any) {
                 <input
                   value={form.nip}
                   onChange={handleChange("nip")}
-                 
+                  className="field-input"
                   inputMode="numeric"
                   maxLength={30}
                 />
               </Field>
               <Field label="Nama Pejabat">
-                <input value={form.nama} onChange={handleChange("nama")} />
+                <input value={form.nama} onChange={handleChange("nama")} className="field-input" />
               </Field>
               <Field label="Jabatan">
-                <input value={form.jabatan} onChange={handleChange("jabatan")} />
+                <input value={form.jabatan} onChange={handleChange("jabatan")} className="field-input" />
               </Field>
               <Field label="Pejabat Struktural">
                 <TypeableSelect value={form.is_struktural} onChange={handleChange("is_struktural")}>

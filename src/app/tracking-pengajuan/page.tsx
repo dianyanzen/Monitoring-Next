@@ -3,6 +3,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState } from "react";
+import CryptoJS from "crypto-js";
 import {
   CheckCircle2,
   Clock3,
@@ -19,7 +20,7 @@ import DateRangePopup from "@/components/ui/DateRangePopup";
 import NeonModal, { type ModalKind } from "@/components/ui/NeonModal";
 import SelectFancy, { type Option as SelectFancyOption } from "@/components/ui/SelectFancy";
 import SettingPageHeader from "@/components/setting/SettingPageHeader";
-import { filterLocationsByOffice } from "@/lib/tracking/office-location";
+import { filterLocationsByOffice, isOfficeAllowedForLocation } from "@/lib/tracking/office-location";
 
 const JQDataTable = dynamic(() => import("@/components/datatable/JQDataTable"), {
   ssr: false,
@@ -125,8 +126,23 @@ const emptyEditForm = {
 
 const toLocalIso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 const normalizeDigits = (value: string, max = 16) => value.replace(/\D/g, "").slice(0, max);
-const qrUrl = (value: string) => {
-  const targetUrl = `https://disdukcapil.bandung.go.id/api/web/cekresi?resi=${encodeURIComponent(value)}`;
+const QR_SECRET = "DISDUKCAPIL-BANDUNG-2026-QR-SECRET";
+
+const encryptResi = (resi: string) => {
+  const key = CryptoJS.SHA256(QR_SECRET);
+  const iv = CryptoJS.lib.WordArray.random(16);
+  const encrypted = CryptoJS.AES.encrypt(resi, key, {
+    iv,
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7,
+  });
+  const combined = iv.clone().concat(encrypted.ciphertext);
+  return encodeURIComponent(CryptoJS.enc.Base64.stringify(combined));
+};
+
+const qrUrl = (registrationNo: string) => {
+  const encryptedResi = encryptResi(registrationNo);
+  const targetUrl = `https://disdukcapil.bandung.go.id/api/web/cekresi?r=${encryptedResi}`;
   return `https://api.qrserver.com/v1/create-qr-code/?size=132x132&data=${encodeURIComponent(targetUrl)}`;
 };
 
@@ -248,6 +264,19 @@ function selectedWilayahLabel(options: WilayahOption[], value: string) {
   return options.find((opt) => opt.value === value)?.label || "";
 }
 
+function normalizeGeulisName(value: string) {
+  const raw = String(value || "").trim().toUpperCase();
+  const compact = raw.replace(/\s+/g, " ");
+  if (compact.includes("BTC") || compact.includes("DBOTANICA") || compact.includes("D BOTANICA") || compact.includes("D'BOTANICA")) return "GEULIS D'BOTANICA";
+  if (compact.includes("DPRD")) return "GEULIS DPRD";
+  if (compact.includes("MIM")) return "GEULIS MIM";
+  if (compact.includes("SUMARECON") || compact.includes("SUMMARECON")) return "GEULIS SUMARECON";
+  if (compact.includes("KIWARI")) return "GEULIS KIWARI";
+  if (compact.includes("MPP")) return "GEULIS MPP";
+  const withoutPrefix = compact.replace(/^GEULIS\s+/, "").trim();
+  return withoutPrefix ? `GEULIS ${withoutPrefix}` : "GEULIS";
+}
+
 export default function TrackingPengajuanPage() {
   const { user } = useSession();
   const today = useMemo(() => toLocalIso(new Date()), []);
@@ -312,11 +341,13 @@ export default function TrackingPengajuanPage() {
   const currentUserId = useMemo(() => String(user?.S_USER_ID || "").trim().toUpperCase(), [user?.S_USER_ID]);
   const isTrackingSuperadmin = useMemo(() => currentUserId === TRACKING_SUPERADMIN_USER, [currentUserId]);
 
-  const canManageTracking = (createdBy?: string | null) => {
+  const canManageTracking = (locationCode?: string | null, locationName?: string | null) => {
     if (isTrackingSuperadmin) return true;
-    if (!currentUserId) return false;
-    return String(createdBy || "").trim().toUpperCase() === currentUserId;
+    return isOfficeAllowedForLocation(user?.S_NAMA_KANTOR, locationCode, locationName);
   };
+
+  const canManageTrackingRow = (row: TrackingRow) => canManageTracking(row.locationCode, row.locationName);
+  const canManageSearchRow = (row: SearchRow) => canManageTracking(null, row.locationName);
 
   const isLocationProductSelected = Boolean(form.locationId && form.productId);
   const isNikEnabled = isLocationProductSelected;
@@ -422,8 +453,7 @@ export default function TrackingPengajuanPage() {
     [currentKelurahanOptions]
   );
 
-  const selectFancyThemeVars =
-    "[--accent:#22d3ee] [--panel-bg:#0f172a] [--surface-1:#0f172a] [--panel-border:rgba(34,211,238,0.35)] [--panel-shadow:0_12px_28px_rgba(0,0,0,0.45)] [--ink:#e0f2fe] [--ink-muted:#a5c9df]";
+  const selectFancyThemeVars = "typeable-select tracking-select";
 
   const inputLocationSelectFancyOptions = useMemo<SelectFancyOption[]>(
     () => inputLocations.map((item) => ({ value: String(item.locationId), label: `${item.code} - ${item.name}` })),
@@ -526,17 +556,18 @@ export default function TrackingPengajuanPage() {
   );
 
   const selectedTrackingSet = useMemo(() => new Set(selectedTrackingIds), [selectedTrackingIds]);
+  const manageableRows = useMemo(() => rows.filter((row) => canManageTrackingRow(row)), [rows, isTrackingSuperadmin, user?.S_NAMA_KANTOR]);
   const selectedOwnedRows = useMemo(
-    () => rows.filter((row) => selectedTrackingSet.has(row.trackingId) && canManageTracking(row.createdBy)),
-    [rows, selectedTrackingSet, currentUserId]
+    () => rows.filter((row) => selectedTrackingSet.has(row.trackingId) && canManageTrackingRow(row)),
+    [rows, selectedTrackingSet, isTrackingSuperadmin, user?.S_NAMA_KANTOR]
   );
   const allRowsSelected = useMemo(
-    () => rows.length > 0 && rows.every((row) => selectedTrackingSet.has(row.trackingId)),
-    [rows, selectedTrackingSet]
+    () => manageableRows.length > 0 && manageableRows.every((row) => selectedTrackingSet.has(row.trackingId)),
+    [manageableRows, selectedTrackingSet]
   );
   const selectedRows = useMemo(
-    () => rows.filter((row) => selectedTrackingSet.has(row.trackingId)),
-    [rows, selectedTrackingSet]
+    () => rows.filter((row) => selectedTrackingSet.has(row.trackingId) && canManageTrackingRow(row)),
+    [rows, selectedTrackingSet, isTrackingSuperadmin, user?.S_NAMA_KANTOR]
   );
 
   const columns = useMemo(
@@ -544,12 +575,18 @@ export default function TrackingPengajuanPage() {
       { data: null, title: "No", render: (_: any, __: any, ___: any, meta: any) => meta.row + 1 },
       {
         data: null,
-        title: `<input type="checkbox" class="select-all-tracking" aria-label="Pilih semua" ${allRowsSelected ? "checked" : ""} />`,
+        title: manageableRows.length
+          ? `<input type="checkbox" class="select-all-tracking" aria-label="Pilih semua" ${allRowsSelected ? "checked" : ""} />`
+          : "Pilih",
         orderable: false,
         width: "44px",
         className: "dt-body-center",
-        render: (_: any, __: any, row: TrackingRow) =>
-          `<input type="checkbox" class="row-select-tracking" data-id="${row.trackingId}" aria-label="Pilih ${row.registrationNo}" ${selectedTrackingSet.has(row.trackingId) ? "checked" : ""} />`,
+        render: (_: any, __: any, row: TrackingRow) => {
+          if (!canManageTrackingRow(row)) {
+            return '<span class="text-[11px] text-cyan-100/45">-</span>';
+          }
+          return `<input type="checkbox" class="row-select-tracking" data-id="${row.trackingId}" aria-label="Pilih ${row.registrationNo}" ${selectedTrackingSet.has(row.trackingId) ? "checked" : ""} />`;
+        },
       },
       {
         data: null,
@@ -558,8 +595,11 @@ export default function TrackingPengajuanPage() {
         width: "188px",
         className: "dt-actions",
         render: (_: any, __: any, row: TrackingRow) => {
-          const isOwner = canManageTracking(row.createdBy);
-          const canUpdate = isOwner && nextStatuses(row.status).length > 0;
+          const canManage = canManageTrackingRow(row);
+          if (!canManage) {
+            return '<span class="inline-flex min-w-[168px] justify-center rounded-md border border-cyan-800/60 bg-white/5 px-2 py-1.5 text-[11px] text-cyan-100/70">Tanpa akses lokasi</span>';
+          }
+          const canUpdate = nextStatuses(row.status).length > 0;
           const statusActionClass =
             row.status === "BERKAS_MASUK"
               ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-50 hover:bg-emerald-500/25"
@@ -567,18 +607,16 @@ export default function TrackingPengajuanPage() {
               ? "border-blue-500/40 bg-blue-500/15 text-blue-50 hover:bg-blue-500/25"
               : "border-slate-600/40 bg-slate-500/10 text-slate-200 hover:bg-slate-500/20";
           const statusActionTitle =
-            !isOwner
-              ? "Hanya petugas penginput yang dapat mengubah status"
-              : row.status === "BERKAS_MASUK"
+            row.status === "BERKAS_MASUK"
               ? "Perbarui status (Selesai atau Batal)"
               : row.status === "SELESAI"
               ? "Perbarui status (Sudah Diambil)"
               : "Tidak ada aksi status lanjutan";
           return `
             <div class="grid min-w-[168px] grid-cols-4 gap-1">
-              <button title="${isOwner ? "Cetak resi" : "Hanya petugas penginput yang dapat mencetak resi"}" aria-label="Cetak resi" class="btn-print-resi inline-flex h-8 w-8 items-center justify-center rounded-md border border-cyan-500/40 bg-cyan-500/15 text-cyan-50 transition hover:bg-cyan-500/25 disabled:cursor-not-allowed disabled:opacity-40" data-id="${row.trackingId}" ${isOwner ? "" : "disabled"}>${actionIcons.print}</button>
-              <button title="${isOwner ? "Edit pengajuan" : "Hanya petugas penginput yang dapat mengedit"}" aria-label="Edit pengajuan" class="btn-edit-tracking inline-flex h-8 w-8 items-center justify-center rounded-md border border-sky-500/40 bg-sky-500/15 text-sky-50 transition hover:bg-sky-500/25 disabled:cursor-not-allowed disabled:opacity-40" data-id="${row.trackingId}" ${isOwner ? "" : "disabled"}>${actionIcons.edit}</button>
-              <button title="${isOwner ? "Hapus pengajuan" : "Hanya petugas penginput yang dapat menghapus"}" aria-label="Hapus pengajuan" class="btn-delete-tracking inline-flex h-8 w-8 items-center justify-center rounded-md border border-rose-500/40 bg-rose-500/15 text-rose-50 transition hover:bg-rose-500/25 disabled:cursor-not-allowed disabled:opacity-40" data-id="${row.trackingId}" ${isOwner ? "" : "disabled"}>${actionIcons.trash}</button>
+              <button title="Cetak resi" aria-label="Cetak resi" class="btn-print-resi inline-flex h-8 w-8 items-center justify-center rounded-md border border-cyan-500/40 bg-cyan-500/15 text-cyan-50 transition hover:bg-cyan-500/25" data-id="${row.trackingId}">${actionIcons.print}</button>
+              <button title="Edit pengajuan" aria-label="Edit pengajuan" class="btn-edit-tracking inline-flex h-8 w-8 items-center justify-center rounded-md border border-sky-500/40 bg-sky-500/15 text-sky-50 transition hover:bg-sky-500/25" data-id="${row.trackingId}">${actionIcons.edit}</button>
+              <button title="Hapus pengajuan" aria-label="Hapus pengajuan" class="btn-delete-tracking inline-flex h-8 w-8 items-center justify-center rounded-md border border-rose-500/40 bg-rose-500/15 text-rose-50 transition hover:bg-rose-500/25" data-id="${row.trackingId}">${actionIcons.trash}</button>
               <button title="${statusActionTitle}" aria-label="${statusActionTitle}" class="btn-update-status inline-flex h-8 w-8 items-center justify-center rounded-md border transition ${statusActionClass} disabled:cursor-not-allowed disabled:opacity-40" data-id="${row.trackingId}" ${canUpdate ? "" : "disabled"}>${actionIcons.status}</button>
             </div>
           `;
@@ -606,13 +644,13 @@ export default function TrackingPengajuanPage() {
       },
       { data: "createdBy", title: "Petugas" },
     ],
-    [allRowsSelected, selectedTrackingSet, currentUserId]
+    [allRowsSelected, manageableRows.length, selectedTrackingSet, isTrackingSuperadmin, user?.S_NAMA_KANTOR]
   );
 
   useEffect(() => {
-    const activeIds = new Set(rows.map((row) => row.trackingId));
+    const activeIds = new Set(manageableRows.map((row) => row.trackingId));
     setSelectedTrackingIds((prev) => prev.filter((id) => activeIds.has(id)));
-  }, [rows]);
+  }, [manageableRows]);
 
   useEffect(() => {
     const host = tableHostRef.current;
@@ -894,6 +932,8 @@ export default function TrackingPengajuanPage() {
     if (rowSelect) {
       const id = Number(rowSelect.dataset.id || 0);
       if (!id) return;
+      const row = rows.find((item) => item.trackingId === id);
+      if (!row || !canManageTrackingRow(row)) return;
       setSelectedTrackingIds((prev) => {
         if (rowSelect.checked) {
           if (prev.includes(id)) return prev;
@@ -906,7 +946,7 @@ export default function TrackingPengajuanPage() {
     const selectAll = target.closest("input.select-all-tracking") as HTMLInputElement | null;
     if (selectAll) {
       if (selectAll.checked) {
-        setSelectedTrackingIds(rows.map((row) => row.trackingId));
+        setSelectedTrackingIds(manageableRows.map((row) => row.trackingId));
       } else {
         setSelectedTrackingIds([]);
       }
@@ -918,36 +958,36 @@ export default function TrackingPengajuanPage() {
     const statusBtn = target.closest("[data-id].btn-update-status") as HTMLButtonElement | null;
     if (printBtn) {
       const row = rows.find((item) => item.trackingId === Number(printBtn.dataset.id));
-      if (row && canManageTracking(row.createdBy)) {
+      if (row && canManageTrackingRow(row)) {
         printReceipt(row);
       } else {
-        setNotice({ kind: "error", title: "Akses Ditolak", message: "Hanya petugas penginput yang dapat mencetak resi." });
+        setNotice({ kind: "error", title: "Akses Ditolak", message: "Anda tidak memiliki hak akses lokasi untuk mencetak data ini." });
       }
       return;
     }
     if (editBtn) {
       const row = rows.find((item) => item.trackingId === Number(editBtn.dataset.id));
-      if (row && canManageTracking(row.createdBy)) {
+      if (row && canManageTrackingRow(row)) {
         void openEditModal(row.trackingId);
       } else {
-        setNotice({ kind: "error", title: "Akses Ditolak", message: "Hanya petugas penginput yang dapat mengedit." });
+        setNotice({ kind: "error", title: "Akses Ditolak", message: "Anda tidak memiliki hak akses lokasi untuk mengedit data ini." });
       }
       return;
     }
     if (deleteBtn) {
       const row = rows.find((item) => item.trackingId === Number(deleteBtn.dataset.id));
-      if (row && canManageTracking(row.createdBy)) {
+      if (row && canManageTrackingRow(row)) {
         openDeleteModal(row);
       } else {
-        setNotice({ kind: "error", title: "Akses Ditolak", message: "Hanya petugas penginput yang dapat menghapus." });
+        setNotice({ kind: "error", title: "Akses Ditolak", message: "Anda tidak memiliki hak akses lokasi untuk menghapus data ini." });
       }
       return;
     }
     if (statusBtn && !statusBtn.disabled) {
       const row = rows.find((item) => item.trackingId === Number(statusBtn.dataset.id));
       if (!row) return;
-      if (!canManageTracking(row.createdBy)) {
-        setNotice({ kind: "error", title: "Akses Ditolak", message: "Hanya petugas penginput yang dapat memperbarui status." });
+      if (!canManageTrackingRow(row)) {
+        setNotice({ kind: "error", title: "Akses Ditolak", message: "Anda tidak memiliki hak akses lokasi untuk memperbarui status." });
         return;
       }
       openStatusModal(row);
@@ -957,8 +997,8 @@ export default function TrackingPengajuanPage() {
   useEffect(() => () => detachTableClick(), []);
 
   function toggleSelectAllRows() {
-    if (!rows.length) return;
-    setSelectedTrackingIds(allRowsSelected ? [] : rows.map((row) => row.trackingId));
+    if (!manageableRows.length) return;
+    setSelectedTrackingIds(allRowsSelected ? [] : manageableRows.map((row) => row.trackingId));
   }
 
   function escapeForSrcDoc(value: string) {
@@ -975,12 +1015,7 @@ export default function TrackingPengajuanPage() {
       return;
     }
 
-    if (!selectedOwnedRows.length) {
-      setNotice({ kind: "error", title: "Akses Ditolak", message: "Tidak ada data milik Anda pada pilihan saat ini untuk dicetak." });
-      return;
-    }
-
-    const docs = selectedOwnedRows
+    const docs = selectedRows
       .map((row) => printReceipt(row, { returnHtml: true, autoPrint: false }))
       .filter((item): item is string => typeof item === "string" && item.length > 0);
 
@@ -1053,7 +1088,7 @@ export default function TrackingPengajuanPage() {
     setNotice({
       kind: "success",
       title: "Cetak Massal Diproses",
-      message: `${selectedOwnedRows.length} pengajuan diproses dalam satu dokumen cetak. Simpan sebagai PDF untuk mendapatkan 1 file multi-halaman.`,
+      message: `${selectedRows.length} pengajuan diproses dalam satu dokumen cetak. Simpan sebagai PDF untuk mendapatkan 1 file multi-halaman.`,
     });
   }
 
@@ -1381,12 +1416,21 @@ export default function TrackingPengajuanPage() {
 
   async function searchTrackingByQuery(query: string) {
     setSearching(true);
+    setNotice(null);
     try {
       const params = new URLSearchParams({ q: query.trim() });
       const res = await fetch(`/api/tracking-pengajuan/search?${params.toString()}`, { cache: "no-store" });
       const json = await res.json().catch(() => ({}));
       if (!res.ok || json.success === false) throw new Error(json.message || "Gagal mencari tracking");
-      setSearchRows(json.data?.rows || []);
+      const nextRows = json.data?.rows || [];
+      setSearchRows(nextRows);
+      if (!nextRows.length) {
+        setNotice({
+          kind: "error",
+          title: "Data Tidak Ditemukan",
+          message: "Data tracking tidak ditemukan. Gunakan NIK 16 digit atau nomor registrasi REG-..., bisa lebih dari satu dipisahkan koma.",
+        });
+      }
     } catch (e: any) {
       setNotice({ kind: "error", title: "Pencarian Gagal", message: e?.message || "Gagal mencari tracking" });
       setSearchRows([]);
@@ -1398,7 +1442,7 @@ export default function TrackingPengajuanPage() {
   async function searchTracking() {
     const query = searchTerm.trim();
     if (!query) {
-      setNotice({ kind: "error", title: "Pencarian Kosong", message: "Masukkan Nomor Registrasi atau NIK terlebih dahulu." });
+      setNotice({ kind: "error", title: "Pencarian Kosong", message: "Masukkan Nomor Registrasi atau NIK terlebih dahulu. Bisa lebih dari satu dipisahkan koma." });
       return;
     }
     await searchTrackingByQuery(query);
@@ -1420,6 +1464,10 @@ export default function TrackingPengajuanPage() {
   async function handleSearchCardPrint(trackingId: number) {
     try {
       const row = await resolveTrackingRow(trackingId);
+      if (!canManageTrackingRow(row)) {
+        setNotice({ kind: "error", title: "Akses Ditolak", message: "Anda tidak memiliki hak akses lokasi untuk mencetak data ini." });
+        return;
+      }
       printReceipt(row);
     } catch (e: any) {
       setNotice({ kind: "error", title: "Gagal Cetak", message: e?.message || "Gagal memuat data untuk cetak" });
@@ -1429,6 +1477,10 @@ export default function TrackingPengajuanPage() {
   async function handleSearchCardStatus(trackingId: number) {
     try {
       const row = await resolveTrackingRow(trackingId);
+      if (!canManageTrackingRow(row)) {
+        setNotice({ kind: "error", title: "Akses Ditolak", message: "Anda tidak memiliki hak akses lokasi untuk memperbarui status." });
+        return;
+      }
       openStatusModal(row);
     } catch (e: any) {
       setNotice({ kind: "error", title: "Gagal Memuat Status", message: e?.message || "Gagal memuat data untuk update status" });
@@ -1440,7 +1492,7 @@ export default function TrackingPengajuanPage() {
       return `KECAMATAN ${row.locationName}`;
     }
     if (row.locationId >= 31 && row.locationId <= 36) {
-      return `GEULIS ${row.locationName}`;
+      return normalizeGeulisName(row.locationName);
     }
     if (row.locationCode === "99" || row.locationName?.toUpperCase() === "DINAS") {
       return "DINAS KEPENDUDUKAN DAN PENCATATAN SIPIL KOTA BANDUNG";
@@ -2081,7 +2133,7 @@ export default function TrackingPengajuanPage() {
   }
 
   return (
-    <div className="relative mt-16 space-y-8 px-4 pb-10 pt-6 text-gray-100 sm:px-6 md:px-8 md:pt-8">
+    <div className="tracking-pengajuan-page relative mt-16 space-y-8 px-4 pb-10 pt-6 text-gray-100 sm:px-6 md:px-8 md:pt-8">
       <SettingPageHeader
         lead="Pelayanan"
         title="Tracking Pengajuan"
@@ -2222,7 +2274,7 @@ export default function TrackingPengajuanPage() {
             <button
               onClick={() => void saveTracking()}
               disabled={!isSaveEnabled || saving}
-              className={`mt-1 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-black shadow-lg ${isSaveEnabled ? "bg-gradient-to-r from-cyan-400 to-blue-500 hover:opacity-95" : "bg-slate-700 text-slate-300 cursor-not-allowed"}`}
+              className={`mt-1 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold shadow-lg ${isSaveEnabled ? "bg-gradient-to-r from-cyan-400 to-blue-500 text-black hover:opacity-95" : "cursor-not-allowed border border-cyan-800/60 bg-white/5 text-cyan-200/60 shadow-none"}`}
             >
               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
               Simpan
@@ -2291,18 +2343,18 @@ export default function TrackingPengajuanPage() {
           </div>
           <div className="ml-auto flex flex-wrap items-center gap-2">
             <span className="rounded-full border border-cyan-500/40 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100/85">
-              Terpilih: <span className="font-semibold text-cyan-50">{selectedRows.length}</span> | Milik Saya: <span className="font-semibold text-cyan-50">{selectedOwnedRows.length}</span>
+              Terpilih: <span className="font-semibold text-cyan-50">{selectedRows.length}</span> | Dapat Dikelola: <span className="font-semibold text-cyan-50">{selectedOwnedRows.length}</span>
             </span>
             <button
               onClick={toggleSelectAllRows}
-              disabled={!rows.length || saving || loading}
+              disabled={!manageableRows.length || saving || loading}
               className="inline-flex items-center justify-center rounded-lg border border-cyan-700/50 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-50 hover:bg-cyan-500/20 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {allRowsSelected ? "Batal Pilih Semua" : "Pilih Semua"}
             </button>
             <button
               onClick={printSelectedRows}
-              disabled={!selectedOwnedRows.length || saving || loading}
+              disabled={!selectedRows.length || saving || loading}
               className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-sky-500/40 bg-sky-500/15 px-3 py-1.5 text-xs font-semibold text-sky-50 hover:bg-sky-500/25 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Printer className="h-3.5 w-3.5" /> Cetak Terpilih
@@ -2330,7 +2382,7 @@ export default function TrackingPengajuanPage() {
             <h2 className="text-sm font-semibold">Tracking</h2>
           </div>
           <div className="ml-auto flex flex-1 flex-wrap justify-end gap-2">
-            <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value.toUpperCase())} onKeyDown={(e) => e.key === "Enter" && searchTracking()} placeholder="Nomor Registrasi atau NIK" className="min-w-0 w-full max-w-[420px] rounded-xl border border-cyan-800/60 bg-[#0f172a] px-3 py-2 text-sm text-cyan-50" />
+            <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value.toUpperCase())} onKeyDown={(e) => e.key === "Enter" && searchTracking()} placeholder="Nomor Registrasi / NIK (pisahkan dengan koma)" className="field-input min-w-0 w-full max-w-[420px]" />
             <button onClick={() => void searchTracking()} disabled={searching} className="min-w-0 w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-500/20 px-4 py-2 text-sm font-semibold text-cyan-50 hover:bg-cyan-500/30">
               {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
               Cari
@@ -2357,14 +2409,14 @@ export default function TrackingPengajuanPage() {
             type="date"
             value={quickTracking.date}
             onChange={(e) => setQuickTracking((prev) => ({ ...prev, date: e.target.value }))}
-            className="min-w-0 rounded-xl border border-cyan-800/60 bg-[#0f172a] px-3 py-2 text-sm text-cyan-50"
+            className="field-input min-w-0"
           />
           <input
             value={quickTracking.sequence}
             onChange={(e) => setQuickTracking((prev) => ({ ...prev, sequence: e.target.value.replace(/[^\d]/g, "").slice(0, 3) }))}
             onKeyDown={(e) => e.key === "Enter" && void searchTrackingBySequence()}
             placeholder="No Urut (001)"
-            className="min-w-0 rounded-xl border border-cyan-800/60 bg-[#0f172a] px-3 py-2 text-sm text-cyan-50"
+            className="field-input min-w-0"
           />
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -2398,7 +2450,7 @@ export default function TrackingPengajuanPage() {
                   ) : null}
                 </div>
                 <div className="mt-4 grid grid-cols-2 gap-2">
-                  {canManageTracking(item.createdBy) ? (
+                  {canManageSearchRow(item) ? (
                     <>
                       <button
                         onClick={() => void handleSearchCardPrint(item.trackingId)}
@@ -2459,7 +2511,7 @@ export default function TrackingPengajuanPage() {
                     </>
                   ) : (
                     <p className="col-span-2 rounded-lg border border-cyan-800/60 bg-white/5 px-2.5 py-2 text-center text-[11px] text-cyan-100/70">
-                      Data ini hanya dapat dikelola oleh petugas penginput.
+                      Tanpa hak akses lokasi. Data hanya dapat dikelola lokasi yang berkepentingan.
                     </p>
                   )}
                 </div>

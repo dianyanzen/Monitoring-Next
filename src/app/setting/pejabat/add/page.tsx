@@ -119,7 +119,7 @@ export default function SettingPejabatAddPage() {
             <input
               value={form.nip}
               onChange={handleChange("nip")}
-             
+              className="field-input"
               placeholder="NIP pejabat"
               inputMode="numeric"
               maxLength={30}
@@ -129,7 +129,7 @@ export default function SettingPejabatAddPage() {
             <input
               value={form.nama}
               onChange={handleChange("nama")}
-             
+              className="field-input"
               placeholder="Tulis huruf kapital"
             />
           </Field>
@@ -137,7 +137,7 @@ export default function SettingPejabatAddPage() {
             <input
               value={form.jabatan}
               onChange={handleChange("jabatan")}
-             
+              className="field-input"
               placeholder="Jabatan pejabat"
             />
           </Field>

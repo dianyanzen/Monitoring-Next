@@ -176,7 +176,7 @@ export default function SettingActivityIdAddPage() {
               <input
                 value={form.activity}
                 onChange={handleChange("activity")}
-               
+                className="field-input"
                 placeholder="Nama activity"
               />
             </Field>

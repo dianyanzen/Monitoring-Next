@@ -827,7 +827,7 @@ export default function AddUserPage() {
                       akun: { ...prev.akun, user_siak: nik },
                     }));
                   }}
-                 
+                  className="field-input"
                   maxLength={16}
                   inputMode="numeric"
                 />
@@ -850,7 +850,7 @@ export default function AddUserPage() {
                 <input
                   value={form.tgl_lhr}
                   onChange={handleBirthDateChange}
-                 
+                  className="field-input"
                   placeholder="31-12-1990"
                   maxLength={10}
                   inputMode="numeric"
@@ -897,7 +897,7 @@ export default function AddUserPage() {
                 <input
                   value={form.telp}
                   onChange={handleChange("telp")}
-                 
+                  className="field-input"
                 />
               </Field>
 
@@ -1068,7 +1068,7 @@ export default function AddUserPage() {
                       akun: { ...prev.akun, user_bcard: e.target.value },
                     }))
                   }
-                 
+                  className="field-input"
                 />
               </Field>
               <Field label="Akun Biomorf Enrol">
@@ -1080,7 +1080,7 @@ export default function AddUserPage() {
                       akun: { ...prev.akun, user_benrol: e.target.value },
                     }))
                   }
-                 
+                  className="field-input"
                 />
               </Field>
             </div>
@@ -1177,7 +1177,7 @@ export default function AddUserPage() {
                   type="password"
                   value={form.password}
                   onChange={handleChange("password")}
-                 
+                  className="field-input"
                 />
               </Field>
               <Field label="Re-Password">
@@ -1185,7 +1185,7 @@ export default function AddUserPage() {
                   type="password"
                   value={form.re_password}
                   onChange={handleChange("re_password")}
-                 
+                  className="field-input"
                 />
               </Field>
             </div>

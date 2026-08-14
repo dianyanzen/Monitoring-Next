@@ -97,7 +97,7 @@ html[data-theme="light"] .btn--danger{
 }
 
 
-html[data-theme="light"] :is(input, textarea, select) {
+html[data-theme="light"] :is(input, textarea, select):not([id^="react-select-"]) {
 background: #fff !important;
 color: var(--lux-ink) !important;
 border: 1px solid var(--lux-border) !important;
@@ -109,8 +109,136 @@ html[data-theme="light"] ::placeholder {
 color: #98a2b3;
 opacity: 1;
 }
-html[data-theme="light"] :is(input, textarea, select):focus {
+html[data-theme="light"] :is(input, textarea, select):focus:not([id^="react-select-"]) {
 outline: none !important;
 box-shadow: 0 0 0 3px rgba(60, 80, 125, 0.24) !important;
 border-color: color-mix(in oklab, #e0c58f 55%, #a8844c 15%) !important;
+}
+
+/* React-Select owns its own input layout; do not force global light input skin here. */
+html[data-theme="light"] .typeable-select .rs__input-container,
+html[data-theme="light"] .typeable-select .rs__input-container input {
+background: transparent !important;
+border: 0 !important;
+border-radius: 0 !important;
+padding: 0 !important;
+box-shadow: none !important;
+min-width: 2px !important;
+}
+
+html[data-theme="light"] .typeable-select .rs__input-container input:focus {
+box-shadow: none !important;
+border-color: transparent !important;
+}
+
+/* TypeableSelect theme tokens (shared by SelectFancy inline styles) */
+.typeable-select {
+--accent: #22d3ee;
+--panel-bg: #0f172a;
+--surface-1: #0f172a;
+--panel-border: rgba(34, 211, 238, 0.35);
+--panel-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+--ink: #e0f2fe;
+--ink-muted: #a5c9df;
+}
+
+html[data-theme="light"] .typeable-select {
+--accent: color-mix(in oklab, var(--gold-400), #fff 30%);
+--panel-bg: #fff;
+--surface-1: #fff;
+--panel-border: var(--lux-border);
+--panel-shadow: var(--lux-shadow);
+--ink: var(--lux-ink);
+--ink-muted: var(--lux-muted);
+}
+
+/* Force react-select light visuals regardless of inherited dark inline vars. */
+html[data-theme="light"] .typeable-select .rs__control {
+background: #fff !important;
+border-color: var(--lux-border) !important;
+box-shadow: inset 0 1px 0 #fff, 0 0 0 1px transparent !important;
+min-height: 42px !important;
+border-radius: 12px !important;
+}
+
+html[data-theme="light"] .typeable-select .rs__control--is-focused {
+border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 28%) !important;
+box-shadow: 0 0 0 3px rgba(60, 80, 125, 0.24) !important;
+}
+
+html[data-theme="light"] .typeable-select .rs__menu {
+background: #fff !important;
+border: 1px solid var(--lux-border) !important;
+box-shadow: var(--lux-shadow) !important;
+}
+
+html[data-theme="light"] .typeable-select .rs__value-container {
+padding-left: 12px !important;
+padding-right: 10px !important;
+}
+
+html[data-theme="light"] .typeable-select .rs__placeholder {
+color: var(--lux-muted) !important;
+}
+
+html[data-theme="light"] .typeable-select .rs__option {
+color: var(--lux-ink) !important;
+}
+
+html[data-theme="light"] .typeable-select .rs__option--is-focused {
+background: color-mix(in oklab, var(--gold-100), #fff 55%) !important;
+}
+
+html[data-theme="light"] .typeable-select .rs__option--is-selected {
+background: color-mix(in oklab, var(--gold-200), #fff 42%) !important;
+color: var(--lux-ink) !important;
+}
+
+/* Tracking page: force light look on SelectFancy controls in case page-level styles override defaults. */
+html[data-theme="light"] .tracking-pengajuan-page .tracking-select .rs__control {
+background: #fff !important;
+border: 1px solid var(--lux-border) !important;
+color: var(--lux-ink) !important;
+box-shadow: inset 0 1px 0 #fff, 0 0 0 1px transparent !important;
+min-height: 42px !important;
+border-radius: 12px !important;
+}
+
+html[data-theme="light"] .tracking-pengajuan-page .tracking-select .rs__control--is-focused {
+border-color: color-mix(in oklab, var(--lux-border), var(--gold-400) 28%) !important;
+box-shadow: 0 0 0 3px rgba(60, 80, 125, 0.24) !important;
+}
+
+html[data-theme="light"] .tracking-pengajuan-page .tracking-select .rs__single-value,
+html[data-theme="light"] .tracking-pengajuan-page .tracking-select .rs__placeholder,
+html[data-theme="light"] .tracking-pengajuan-page .tracking-select .rs__indicator {
+color: var(--lux-ink) !important;
+}
+
+html[data-theme="light"] .tracking-pengajuan-page .tracking-select .rs__placeholder {
+color: var(--lux-muted) !important;
+}
+
+html[data-theme="light"] .tracking-pengajuan-page .tracking-select .rs__value-container {
+padding-left: 12px !important;
+padding-right: 10px !important;
+}
+
+html[data-theme="light"] .tracking-pengajuan-page .tracking-select .rs__input-container,
+html[data-theme="light"] .tracking-pengajuan-page .tracking-select .rs__input-container input {
+background: transparent !important;
+border: 0 !important;
+padding: 0 !important;
+box-shadow: none !important;
+color: var(--lux-ink) !important;
+}
+
+html[data-theme="light"] .tracking-pengajuan-page .tracking-select .rs__menu {
+background: #fff !important;
+border: 1px solid var(--lux-border) !important;
+box-shadow: var(--lux-shadow) !important;
+}
+
+html[data-theme="light"] .tracking-pengajuan-page .tracking-select .rs__option {
+color: var(--lux-ink) !important;
 }

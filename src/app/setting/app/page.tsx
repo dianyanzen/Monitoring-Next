@@ -234,7 +234,7 @@ export default function SettingAppPage() {
                 <input
                   value={form.no_prop}
                   onChange={handleChange("no_prop")}
-                 
+                  className="field-input"
                   maxLength={2}
                   inputMode="numeric"
                   disabled={formDisabled}
@@ -244,7 +244,7 @@ export default function SettingAppPage() {
                 <input
                   value={form.no_kab}
                   onChange={handleChange("no_kab")}
-                 
+                  className="field-input"
                   maxLength={2}
                   inputMode="numeric"
                   disabled={formDisabled}
@@ -254,7 +254,7 @@ export default function SettingAppPage() {
                 <input
                   value={form.nm_prop}
                   onChange={handleChange("nm_prop")}
-                 
+                  className="field-input"
                   disabled={formDisabled}
                 />
               </Field>
@@ -262,7 +262,7 @@ export default function SettingAppPage() {
                 <input
                   value={form.nm_kab}
                   onChange={handleChange("nm_kab")}
-                 
+                  className="field-input"
                   disabled={formDisabled}
                 />
               </Field>
@@ -275,7 +275,7 @@ export default function SettingAppPage() {
                 <input
                   value={form.siak_dblink}
                   onChange={handleChange("siak_dblink")}
-                 
+                  className="field-input"
                   disabled={formDisabled}
                 />
               </Field>
@@ -283,7 +283,7 @@ export default function SettingAppPage() {
                 <input
                   value={form.cetak_dblink}
                   onChange={handleChange("cetak_dblink")}
-                 
+                  className="field-input"
                   disabled={formDisabled}
                 />
               </Field>
@@ -291,7 +291,7 @@ export default function SettingAppPage() {
                 <input
                   value={form.rekam_dblink}
                   onChange={handleChange("rekam_dblink")}
-                 
+                  className="field-input"
                   disabled={formDisabled}
                 />
               </Field>
@@ -299,7 +299,7 @@ export default function SettingAppPage() {
                 <input
                   value={form.master_dblink}
                   onChange={handleChange("master_dblink")}
-                 
+                  className="field-input"
                   disabled={formDisabled}
                 />
               </Field>
@@ -307,7 +307,7 @@ export default function SettingAppPage() {
                 <input
                   value={form.default_pass}
                   onChange={handleChange("default_pass")}
-                 
+                  className="field-input"
                   disabled={formDisabled}
                 />
               </Field>
@@ -322,7 +322,7 @@ export default function SettingAppPage() {
                 <input
                   value={form.dkb_bio}
                   onChange={handleChange("dkb_bio")}
-                 
+                  className="field-input"
                   disabled={formDisabled}
                 />
               </Field>
@@ -330,7 +330,7 @@ export default function SettingAppPage() {
                 <input
                   value={form.dkb_kk}
                   onChange={handleChange("dkb_kk")}
-                 
+                  className="field-input"
                   disabled={formDisabled}
                 />
               </Field>
@@ -338,7 +338,7 @@ export default function SettingAppPage() {
                 <input
                   value={form.dkb_tahun}
                   onChange={handleChange("dkb_tahun")}
-                 
+                  className="field-input"
                   disabled={formDisabled}
                 />
               </Field>
@@ -347,7 +347,7 @@ export default function SettingAppPage() {
                   value={form.dkb_cutoff}
                   onChange={handleChange("dkb_cutoff")}
                   onBlur={handleCutoffBlur}
-                 
+                  className="field-input"
                   placeholder="DD-MM-YYYY"
                   disabled={formDisabled}
                 />

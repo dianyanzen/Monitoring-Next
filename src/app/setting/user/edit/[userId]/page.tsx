@@ -510,7 +510,7 @@ export default function EditUserPage() {
                 />
               </Field>
               <Field label="NIK">
-                <input value={form.nik} onChange={(e) => setForm((prev) => ({ ...prev, nik: e.target.value.replace(/[^\d]/g, "").slice(0, 16) }))} maxLength={16} />
+                <input value={form.nik} onChange={(e) => setForm((prev) => ({ ...prev, nik: e.target.value.replace(/[^\d]/g, "").slice(0, 16) }))} maxLength={16} className="field-input" />
               </Field>
               <Field label="Tempat Lahir">
                 <input
@@ -525,7 +525,7 @@ export default function EditUserPage() {
                 <input
                   value={form.tgl_lhr}
                   onChange={handleBirthDateChange}
-                 
+                  className="field-input"
                   placeholder="31-12-1990"
                   maxLength={10}
                   inputMode="numeric"
@@ -561,7 +561,7 @@ export default function EditUserPage() {
                 />
               </Field>
               <Field label="Telepon Kantor">
-                <input value={form.telp} onChange={handleChange("telp")} />
+                <input value={form.telp} onChange={handleChange("telp")} className="field-input" />
               </Field>
               <Field label="Alamat Kantor" full>
                 <textarea
@@ -640,10 +640,10 @@ export default function EditUserPage() {
                 </TypeableSelect>
               </Field>
               <Field label="RW">
-                <input value={form.wilayah.no_rw} onChange={handleWilayahChange("no_rw")} />
+                <input value={form.wilayah.no_rw} onChange={handleWilayahChange("no_rw")} className="field-input" />
               </Field>
               <Field label="RT">
-                <input value={form.wilayah.no_rt} onChange={handleWilayahChange("no_rt")} />
+                <input value={form.wilayah.no_rt} onChange={handleWilayahChange("no_rt")} className="field-input" />
               </Field>
             </div>
           </div>
@@ -652,13 +652,13 @@ export default function EditUserPage() {
             <h2 className="mb-4 text-sm font-semibold text-cyan-200/90">Akun Layanan</h2>
             <div className="grid gap-4 md:grid-cols-3">
               <Field label="Akun SIAK">
-                <input value={form.akun.user_siak} onChange={(e) => setForm((prev) => ({ ...prev, akun: { ...prev.akun, user_siak: e.target.value } }))} />
+                <input value={form.akun.user_siak} onChange={(e) => setForm((prev) => ({ ...prev, akun: { ...prev.akun, user_siak: e.target.value } }))} className="field-input" />
               </Field>
               <Field label="Akun Biomorf Card">
-                <input value={form.akun.user_bcard} onChange={(e) => setForm((prev) => ({ ...prev, akun: { ...prev.akun, user_bcard: e.target.value } }))} />
+                <input value={form.akun.user_bcard} onChange={(e) => setForm((prev) => ({ ...prev, akun: { ...prev.akun, user_bcard: e.target.value } }))} className="field-input" />
               </Field>
               <Field label="Akun Biomorf Enrol">
-                <input value={form.akun.user_benrol} onChange={(e) => setForm((prev) => ({ ...prev, akun: { ...prev.akun, user_benrol: e.target.value } }))} />
+                <input value={form.akun.user_benrol} onChange={(e) => setForm((prev) => ({ ...prev, akun: { ...prev.akun, user_benrol: e.target.value } }))} className="field-input" />
               </Field>
             </div>
           </div>

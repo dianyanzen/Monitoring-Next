@@ -83,7 +83,7 @@ export default function TypeableSelect({
       placeholder={fallbackPlaceholder}
       isDisabled={!!disabled}
       isClearable={!required}
-      className={`w-full [--accent:#22d3ee] [--panel-bg:#0f172a] [--surface-1:#0f172a] [--panel-border:rgba(34,211,238,0.35)] [--panel-shadow:0_12px_28px_rgba(0,0,0,0.45)] [--ink:#e0f2fe] [--ink-muted:#a5c9df] ${className || ""}`}
+      className={`w-full typeable-select ${className || ""}`}
       {...(rest as any)}
     />
   );

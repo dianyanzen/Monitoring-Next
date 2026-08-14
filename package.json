@@ -19,6 +19,7 @@
     "@radix-ui/react-select": "^2.2.6",
     "chart.js": "^4.5.0",
     "chroma-js": "^3.1.2",
+    "crypto-js": "^4.2.0",
     "datatables.net": "^2.3.4",
     "datatables.net-buttons": "^3.2.5",
     "datatables.net-buttons-dt": "^3.2.5",
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/crypto-js": "^4.2.2",
     "@types/jquery": "^3.5.33",
     "@types/node": "^20",
     "@types/react": "^19.2.1",

@@ -236,7 +236,7 @@ export default function SettingMenuUserEditPage() {
             <>
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Menu ID">
-                  <input value={detail.menu_id} readOnly />
+                  <input value={detail.menu_id} readOnly className="field-input bg-cyan-900/20" />
                 </Field>
                 <Field label="Parent Menu">
                   <TypeableSelect
@@ -258,7 +258,7 @@ export default function SettingMenuUserEditPage() {
                 </Field>
                 <div className="md:col-span-2">
                   <Field label="Title">
-                    <input value={detail.title} onChange={handleChange("title")} />
+                    <input value={detail.title} onChange={handleChange("title")} className="field-input" />
                   </Field>
                 </div>
                 <Field label="Menu Level">
@@ -274,10 +274,10 @@ export default function SettingMenuUserEditPage() {
                   </TypeableSelect>
                 </Field>
                 <Field label="Level Head">
-                  <input value={detail.level_head} onChange={handleChange("level_head")} />
+                  <input value={detail.level_head} onChange={handleChange("level_head")} className="field-input" />
                 </Field>
                 <Field label="Level Sub">
-                  <input value={detail.level_sub} onChange={handleChange("level_sub")} />
+                  <input value={detail.level_sub} onChange={handleChange("level_sub")} className="field-input" />
                 </Field>
               </div>
 
