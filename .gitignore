@@ -49,3 +49,14 @@ next-env.d.ts
 /scripts/ansi.mjs
 /scripts/pretty-start.mjs
 /start-3273.bat
+
+# Custom startup scripts
+/scripts/ansi.mjs
+/scripts/pretty-start.mjs
+/start-3273.bat
+
+# Video assets
+/public/assets/video/
+
+# Archives
+*.7z

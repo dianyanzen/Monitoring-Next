@@ -1,0 +1,3943 @@
+/*
+=========================================================
+FILE:
+src/styles/espasi-loket.css
+
+PAGE:
+src/app/espasi/loket/dinas/baru/page.tsx
+
+FINAL CSS
+ESPASI — ANTRIAN VERIFIKASI BARU
+
+Catatan:
+- CSS ini mengikuti className pada page.tsx terbaru.
+- Jangan dicampur dengan rewrite CSS ESPASI lama.
+- Topbar global diasumsikan fixed ±82px.
+=========================================================
+*/
+
+
+/* =========================================================
+   ROOT PAGE
+   ========================================================= */
+
+.espasi-loket-page {
+  position: relative;
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  /*
+   * GLOBAL TOPBAR
+   *
+   * Topbar Monalisa berada sekitar 82px.
+   * Padding digunakan agar content tidak tertutup.
+   */
+  margin: 0 !important;
+
+  padding:
+    96px
+    14px
+    18px
+    14px !important;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+
+  min-height: 100%;
+
+  color: var(--ink);
+
+  overflow: visible;
+}
+
+
+/* =========================================================
+   ICON STANDARD
+   ========================================================= */
+
+.espasi-loket-page .icon-sm {
+  width: 15px;
+  height: 15px;
+
+  flex: 0 0 auto;
+}
+
+.espasi-loket-page .icon-md {
+  width: 18px;
+  height: 18px;
+
+  flex: 0 0 auto;
+}
+
+.espasi-loket-page .icon-lg {
+  width: 24px;
+  height: 24px;
+
+  flex: 0 0 auto;
+}
+
+
+/* =========================================================
+   ANIMATION
+   ========================================================= */
+
+@keyframes espasi-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.espasi-loket-page .animate-spin {
+  animation:
+    espasi-spin
+    .8s
+    linear
+    infinite;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.espasi-dinas-header {
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+
+  min-height: 68px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  padding:
+    10px
+    14px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius:
+    var(--radius-xl);
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--surface-2),
+      var(--surface-1)
+    );
+
+  box-shadow:
+    var(--shadow-md);
+
+  overflow: hidden;
+}
+
+
+/*
+ * Accent line kiri.
+ */
+
+.espasi-dinas-header::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+
+  width: 3px;
+
+  border-radius:
+    0 999px 999px 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      var(--accent),
+      var(--accent-2)
+    );
+
+  box-shadow:
+    0 0 14px
+    color-mix(
+      in oklab,
+      var(--accent) 35%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   HEADER IDENTITY
+   ========================================================= */
+
+.espasi-dinas-header__identity {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.espasi-dinas-header__identity > div:last-child {
+  min-width: 0;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.espasi-back-button {
+  width: 38px;
+  height: 38px;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius: 10px;
+
+  background:
+    var(--surface-2);
+
+  color:
+    var(--ink-muted);
+
+  cursor: pointer;
+
+  transition:
+    border-color .15s ease,
+    background .15s ease,
+    color .15s ease,
+    transform .15s ease;
+}
+
+.espasi-back-button:hover {
+  color:
+    var(--accent);
+
+  border-color:
+    color-mix(
+      in oklab,
+      var(--accent) 45%,
+      var(--border-subtle)
+    );
+
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 7%,
+      var(--surface-2)
+    );
+}
+
+.espasi-back-button:active {
+  transform:
+    translateY(1px);
+}
+
+
+/* =========================================================
+   HEADER TYPOGRAPHY
+   ========================================================= */
+
+.espasi-eyebrow {
+  color:
+    var(--ink-muted);
+
+  font-size: 8px;
+
+  font-weight: 900;
+
+  letter-spacing: .13em;
+
+  line-height: 1.2;
+
+  text-transform: uppercase;
+}
+
+.espasi-dinas-header h1 {
+  margin: 2px 0 1px;
+
+  color:
+    var(--ink);
+
+  font-size: 16px;
+
+  font-weight: 850;
+
+  line-height: 1.15;
+}
+
+.espasi-subtitle {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 8px;
+
+  line-height: 1.3;
+}
+
+.espasi-divider {
+  opacity: .45;
+}
+
+
+/* =========================================================
+   STATUS DOT
+   ========================================================= */
+
+.espasi-status-dot {
+  width: 7px;
+  height: 7px;
+
+  flex: 0 0 auto;
+
+  display: inline-block;
+
+  border-radius: 999px;
+
+  background:
+    var(--accent);
+
+  box-shadow:
+    0 0 9px
+    color-mix(
+      in oklab,
+      var(--accent) 55%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   HEADER RIGHT
+   ========================================================= */
+
+.espasi-dinas-header__meta {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.espasi-total {
+  min-width: 44px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  line-height: 1;
+}
+
+.espasi-total span {
+  color:
+    var(--ink-muted);
+
+  font-size: 7px;
+
+  font-weight: 900;
+
+  letter-spacing: .12em;
+}
+
+.espasi-total strong {
+  margin-top: 4px;
+
+  color:
+    var(--accent);
+
+  font-size: 20px;
+
+  font-weight: 900;
+
+  text-shadow:
+    0 0 16px
+    color-mix(
+      in oklab,
+      var(--accent) 20%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   REFRESH
+   ========================================================= */
+
+.espasi-refresh-button {
+  min-height: 38px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding:
+    0
+    12px;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius: 10px;
+
+  background:
+    var(--surface-2);
+
+  color:
+    var(--ink);
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    border-color .15s ease,
+    background .15s ease,
+    color .15s ease;
+}
+
+.espasi-refresh-button:hover:not(:disabled) {
+  color:
+    var(--accent);
+
+  border-color:
+    color-mix(
+      in oklab,
+      var(--accent) 40%,
+      var(--border-subtle)
+    );
+
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 6%,
+      var(--surface-2)
+    );
+}
+
+.espasi-refresh-button:disabled {
+  opacity: .45;
+
+  cursor:
+    not-allowed;
+}
+
+
+/* =========================================================
+   INLINE ERROR
+   ========================================================= */
+
+.espasi-inline-error {
+  min-height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  padding:
+    8px
+    12px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid
+    color-mix(
+      in oklab,
+      var(--error) 45%,
+      var(--border-subtle)
+    );
+
+  border-radius: 10px;
+
+  background:
+    color-mix(
+      in oklab,
+      var(--error) 6%,
+      var(--surface-2)
+    );
+
+  color:
+    var(--error);
+
+  font-size: 9px;
+}
+
+.espasi-inline-error button {
+  width: 26px;
+  height: 26px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+
+  border-radius: 7px;
+
+  background:
+    transparent;
+
+  color:
+    var(--ink-muted);
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   VIEW ONLY
+   ========================================================= */
+
+.espasi-viewonly-banner {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding:
+    9px
+    12px;
+
+  border:
+    1px solid
+    color-mix(
+      in oklab,
+      var(--accent) 25%,
+      var(--border-subtle)
+    );
+
+  border-radius: 10px;
+
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 4%,
+      var(--surface-2)
+    );
+}
+
+.espasi-viewonly-banner > svg {
+  color:
+    var(--accent);
+}
+
+.espasi-viewonly-banner > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.espasi-viewonly-banner strong {
+  color:
+    var(--accent);
+
+  font-size: 9px;
+
+  font-weight: 850;
+}
+
+.espasi-viewonly-banner span {
+  color:
+    var(--ink-muted);
+
+  font-size: 8px;
+}
+
+
+/* =========================================================
+   WORKSPACE
+   ========================================================= */
+
+.espasi-workspace {
+  width: 100%;
+  min-width: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    310px;
+
+  gap: 12px;
+
+  align-items: stretch;
+}
+
+
+/* =========================================================
+   TABLE PANEL
+   ========================================================= */
+
+.espasi-table-panel {
+  min-width: 0;
+  min-height: 500px;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius:
+    var(--radius-xl);
+
+  background:
+    linear-gradient(
+      180deg,
+      var(--surface-1),
+      var(--surface-0)
+    );
+
+  box-shadow:
+    var(--shadow-sm);
+}
+
+
+/* =========================================================
+   TOOLBAR
+   ========================================================= */
+
+.espasi-toolbar {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding:
+    10px;
+
+  border-bottom:
+    1px solid
+    var(--border-subtle);
+
+  background:
+    color-mix(
+      in oklab,
+      var(--surface-2) 45%,
+      transparent
+    );
+}
+
+.espasi-toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.espasi-toolbar-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  flex: 0 0 auto;
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.espasi-search {
+  position: relative;
+
+  min-width: 240px;
+
+  flex:
+    1
+    1
+    320px;
+
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  padding:
+    0
+    11px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius: 9px;
+
+  background:
+    var(--surface-2);
+
+  color:
+    var(--ink-muted);
+
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease,
+    background .15s ease;
+}
+
+.espasi-search:focus-within {
+  border-color:
+    var(--accent);
+
+  background:
+    var(--surface-1);
+
+  box-shadow:
+    var(--focus-ring);
+}
+
+.espasi-search input {
+  width: 100%;
+  min-width: 0;
+
+  height: 100%;
+
+  padding: 0;
+
+  border: 0;
+
+  outline: 0;
+
+  background:
+    transparent;
+
+  color:
+    var(--ink);
+
+  font-size: 9px;
+}
+
+.espasi-search input::placeholder {
+  color:
+    var(--ink-muted);
+
+  opacity: .7;
+}
+
+.espasi-search > button {
+  width: 25px;
+  height: 25px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  border: 0;
+
+  border-radius: 6px;
+
+  background:
+    transparent;
+
+  color:
+    var(--ink-muted);
+
+  cursor: pointer;
+}
+
+.espasi-search > button:hover {
+  color:
+    var(--accent);
+}
+
+
+/* =========================================================
+   TOOLBAR BUTTON
+   ========================================================= */
+
+.espasi-toolbar-button {
+  height: 38px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding:
+    0
+    11px;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius: 9px;
+
+  background:
+    var(--surface-2);
+
+  color:
+    var(--ink);
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition:
+    border-color .15s ease,
+    color .15s ease,
+    background .15s ease;
+}
+
+.espasi-toolbar-button:hover:not(:disabled) {
+  color:
+    var(--accent);
+
+  border-color:
+    color-mix(
+      in oklab,
+      var(--accent) 40%,
+      var(--border-subtle)
+    );
+
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 5%,
+      var(--surface-2)
+    );
+}
+
+.espasi-toolbar-button:disabled {
+  opacity: .4;
+
+  cursor:
+    not-allowed;
+}
+
+
+/* =========================================================
+   LOCATION
+   ========================================================= */
+
+.espasi-location-readonly {
+  min-width: 105px;
+  height: 38px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding:
+    0
+    10px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius: 9px;
+
+  background:
+    var(--surface-2);
+}
+
+.espasi-location-readonly span {
+  color:
+    var(--ink-muted);
+
+  font-size: 6px;
+
+  font-weight: 900;
+
+  letter-spacing: .1em;
+}
+
+.espasi-location-readonly strong {
+  margin-top: 2px;
+
+  color:
+    var(--accent);
+
+  font-size: 8px;
+
+  font-weight: 850;
+}
+
+
+/* =========================================================
+   LOKET CONTROL
+   ========================================================= */
+
+.espasi-loket-control {
+  min-width: 104px;
+  height: 38px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding:
+    0
+    9px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius: 9px;
+
+  background:
+    var(--surface-2);
+}
+
+.espasi-loket-control span {
+  color:
+    var(--ink-muted);
+
+  font-size: 6px;
+
+  font-weight: 900;
+
+  letter-spacing: .1em;
+}
+
+.espasi-loket-control select {
+  width: 100%;
+
+  height: 17px;
+
+  margin-top: 1px;
+
+  padding: 0;
+
+  border: 0;
+
+  outline: 0;
+
+  background:
+    transparent;
+
+  color:
+    var(--ink);
+
+  font-size: 8px;
+
+  font-weight: 850;
+
+  cursor: pointer;
+}
+
+.espasi-loket-control select:focus {
+  outline: none;
+}
+
+.espasi-loket-control select option {
+  background:
+    var(--surface-1);
+
+  color:
+    var(--ink);
+}
+
+
+/* =========================================================
+   TABLE WRAP
+   ========================================================= */
+
+.espasi-table-wrap {
+  width: 100%;
+  min-width: 0;
+
+  flex:
+    1
+    1
+    auto;
+
+  overflow-x: auto;
+  overflow-y: auto;
+
+  scrollbar-width: thin;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.espasi-table {
+  width: 100%;
+
+  min-width: 900px;
+
+  border-collapse:
+    separate;
+
+  border-spacing: 0;
+
+  table-layout: fixed;
+
+  color:
+    var(--ink);
+}
+
+.espasi-table thead {
+  background:
+    var(--surface-2);
+}
+
+.espasi-table thead th {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 5;
+
+  height: 38px;
+
+  padding:
+    0
+    9px;
+
+  box-sizing: border-box;
+
+  border-bottom:
+    1px solid
+    var(--border-strong);
+
+  background:
+    var(--surface-2);
+
+  color:
+    var(--ink-muted);
+
+  font-size: 7px;
+
+  font-weight: 900;
+
+  letter-spacing: .08em;
+
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+.espasi-table tbody td {
+  height: 47px;
+
+  padding:
+    0
+    9px;
+
+  box-sizing: border-box;
+
+  border-bottom:
+    1px solid
+    var(--border-subtle);
+
+  color:
+    var(--ink);
+
+  font-size: 8px;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.espasi-table tbody tr {
+  transition:
+    background .12s ease,
+    box-shadow .12s ease;
+}
+
+.espasi-table tbody tr:hover {
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 4%,
+      var(--surface-1)
+    );
+}
+
+.espasi-table tbody tr.is-current {
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 7%,
+      var(--surface-1)
+    );
+
+  box-shadow:
+    inset 3px 0 0
+    var(--accent);
+}
+
+
+/* =========================================================
+   TABLE COLUMN WIDTH
+   ========================================================= */
+
+.espasi-table th:nth-child(1),
+.espasi-table td:nth-child(1) {
+  width: 40px;
+}
+
+.espasi-table th:nth-child(2),
+.espasi-table td:nth-child(2) {
+  width: 80px;
+}
+
+.espasi-table th:nth-child(3),
+.espasi-table td:nth-child(3) {
+  width: 165px;
+}
+
+.espasi-table th:nth-child(4),
+.espasi-table td:nth-child(4) {
+  width: 170px;
+}
+
+.espasi-table th:nth-child(5),
+.espasi-table td:nth-child(5) {
+  width: 100px;
+}
+
+.espasi-table th:nth-child(6),
+.espasi-table td:nth-child(6) {
+  width: 135px;
+}
+
+.espasi-table th:nth-child(7),
+.espasi-table td:nth-child(7) {
+  width: 75px;
+}
+
+.espasi-table th:nth-child(8),
+.espasi-table td:nth-child(8) {
+  width: 85px;
+}
+
+
+/* =========================================================
+   NAME
+   ========================================================= */
+
+.espasi-name-cell {
+  font-weight: 800;
+
+  color:
+    var(--ink);
+}
+
+
+/* =========================================================
+   QUEUE NUMBER
+   ========================================================= */
+
+.espasi-queue-number {
+  min-width: 34px;
+  height: 27px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    0
+    8px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid
+    color-mix(
+      in oklab,
+      var(--accent) 35%,
+      var(--border-subtle)
+    );
+
+  border-radius: 8px;
+
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 6%,
+      var(--surface-2)
+    );
+
+  color:
+    var(--accent);
+
+  font-size: 9px;
+
+  font-weight: 900;
+}
+
+
+/* =========================================================
+   STATUS CHIP
+   ========================================================= */
+
+.espasi-status-chip {
+  min-height: 22px;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 5px;
+
+  padding:
+    0
+    8px;
+
+  border:
+    1px solid
+    color-mix(
+      in oklab,
+      var(--accent) 28%,
+      var(--border-subtle)
+    );
+
+  border-radius: 999px;
+
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 5%,
+      var(--surface-2)
+    );
+
+  color:
+    var(--accent);
+
+  font-size: 7px;
+
+  font-weight: 850;
+
+  text-transform: uppercase;
+}
+
+.espasi-status-chip > span {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 999px;
+
+  background:
+    var(--accent);
+
+  box-shadow:
+    0 0 7px
+    color-mix(
+      in oklab,
+      var(--accent) 50%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   PILIH BUTTON
+   ========================================================= */
+
+.espasi-pilih-button {
+  min-width: 62px;
+  height: 29px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  padding:
+    0
+    8px;
+
+  border:
+    1px solid
+    color-mix(
+      in oklab,
+      var(--accent) 45%,
+      var(--border-subtle)
+    );
+
+  border-radius: 999px;
+
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 5%,
+      var(--surface-2)
+    );
+
+  color:
+    var(--accent);
+
+  font-size: 7px;
+
+  font-weight: 850;
+
+  cursor: pointer;
+
+  transition:
+    background .15s ease,
+    border-color .15s ease,
+    transform .15s ease;
+}
+
+.espasi-pilih-button:hover:not(:disabled) {
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 12%,
+      var(--surface-2)
+    );
+
+  border-color:
+    var(--accent);
+}
+
+.espasi-pilih-button:active:not(:disabled) {
+  transform:
+    translateY(1px);
+}
+
+.espasi-pilih-button:disabled {
+  opacity: .35;
+
+  cursor:
+    not-allowed;
+}
+
+
+/* =========================================================
+   TABLE LOADING
+   ========================================================= */
+
+.espasi-table-loading {
+  height: 320px;
+
+  color:
+    var(--ink-muted);
+
+  text-align: center;
+}
+
+.espasi-table-loading > svg {
+  display: inline-block;
+
+  margin-right: 7px;
+
+  vertical-align: middle;
+
+  color:
+    var(--accent);
+}
+
+
+/* =========================================================
+   TABLE EMPTY
+   ========================================================= */
+
+.espasi-table-empty {
+  height: 320px;
+
+  text-align: center;
+
+  color:
+    var(--ink-muted);
+}
+
+.espasi-table-empty > svg,
+.espasi-table-empty > strong,
+.espasi-table-empty > span {
+  display: block;
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.espasi-table-empty > svg {
+  margin-bottom: 8px;
+
+  color:
+    var(--ink-muted);
+}
+
+.espasi-table-empty > strong {
+  color:
+    var(--ink);
+
+  font-size: 10px;
+}
+
+.espasi-table-empty > span {
+  margin-top: 3px;
+
+  font-size: 8px;
+}
+
+
+/* =========================================================
+   TABLE FOOTER
+   ========================================================= */
+
+.espasi-table-footer {
+  min-height: 47px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  padding:
+    8px
+    11px;
+
+  box-sizing: border-box;
+
+  border-top:
+    1px solid
+    var(--border-subtle);
+
+  background:
+    color-mix(
+      in oklab,
+      var(--surface-2) 40%,
+      transparent
+    );
+
+  color:
+    var(--ink-muted);
+
+  font-size: 8px;
+}
+
+.espasi-table-footer strong {
+  color:
+    var(--ink);
+}
+
+
+/* =========================================================
+   PAGINATION
+   ========================================================= */
+
+.espasi-pagination {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+}
+
+.espasi-pagination label {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 6px;
+}
+
+.espasi-pagination select {
+  width: 60px;
+  height: 30px;
+
+  padding:
+    0
+    7px;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius: 8px;
+
+  background:
+    var(--surface-2);
+
+  color:
+    var(--ink);
+
+  font-size: 8px;
+
+  outline: none;
+}
+
+.espasi-pagination button {
+  width: 30px;
+  height: 30px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius: 8px;
+
+  background:
+    var(--surface-2);
+
+  color:
+    var(--ink-muted);
+
+  cursor: pointer;
+}
+
+.espasi-pagination button:hover:not(:disabled) {
+  color:
+    var(--accent);
+
+  border-color:
+    color-mix(
+      in oklab,
+      var(--accent) 40%,
+      var(--border-subtle)
+    );
+}
+
+.espasi-pagination button:disabled {
+  opacity: .35;
+
+  cursor:
+    not-allowed;
+}
+
+.espasi-pagination > span {
+  min-width: 45px;
+
+  color:
+    var(--ink-muted);
+
+  text-align: center;
+
+  font-size: 8px;
+}
+
+
+/* =========================================================
+   RIGHT LOKET PANEL
+   ========================================================= */
+
+.espasi-loket-panel {
+  position: relative;
+
+  min-width: 0;
+  min-height: 500px;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius:
+    var(--radius-xl);
+
+  background:
+    linear-gradient(
+      180deg,
+      var(--surface-1),
+      var(--surface-0)
+    );
+
+  box-shadow:
+    var(--shadow-sm);
+}
+
+
+/*
+ * Accent top.
+ */
+
+.espasi-loket-panel::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 2px;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--accent),
+      var(--accent-2),
+      transparent
+    );
+}
+
+
+/* =========================================================
+   PANEL HEADER
+   ========================================================= */
+
+.espasi-loket-panel__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 8px;
+
+  padding:
+    14px;
+
+  border-bottom:
+    1px solid
+    var(--border-subtle);
+
+  background:
+    color-mix(
+      in oklab,
+      var(--surface-2) 45%,
+      transparent
+    );
+}
+
+.espasi-loket-panel__header > div:first-child {
+  min-width: 0;
+}
+
+.espasi-loket-panel__header span:first-child {
+  display: block;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 7px;
+
+  font-weight: 900;
+
+  letter-spacing: .11em;
+}
+
+.espasi-loket-panel__header h2 {
+  margin: 3px 0;
+
+  color:
+    var(--ink);
+
+  font-size: 13px;
+
+  font-weight: 900;
+
+  line-height: 1.2;
+}
+
+.espasi-loket-panel__header small {
+  color:
+    var(--ink-muted);
+
+  font-size: 7px;
+}
+
+
+/* =========================================================
+   OPERATOR BADGE
+   ========================================================= */
+
+.espasi-operator-badge {
+  min-height: 26px;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 5px;
+
+  padding:
+    0
+    8px;
+
+  border:
+    1px solid
+    color-mix(
+      in oklab,
+      var(--accent) 35%,
+      var(--border-subtle)
+    );
+
+  border-radius: 999px;
+
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 5%,
+      var(--surface-2)
+    );
+
+  color:
+    var(--accent);
+
+  font-size: 6px;
+
+  font-weight: 900;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   PANEL BODY
+   ========================================================= */
+
+.espasi-loket-panel__body {
+  flex:
+    1
+    1
+    auto;
+
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  padding:
+    10px;
+}
+
+
+/* =========================================================
+   EMPTY CURRENT
+   ========================================================= */
+
+.espasi-no-current {
+  flex:
+    1
+    1
+    auto;
+
+  min-height: 320px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 20px;
+
+  text-align: center;
+
+  color:
+    var(--ink-muted);
+}
+
+.espasi-no-current > svg {
+  color:
+    var(--accent);
+
+  opacity: .75;
+
+  margin-bottom: 4px;
+}
+
+.espasi-no-current strong {
+  color:
+    var(--ink);
+
+  font-size: 11px;
+}
+
+.espasi-no-current span {
+  max-width: 220px;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 8px;
+
+  line-height: 1.5;
+}
+
+.espasi-no-current b {
+  color:
+    var(--accent);
+}
+
+
+/* =========================================================
+   CURRENT QUEUE CARD
+   ========================================================= */
+
+.espasi-current-card {
+  padding:
+    13px;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius:
+    var(--radius-lg);
+
+  background:
+    color-mix(
+      in oklab,
+      var(--surface-2) 72%,
+      var(--surface-1)
+    );
+
+  box-shadow:
+    inset 0 1px 0
+    rgba(255,255,255,.025);
+
+  text-align: center;
+}
+
+.espasi-current-label {
+  display: block;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 7px;
+
+  font-weight: 900;
+
+  letter-spacing: .11em;
+
+  text-align: left;
+}
+
+.espasi-current-number-label {
+  display: block;
+
+  margin-top: 15px;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 7px;
+
+  font-weight: 900;
+
+  letter-spacing: .1em;
+}
+
+.espasi-current-number {
+  display: block;
+
+  margin-top: 2px;
+
+  color:
+    var(--accent);
+
+  font-size: clamp(
+    52px,
+    6vw,
+    76px
+  );
+
+  font-weight: 950;
+
+  line-height: .9;
+
+  text-shadow:
+    0 0 26px
+    color-mix(
+      in oklab,
+      var(--accent) 18%,
+      transparent
+    );
+}
+
+.espasi-current-name {
+  display: block;
+
+  margin-top: 10px;
+
+  color:
+    var(--ink);
+
+  font-size: 13px;
+
+  font-weight: 900;
+}
+
+.espasi-current-nik {
+  display: block;
+
+  margin-top: 4px;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 7px;
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+
+
+/* =========================================================
+   CURRENT META
+   ========================================================= */
+
+.espasi-current-meta {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap: 7px;
+
+  margin-top: 14px;
+}
+
+.espasi-current-meta > div {
+  min-width: 0;
+
+  padding:
+    8px;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius: 8px;
+
+  background:
+    color-mix(
+      in oklab,
+      var(--surface-1) 70%,
+      transparent
+    );
+
+  text-align: left;
+}
+
+.espasi-current-meta span {
+  display: block;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 6px;
+
+  font-weight: 900;
+
+  letter-spacing: .08em;
+}
+
+.espasi-current-meta strong {
+  display: block;
+
+  margin-top: 3px;
+
+  color:
+    var(--ink);
+
+  font-size: 8px;
+}
+
+
+/* =========================================================
+   ACTION GRID
+   ========================================================= */
+
+.espasi-action-grid {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap: 8px;
+
+  margin-top: 10px;
+}
+
+
+/* =========================================================
+   ACTION BASE
+   ========================================================= */
+
+.espasi-action {
+  min-height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding:
+    0
+    10px;
+
+  border-radius: 9px;
+
+  font-size: 8px;
+
+  font-weight: 850;
+
+  cursor: pointer;
+
+  transition:
+    background .15s ease,
+    border-color .15s ease,
+    color .15s ease,
+    box-shadow .15s ease,
+    transform .15s ease;
+}
+
+.espasi-action:active:not(:disabled) {
+  transform:
+    translateY(1px);
+}
+
+.espasi-action:disabled {
+  opacity: .35;
+
+  cursor:
+    not-allowed;
+}
+
+
+/* =========================================================
+   PANGGIL
+   ========================================================= */
+
+.espasi-action-call {
+  grid-column:
+    1 /
+    -1;
+
+  border:
+    1px solid
+    color-mix(
+      in oklab,
+      var(--accent) 60%,
+      transparent
+    );
+
+  background:
+    linear-gradient(
+      105deg,
+      var(--accent),
+      var(--accent-2)
+    );
+
+  color:
+    var(--accent-contrast);
+
+  box-shadow:
+    0 0 18px
+    color-mix(
+      in oklab,
+      var(--accent) 12%,
+      transparent
+    );
+}
+
+.espasi-action-call:hover:not(:disabled) {
+  filter:
+    brightness(1.06);
+
+  box-shadow:
+    0 0 25px
+    color-mix(
+      in oklab,
+      var(--accent) 18%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   ULANGI
+   ========================================================= */
+
+.espasi-action-recall {
+  grid-column:
+    1 /
+    -1;
+
+  border:
+    1px solid
+    color-mix(
+      in oklab,
+      var(--accent) 55%,
+      transparent
+    );
+
+  background:
+    linear-gradient(
+      105deg,
+      var(--accent),
+      var(--accent-2)
+    );
+
+  color:
+    var(--accent-contrast);
+
+  box-shadow:
+    0 0 18px
+    color-mix(
+      in oklab,
+      var(--accent) 10%,
+      transparent
+    );
+}
+
+.espasi-action-recall:hover:not(:disabled) {
+  filter:
+    brightness(1.06);
+}
+
+
+/* =========================================================
+   SELESAI
+   ========================================================= */
+
+.espasi-action-finish {
+  border:
+    1px solid
+    color-mix(
+      in oklab,
+      var(--accent) 35%,
+      var(--border-subtle)
+    );
+
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 5%,
+      var(--surface-2)
+    );
+
+  color:
+    var(--accent);
+}
+
+.espasi-action-finish:hover:not(:disabled) {
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 11%,
+      var(--surface-2)
+    );
+
+  border-color:
+    var(--accent);
+}
+
+
+/* =========================================================
+   LEWAT
+   ========================================================= */
+
+.espasi-action-skip {
+  border:
+    1px solid
+    color-mix(
+      in oklab,
+      var(--error) 38%,
+      var(--border-subtle)
+    );
+
+  background:
+    color-mix(
+      in oklab,
+      var(--error) 4%,
+      var(--surface-2)
+    );
+
+  color:
+    var(--error);
+}
+
+.espasi-action-skip:hover:not(:disabled) {
+  background:
+    color-mix(
+      in oklab,
+      var(--error) 10%,
+      var(--surface-2)
+    );
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+.espasi-action-reset {
+  grid-column:
+    1 /
+    -1;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  background:
+    var(--surface-2);
+
+  color:
+    var(--ink-muted);
+}
+
+.espasi-action-reset:hover:not(:disabled) {
+  color:
+    var(--ink);
+
+  border-color:
+    var(--border-strong);
+}
+
+
+/* =========================================================
+   PANEL FOOTER
+   ========================================================= */
+
+.espasi-loket-panel__footer {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 8px;
+
+  padding:
+    10px 12px;
+
+  border-top:
+    1px solid
+    var(--border-subtle);
+
+  background:
+    var(--surface-2);
+}
+
+.espasi-loket-panel__footer > div {
+  min-width: 0;
+}
+
+.espasi-loket-panel__footer strong {
+  display: block;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 7px;
+
+  font-weight: 900;
+
+  letter-spacing: .08em;
+}
+
+.espasi-loket-panel__footer p {
+  margin:
+    4px 0 0;
+
+  color:
+    var(--ink);
+
+  font-size: 8px;
+
+  line-height: 1.35;
+}
+
+.espasi-loket-panel__footer small {
+  display: block;
+
+  margin-top: 3px;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 7px;
+
+  line-height: 1.35;
+}
+
+
+/* =========================================================
+   MODAL BACKDROP
+   ========================================================= */
+
+.espasi-modal-backdrop {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 99999;
+
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    20px;
+
+  box-sizing: border-box;
+
+  background:
+    rgba(0,0,0,.74);
+
+  backdrop-filter:
+    blur(7px);
+
+  overscroll-behavior:
+    contain;
+}
+
+
+/* =========================================================
+   COMMON MODAL HEADER
+   ========================================================= */
+
+.espasi-modal-header {
+  flex:
+    0
+    0
+    auto;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding:
+    15px;
+
+  border-bottom:
+    1px solid
+    var(--border-subtle);
+}
+
+.espasi-modal-header > div:first-child {
+  min-width: 0;
+}
+
+.espasi-modal-eyebrow {
+  display: block;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 7px;
+
+  font-weight: 900;
+
+  letter-spacing: .12em;
+}
+
+.espasi-modal-header h2 {
+  margin:
+    4px
+    0;
+
+  color:
+    var(--ink);
+
+  font-size: 16px;
+
+  font-weight: 900;
+}
+
+.espasi-modal-header p {
+  margin: 0;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 9px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   MODAL CLOSE
+   ========================================================= */
+
+.espasi-modal-close {
+  width: 34px;
+  height: 34px;
+
+  flex: 0 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius: 9px;
+
+  background:
+    var(--surface-2);
+
+  color:
+    var(--ink-muted);
+
+  cursor: pointer;
+
+  transition:
+    color .15s ease,
+    border-color .15s ease,
+    background .15s ease;
+}
+
+.espasi-modal-close:hover:not(:disabled) {
+  color:
+    var(--error);
+
+  border-color:
+    color-mix(
+      in oklab,
+      var(--error) 40%,
+      var(--border-subtle)
+    );
+
+  background:
+    color-mix(
+      in oklab,
+      var(--error) 5%,
+      var(--surface-2)
+    );
+}
+
+.espasi-modal-close:disabled {
+  opacity: .4;
+
+  cursor:
+    not-allowed;
+}
+
+
+/* =========================================================
+   SELECTION MODAL
+   ========================================================= */
+
+.espasi-selection-modal {
+  width:
+    min(
+      500px,
+      100%
+    );
+
+  max-height:
+    calc(100vh - 40px);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    var(--border-strong);
+
+  border-radius:
+    16px;
+
+  background:
+    var(--surface-1);
+
+  box-shadow:
+    0 24px 80px
+    rgba(0,0,0,.58);
+}
+
+
+/* =========================================================
+   SELECTION BODY
+   ========================================================= */
+
+.espasi-selection-body {
+  display: grid;
+
+  grid-template-columns:
+    125px
+    minmax(0,1fr);
+
+  gap: 14px;
+
+  padding:
+    15px;
+}
+
+.espasi-selection-number {
+  min-height: 145px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  border:
+    1px solid
+    color-mix(
+      in oklab,
+      var(--accent) 25%,
+      var(--border-subtle)
+    );
+
+  border-radius:
+    13px;
+
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 5%,
+      var(--surface-2)
+    );
+}
+
+.espasi-selection-number span {
+  color:
+    var(--ink-muted);
+
+  font-size: 7px;
+
+  font-weight: 900;
+
+  letter-spacing: .12em;
+}
+
+.espasi-selection-number strong {
+  margin-top: 6px;
+
+  color:
+    var(--accent);
+
+  font-size: 48px;
+
+  font-weight: 950;
+
+  line-height: 1;
+
+  text-shadow:
+    0 0 22px
+    color-mix(
+      in oklab,
+      var(--accent) 18%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   SELECTION INFO
+   ========================================================= */
+
+.espasi-selection-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+.espasi-selection-info > div {
+  min-width: 0;
+
+  padding:
+    8px
+    10px;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius:
+    8px;
+
+  background:
+    var(--surface-2);
+}
+
+.espasi-selection-info span {
+  display: block;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 6px;
+
+  font-weight: 900;
+
+  letter-spacing: .09em;
+}
+
+.espasi-selection-info strong {
+  display: block;
+
+  margin-top: 3px;
+
+  overflow: hidden;
+
+  color:
+    var(--ink);
+
+  font-size: 8px;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   TRACKING MODAL
+   ========================================================= */
+
+.espasi-tracking-modal {
+  width:
+    min(
+      820px,
+      100%
+    );
+
+  max-height:
+    calc(100vh - 40px);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    var(--border-strong);
+
+  border-radius:
+    16px;
+
+  background:
+    var(--surface-1);
+
+  box-shadow:
+    0 24px 80px
+    rgba(0,0,0,.58);
+}
+
+
+/* =========================================================
+   TRACKING MODAL BODY
+   ========================================================= */
+
+.espasi-tracking-modal-body {
+  min-height: 0;
+
+  flex:
+    1
+    1
+    auto;
+
+  overflow-y: auto;
+
+  padding:
+    15px;
+
+  scrollbar-width:
+    thin;
+}
+
+
+/* =========================================================
+   FORM GRID
+   ========================================================= */
+
+.espasi-form-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0,1fr)
+    );
+
+  gap:
+    11px;
+}
+
+.espasi-form-field {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.espasi-form-field > span {
+  color:
+    var(--ink-muted);
+
+  font-size: 7px;
+
+  font-weight: 900;
+
+  letter-spacing: .08em;
+
+  text-transform: uppercase;
+}
+
+.espasi-form-field > small {
+  color:
+    var(--ink-muted);
+
+  font-size: 7px;
+
+  line-height: 1.35;
+}
+
+.espasi-form-field--full {
+  grid-column:
+    1 /
+    -1;
+}
+
+
+/* =========================================================
+   FORM INPUTS
+   ========================================================= */
+
+.espasi-form-field input,
+.espasi-form-field textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius:
+    9px;
+
+  outline: none;
+
+  background:
+    var(--surface-2);
+
+  color:
+    var(--ink);
+
+  font-size: 9px;
+
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease,
+    background .15s ease;
+}
+
+.espasi-form-field input {
+  height: 38px;
+
+  padding:
+    0
+    10px;
+}
+
+.espasi-form-field textarea {
+  min-height: 95px;
+
+  padding:
+    10px;
+
+  resize:
+    vertical;
+}
+
+.espasi-form-field input:focus,
+.espasi-form-field textarea:focus {
+  border-color:
+    var(--accent);
+
+  background:
+    var(--surface-1);
+
+  box-shadow:
+    var(--focus-ring);
+}
+
+.espasi-form-field input[readonly] {
+  color:
+    var(--accent);
+
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 4%,
+      var(--surface-2)
+    );
+
+  cursor:
+    default;
+}
+
+
+/* =========================================================
+   COMBOBOX
+   ========================================================= */
+
+.espasi-combobox {
+  position: relative;
+
+  width: 100%;
+
+  min-width: 0;
+}
+
+
+/*
+ * Trigger.
+ */
+
+.espasi-combobox-control {
+  width: 100%;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+
+  padding:
+    0
+    10px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid
+    var(--border-subtle);
+
+  border-radius:
+    9px;
+
+  background:
+    var(--surface-2);
+
+  color:
+    var(--ink);
+
+  font-size: 9px;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease,
+    background .15s ease;
+}
+
+.espasi-combobox-control:hover:not(:disabled) {
+  border-color:
+    color-mix(
+      in oklab,
+      var(--accent) 40%,
+      var(--border-subtle)
+    );
+}
+
+.espasi-combobox-control:focus-visible {
+  outline: none;
+
+  border-color:
+    var(--accent);
+
+  box-shadow:
+    var(--focus-ring);
+}
+
+.espasi-combobox-control:disabled {
+  opacity: .5;
+
+  cursor:
+    not-allowed;
+}
+
+.espasi-combobox-control > span:first-child {
+  min-width: 0;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+}
+
+.espasi-combobox-control .is-placeholder {
+  color:
+    var(--ink-muted);
+}
+
+
+/* =========================================================
+   COMBOBOX PORTAL
+   ========================================================= */
+
+/*
+ * Portal berada di body.
+ *
+ * Ini penting supaya dropdown tidak terpotong
+ * oleh overflow modal/page.
+ */
+
+.espasi-combobox-portal {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 100000;
+
+  pointer-events:
+    none;
+}
+
+
+/*
+ * Karena portal full-screen, menu sendiri
+ * harus pointer-events auto.
+ *
+ * Posisi menu ditentukan oleh browser melalui
+ * CSS anchor fallback tidak digunakan.
+ *
+ * JavaScript page menggunakan portal untuk
+ * menghindari clipping.
+ */
+
+.espasi-combobox-menu {
+  position: fixed;
+
+  /*
+   * Default fallback.
+   * Jika perlu posisi dinamis berdasarkan tombol,
+   * browser tetap menampilkan menu pada area aman.
+   */
+  left: 50%;
+  top: 50%;
+
+  width:
+    min(
+      360px,
+      calc(100vw - 32px)
+    );
+
+  max-height:
+    min(
+      380px,
+      calc(100vh - 32px)
+    );
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+
+  pointer-events:
+    auto;
+
+  border:
+    1px solid
+    var(--border-strong);
+
+  border-radius:
+    12px;
+
+  background:
+    var(--surface-1);
+
+  box-shadow:
+    0 24px 70px
+    rgba(0,0,0,.6);
+
+  /*
+   * Sedikit glow agar tetap sesuai ESPASI.
+   */
+  box-shadow:
+    0 24px 70px
+    rgba(0,0,0,.6),
+    0 0 22px
+    color-mix(
+      in oklab,
+      var(--accent) 7%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   COMBO SEARCH
+   ========================================================= */
+
+.espasi-combobox-search {
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  padding:
+    0
+    10px;
+
+  border-bottom:
+    1px solid
+    var(--border-subtle);
+
+  color:
+    var(--ink-muted);
+}
+
+.espasi-combobox-search input {
+  width: 100%;
+
+  height: 100%;
+
+  padding: 0;
+
+  border: 0;
+
+  outline: 0;
+
+  background:
+    transparent;
+
+  color:
+    var(--ink);
+
+  font-size: 9px;
+}
+
+.espasi-combobox-search input::placeholder {
+  color:
+    var(--ink-muted);
+
+  opacity: .7;
+}
+
+
+/* =========================================================
+   COMBO OPTIONS
+   ========================================================= */
+
+.espasi-combobox-options {
+  min-height: 0;
+
+  overflow-y: auto;
+
+  padding:
+    5px;
+
+  scrollbar-width:
+    thin;
+}
+
+.espasi-combobox-option {
+  width: 100%;
+
+  min-height: 37px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+
+  padding:
+    7px
+    9px;
+
+  border: 0;
+
+  border-radius:
+    8px;
+
+  background:
+    transparent;
+
+  color:
+    var(--ink);
+
+  font-size: 8px;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background .12s ease,
+    color .12s ease;
+}
+
+.espasi-combobox-option:hover {
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 7%,
+      var(--surface-2)
+    );
+
+  color:
+    var(--accent);
+}
+
+.espasi-combobox-option.is-selected {
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 10%,
+      var(--surface-2)
+    );
+
+  color:
+    var(--accent);
+}
+
+.espasi-combobox-empty {
+  padding:
+    25px
+    12px;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 8px;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   MODAL ERROR
+   ========================================================= */
+
+.espasi-modal-error {
+  margin-bottom:
+    11px;
+
+  padding:
+    9px
+    10px;
+
+  border:
+    1px solid
+    color-mix(
+      in oklab,
+      var(--error) 40%,
+      var(--border-subtle)
+    );
+
+  border-radius:
+    8px;
+
+  background:
+    color-mix(
+      in oklab,
+      var(--error) 5%,
+      var(--surface-2)
+    );
+
+  color:
+    var(--error);
+
+  font-size: 8px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   MODAL FOOTER
+   ========================================================= */
+
+.espasi-modal-footer {
+  flex:
+    0
+    0
+    auto;
+
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  padding:
+    10px
+    15px;
+
+  border-top:
+    1px solid
+    var(--border-subtle);
+
+  background:
+    color-mix(
+      in oklab,
+      var(--surface-2) 25%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   MODAL BUTTON
+   ========================================================= */
+
+.espasi-modal-button {
+  min-height: 38px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  padding:
+    0
+    13px;
+
+  border-radius:
+    9px;
+
+  font-size: 8px;
+
+  font-weight: 850;
+
+  cursor: pointer;
+
+  transition:
+    background .15s ease,
+    border-color .15s ease,
+    color .15s ease,
+    box-shadow .15s ease;
+}
+
+.espasi-modal-button:disabled {
+  opacity: .4;
+
+  cursor:
+    not-allowed;
+}
+
+
+/* =========================================================
+   MODAL SECONDARY
+   ========================================================= */
+
+.espasi-modal-button.secondary {
+  border:
+    1px solid
+    var(--border-subtle);
+
+  background:
+    var(--surface-2);
+
+  color:
+    var(--ink-muted);
+}
+
+.espasi-modal-button.secondary:hover:not(:disabled) {
+  color:
+    var(--ink);
+
+  border-color:
+    var(--border-strong);
+}
+
+
+/* =========================================================
+   MODAL PRIMARY
+   ========================================================= */
+
+.espasi-modal-button.primary {
+  border:
+    1px solid
+    color-mix(
+      in oklab,
+      var(--accent) 55%,
+      transparent
+    );
+
+  background:
+    linear-gradient(
+      105deg,
+      var(--accent),
+      var(--accent-2)
+    );
+
+  color:
+    var(--accent-contrast);
+
+  box-shadow:
+    0 0 15px
+    color-mix(
+      in oklab,
+      var(--accent) 9%,
+      transparent
+    );
+}
+
+.espasi-modal-button.primary:hover:not(:disabled) {
+  filter:
+    brightness(1.06);
+
+  box-shadow:
+    0 0 22px
+    color-mix(
+      in oklab,
+      var(--accent) 15%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   RECEIPT MODAL
+   ========================================================= */
+
+.espasi-receipt-modal {
+  width:
+    min(
+      430px,
+      100%
+    );
+
+  padding:
+    23px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid
+    var(--border-strong);
+
+  border-radius:
+    16px;
+
+  background:
+    var(--surface-1);
+
+  text-align:
+    center;
+
+  box-shadow:
+    0 24px 80px
+    rgba(0,0,0,.58);
+}
+
+.espasi-receipt-icon {
+  width: 50px;
+  height: 50px;
+
+  margin:
+    0
+    auto
+    12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius:
+    14px;
+
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 9%,
+      var(--surface-2)
+    );
+
+  color:
+    var(--accent);
+
+  box-shadow:
+    0 0 22px
+    color-mix(
+      in oklab,
+      var(--accent) 8%,
+      transparent
+    );
+}
+
+.espasi-receipt-modal h2 {
+  margin:
+    5px
+    0;
+
+  color:
+    var(--ink);
+
+  font-size: 20px;
+
+  font-weight: 900;
+}
+
+.espasi-receipt-modal > p {
+  margin:
+    0;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 9px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   REGISTRATION CARD
+   ========================================================= */
+
+.espasi-registration-card {
+  margin-top:
+    15px;
+
+  padding:
+    11px;
+
+  border:
+    1px solid
+    color-mix(
+      in oklab,
+      var(--accent) 25%,
+      var(--border-subtle)
+    );
+
+  border-radius:
+    10px;
+
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 4%,
+      var(--surface-2)
+    );
+}
+
+.espasi-registration-card span {
+  display: block;
+
+  color:
+    var(--ink-muted);
+
+  font-size: 7px;
+
+  font-weight: 900;
+
+  letter-spacing: .1em;
+}
+
+.espasi-registration-card strong {
+  display: block;
+
+  margin-top: 5px;
+
+  color:
+    var(--accent);
+
+  font-size: 14px;
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+
+  word-break:
+    break-all;
+}
+
+
+/* =========================================================
+   RECEIPT ACTIONS
+   ========================================================= */
+
+.espasi-receipt-actions {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap: 8px;
+
+  margin-top:
+    16px;
+}
+
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+.espasi-loket-page
+button:focus-visible,
+.espasi-loket-page
+input:focus-visible,
+.espasi-loket-page
+select:focus-visible,
+.espasi-loket-page
+textarea:focus-visible {
+  outline: none;
+
+  box-shadow:
+    var(--focus-ring);
+}
+
+
+/* =========================================================
+   LIGHT THEME
+   ========================================================= */
+
+html[data-theme="light"]
+.espasi-loket-page
+.espasi-dinas-header {
+  background:
+    linear-gradient(
+      135deg,
+      var(--surface-1),
+      var(--surface-2)
+    );
+
+  box-shadow:
+    var(--shadow-sm);
+}
+
+html[data-theme="light"]
+.espasi-loket-page
+.espasi-table-panel,
+html[data-theme="light"]
+.espasi-loket-page
+.espasi-loket-panel {
+  box-shadow:
+    var(--shadow-sm);
+}
+
+html[data-theme="light"]
+.espasi-loket-page
+.espasi-table thead th {
+  background:
+    var(--surface-2);
+}
+
+html[data-theme="light"]
+.espasi-loket-page
+.espasi-table tbody tr:hover {
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 4%,
+      var(--surface-1)
+    );
+}
+
+html[data-theme="light"]
+.espasi-loket-page
+.espasi-table tbody tr.is-current {
+  background:
+    color-mix(
+      in oklab,
+      var(--accent) 7%,
+      var(--surface-1)
+    );
+}
+
+
+/* =========================================================
+   RESPONSIVE — 1200
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+  .espasi-workspace {
+    grid-template-columns:
+      minmax(0,1fr)
+      285px;
+  }
+
+  .espasi-location-readonly {
+    display: none;
+  }
+
+  .espasi-table {
+    min-width: 860px;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE — 1000
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+  .espasi-workspace {
+    grid-template-columns:
+      minmax(0,1fr)
+      270px;
+  }
+
+  .espasi-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .espasi-search {
+    min-width: 220px;
+
+    flex-basis:
+      100%;
+  }
+
+  .espasi-toolbar-spacer {
+    display: none;
+  }
+
+  .espasi-toolbar-actions {
+    width: 100%;
+
+    justify-content:
+      flex-end;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE — 850
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+  .espasi-workspace {
+    grid-template-columns:
+      1fr;
+  }
+
+  .espasi-loket-panel {
+    min-height:
+      auto;
+  }
+
+  .espasi-loket-panel__body {
+    padding:
+      10px;
+  }
+
+  .espasi-no-current {
+    min-height:
+      180px;
+  }
+
+  .espasi-current-number {
+    font-size:
+      58px;
+  }
+
+  .espasi-tracking-modal {
+    max-height:
+      calc(100vh - 24px);
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE — 700
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .espasi-loket-page {
+    padding:
+      92px
+      10px
+      12px
+      10px !important;
+  }
+
+  .espasi-dinas-header {
+    align-items:
+      flex-start;
+
+    padding:
+      10px;
+  }
+
+  .espasi-dinas-header__meta {
+    gap: 6px;
+  }
+
+  .espasi-total {
+    display: none;
+  }
+
+  .espasi-toolbar-actions {
+    justify-content:
+      stretch;
+  }
+
+  .espasi-toolbar-button,
+  .espasi-loket-control {
+    flex:
+      1
+      1
+      0;
+  }
+
+  .espasi-form-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .espasi-form-field--full {
+    grid-column:
+      auto;
+  }
+
+  .espasi-selection-body {
+    grid-template-columns:
+      1fr;
+  }
+
+  .espasi-selection-number {
+    min-height:
+      110px;
+  }
+
+  .espasi-modal-backdrop {
+    align-items:
+      flex-start;
+
+    padding:
+      12px;
+  }
+
+  .espasi-tracking-modal,
+  .espasi-selection-modal {
+    max-height:
+      calc(100vh - 24px);
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE — 520
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+  .espasi-loket-page {
+    padding:
+      90px
+      7px
+      10px
+      7px !important;
+
+    gap:
+      8px;
+  }
+
+  .espasi-dinas-header {
+    min-height:
+      60px;
+
+    padding:
+      8px;
+  }
+
+  .espasi-back-button {
+    width:
+      34px;
+
+    height:
+      34px;
+  }
+
+  .espasi-dinas-header h1 {
+    font-size:
+      14px;
+  }
+
+  .espasi-subtitle {
+    font-size:
+      7px;
+  }
+
+  .espasi-refresh-button {
+    width:
+      36px;
+
+    padding:
+      0;
+  }
+
+  .espasi-refresh-button span {
+    display:
+      none;
+  }
+
+  .espasi-toolbar {
+    padding:
+      8px;
+  }
+
+  .espasi-toolbar-actions {
+    display:
+      grid;
+
+    grid-template-columns:
+      1fr
+      1fr;
+
+    gap:
+      7px;
+  }
+
+  .espasi-search {
+    min-width:
+      0;
+  }
+
+  .espasi-table {
+    min-width:
+      820px;
+  }
+
+  .espasi-table-footer {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .espasi-pagination {
+    width:
+      100%;
+
+    justify-content:
+      space-between;
+  }
+
+  .espasi-action-grid {
+    gap:
+      6px;
+  }
+
+  .espasi-action {
+    min-height:
+      40px;
+  }
+
+  .espasi-modal-footer {
+    padding:
+      9px 11px;
+  }
+
+  .espasi-modal-button {
+    flex:
+      1
+      1
+      0;
+  }
+
+  .espasi-receipt-modal {
+    padding:
+      18px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .espasi-loket-page *,
+  .espasi-loket-page *::before,
+  .espasi-loket-page *::after {
+    transition:
+      none !important;
+
+    animation:
+      none !important;
+  }
+}
