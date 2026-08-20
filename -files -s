@@ -1,0 +1,169 @@
+ .gitignore                                         |   13 [32m+[m[31m-[m
+ public/assets/.htaccess                            |    9 [32m+[m
+ public/assets/favicon.ico                          |  Bin [31m0[m -> [32m1150[m bytes
+ public/assets/favicon.png                          |  Bin [31m0[m -> [32m2283[m bytes
+ public/assets/formulir-09-09-2020-134009.pdf       |  Bin [31m0[m -> [32m67955[m bytes
+ public/assets/img/404.png                          |  Bin [31m0[m -> [32m98071[m bytes
+ public/assets/img/404_cloud.png                    |  Bin [31m0[m -> [32m4766[m bytes
+ public/assets/img/KK.png                           |  Bin [31m0[m -> [32m86215[m bytes
+ public/assets/img/Loket Legalisir.png              |  Bin [31m0[m -> [32m54602[m bytes
+ public/assets/img/city.png                         |  Bin [31m0[m -> [32m196910[m bytes
+ public/assets/img/e-spasi.png                      |  Bin [31m0[m -> [32m1743[m bytes
+ public/assets/img/fonts/element-icons.ttf          |  Bin [31m0[m -> [32m11040[m bytes
+ public/assets/img/fonts/element-icons.woff         |  Bin [31m0[m -> [32m6164[m bytes
+ .../element-ui/lib/theme-chalk/element-icons.ttf   |  Bin [31m0[m -> [32m11040[m bytes
+ .../element-ui/lib/theme-chalk/element-icons.woff  |  Bin [31m0[m -> [32m6164[m bytes
+ .../img/fonts/font-awesome/fontawesome-webfont.eot |  Bin [31m0[m -> [32m165742[m bytes
+ .../img/fonts/font-awesome/fontawesome-webfont.svg | 2671 [32m+++++++++++[m
+ .../img/fonts/font-awesome/fontawesome-webfont.ttf |  Bin [31m0[m -> [32m165548[m bytes
+ .../fonts/font-awesome/fontawesome-webfont.woff    |  Bin [31m0[m -> [32m98024[m bytes
+ .../fonts/font-awesome/fontawesome-webfont.woff2   |  Bin [31m0[m -> [32m77160[m bytes
+ public/assets/img/garuda.png                       |  Bin [31m0[m -> [32m6647[m bytes
+ public/assets/img/ghost.svg                        |    1 [32m+[m
+ public/assets/img/hexagons.rar                     |  Bin [31m0[m -> [32m4251[m bytes
+ public/assets/img/hexagons/accent-heavy.svg        |   13 [32m+[m
+ public/assets/img/hexagons/accent.svg              |   13 [32m+[m
+ public/assets/img/hexagons/green-heavy.svg         |   13 [32m+[m
+ public/assets/img/hexagons/green.svg               |   13 [32m+[m
+ public/assets/img/hexagons/orange-heavy.svg        |   13 [32m+[m
+ public/assets/img/hexagons/orange.svg              |   13 [32m+[m
+ public/assets/img/hexagons/purple-heavy.svg        |   13 [32m+[m
+ public/assets/img/hexagons/purple.svg              |   13 [32m+[m
+ public/assets/img/icon ktp.png                     |  Bin [31m0[m -> [32m108330[m bytes
+ public/assets/img/loket-akta-kelahiran.png         |  Bin [31m0[m -> [32m61000[m bytes
+ public/assets/img/loket-akta-kematian.png          |  Bin [31m0[m -> [32m56277[m bytes
+ public/assets/img/loket-kawin-cerai.png            |  Bin [31m0[m -> [32m61079[m bytes
+ public/assets/img/loket-kia.png                    |  Bin [31m0[m -> [32m45041[m bytes
+ public/assets/img/loket-legalisasi.png             |  Bin [31m0[m -> [32m171822[m bytes
+ public/assets/img/loket-perbaikan-akta.png         |  Bin [31m0[m -> [32m48296[m bytes
+ public/assets/img/loket-perbaikan-data.png         |  Bin [31m0[m -> [32m18769[m bytes
+ public/assets/img/loket-perekaman.png              |  Bin [31m0[m -> [32m52630[m bytes
+ public/assets/img/loket-pindah-keluar.png          |  Bin [31m0[m -> [32m26378[m bytes
+ public/assets/img/loket-wna.png                    |  Bin [31m0[m -> [32m213638[m bytes
+ public/assets/img/pemkot.png                       |  Bin [31m0[m -> [32m32783[m bytes
+ public/assets/img/queue_management_system.jpg      |  Bin [31m0[m -> [32m478245[m bytes
+ public/assets/index.html                           |   29 [32m+[m
+ public/assets/ratna.mp4                            |  Bin [31m0[m -> [32m840497[m bytes
+ public/assets/sound/0.wav                          |  Bin [31m0[m -> [32m2018[m bytes
+ public/assets/sound/1.wav                          |  Bin [31m0[m -> [32m65866[m bytes
+ public/assets/sound/10.wav                         |  Bin [31m0[m -> [32m74588[m bytes
+ public/assets/sound/100.wav                        |  Bin [31m0[m -> [32m85992[m bytes
+ public/assets/sound/11.wav                         |  Bin [31m0[m -> [32m79086[m bytes
+ public/assets/sound/12.wav                         |  Bin [31m0[m -> [32m79142[m bytes
+ public/assets/sound/13.wav                         |  Bin [31m0[m -> [32m90066[m bytes
+ public/assets/sound/14.wav                         |  Bin [31m0[m -> [32m89954[m bytes
+ public/assets/sound/15.wav                         |  Bin [31m0[m -> [32m90108[m bytes
+ public/assets/sound/16.wav                         |  Bin [31m0[m -> [32m89992[m bytes
+ public/assets/sound/17.wav                         |  Bin [31m0[m -> [32m90212[m bytes
+ public/assets/sound/18.wav                         |  Bin [31m0[m -> [32m102286[m bytes
+ public/assets/sound/19.wav                         |  Bin [31m0[m -> [32m105764[m bytes
+ public/assets/sound/2.wav                          |  Bin [31m0[m -> [32m65810[m bytes
+ public/assets/sound/20.wav                         |  Bin [31m0[m -> [32m83454[m bytes
+ public/assets/sound/200.wav                        |  Bin [31m0[m -> [32m89732[m bytes
+ public/assets/sound/3.wav                          |  Bin [31m0[m -> [32m65794[m bytes
+ public/assets/sound/30.wav                         |  Bin [31m0[m -> [32m83382[m bytes
+ public/assets/sound/300.wav                        |  Bin [31m0[m -> [32m91292[m bytes
+ public/assets/sound/4.wav                          |  Bin [31m0[m -> [32m65792[m bytes
+ public/assets/sound/40.wav                         |  Bin [31m0[m -> [32m87734[m bytes
+ public/assets/sound/400.wav                        |  Bin [31m0[m -> [32m90206[m bytes
+ public/assets/sound/5.wav                          |  Bin [31m0[m -> [32m65826[m bytes
+ public/assets/sound/50.wav                         |  Bin [31m0[m -> [32m87868[m bytes
+ public/assets/sound/500.wav                        |  Bin [31m0[m -> [32m91084[m bytes
+ public/assets/sound/6.wav                          |  Bin [31m0[m -> [32m65758[m bytes
+ public/assets/sound/60.wav                         |  Bin [31m0[m -> [32m83650[m bytes
+ public/assets/sound/600.wav                        |  Bin [31m0[m -> [32m90928[m bytes
+ public/assets/sound/7.wav                          |  Bin [31m0[m -> [32m64950[m bytes
+ public/assets/sound/70.wav                         |  Bin [31m0[m -> [32m83438[m bytes
+ public/assets/sound/700.wav                        |  Bin [31m0[m -> [32m90920[m bytes
+ public/assets/sound/8.wav                          |  Bin [31m0[m -> [32m65748[m bytes
+ public/assets/sound/80.wav                         |  Bin [31m0[m -> [32m96828[m bytes
+ public/assets/sound/800.wav                        |  Bin [31m0[m -> [32m101024[m bytes
+ public/assets/sound/9.wav                          |  Bin [31m0[m -> [32m70238[m bytes
+ public/assets/sound/90.wav                         |  Bin [31m0[m -> [32m105696[m bytes
+ public/assets/sound/900.wav                        |  Bin [31m0[m -> [32m107888[m bytes
+ public/assets/sound/A.WAV                          |  Bin [31m0[m -> [32m41928[m bytes
+ public/assets/sound/B.WAV                          |  Bin [31m0[m -> [32m46106[m bytes
+ public/assets/sound/BEL.WAV                        |  Bin [31m0[m -> [32m36816[m bytes
+ public/assets/sound/BEL2a.wav                      |  Bin [31m0[m -> [32m36168[m bytes
+ public/assets/sound/BELAS.WAV                      |  Bin [31m0[m -> [32m65538[m bytes
+ public/assets/sound/C.wav                          |  Bin [31m0[m -> [32m43878[m bytes
+ public/assets/sound/D.wav                          |  Bin [31m0[m -> [32m43258[m bytes
+ public/assets/sound/E.wav                          |  Bin [31m0[m -> [32m51254[m bytes
+ public/assets/sound/F.wav                          |  Bin [31m0[m -> [32m47890[m bytes
+ public/assets/sound/G.wav                          |  Bin [31m0[m -> [32m63674[m bytes
+ public/assets/sound/H.wav                          |  Bin [31m0[m -> [32m45798[m bytes
+ public/assets/sound/I.wav                          |  Bin [31m0[m -> [32m44016[m bytes
+ public/assets/sound/J.wav                          |  Bin [31m0[m -> [32m50470[m bytes
+ public/assets/sound/K.wav                          |  Bin [31m0[m -> [32m42894[m bytes
+ public/assets/sound/KE_CSR.wav                     |  Bin [31m0[m -> [32m127740[m bytes
+ public/assets/sound/KE_TELLER.wav                  |  Bin [31m0[m -> [32m65936[m bytes
+ public/assets/sound/Keloket.wav                    |  Bin [31m0[m -> [32m61416[m bytes
+ public/assets/sound/Keloket1.wav                   |  Bin [31m0[m -> [32m14012[m bytes
+ public/assets/sound/L.wav                          |  Bin [31m0[m -> [32m46322[m bytes
+ public/assets/sound/PULUH.WAV                      |  Bin [31m0[m -> [32m43800[m bytes
+ public/assets/sound/RATUS.WAV                      |  Bin [31m0[m -> [32m76274[m bytes
+ public/assets/sound/ding.WAV                       |  Bin [31m0[m -> [32m58388[m bytes
+ public/assets/sound/group1.wav                     |  Bin [31m0[m -> [32m61416[m bytes
+ public/assets/sound/group1a.wav                    |  Bin [31m0[m -> [32m65936[m bytes
+ public/assets/sound/group2.wav                     |  Bin [31m0[m -> [32m61416[m bytes
+ public/assets/sound/group2b.wav                    |  Bin [31m0[m -> [32m127740[m bytes
+ public/assets/sound/group3.wav                     |  Bin [31m0[m -> [32m61416[m bytes
+ public/assets/sound/group4.wav                     |  Bin [31m0[m -> [32m61416[m bytes
+ public/assets/sound/group5.wav                     |  Bin [31m0[m -> [32m61416[m bytes
+ public/assets/sound/kecounter.wav                  |  Bin [31m0[m -> [32m80936[m bytes
+ public/assets/sound/nol.wav                        |  Bin [31m0[m -> [32m94132[m bytes
+ public/assets/sound/nomor_antrian.wav              |  Bin [31m0[m -> [32m103014[m bytes
+ public/assets/uploads/users/.png                   |  Bin [31m0[m -> [32m4880[m bytes
+ public/assets/uploads/users/3204060201930006.gif   |  Bin [31m0[m -> [32m58215[m bytes
+ src/app/api/espasi/[...legacy]/route.ts            | 4204 [32m++++++++++++++++++[m
+ src/app/api/espasi/access/route.ts                 |  221 [32m+[m
+ src/app/api/espasi/antrian-loket/route.ts          |  651 [32m+++[m
+ src/app/api/espasi/antrian/route.ts                |  137 [32m+[m
+ src/app/api/espasi/cass/route.ts                   |   52 [32m+[m
+ src/app/api/espasi/config/route.ts                 |   20 [32m+[m
+ src/app/api/espasi/dashboard/route.ts              |   84 [32m+[m
+ .../espasi/disduk-sms-antrian/[server]/route.ts    |   58 [32m+[m
+ src/app/api/espasi/loket/route.ts                  |   82 [32m+[m
+ src/app/api/espasi/loket/update/route.ts           |   87 [32m+[m
+ src/app/api/espasi/pengaturan/loket/route.ts       |   57 [32m+[m
+ src/app/api/espasi/route.ts                        |   59 [32m+[m
+ src/app/api/espasi/video/route.ts                  |   75 [32m+[m
+ src/app/api/tracking-pengajuan/receipt/route.ts    | 1167 [32m+++++[m
+ src/app/dashboard-sms/page.tsx                     |    5 [32m+[m
+ src/app/dashboard/[section]/page.tsx               |   69 [32m+[m
+ src/app/espasi/cass/page.tsx                       |  140 [32m+[m
+ src/app/espasi/dashboard-btc/page.tsx              |   13 [32m+[m
+ src/app/espasi/dashboard-dprd/page.tsx             |   12 [32m+[m
+ src/app/espasi/dashboard-fcl/page.tsx              |   14 [32m+[m
+ src/app/espasi/dashboard-mim/page.tsx              |   14 [32m+[m
+ src/app/espasi/dashboard-sms/page.tsx              | 1523 [32m+++++++[m
+ src/app/espasi/dashboard/page.tsx                  |   18 [32m+[m
+ src/app/espasi/konfigurasi/page.tsx                |    5 [32m+[m
+ src/app/espasi/layout.tsx                          |   21 [32m+[m
+ src/app/espasi/loket-terlewat/page.tsx             |   16 [32m+[m
+ src/app/espasi/loket/dinas/baru/page.tsx           | 4661 [32m++++++++++++++++++++[m
+ src/app/espasi/loket/dinas/lanjutan/page.tsx       |   16 [32m+[m
+ .../espasi/loket/dinas/terlewat-lanjutan/page.tsx  |   15 [32m+[m
+ src/app/espasi/loket/dinas/terlewat/page.tsx       |   16 [32m+[m
+ src/app/espasi/loket/gerai/baru/page.tsx           |   17 [32m+[m
+ src/app/espasi/loket/gerai/terlewat/page.tsx       |   16 [32m+[m
+ src/app/espasi/loket/page.tsx                      |   17 [32m+[m
+ src/app/espasi/mainlayout.tsx                      |   15 [32m+[m
+ src/app/espasi/migrasi/page.tsx                    |   87 [32m+[m
+ src/app/espasi/permissions/page.tsx                |    5 [32m+[m
+ src/app/espasi/roles/page.tsx                      |    5 [32m+[m
+ src/app/espasi/sms-antrian-keluar/page.tsx         |   13 [32m+[m
+ src/app/espasi/sms-antrian-log/page.tsx            |   13 [32m+[m
+ src/app/espasi/sms-antrian-masuk/page.tsx          |   13 [32m+[m
+ src/app/espasi/sms-antrian/page.tsx                |  176 [32m+[m
+ src/app/espasi/telepon/page.tsx                    |   13 [32m+[m
+ src/app/espasi/user/page.tsx                       |    5 [32m+[m
+ src/components/espasi/EspasiAntrianModeTable.tsx   |  235 [32m+[m
+ src/components/espasi/EspasiDashboardScreen.tsx    |  428 [32m++[m
+ src/components/espasi/EspasiLoketCallLayout.tsx    |  446 [32m++[m
+ src/lib/espasi-menu.ts                             |  126 [32m+[m
+ src/lib/espasi/api.ts                              |   38 [32m+[m
+ src/lib/espasi/loket-socket.ts                     |   16 [32m+[m
+ src/styles/espasi-loket.css                        | 3943 [32m+++++++++++++++++[m
+ src/styles/espasi-sms.css                          | 1838 [32m++++++++[m
+ 168 files changed, 23803 insertions(+), 1 deletion(-)

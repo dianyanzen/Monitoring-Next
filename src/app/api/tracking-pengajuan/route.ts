@@ -344,7 +344,7 @@ export async function POST(req: NextRequest) {
     if (!noKec || noKec === "0") return badRequest("Kecamatan wajib diisi.");
     if (!Number.isFinite(noKel) || noKel <= 0) return badRequest("Kelurahan wajib diisi.");
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return badRequest("Format email tidak valid.");
-    if (!["MANUAL", "SALAMAN"].includes(source)) return badRequest("Source tidak valid.");
+    if (!["MANUAL", "SALAMAN", "ESPASI"].includes(source)) return badRequest("Source tidak valid.");
 
     let created: any = null;
 
