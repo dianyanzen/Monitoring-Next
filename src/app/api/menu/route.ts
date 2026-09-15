@@ -149,7 +149,7 @@ export async function POST(request: Request) {
     }
 
     const tag = `menu:${level}`;
-    revalidateTag(tag);
+    revalidateTag(tag, 'max');
     Log.info({
       scope: "SYSTEM",
       msg: "menu.revalidate",
