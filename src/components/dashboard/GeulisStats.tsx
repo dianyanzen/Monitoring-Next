@@ -49,7 +49,7 @@ export default function GeulisStats() {
                     <th className="text-right py-2 px-3">Rekaman KTP-el</th>
                     <th className="text-right py-2 px-3">Pencetakan</th>
                     <th className="text-right py-2 px-3">Identitas Digital</th>
-                    <th className="text-right py-2 px-3">Akta 0–17</th>
+                    <th className="text-right py-2 px-3">Akta 0–4</th>
                     <th className="text-right py-2 px-3">KIA</th>
                     <th className="text-right py-2 px-3">Total</th>
                   </tr>

@@ -179,113 +179,236 @@ const BBL_EXTRA_NOTE = "BBL";
 export async function GET(req: NextRequest) {
   const started = Date.now();
   const { ip, ua } = await getClientInfo();
+
   try {
+    // ============================================================
+    // 1. AUTH
+    // ============================================================
     const session = await readServerSession();
-    if (!session?.S_USER_ID) return unauthorized("Unauthorized");
 
-    const syncResult = await syncAutoCompletedTracking();
-
-    const sp = req.nextUrl.searchParams;
-    const start = normalizeText(sp.get("start"));
-    const end = normalizeText(sp.get("end"));
-    if ((start && !isIsoDate(start)) || (end && !isIsoDate(end))) return badRequest("Tanggal filter tidak valid.");
-
-    const binds: Record<string, unknown> = {
-      b_start: start || null,
-      b_end: end || null,
-      b_location_id: normalizeText(sp.get("locationId")) || null,
-      b_product_id: normalizeText(sp.get("productId")) || null,
-      b_status: normalizeUpper(sp.get("status")) || null,
-      b_petugas: normalizeUpper(sp.get("petugas")) || null,
-      b_nik: normalizeDigits(sp.get("nik"), 16) || null,
-      b_registration_no: normalizeUpper(sp.get("registrationNo")) || null,
-    };
-
-    const where = `
-      WHERE T.IS_ACTIVE = 'Y'
-        AND (:b_start IS NULL OR TRUNC(T.CREATED_AT) >= TO_DATE(:b_start, 'YYYY-MM-DD'))
-        AND (:b_end IS NULL OR TRUNC(T.CREATED_AT) <= TO_DATE(:b_end, 'YYYY-MM-DD'))
-        AND (:b_location_id IS NULL OR T.LOCATION_ID = TO_NUMBER(:b_location_id))
-        AND (:b_product_id IS NULL OR T.PRODUCT_ID = TO_NUMBER(:b_product_id))
-        AND (:b_status IS NULL OR T.STATUS = :b_status)
-        AND (:b_petugas IS NULL OR UPPER(T.CREATED_BY) LIKE '%' || :b_petugas || '%')
-        AND (:b_nik IS NULL OR T.NIK = :b_nik)
-        AND (:b_registration_no IS NULL OR UPPER(T.REGISTRATION_NO) LIKE '%' || :b_registration_no || '%')
-    `;
-
-    const rows = await execRows<TrackingRow>(
-      `
-      SELECT
-        T.REQUEST_ID,
-        T.REGISTRATION_NO,
-        T.QUEUE_NO,
-        T.NO_DOK,
-        T.EXTRA_NOTE,
-        T.LOCATION_ID,
-        L.LOCATION_CODE,
-        L.LOCATION_NAME,
-        L.LOCATION_GROUP,
-        T.PRODUCT_ID,
-        P.PRODUCT_CODE,
-        P.PRODUCT_NAME,
-        T.NIK,
-        T.APPLICANT_NAME,
-        T.NO_KEC,
-        T.NO_KEL,
-        T.ALAMAT,
-        T.NO_RW,
-        T.NO_RT,
-        T.ALAMAT,
-        T.NO_RW,
-        T.NO_RT,
-        T.PHONE,
-        T.EMAIL,
-        T.STATUS,
-        T.SOURCE,
-        T.NOTES,
-        T.CREATED_BY,
-        TO_CHAR(T.CREATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS CREATED_AT,
-        TO_CHAR(T.CREATED_AT, 'DD-MM-YYYY') AS CREATED_DATE,
-        TO_CHAR(T.CREATED_AT, 'HH24:MI') AS CREATED_TIME,
-        T.UPDATED_BY,
-        TO_CHAR(T.UPDATED_AT, 'YYYY-MM-DD HH24:MI:SS') AS UPDATED_AT
-      FROM M_TRACKING_REQUEST T
-      JOIN M_TRACKING_LOCATION L ON L.LOCATION_ID = T.LOCATION_ID
-      JOIN M_TRACKING_PRODUCT P ON P.PRODUCT_ID = T.PRODUCT_ID
-      ${where}
-      ORDER BY T.CREATED_AT DESC, T.REQUEST_ID DESC
-      `,
-      binds,
-      {},
-      ORACLE_ALIAS
-    );
-
-    const summaryRows = await execRows<{ STATUS: string; TOTAL: number }>(
-      `
-      SELECT T.STATUS, COUNT(*) AS TOTAL
-      FROM M_TRACKING_REQUEST T
-      ${where}
-      GROUP BY T.STATUS
-      `,
-      binds,
-      {},
-      ORACLE_ALIAS
-    );
-
-    const summary = TRACKING_STATUSES.reduce<Record<string, number>>((acc, status) => {
-      acc[status] = 0;
-      return acc;
-    }, {});
-    for (const row of summaryRows) summary[normalizeUpper(row.STATUS)] = Number(row.TOTAL ?? 0);
-
-    let mappedRows = rows.map(mapTracking);
-    try {
-      mappedRows = await enrichWilayahNames(session, rows);
-    } catch {
-      // Fallback to raw code values when wilayah reference service is unavailable.
-      mappedRows = rows.map(mapTracking);
+    if (!session?.S_USER_ID) {
+      return unauthorized("Unauthorized");
     }
 
+    // ============================================================
+    // 2. PARAMETER
+    // ============================================================
+    const sp = req.nextUrl.searchParams;
+
+    const start = normalizeText(sp.get("start"));
+    const end = normalizeText(sp.get("end"));
+
+    if ((start && !isIsoDate(start)) || (end && !isIsoDate(end))) {
+      return badRequest("Tanggal filter tidak valid.");
+    }
+
+    const locationId = normalizeText(sp.get("locationId"));
+    const productId = normalizeText(sp.get("productId"));
+    const status = normalizeUpper(sp.get("status"));
+    const petugas = normalizeUpper(sp.get("petugas"));
+    const nik = normalizeDigits(sp.get("nik"), 16);
+    const registrationNo = normalizeUpper(sp.get("registrationNo"));
+
+    // ============================================================
+    // 3. WHERE CLAUSE
+    //
+    // IMPORTANT:
+    // Jangan gunakan TRUNC(CREATED_AT)
+    // supaya index CREATED_AT tetap bisa digunakan Oracle.
+    // ============================================================
+    const conditions: string[] = [
+      `T.IS_ACTIVE = 'Y'`,
+    ];
+
+    const binds: Record<string, unknown> = {};
+
+    if (start) {
+      conditions.push(`
+        T.CREATED_AT >= TO_DATE(:b_start, 'YYYY-MM-DD')
+      `);
+
+      binds.b_start = start;
+    }
+
+    if (end) {
+      conditions.push(`
+        T.CREATED_AT < TO_DATE(:b_end, 'YYYY-MM-DD') + 1
+      `);
+
+      binds.b_end = end;
+    }
+
+    if (locationId) {
+      conditions.push(`
+        T.LOCATION_ID = TO_NUMBER(:b_location_id)
+      `);
+
+      binds.b_location_id = locationId;
+    }
+
+    if (productId) {
+      conditions.push(`
+        T.PRODUCT_ID = TO_NUMBER(:b_product_id)
+      `);
+
+      binds.b_product_id = productId;
+    }
+
+    if (status) {
+      conditions.push(`
+        T.STATUS = :b_status
+      `);
+
+      binds.b_status = status;
+    }
+
+    if (petugas) {
+      conditions.push(`
+        UPPER(T.CREATED_BY) LIKE '%' || :b_petugas || '%'
+      `);
+
+      binds.b_petugas = petugas;
+    }
+
+    if (nik) {
+      conditions.push(`
+        T.NIK = :b_nik
+      `);
+
+      binds.b_nik = nik;
+    }
+
+    if (registrationNo) {
+      conditions.push(`
+        UPPER(T.REGISTRATION_NO) LIKE '%' || :b_registration_no || '%'
+      `);
+
+      binds.b_registration_no = registrationNo;
+    }
+
+    const where = `
+      WHERE ${conditions.join("\n        AND ")}
+    `;
+
+    // ============================================================
+    // 4. QUERY DATA
+    //
+    // Summary status dihitung sekaligus menggunakan analytic
+    // COUNT OVER(), sehingga tidak perlu query kedua.
+    // ============================================================
+    const rows = await execRows<TrackingRow & {
+      STATUS_TOTAL?: number;
+    }>(
+      `
+        SELECT
+          T.REQUEST_ID,
+          T.REGISTRATION_NO,
+          T.QUEUE_NO,
+          T.NO_DOK,
+          T.EXTRA_NOTE,
+
+          T.LOCATION_ID,
+          L.LOCATION_CODE,
+          L.LOCATION_NAME,
+          L.LOCATION_GROUP,
+
+          T.PRODUCT_ID,
+          P.PRODUCT_CODE,
+          P.PRODUCT_NAME,
+
+          T.NIK,
+          T.APPLICANT_NAME,
+
+          T.NO_KEC,
+          T.NO_KEL,
+          T.ALAMAT,
+          T.NO_RW,
+          T.NO_RT,
+
+          T.PHONE,
+          T.EMAIL,
+
+          T.STATUS,
+          T.SOURCE,
+          T.NOTES,
+
+          T.CREATED_BY,
+
+          TO_CHAR(
+            T.CREATED_AT,
+            'YYYY-MM-DD HH24:MI:SS'
+          ) AS CREATED_AT,
+
+          TO_CHAR(
+            T.CREATED_AT,
+            'DD-MM-YYYY'
+          ) AS CREATED_DATE,
+
+          TO_CHAR(
+            T.CREATED_AT,
+            'HH24:MI'
+          ) AS CREATED_TIME,
+
+          T.UPDATED_BY,
+
+          TO_CHAR(
+            T.UPDATED_AT,
+            'YYYY-MM-DD HH24:MI:SS'
+          ) AS UPDATED_AT,
+
+          COUNT(*) OVER (
+            PARTITION BY T.STATUS
+          ) AS STATUS_TOTAL
+
+        FROM M_TRACKING_REQUEST T
+
+        JOIN M_TRACKING_LOCATION L
+          ON L.LOCATION_ID = T.LOCATION_ID
+
+        JOIN M_TRACKING_PRODUCT P
+          ON P.PRODUCT_ID = T.PRODUCT_ID
+
+        ${where}
+
+        ORDER BY
+          T.CREATED_AT DESC,
+          T.REQUEST_ID DESC
+      `,
+      binds,
+      {},
+      ORACLE_ALIAS
+    );
+
+    // ============================================================
+    // 5. SUMMARY
+    //
+    // Dibuat dari hasil query yang sama.
+    // Tidak perlu SELECT COUNT kedua.
+    // ============================================================
+    const summary = TRACKING_STATUSES.reduce<Record<string, number>>(
+      (acc, statusName) => {
+        acc[statusName] = 0;
+        return acc;
+      },
+      {}
+    );
+
+    for (const row of rows) {
+      const key = normalizeUpper(row.STATUS);
+
+      if (key && summary[key] !== undefined) {
+        summary[key] = Number(row.STATUS_TOTAL ?? 0);
+      }
+    }
+
+    // ============================================================
+    // 6. MAP DATA
+    // ============================================================
+    const mappedRows = rows.map(mapTracking);
+
+    // ============================================================
+    // 7. LOG
+    // ============================================================
     await Log.info({
       scope: "API",
       msg: "tracking/list",
@@ -294,11 +417,24 @@ export async function GET(req: NextRequest) {
       ip,
       ua,
       tookMs: Date.now() - started,
-      extra: { count: rows.length, autoCompleted: syncResult.updatedCount },
+      extra: {
+        count: mappedRows.length,
+      },
     });
 
-    return ok({ rows: mappedRows, summary }, "Data tracking berhasil dimuat");
+    // ============================================================
+    // 8. RESPONSE
+    // ============================================================
+    return ok(
+      {
+        rows: mappedRows,
+        summary,
+      },
+      "Data tracking berhasil dimuat"
+    );
+
   } catch (e: any) {
+
     await Log.error({
       scope: "API",
       msg: "tracking/list_err",
@@ -306,9 +442,15 @@ export async function GET(req: NextRequest) {
       ip,
       ua,
       tookMs: Date.now() - started,
-      err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
+      err: {
+        name: e?.name ?? "Error",
+        message: e?.message ?? String(e),
+      },
     });
-    return err(e?.message || "Gagal memuat tracking pengajuan");
+
+    return err(
+      e?.message || "Gagal memuat tracking pengajuan"
+    );
   }
 }
 

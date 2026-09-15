@@ -649,12 +649,67 @@ async function buildReceiptHtml(row: ReceiptRow): Promise<string> {
   <meta charset="UTF-8" />
   <title>Bukti Registrasi Pengajuan ${safe(registrationNo)}</title>
   <style>
+    /* ========================================================
+     * PRINT LAYOUT — Chrome 109 SAFE
+     * A4 = 210 x 297 mm
+     * Sheet = 200 x 283 mm
+     * Visual margin = 5 mm kiri/kanan + safety bottom 9 mm
+     * Tidak memakai CSS Grid pada sheet agar Chromium lama
+     * tidak melakukan fractional rounding yang memicu page 2.
+     * ======================================================== */
     *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-    html, body{font-family:Arial,sans-serif;margin:0;padding:0;background:#fff;color:#111;height:100vh;overflow:hidden;}
-    @page{size:A4 portrait;margin:5mm}
-    .sheet{width:200mm;height:285mm;display:grid;grid-template-rows:141mm 1mm 141mm}
-    .receipt{height:141mm;padding:4mm 4.5mm;page-break-inside:avoid;overflow:hidden;position:relative}
-    .cut-line{border-top:1px dashed #777;margin:0}
+    html{width:210mm;min-height:297mm;margin:0;padding:0;background:#fff}
+    body{font-family:Arial,sans-serif;width:210mm;min-height:297mm;margin:0;padding:0;background:#fff;color:#111;overflow:hidden}
+    @page{size:A4 portrait;margin:0}
+
+    .sheet{
+      box-sizing:border-box;
+      width:200mm;
+      height:283mm;
+      margin:5mm auto 9mm auto;
+      padding:0;
+      display:block;
+      overflow:hidden;
+      position:relative;
+      break-before:avoid;
+      break-after:avoid;
+      break-inside:avoid;
+      page-break-before:avoid;
+      page-break-after:avoid;
+      page-break-inside:avoid;
+    }
+
+    .receipt{
+      box-sizing:border-box;
+      width:200mm;
+      height:141mm;
+      padding:4mm 4.5mm;
+      margin:0;
+      break-before:avoid;
+      break-after:avoid;
+      break-inside:avoid;
+      page-break-before:avoid;
+      page-break-after:avoid;
+      page-break-inside:avoid;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .cut-line{
+      box-sizing:border-box;
+      width:200mm;
+      height:1mm;
+      margin:0;
+      padding:0;
+      border-top:1px dashed #777;
+      border-bottom:0;
+      break-before:avoid;
+      break-after:avoid;
+      break-inside:avoid;
+      page-break-before:avoid;
+      page-break-after:avoid;
+      page-break-inside:avoid;
+    }
     .watermark{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;user-select:none}
     .watermark img{width:690px;height:690px;object-fit:contain;opacity:.12;filter:grayscale(1) contrast(1.05)}
     .copy-tag{position:absolute;top:4mm;right:4.5mm;background:#000;color:#fff;padding:1px 8px;font-size:8.6px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
@@ -705,11 +760,66 @@ async function buildReceiptHtml(row: ReceiptRow): Promise<string> {
     .notes ul{margin:0;padding-left:12px;display:grid;gap:1px}
     .notes li{font-size:7.2px;line-height:1.2;color:#222}
     .notes strong{font-weight:800}
+    /* Elemen internal tidak boleh menjadi titik page-break. */
+    .wrap,.content-grid,.left-col,.right-col,.section,.info-table,.notes,.footer{
+      break-inside:avoid;
+      page-break-inside:avoid;
+    }
+
+    img{display:block}
+
     @media print{
-	  body{margin:0;overflow:hidden;}
-	  .noprint{display:none}
-	  .sheet{width:200mm;height:283mm;} /* <-- Diturunkan dari 287mm menjadi 283mm agar ada ruang aman (buffer) */
-	}
+      html,body{
+        width:210mm !important;
+        min-height:297mm !important;
+        margin:0 !important;
+        padding:0 !important;
+        overflow:hidden !important;
+      }
+
+      .noprint{display:none !important}
+
+      .sheet{
+        width:200mm !important;
+        height:283mm !important;
+        margin:5mm auto 9mm auto !important;
+        padding:0 !important;
+        overflow:hidden !important;
+        display:block !important;
+        break-before:avoid !important;
+        break-after:avoid !important;
+        break-inside:avoid !important;
+        page-break-before:avoid !important;
+        page-break-after:avoid !important;
+        page-break-inside:avoid !important;
+      }
+
+      .receipt{
+        width:200mm !important;
+        height:141mm !important;
+        margin:0 !important;
+        overflow:hidden !important;
+        break-before:avoid !important;
+        break-after:avoid !important;
+        break-inside:avoid !important;
+        page-break-before:avoid !important;
+        page-break-after:avoid !important;
+        page-break-inside:avoid !important;
+      }
+
+      .cut-line{
+        width:200mm !important;
+        height:1mm !important;
+        margin:0 !important;
+        padding:0 !important;
+        break-before:avoid !important;
+        break-after:avoid !important;
+        break-inside:avoid !important;
+        page-break-before:avoid !important;
+        page-break-after:avoid !important;
+        page-break-inside:avoid !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -749,8 +859,21 @@ async function htmlToPdf(html: string): Promise<ArrayBuffer> {
       deviceScaleFactor: 1,
     });
 
+    await page.emulateMedia({ media: "print" });
+
     await page.setContent(html, {
-      waitUntil: "networkidle",
+      waitUntil: "domcontentloaded",
+    });
+
+    /* Tunggu font sebelum layout final dihitung. */
+    await page.evaluate(async () => {
+      try {
+        if (document.fonts?.ready) {
+          await document.fonts.ready;
+        }
+      } catch {
+        // lanjutkan; receipt tetap bisa dibuat tanpa Font Loading API
+      }
     });
 
     /*
@@ -774,18 +897,48 @@ async function htmlToPdf(html: string): Promise<ArrayBuffer> {
       );
     });
 
+    /*
+     * Tunggu dua frame agar image + layout benar-benar settle.
+     * Ini penting untuk Chromium lama karena layout print dapat
+     * melakukan reflow sesaat setelah image selesai dimuat.
+     */
+    await page.evaluate(() =>
+      new Promise<void>((resolve) => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => resolve());
+        });
+      })
+    );
+
+    /* Force layout calculation sebelum page.pdf(). */
+    await page.evaluate(() => {
+      const sheet = document.querySelector(".sheet") as HTMLElement | null;
+      if (!sheet) return;
+      void sheet.offsetHeight;
+      void sheet.scrollHeight;
+      void sheet.clientHeight;
+    });
+
     const pdf = await page.pdf({
-	  format: "A4",
-	  landscape: false,
-	  printBackground: true,
-	  preferCSSPageSize: true, // Ini akan membaca ukuran A4 & margin 5mm dari CSS
-	  margin: {
-		top: "0mm",
-		right: "0mm",
-		bottom: "0mm",
-		left: "0mm",
-	  },
-	});
+		  format: "A4",
+		  landscape: false,
+		  printBackground: true,
+		  preferCSSPageSize: false,
+
+		  margin: {
+			top: "0mm",
+			right: "0mm",
+			bottom: "0mm",
+			left: "0mm",
+		  },
+
+		  displayHeaderFooter: false,
+
+		  // FORCE PDF HANYA HALAMAN 1
+		  pageRanges: "1",
+
+		  scale: 1,
+		});
 
     return pdf.buffer.slice(
       pdf.byteOffset,
