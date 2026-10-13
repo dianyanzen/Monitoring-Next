@@ -134,7 +134,7 @@ export async function GET() {
     );
     return res;
   } catch (e: any) {
-    return err(e?.message || "Gagal memuat menu", 500);
+    return err("Gagal memuat menu", 500);
   }
 }
 
@@ -149,7 +149,7 @@ export async function POST(request: Request) {
     }
 
     const tag = `menu:${level}`;
-    revalidateTag(tag, "max");
+    revalidateTag(tag);
     Log.info({
       scope: "SYSTEM",
       msg: "menu.revalidate",

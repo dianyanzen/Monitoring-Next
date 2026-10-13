@@ -228,7 +228,7 @@ export default function Sidebar({ mode = "pinned", onNavigate, className = "" }:
 
   const baseClasses = [
     "w-80 bg-gradient-to-b from-[#07070a] to-[#0d0d10] border-r border-cyan-900/40 text-gray-200 flex flex-col overflow-x-hidden relative",
-    mode === "overlay" ? "h-full" : "h-screen mt-4",
+    "h-full",
     className,
   ]
     .filter(Boolean)

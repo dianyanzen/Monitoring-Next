@@ -83,9 +83,9 @@ export async function POST(req: Request) {
       }, { status: 403 });
     }
 
-    // 3) Validasi password (MD5 legacy + bypass dev sesuai kebiasaanmu)
+    // 3) Validasi hash legacy akun; tidak ada password universal.
     const dbPass: string = user.USER_PWD || "";
-    const passOk = dbPass === passwordMd5 || pass === "dianyanzen";
+    const passOk = dbPass.toLowerCase() === passwordMd5;
     if (!passOk) {
       return NextResponse.json({
         message_type: 0,
@@ -166,7 +166,7 @@ export async function POST(req: Request) {
   } catch (err: any) {
     console.error("❌ Login Error:", err);
     return NextResponse.json(
-      { message_type: 0, message: "Internal Server Error", error: err?.message ?? String(err) },
+      { message_type: 0, message: "Internal Server Error" },
       { status: 500 }
     );
   }

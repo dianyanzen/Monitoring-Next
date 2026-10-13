@@ -29,6 +29,6 @@ export async function GET() {
 
     return ok({ sekolah });
   } catch (e: any) {
-    return err(e?.message || "Gagal memuat daftar sekolah", 500);
+    return err("Gagal memuat daftar sekolah", 500);
   }
 }

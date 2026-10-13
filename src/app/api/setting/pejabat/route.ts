@@ -107,7 +107,7 @@ export async function GET(req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memuat daftar pejabat");
+    return err("Gagal memuat daftar pejabat");
   }
 }
 
@@ -177,6 +177,6 @@ export async function POST(req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal menyimpan pejabat baru");
+    return err("Gagal menyimpan pejabat baru");
   }
 }

@@ -146,6 +146,6 @@ export async function POST(req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memuat list pengajuan (DT)");
+    return err("Gagal memuat list pengajuan (DT)");
   }
 }

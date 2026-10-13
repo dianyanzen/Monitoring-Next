@@ -226,6 +226,6 @@ export async function GET(req: NextRequest) {
 
     return ok(data, "OK", 0);
   } catch (e: any) {
-    return err(e?.message || "Gagal memuat pemanfaatan");
+    return err("Gagal memuat pemanfaatan");
   }
 }

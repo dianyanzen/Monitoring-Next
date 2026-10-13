@@ -86,7 +86,7 @@ export async function GET(_: NextRequest, context: { params: Promise<{ menuId: s
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memuat menu user");
+    return err("Gagal memuat menu user");
   }
 }
 
@@ -162,6 +162,6 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ menuId:
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memperbarui menu");
+    return err("Gagal memperbarui menu");
   }
 }

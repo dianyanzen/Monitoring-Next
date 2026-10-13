@@ -67,6 +67,6 @@ export async function POST(req: NextRequest, context: { params: Promise<{ dailyI
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memverifikasi aktivitas");
+    return err("Gagal memverifikasi aktivitas");
   }
 }

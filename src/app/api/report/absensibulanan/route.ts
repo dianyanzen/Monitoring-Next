@@ -166,6 +166,6 @@ ${dayAggregateSql}
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memuat rekap absensi bulanan");
+    return err("Gagal memuat rekap absensi bulanan");
   }
 }

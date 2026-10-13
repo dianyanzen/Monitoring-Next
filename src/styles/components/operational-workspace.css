@@ -1,0 +1,522 @@
+/* Operational surfaces inherit MONALISA tokens in both themes. */
+.monalisa-ops {
+  --ops-text: var(--ink);
+  --ops-muted: var(--muted);
+  --ops-surface: var(--surface);
+  --ops-border: var(--border);
+  color: var(--ops-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.monalisa-ops h1 {
+  font-size: clamp(1.45rem, 2vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+.monalisa-ops h2 {
+  font-size: 1.2rem;
+  font-weight: 650;
+  margin: 0;
+}
+.monalisa-ops h3 {
+  font-size: 1rem;
+  font-weight: 650;
+  margin: 0;
+}
+.monalisa-ops p {
+  margin: 0.35rem 0;
+  color: var(--ops-muted);
+}
+.inventory-workspace {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 1.2rem 0 2rem;
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+.ops-header,
+.ops-actions,
+.ops-row-actions,
+.ops-table-heading,
+.ops-pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+.ops-header,
+.ops-table-heading,
+.ops-pagination {
+  justify-content: space-between;
+}
+.ops-header {
+  align-items: flex-start;
+  gap: 1rem;
+}
+.ops-header > div:first-child {
+  flex: 1;
+  min-width: 200px;
+}
+.monalisa-ops .ops-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 0 0 0.25rem;
+}
+.monalisa-ops button,
+.ops-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 38px;
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--ops-border);
+  background: var(--ops-surface);
+  color: var(--ops-text);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 550;
+  white-space: nowrap;
+}
+.monalisa-ops button:hover,
+.ops-nav a:hover {
+  background: color-mix(in srgb, var(--ops-text) 9%, var(--ops-surface));
+}
+.monalisa-ops button.primary,
+.ops-nav a[aria-current="page"] {
+  background: color-mix(in srgb, var(--ops-text) 14%, var(--ops-surface));
+  border-color: var(--ops-text);
+}
+.monalisa-ops button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.monalisa-ops :is(button, input, select, textarea, a, summary):focus-visible {
+  outline: 2px solid var(--ops-text);
+  outline-offset: 3px;
+}
+.monalisa-ops label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 550;
+  min-width: 0;
+}
+.monalisa-ops :is(input, select, textarea) {
+  background: var(--ops-surface);
+  color: var(--ops-text);
+  border: 1px solid var(--ops-border);
+  border-radius: 8px;
+  padding: 0.6rem 0.7rem;
+  min-height: 40px;
+  font: inherit;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+.monalisa-ops option {
+  background: var(--ops-surface);
+  color: var(--ops-text);
+}
+.ops-nav {
+  display: flex;
+  gap: 0.35rem;
+  overflow-x: auto;
+  padding: 0 0 0.5rem;
+  max-width: 100%;
+}
+.ops-nav a {
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  background: transparent;
+}
+.ops-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+.ops-summary > div {
+  border: 1px solid var(--ops-border);
+  background: var(--ops-surface);
+  border-radius: 12px;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.3rem;
+}
+.ops-summary svg {
+  grid-column: 2;
+  grid-row: 1/3;
+}
+.ops-summary span {
+  color: var(--ops-muted);
+  font-size: 0.85rem;
+}
+.ops-summary strong {
+  font-size: 1.6rem;
+  font-variant-numeric: tabular-nums;
+}
+.ops-panel,
+.capaian-panel {
+  border: 1px solid var(--ops-border);
+  background: var(--ops-surface);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.capaian-panel {
+  padding: 1.3rem;
+}
+.ops-toolbar {
+  padding: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--ops-border);
+}
+.ops-toolbar > label {
+  flex: 1 1 155px;
+  max-width: 260px;
+}
+.ops-toolbar > .ops-search {
+  flex: 2 1 220px;
+  max-width: 420px;
+}
+.ops-search span {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.ops-table-heading {
+  padding: 1rem;
+}
+.ops-muted {
+  color: var(--ops-muted);
+  font-size: 0.85rem;
+}
+.ops-table-scroll {
+  overflow: auto;
+  max-height: 65vh;
+  max-width: 100%;
+}
+.monalisa-ops table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.85rem;
+}
+.monalisa-ops th,
+.monalisa-ops td {
+  text-align: left;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--ops-border);
+  vertical-align: middle;
+}
+.monalisa-ops th {
+  font-size: 0.78rem;
+  color: var(--ops-muted);
+  font-weight: 650;
+  background: var(--ops-surface);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  white-space: nowrap;
+}
+.monalisa-ops th button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  min-height: 28px;
+  justify-content: flex-start;
+  font-size: inherit;
+}
+.monalisa-ops td {
+  max-width: 360px;
+  overflow-wrap: anywhere;
+}
+.monalisa-ops td.numeric,
+.monalisa-ops th.numeric {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.monalisa-ops tbody tr:hover {
+  background: color-mix(in srgb, var(--ops-text) 5%, transparent);
+}
+.ops-row-actions {
+  flex-wrap: nowrap;
+}
+.ops-row-actions button {
+  min-height: 34px;
+  padding: 0.4rem;
+}
+.ops-row-actions span {
+  font-size: 0.75rem;
+}
+.ops-badge {
+  display: inline-flex;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--ops-border);
+  border-radius: 6px;
+  white-space: nowrap;
+  color: var(--ops-muted);
+}
+.monalisa-ops .danger {
+  color: var(--danger, firebrick);
+}
+.monalisa-ops .success {
+  color: var(--success, seagreen);
+}
+.monalisa-ops .warning {
+  color: var(--warning, darkgoldenrod);
+}
+.ops-badge.danger,
+.ops-badge.warning,
+.ops-badge.success {
+  border-color: currentColor;
+}
+.ops-pagination {
+  padding: 1rem;
+}
+.ops-pagination label {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.ops-pagination select {
+  width: 75px;
+}
+.ops-empty {
+  min-height: 220px;
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  align-items: center;
+  justify-content: center;
+}
+.ops-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  border: 1px solid currentColor;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  background: var(--ops-surface);
+}
+.ops-dialog {
+  width: min(650px, calc(100vw - 24px));
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  border: 1px solid var(--ops-border);
+  border-radius: 14px;
+  padding: 1.4rem;
+  background: var(--ops-surface);
+  color: var(--ops-text);
+  box-shadow: 0 16px 50px color-mix(in srgb, var(--ops-text) 15%, transparent);
+}
+.ops-dialog::backdrop {
+  background: color-mix(in srgb, var(--bg) 65%, transparent);
+  backdrop-filter: blur(4px);
+}
+.ops-dialog > .ops-header {
+  margin-bottom: 1.1rem;
+}
+.ops-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.ops-form-grid .wide {
+  grid-column: 1/-1;
+}
+.ops-form-actions {
+  justify-content: flex-end;
+  border-top: 1px solid var(--ops-border);
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+.ops-detail {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.ops-detail > div {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+  border-bottom: 1px solid var(--ops-border);
+  padding-bottom: 0.65rem;
+}
+.ops-detail dt {
+  color: var(--ops-muted);
+  text-transform: capitalize;
+}
+.ops-detail dd {
+  overflow-wrap: anywhere;
+}
+.capaian-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+.capaian-card {
+  border: 1px solid var(--ops-border);
+  border-radius: 12px;
+  padding: 1rem;
+}
+.capaian-card > .ops-header h3 {
+  flex: 1;
+}
+.capaian-progress {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+.capaian-progress strong {
+  font-variant-numeric: tabular-nums;
+}
+.capaian-card progress {
+  width: 100%;
+  height: 8px;
+  border-radius: 6px;
+  overflow: hidden;
+  appearance: none;
+  margin: 0.65rem 0;
+}
+.capaian-card progress::-webkit-progress-bar {
+  background: color-mix(in srgb, var(--ops-text) 12%, var(--ops-surface));
+}
+.capaian-card progress::-webkit-progress-value {
+  background: var(--ops-text);
+}
+.capaian-card progress::-moz-progress-bar {
+  background: var(--ops-text);
+}
+.capaian-no-progress {
+  margin: 0.65rem 0;
+  font-size: 0.8rem;
+  color: var(--ops-muted);
+}
+.capaian-values {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 0.5rem 0;
+}
+.capaian-values dt {
+  font-size: 0.8rem;
+  color: var(--ops-muted);
+}
+.capaian-values dd {
+  font-weight: 650;
+  font-size: 1.3rem;
+  font-variant-numeric: tabular-nums;
+}
+.capaian-values small {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--ops-muted);
+}
+.ops-method {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--ops-border);
+}
+.ops-method summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+@media (max-width: 700px) {
+  .ops-summary,
+  .capaian-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .capaian-grid {
+    grid-template-columns: 1fr;
+  }
+  .ops-header {
+    flex-direction: column;
+  }
+  .ops-header > div:first-child {
+    min-width: 0;
+  }
+  .ops-toolbar > label {
+    max-width: none;
+  }
+  .ops-pagination {
+    align-items: flex-start;
+  }
+  .monalisa-ops th,
+  .monalisa-ops td {
+    padding: 0.7rem;
+  }
+  .ops-row-actions span {
+    display: none;
+  }
+  .ops-nav {
+    width: 100%;
+  }
+  .ops-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .ops-actions {
+    width: 100%;
+  }
+  .ops-dialog > .ops-header {
+    flex-direction: row;
+  }
+  .ops-detail > div {
+    grid-template-columns: 1fr;
+  }
+  .capaian-panel {
+    padding: 1rem;
+  }
+  .capaian-values dd {
+    font-size: 1.15rem;
+  }
+}
+html[data-theme="light"] .monalisa-ops {
+  --ops-text: color-mix(in srgb, var(--ink) 55%, black);
+  --ops-muted: color-mix(in srgb, var(--ink) 70%, black);
+}
+.ops-dialog {
+  --ops-surface: var(--surface-2);
+}
+.monalisa-ops .danger {
+  color: var(--error);
+}
+.ops-dialog::backdrop {
+  background: rgb(0 0 0 / 0.55);
+}
+/* Local token override also neutralizes legacy universal light text rules. */
+html[data-theme="light"] .monalisa-ops {
+  --lux-ink: var(--ops-text);
+}
+html[data-theme="light"] .monalisa-ops .danger {
+  color: var(--error) !important;
+}
+html[data-theme="light"] .monalisa-ops .success {
+  color: color-mix(in srgb, var(--success) 80%, black) !important;
+}
+html[data-theme="light"] .monalisa-ops .warning {
+  color: color-mix(in srgb, var(--warning) 70%, black) !important;
+}
+.capaian-panel {
+  display: block;
+}

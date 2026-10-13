@@ -84,6 +84,6 @@ export async function GET(req: Request) {
       err: { name: e?.name || "Error", message: e?.message || String(e), stack: e?.stack },
       extra: { startIso, endIso, qUser },
     });
-    return err(e?.message ?? "Failed", 500);
+    return err("Terjadi kesalahan server. Silakan coba lagi.", 500);
   }
 }

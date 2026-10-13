@@ -109,7 +109,7 @@ export async function GET(req: NextRequest) {
 
     return await handle(userLevel);
   } catch (e: any) {
-    return err(e?.message || "Gagal memuat tree hak akses");
+    return err("Gagal memuat tree hak akses");
   }
 }
 
@@ -125,6 +125,6 @@ export async function POST(req: NextRequest) {
 
     return await handle(userLevel);
   } catch (e: any) {
-    return err(e?.message || "Gagal memuat tree hak akses");
+    return err("Gagal memuat tree hak akses");
   }
 }

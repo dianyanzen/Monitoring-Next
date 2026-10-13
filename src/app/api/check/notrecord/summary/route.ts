@@ -91,6 +91,6 @@ export async function GET() {
     ]);
     return ok({ r2, r7, r3, r4, r5, r6 });
   } catch (e: any) {
-    return err(e?.message || "Gagal memuat ringkasan", 500);
+    return err("Gagal memuat ringkasan", 500);
   }
 }

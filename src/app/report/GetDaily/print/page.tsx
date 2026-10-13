@@ -1,4 +1,5 @@
 "use client";
+import { safeRichText } from "@/lib/safeHtml";
 
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -154,8 +155,8 @@ export default function GetDailyPrintPage() {
                     <tr key={`${row.tanggal}-${row.no}`}>
                       <td style={{ textAlign: "center" }}>{row.no}</td>
                       <td style={{ textAlign: "center" }}>{row.tanggal}</td>
-                      <td className="text-wrap" dangerouslySetInnerHTML={{ __html: row.description || "-" }} />
-                      <td className="text-wrap" dangerouslySetInnerHTML={{ __html: row.jumlah || "-" }} />
+                      <td className="text-wrap" dangerouslySetInnerHTML={{ __html: safeRichText(row.description || "-") }} />
+                      <td className="text-wrap" dangerouslySetInnerHTML={{ __html: safeRichText(row.jumlah || "-") }} />
                       <td></td>
                     </tr>
                   ))

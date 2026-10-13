@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   // Pastikan aset PDF eksternal (jika dipakai) ikut dibawa di output tracing.
   outputFileTracingIncludes: {
     "/api/report/getdaily/pdf2": ["./node_modules/@foliojs-fork/fontkit/data/**/*"],
+    "/api/siak/repair_local_biometric/scan": ["./scripts/wsq_to_png.py"],
   },
   async rewrites() {
     return [

@@ -40,7 +40,8 @@ const toMime = (code: string | null | undefined) => {
 
 function convertJp2ToPng(buf: Buffer) {
   return new Promise<Buffer>((resolve, reject) => {
-    const proc = spawn(MAGICK_BIN, ["jp2:-", "png:-"]);
+    // ImageMagick is installed on the host, outside the application bundle.
+    const proc = spawn(/* turbopackIgnore: true */ MAGICK_BIN, ["jp2:-", "png:-"]);
     const out: Buffer[] = [];
     const errs: Buffer[] = [];
 
@@ -91,7 +92,8 @@ const ORDER: Array<keyof FingerRow> = [
 
 function runPythonWSQtoPNG(buf: Buffer): Promise<Buffer> {
   return new Promise((resolve, reject) => {
-    const p = spawn(PYTHON_BIN, [PY_SCRIPT], { stdio: ["pipe", "pipe", "pipe"] });
+    // Python is host-provided; the bundled default script is traced explicitly.
+    const p = spawn(/* turbopackIgnore: true */ PYTHON_BIN, [PY_SCRIPT], { stdio: ["pipe", "pipe", "pipe"] });
     const out: Buffer[] = [];
     const errs: Buffer[] = [];
     p.stdout.on("data", (c) => out.push(c as Buffer));

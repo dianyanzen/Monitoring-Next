@@ -1,4 +1,9 @@
-// Reuse the GET handler while declaring runtime/dynamic locally so Next.js can detect them.
+import { inventoryApi } from "@/lib/barang/api";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export { GET } from "../status/route";
+export function GET(req: Request) {
+  return inventoryApi(req, "cekaset");
+}
+export function POST(req: Request) {
+  return inventoryApi(req, "cekaset");
+}

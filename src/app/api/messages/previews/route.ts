@@ -151,6 +151,6 @@ export async function GET() {
       tookMs: Date.now() - t0,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e), stack: e?.stack },
     });
-    return err(e?.message || "Terjadi kesalahan server");
+    return err("Terjadi kesalahan server");
   }
 }

@@ -76,6 +76,6 @@ export async function GET(req: Request) {
       },
     });
 
-    return err(e?.message || "Tidak dapat memuat master absensi", 500);
+    return err("Tidak dapat memuat master absensi", 500);
   }
 }

@@ -84,7 +84,7 @@ export async function GET(
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memuat detail pejabat");
+    return err("Gagal memuat detail pejabat");
   }
 }
 
@@ -160,7 +160,7 @@ export async function PUT(
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memperbarui pejabat");
+    return err("Gagal memperbarui pejabat");
   }
 }
 
@@ -211,6 +211,6 @@ export async function DELETE(
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal menghapus pejabat");
+    return err("Gagal menghapus pejabat");
   }
 }

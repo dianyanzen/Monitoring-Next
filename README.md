@@ -58,6 +58,23 @@ npm run start:3273
 - Pastikan alur edit data tracking berjalan lewat modal PATCH, bukan menimpa alur create.
 - Pastikan skrip `dev:turbo`, `build:turbo`, dan `start:3273` dapat dijalankan tanpa error.
 
+### Upload Data PDAK
+
+Klasemen IKD kini tersedia di `/pdak/ikd/ranking`, dengan perbandingan snapshot, Small/Medium/Large League, tujuh indikator pencapaian, dan profil historis. Sumbernya `PDAK_IKD` pada koneksi DB MONALISA; izin TEAM IT (5). Lihat [metodologi, API dan pengujian Klasemen IKD](./docs/IKD_RANKING.md).
+
+Modul `/pdak/upload` menerima satu file per kategori KIA, Akta Kelahiran, Perekaman KTP-el, dan IKD. API mengidentifikasi kategori dari seluruh header terpetakan (bukan nama file), memeriksa signature file, nilai numerik, kode wilayah, duplikasi kode, serta komposisi 182 wilayah. Format sumber `.xls` yang berbentuk HTML-table dan workbook `.xlsx` didukung; `.xls` biner BIFF lama harus disimpan ulang sebagai `.xlsx`.
+
+Sebelum mengaktifkan modul:
+
+1. Gunakan koneksi MONALISA biasa (`monalisa_db`, alias pool `DB`). Skema aktual telah diaudit; batch memakai `ID NUMBER` identity, `STATUS='COMMITTED'`, `TOTAL_ROWS`, dan `INSERTED_ROWS`. Tabel batch yang ada tidak perlu dibuat ulang.
+2. Pastikan tabel target PDAK dan unique constraint `(KODE, TANGGAL_ENTRY)` sudah tersedia sesuai mapping yang disepakati.
+3. Daftarkan URL `/pdak/upload` menggunakan [`sql/pdak/PDAK_MENU_SEED.sql`](./sql/pdak/PDAK_MENU_SEED.sql), pilih satu level petugas yang diizinkan. Halaman dan semua API memeriksa izin aktif `VW_SIAK_MENU` pada alias `DB`.
+4. Jalankan `npm install` untuk mengunduh parser `exceljs` dan `parse5`.
+
+Setiap kategori disimpan dalam transaksi Oracle terpisah. Batch hanya tercatat setelah seluruh 182 baris berhasil di-insert; unique key batch `(DATASET_TYPE, TANGGAL_ENTRY)` mencegah unggah paralel atau pengulangan kategori pada tanggal Asia/Jakarta yang sama. API menerima maksimal 4 file per request, masing-masing maksimal 10 MB.
+
+Verifikasi: `npm run test:pdak`, `npm run lint:pdak`, `npm run typecheck`, dan `npm run build`. Panduan audit, migrasi opsional riwayat percobaan gagal, rollback, daftar file, dan batas pengujian ada di [`docs/PDAK_UPLOAD.md`](./docs/PDAK_UPLOAD.md).
+
 -----
 
 ## KATA PENGANTAR

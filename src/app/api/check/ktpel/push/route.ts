@@ -151,6 +151,6 @@ export async function POST(req: NextRequest) {
         nikCount: nikList.length,
       },
     });
-    return err(error?.message || "Gagal memproses Re-Push KTP-el", 500);
+    return err("Gagal memproses Re-Push KTP-el", 500);
   }
 }

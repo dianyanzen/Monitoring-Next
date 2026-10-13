@@ -40,6 +40,6 @@ export async function POST(req: NextRequest) {
     }
     return ok({ is_exists, nama });
   } catch (e: any) {
-    return err(e?.message || "Gagal mengecek NIK", 500);
+    return err("Gagal mengecek NIK", 500);
   }
 }

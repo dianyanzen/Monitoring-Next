@@ -59,7 +59,7 @@ export async function GET() {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memuat group activity");
+    return err("Gagal memuat group activity");
   }
 }
 

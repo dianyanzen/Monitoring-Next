@@ -351,7 +351,7 @@ export default function AbsensiVerifikasiPage() {
                 <h3 className="text-base font-semibold text-rose-50">Tolak Aktivitas</h3>
                 <p className="text-sm text-rose-100/80">
                   Beri alasan singkat (min. 10 karakter) untuk menolak aktivitas
-                  <span className="font-semibold text-rose-50"> "{reject.target.activity}"</span>.
+                  <span className="font-semibold text-rose-50"> &quot;{reject.target.activity}&quot;</span>.
                 </p>
                 <textarea
                   rows={3}

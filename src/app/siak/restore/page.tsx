@@ -1,5 +1,6 @@
-﻿// FILE: src/app/siak/restore/page.tsx
+// FILE: src/app/siak/restore/page.tsx
 "use client";
+import { safeRichText } from "@/lib/safeHtml";
 
 import React, {
   useState,
@@ -886,7 +887,7 @@ export default function RestorePage() {
                     <div className="grid gap-3 md:grid-cols-2">
                       {result.historyKematian && (
                         <HistoryCard title="History Kematian" icon={<History className="h-3.5 w-3.5" />} tone="danger">
-                          <div className="text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: result.historyKematian }} />
+                          <div className="text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: safeRichText(result.historyKematian) }} />
                         </HistoryCard>
                       )}
                       {result.historyPindah && (

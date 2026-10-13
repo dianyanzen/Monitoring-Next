@@ -260,7 +260,7 @@ export async function GET(
       tookMs: Date.now() - started,
       err: { name: e?.name || "Error", message: e?.message || String(e) },
     });
-    return err(e?.message || "Gagal memuat detail user");
+    return err("Gagal memuat detail user");
   }
 }
 
@@ -506,7 +506,7 @@ export async function PUT(
       tookMs: Date.now() - started,
       err: { name: e?.name || "Error", message: e?.message || String(e) },
     });
-    return err(e?.message || "Gagal memperbarui user");
+    return err("Gagal memperbarui user");
   }
   
 }
@@ -613,6 +613,6 @@ export async function DELETE(
       tookMs: Date.now() - started,
       err: { name: e?.name || "Error", message: e?.message || String(e) },
     });
-    return err(e?.message || "Gagal menghapus user");
+    return err("Gagal menghapus user");
   }
 }

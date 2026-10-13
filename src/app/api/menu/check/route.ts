@@ -132,6 +132,6 @@ export async function GET(req: NextRequest) {
 
     return ok({ level, total: urls.length, results });
   } catch (e: any) {
-    return err(e?.message || "Gagal cek routes", 500);
+    return err("Gagal cek routes", 500);
   }
 }

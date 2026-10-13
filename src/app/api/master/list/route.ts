@@ -60,7 +60,7 @@ export async function GET(req: Request) {
         stack: e?.stack,
       },
     });
-    return err(e?.message || "Tidak dapat memuat master list", 500);
+    return err("Tidak dapat memuat master list", 500);
   }
 }
 

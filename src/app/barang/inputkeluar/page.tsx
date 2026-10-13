@@ -1,1 +1,4 @@
-export { default } from "../keluar/page";
+import InventoryPage from "@/components/barang/InventoryPage";
+export default function Page() {
+  return <InventoryPage mode="keluar" />;
+}

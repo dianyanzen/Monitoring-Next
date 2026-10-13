@@ -101,6 +101,6 @@ export async function GET(req: NextRequest) {
         stack: e?.stack,
       },
     });
-    return err(e?.message || "Gagal memuat metadata KTP-el", 500);
+    return err("Gagal memuat metadata KTP-el", 500);
   }
 }

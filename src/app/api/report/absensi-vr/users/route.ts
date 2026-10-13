@@ -60,7 +60,7 @@ export async function GET() {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memuat daftar petugas");
+    return err("Gagal memuat daftar petugas");
   }
 }
 

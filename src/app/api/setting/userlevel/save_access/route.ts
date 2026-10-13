@@ -102,6 +102,6 @@ export async function POST(req: NextRequest) {
       at: "/api/setting/userlevel/save_access",
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal menyimpan hak akses");
+    return err("Gagal menyimpan hak akses");
   }
 }

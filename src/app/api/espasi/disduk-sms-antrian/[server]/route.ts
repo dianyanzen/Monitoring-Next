@@ -53,6 +53,6 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ server: st
       rows,
     });
   } catch (e: any) {
-    return err(e?.message || "Gagal mengambil data dashboard-sms dari database lokal.", 500);
+    return err("Gagal mengambil data dashboard-sms dari database lokal.", 500);
   }
 }

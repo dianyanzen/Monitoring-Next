@@ -418,6 +418,6 @@ export async function POST(req: NextRequest) {
       },
       extra: { mode },
     });
-    return err(e?.message || "Gagal memuat data KTP-el", 500);
+    return err("Gagal memuat data KTP-el", 500);
   }
 }

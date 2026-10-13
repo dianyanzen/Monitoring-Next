@@ -85,6 +85,6 @@ export async function GET(req: NextRequest) {
         stack: e?.stack,
       },
     });
-    return err(e?.message || "Gagal memuat metadata duplicate", 500);
+    return err("Gagal memuat metadata duplicate", 500);
   }
 }

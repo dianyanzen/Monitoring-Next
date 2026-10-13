@@ -8,7 +8,11 @@ export const metadata = {
   description: "Disdukcapil Kota Bandung | Kendali master & stok barang",
 };
 
-export default async function BarangLayout({ children }: { children: React.ReactNode }) {
+export default async function BarangLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const s = await readServerSession();
   return (
     <SessionProvider initialUser={s ?? null}>
@@ -16,3 +20,5 @@ export default async function BarangLayout({ children }: { children: React.React
     </SessionProvider>
   );
 }
+
+import "@/styles/components/operational-workspace.css";

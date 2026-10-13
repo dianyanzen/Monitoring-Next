@@ -50,6 +50,6 @@ export async function POST(req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name || "Error", message: e?.message || String(e) },
     });
-    return err(e?.message || "Gagal memuat total blangko", 500);
+    return err("Gagal memuat total blangko", 500);
   }
 }

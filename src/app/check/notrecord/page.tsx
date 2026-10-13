@@ -1,7 +1,8 @@
-﻿// FILE: src/app/check/notrecord/page.tsx
+// FILE: src/app/check/notrecord/page.tsx
 "use client";
 
 import dynamic from "next/dynamic";
+import { escapeHtml } from "@/lib/safeHtml";
 import { useEffect, useMemo, useState } from "react";
 import { Loader2, Search, Trash2, RefreshCcw, Info, BarChart3, School2, MapPinned, CheckCircle2 } from "lucide-react";
 import JSZip from "jszip";
@@ -177,7 +178,7 @@ const pill = (text: string, tone: "neutral" | "good" | "bad" | "info" = "neutral
     bad: "border border-red-400/30 bg-red-500/10 text-red-100",
     info: "border border-fuchsia-400/30 bg-fuchsia-500/10 text-fuchsia-100",
   };
-  return `<span class="${base} ${map[tone]}">${text}</span>`;
+  return `<span class="${base} ${map[tone]}">${escapeHtml(text)}</span>`;
 };
 
 const pickRows = (j: any): BNBA[] => {

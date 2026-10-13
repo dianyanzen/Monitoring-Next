@@ -36,6 +36,6 @@ export async function POST(req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name || "Error", message: e?.message || String(e) },
     });
-    return err(e?.message || "Gagal menghapus data SFE", 500);
+    return err("Gagal menghapus data SFE", 500);
   }
 }

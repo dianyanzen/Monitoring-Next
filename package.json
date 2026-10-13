@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "test:pdak": "node --test --test-isolation=none tests/pdak/*.test.cjs",
+    "lint:pdak": "eslint --config scripts/eslint-pdak.config.mjs src/lib/pdak src/components/pdak src/app/api/pdak src/app/pdak",
+    "typecheck": "tsc --noEmit --incremental false",
     "dev": "next dev",
     "build": "next build",
     "dev:turbo": "next dev --turbopack",
@@ -27,6 +30,7 @@
     "datatables.net-responsive": "^3.0.7",
     "datatables.net-responsive-dt": "^3.0.7",
     "date-fns": "^4.1.0",
+    "exceljs": "^4.4.0",
     "framer-motion": "^12.23.22",
     "gridjs": "^6.2.0",
     "gridjs-react": "^6.1.1",
@@ -36,6 +40,7 @@
     "next": "^15.5.7",
     "nodemailer": "^9.0.5",
     "oracledb": "^6.9.0",
+    "parse5": "^8.0.1",
     "pdf-lib": "^1.17.1",
     "pdfmake": "^0.2.20",
     "playwright": "^1.62.1",
@@ -64,5 +69,10 @@
     "prettier-plugin-tailwindcss": "^0.6.14",
     "tailwindcss": "^3.4.10",
     "typescript": "^5"
+  },
+  "overrides": {
+    "exceljs": {
+      "uuid": "11.1.1"
+    }
   }
 }

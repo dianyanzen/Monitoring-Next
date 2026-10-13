@@ -62,6 +62,6 @@ export async function GET(req: NextRequest) {
       ua,
       err: { name: e?.name || "Error", message: e?.message || String(e), stack: e?.stack },
     });
-    return err(e?.message || "Gagal memuat data kelurahan", 500);
+    return err("Gagal memuat data kelurahan", 500);
   }
 }

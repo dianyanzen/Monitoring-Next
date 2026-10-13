@@ -643,9 +643,7 @@ export async function GET(
     e: unknown
   ) {
     return err(
-      e instanceof Error
-        ? e.message
-        : "Gagal memuat antrian Dinas",
+      "Terjadi kesalahan server. Silakan coba lagi.",
     );
   }
 }

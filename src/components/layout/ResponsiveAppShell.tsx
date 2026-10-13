@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/layout/Topbar";
@@ -47,6 +47,16 @@ type ResponsiveAppShellProps = {
 
 export default function ResponsiveAppShell({ children, mainClassName = "flex-1 overflow-y-auto px-6 py-4" }: ResponsiveAppShellProps) {
   const isDesktop = useMediaQuery(DESKTOP_QUERY);
+  const shellRef = useRef<HTMLDivElement>(null);
+  const [topbarHeight, setTopbarHeight] = useState(108);
+  useEffect(() => {
+    const header = shellRef.current?.querySelector("header.fixed.top-0");
+    if (!header) return;
+    const update = () => setTopbarHeight(header.getBoundingClientRect().height);
+    const observer = new ResizeObserver(update);
+    observer.observe(header); update();
+    return () => observer.disconnect();
+  }, []);
   const [sidebarPinned, setSidebarPinned] = useState(false);
   const [sidebarOverlayOpen, setSidebarOverlayOpen] = useState(false);
 
@@ -94,7 +104,7 @@ export default function ResponsiveAppShell({ children, mainClassName = "flex-1 o
   const sidebarShouldRenderPinned = useMemo(() => isDesktop && sidebarPinned, [isDesktop, sidebarPinned]);
 
   return (
-    <div className="relative flex h-screen w-full overflow-hidden">
+    <div ref={shellRef} className="relative flex h-screen w-full overflow-hidden">
       <RouteChangeOverlay />
 
       <AnimatePresence initial={false}>
@@ -102,19 +112,20 @@ export default function ResponsiveAppShell({ children, mainClassName = "flex-1 o
           <motion.div
             key="sidebar-pinned"
             className="hidden h-full lg:flex"
+            style={{ paddingTop: topbarHeight }}
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: "auto", opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <Sidebar mode="pinned" />
+            <Sidebar mode="pinned" className="mt-0 h-full" />
           </motion.div>
         )}
       </AnimatePresence>
 
       <div className="flex h-full flex-1 flex-col overflow-hidden">
         <Topbar onToggleSidebar={handleToggleSidebar} />
-        <main className={mainClassName}>{children}</main>
+        <main className={mainClassName} style={{ marginTop: topbarHeight, paddingTop: 16, minWidth: 0 }}>{children}</main>
         <Footer />
       </div>
 
@@ -135,7 +146,8 @@ export default function ResponsiveAppShell({ children, mainClassName = "flex-1 o
               onClick={() => setSidebarOverlayOpen(false)}
             />
             <motion.div
-              className="absolute left-0 top-16 h-[calc(100%-4rem)] w-[82vw] max-w-[320px]"
+              className="absolute left-0 w-[82vw] max-w-[320px]"
+              style={{ top: topbarHeight, height: `calc(100% - ${topbarHeight}px)` }}
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}

@@ -132,6 +132,6 @@ export async function GET(req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name || "Error", message: e?.message || String(e) },
     });
-    return err(e?.message || "Gagal memuat data antrian", 500);
+    return err("Gagal memuat data antrian", 500);
   }
 }

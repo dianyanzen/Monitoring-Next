@@ -50,6 +50,6 @@ export async function GET(req: NextRequest) {
 
     return ok(data, "OK", data.length);
   } catch (e: any) {
-    return err(e?.message || "Gagal memuat daftar kecamatan");
+    return err("Gagal memuat daftar kecamatan");
   }
 }

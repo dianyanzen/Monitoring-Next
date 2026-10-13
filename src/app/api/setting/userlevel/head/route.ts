@@ -53,6 +53,6 @@ export async function GET(req: NextRequest) {
 
     return ok({ data });
   } catch (e: any) {
-    return err(e?.message || "Gagal memuat head user level");
+    return err("Gagal memuat head user level");
   }
 }
