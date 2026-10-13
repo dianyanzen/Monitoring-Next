@@ -63,6 +63,6 @@ export async function GET(req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name || "Error", message: e?.message || String(e) },
     });
-    return err(e?.message || "Gagal mengecek user ID");
+    return err("Gagal mengecek user ID");
   }
 }

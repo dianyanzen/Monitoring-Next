@@ -56,6 +56,6 @@ export async function POST(req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name || "Error", message: e?.message || String(e) },
     });
-    return err(e?.message || "Gagal memuat histori distribusi", 500);
+    return err("Gagal memuat histori distribusi", 500);
   }
 }

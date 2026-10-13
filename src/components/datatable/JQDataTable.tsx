@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { escapeHtml } from "@/lib/safeHtml";
 
 // ====== CSS DataTables (styling only; JS modules di-load dinamis) ======
 import "datatables.net-dt/css/dataTables.dataTables.css";
@@ -113,7 +114,9 @@ export default function JQDataTable({
     async function boot() {
       if (!tableRef.current) return;
 
-      resolvedColumnsRef.current = autoColumns;
+      resolvedColumnsRef.current = autoColumns.map(column => ({ ...column,
+        render: column.render ?? ((value: unknown, type: string) => type === "display" ? escapeHtml(value) : value),
+      }));
 
       const [
         { default: DataTable },
@@ -132,10 +135,11 @@ export default function JQDataTable({
       ]);
 
       // registrasi plugin ala DataTables v2 (tanpa jQuery)
-      DataTable.use(Responsive);
-      DataTable.use(Buttons);
-      DataTable.use(ButtonsHtml5);
-      DataTable.use(ButtonsPrint);
+      const registerPlugin = DataTable.use.bind(DataTable);
+      registerPlugin(Responsive);
+      registerPlugin(Buttons);
+      registerPlugin(ButtonsHtml5);
+      registerPlugin(ButtonsPrint);
 
       // buttons export membutuhkan JSZip di window
       (window as any).JSZip = JSZip;
@@ -222,7 +226,7 @@ export default function JQDataTable({
         onApiReadyRef.current?.(null);
       }
       if (dtRef.current) {
-        dtRef.current.destroy(true);
+        dtRef.current.destroy(false);
         dtRef.current = null;
       }
     };
@@ -235,7 +239,7 @@ export default function JQDataTable({
     api.clear();
     if (data?.length) api.rows.add(data as any);
     api.draw(false);
-  }, [data]);
+  }, [data, ready]);
 
   return (
     <div className="overflow-x-auto">

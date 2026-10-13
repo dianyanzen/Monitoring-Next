@@ -1160,8 +1160,7 @@ export async function GET(
     });
 
     return err(
-      cause?.message ??
-        "Gagal membuat PDF resi.",
+      "Terjadi kesalahan server. Silakan coba lagi.",
     );
   }
 }

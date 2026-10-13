@@ -70,6 +70,6 @@ export async function POST(req: Request) {
 
     return ok({ message: "Data Berhasil Disimpan" });
   } catch (e: any) {
-    return err(e?.message || "Gagal menyimpan Level");
+    return err("Gagal menyimpan Level");
   }
 }

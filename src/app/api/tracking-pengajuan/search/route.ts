@@ -167,7 +167,7 @@ export async function GET(req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal mencari tracking pengajuan");
+    return err("Gagal mencari tracking pengajuan");
   }
 }
 

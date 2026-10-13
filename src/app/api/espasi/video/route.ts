@@ -70,6 +70,6 @@ export async function GET(_req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name || "Error", message: e?.message || String(e) },
     });
-    return err(e?.message || "Gagal memuat daftar video", 500);
+    return err("Gagal memuat daftar video", 500);
   }
 }

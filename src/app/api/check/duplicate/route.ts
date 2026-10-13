@@ -316,6 +316,6 @@ export async function POST(req: NextRequest) {
       },
       extra: { mode },
     });
-    return err(e?.message || "Gagal memuat data duplicate", 500);
+    return err("Gagal memuat data duplicate", 500);
   }
 }

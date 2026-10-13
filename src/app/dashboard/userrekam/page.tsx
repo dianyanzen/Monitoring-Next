@@ -29,7 +29,7 @@ const monthEdges = (d = new Date()) => {
   return { start: iso(s), end: iso(e) };
 };
 
-export default function userrekamPage() {
+export default function UserRekamPage() {
   const [start, setStart] = useState(todayISO());
   const [end, setEnd] = useState(todayISO());
   const [rows, setRows] = useState<Row[]>([]);
@@ -51,7 +51,7 @@ export default function userrekamPage() {
         signal: ac.signal,
       });
       const j = await res.json();
-      setRows((j?.data ?? []) as Row[]);
+      if (!ac.signal.aborted) setRows((j?.data ?? []) as Row[]);
     } catch {
       if (!ac.signal.aborted) setRows([]);
     } finally {
@@ -64,6 +64,7 @@ export default function userrekamPage() {
 
   useEffect(() => {
     load(); // first render
+    return () => abortRef.current?.abort();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -2,6 +2,10 @@
 
 import ResponsiveAppShell from "@/components/layout/ResponsiveAppShell";
 
-export default function MainLayoutClient({ children }: { children: React.ReactNode }) {
+export default function MainLayoutClient({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return <ResponsiveAppShell>{children}</ResponsiveAppShell>;
 }

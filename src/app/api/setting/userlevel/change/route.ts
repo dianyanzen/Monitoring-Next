@@ -25,6 +25,6 @@ export async function POST(req: NextRequest) {
 
     return ok({ message: "Level name berhasil diperbarui." });
   } catch (e: any) {
-    return err(e?.message || "Gagal memperbarui level name");
+    return err("Gagal memperbarui level name");
   }
 }

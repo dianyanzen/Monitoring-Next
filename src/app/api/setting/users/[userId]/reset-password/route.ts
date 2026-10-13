@@ -67,6 +67,6 @@ export async function POST(
       tookMs: Date.now() - started,
       err: { name: e?.name || "Error", message: e?.message || String(e) },
     });
-    return err(e?.message || "Gagal me-reset password user");
+    return err("Gagal me-reset password user");
   }
 }

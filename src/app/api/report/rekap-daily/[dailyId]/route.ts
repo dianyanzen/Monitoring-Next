@@ -74,6 +74,6 @@ export async function DELETE(
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal menghapus daily report");
+    return err("Gagal menghapus daily report");
   }
 }

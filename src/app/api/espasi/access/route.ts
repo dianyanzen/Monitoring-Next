@@ -213,9 +213,7 @@ export async function GET(
     });
 
     return err(
-      e instanceof Error
-        ? e.message
-        : "Gagal membaca hak akses ESPASI",
+      "Terjadi kesalahan server. Silakan coba lagi.",
     );
   }
 }

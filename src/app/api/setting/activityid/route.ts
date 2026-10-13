@@ -96,7 +96,7 @@ export async function GET(req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memuat daftar activity");
+    return err("Gagal memuat daftar activity");
   }
 }
 
@@ -172,7 +172,7 @@ export async function POST(req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal menyimpan activity baru");
+    return err("Gagal menyimpan activity baru");
   }
 }
 

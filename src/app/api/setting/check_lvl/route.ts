@@ -36,6 +36,6 @@ export async function POST(req: Request) {
 
     return ok({ is_exists: isExists, lvl_name: lvlName });
   } catch (e: any) {
-    return err(e?.message || "Gagal memeriksa Level Code");
+    return err("Gagal memeriksa Level Code");
   }
 }

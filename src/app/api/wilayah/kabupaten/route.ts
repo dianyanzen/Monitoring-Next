@@ -47,6 +47,6 @@ export async function GET(req: NextRequest) {
 
     return ok(data, "OK", data.length);
   } catch (e: any) {
-    return err(e?.message || "Gagal memuat daftar kabupaten/kota");
+    return err("Gagal memuat daftar kabupaten/kota");
   }
 }

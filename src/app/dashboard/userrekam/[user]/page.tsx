@@ -101,7 +101,7 @@ const buildButtons = (
   ];
 };
 
-export default function userrekamDetailPage() {
+export default function UserRekamDetailPage() {
   const { user } = useParams<{ user: string }>();
   const searchParams = useSearchParams();
   const [start, setStart] = useState(() => searchParams.get("start") ?? todayISO());
@@ -155,6 +155,7 @@ export default function userrekamDetailPage() {
         fetch(`/api/dashboard/userrekam/detail/kel?user=${encodeURIComponent(user)}&start=${startDate}&end=${endDate}`, { cache:"no-store", signal: ac.signal }).then(r=>r.json()),
       ]);
 
+      if (ac.signal.aborted) return;
       setRows(unwrap(d));
       setKec(unwrap(rkec));
       setKel(unwrap(rkel));
@@ -165,7 +166,7 @@ export default function userrekamDetailPage() {
     }
   }, [user, start, end]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => { load(); return () => abortRef.current?.abort(); }, [load]);
   useEffect(() => { if (end < start) setEnd(start); }, [start, end]);
 
   function onClear() { const t = todayISO(); setStart(t); setEnd(t); }

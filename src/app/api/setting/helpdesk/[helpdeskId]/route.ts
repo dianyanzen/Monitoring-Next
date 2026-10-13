@@ -72,7 +72,7 @@ export async function GET(_: NextRequest, context: { params: Promise<{ helpdeskI
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memuat helpdesk");
+    return err("Gagal memuat helpdesk");
   }
 }
 
@@ -133,7 +133,7 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ helpdes
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memperbarui helpdesk");
+    return err("Gagal memperbarui helpdesk");
   }
 }
 
@@ -180,6 +180,6 @@ export async function DELETE(_: NextRequest, context: { params: Promise<{ helpde
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal menghapus helpdesk");
+    return err("Gagal menghapus helpdesk");
   }
 }

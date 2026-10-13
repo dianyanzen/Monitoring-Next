@@ -3359,8 +3359,7 @@ export async function GET(
     });
 
     return err(
-      e?.message ||
-        "Gagal memproses endpoint legacy",
+      "Gagal memproses endpoint legacy",
       500,
     );
   }
@@ -3969,8 +3968,7 @@ export async function POST(
     });
 
     return err(
-      e?.message ||
-        "Gagal memproses endpoint legacy",
+      "Gagal memproses endpoint legacy",
       500,
     );
   }
@@ -4196,8 +4194,7 @@ export async function DELETE(
     });
 
     return err(
-      e?.message ||
-        "Gagal memproses endpoint legacy",
+      "Gagal memproses endpoint legacy",
       500,
     );
   }

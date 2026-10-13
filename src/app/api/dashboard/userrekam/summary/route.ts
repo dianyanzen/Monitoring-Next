@@ -115,6 +115,6 @@ export async function GET(req: Request) {
       },
       extra: { startIso, endIso },
     });
-    return err(e?.message || "Failed to load summary", 500);
+    return err("Failed to load summary", 500);
   }
 }

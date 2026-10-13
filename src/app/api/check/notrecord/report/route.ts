@@ -47,6 +47,6 @@ export async function POST(req: NextRequest) {
 
     return ok({ message_type: 1, message: "Data balikan tersimpan." });
   } catch (e: any) {
-    return err(e?.message || "Gagal menyimpan data balikan", 500);
+    return err("Gagal menyimpan data balikan", 500);
   }
 }

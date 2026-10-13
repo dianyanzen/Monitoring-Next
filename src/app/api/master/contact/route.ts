@@ -62,7 +62,9 @@ export async function GET(req: Request) {
       extra: { rowCount: data.length },
     });
 
-    return ok(data, 30);
+    const response = ok(data);
+    response.headers.set("Cache-Control", "private, no-store");
+    return response;
   } catch (e: any) {
     await Log.error({
       scope: "API",
@@ -79,6 +81,6 @@ export async function GET(req: Request) {
       },
     });
 
-    return err(e?.message || "Tidak dapat memuat master contact", 500);
+    return err("Tidak dapat memuat master contact", 500);
   }
 }

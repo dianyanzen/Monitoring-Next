@@ -202,7 +202,7 @@ export async function GET(_req: NextRequest, ctx: Params) {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memuat detail tracking");
+    return err("Gagal memuat detail tracking");
   }
 }
 
@@ -394,7 +394,7 @@ export async function PATCH(req: NextRequest, ctx: Params) {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memperbarui tracking", Number(e?.status || 500));
+    return err("Gagal memperbarui tracking", Number(e?.status || 500));
   }
 }
 
@@ -480,6 +480,6 @@ export async function DELETE(_req: NextRequest, ctx: Params) {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal menghapus tracking", Number(e?.status || 500));
+    return err("Gagal menghapus tracking", Number(e?.status || 500));
   }
 }

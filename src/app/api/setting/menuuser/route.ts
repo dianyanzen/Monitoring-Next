@@ -83,6 +83,6 @@ export async function GET(req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memuat menu user");
+    return err("Gagal memuat menu user");
   }
 }

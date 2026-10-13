@@ -92,7 +92,7 @@ export async function GET(
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memuat detail activity");
+    return err("Gagal memuat detail activity");
   }
 }
 
@@ -159,7 +159,7 @@ export async function PUT(
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memperbarui activity");
+    return err("Gagal memperbarui activity");
   }
 }
 
@@ -258,6 +258,6 @@ export async function DELETE(
         ? "Activity tidak ditemukan"
         : e?.message || "Gagal menghapus activity";
     const status = message === "Activity tidak ditemukan" ? 404 : 500;
-    return err(message, status);
+    return err("Terjadi kesalahan server. Silakan coba lagi.", status);
   }
 }

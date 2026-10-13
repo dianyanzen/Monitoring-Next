@@ -202,6 +202,6 @@ export async function POST(req: NextRequest) {
       tookMs: Date.now() - t0,
       err: { name: e?.name || "Error", message: e?.message || String(e), stack: e?.stack },
     });
-    return err(e?.message || "Gagal memuat data", 500);
+    return err("Gagal memuat data", 500);
   }
 }

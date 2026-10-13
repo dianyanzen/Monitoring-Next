@@ -115,6 +115,6 @@ export async function GET(_req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal memuat master tracking");
+    return err("Gagal memuat master tracking");
   }
 }

@@ -283,6 +283,6 @@ export async function GET(req: NextRequest) {
 
     return ok(data, "OK", data.length);
   } catch (e: any) {
-    return err(e?.message || "Gagal memuat ringkasan pemanfaatan per kategori");
+    return err("Gagal memuat ringkasan pemanfaatan per kategori");
   }
 }

@@ -10,9 +10,6 @@ export const dynamic = "force-dynamic";
 function isCronAuthorized(req: NextRequest, sessionUserId?: string | null) {
   if (sessionUserId) return true;
 
-  const cronHeader = String(req.headers.get("x-vercel-cron") || "").trim();
-  if (cronHeader === "1") return true;
-
   const configuredKey = String(process.env.TRACKING_AUTO_SYNC_KEY || "").trim();
   if (!configuredKey) return false;
 
@@ -53,6 +50,6 @@ export async function GET(req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal menjalankan sinkronisasi auto-complete tracking");
+    return err("Gagal menjalankan sinkronisasi auto-complete tracking");
   }
 }

@@ -71,6 +71,6 @@ export async function GET(req: Request) {
       tookMs: Date.now() - t0,
       err: { name: e?.name || "Error", message: e?.message || String(e) },
     });
-    return err(e?.message ?? "Failed", 500);
+    return err("Terjadi kesalahan server. Silakan coba lagi.", 500);
   }
 }

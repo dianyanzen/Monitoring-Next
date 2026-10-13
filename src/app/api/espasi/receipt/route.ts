@@ -1077,6 +1077,6 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return err(error.message || "Gagal membuat PDF resi.");
+    return err("Gagal membuat PDF resi.");
   }
 }

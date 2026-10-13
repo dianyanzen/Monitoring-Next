@@ -81,6 +81,6 @@ export async function GET(req: NextRequest) {
 
     return ok({ data: list });
   } catch (e: any) {
-    return err(e?.message || "Gagal memuat daftar pengguna untuk user level");
+    return err("Gagal memuat daftar pengguna untuk user level");
   }
 }

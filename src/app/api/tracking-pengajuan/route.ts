@@ -447,12 +447,9 @@ export async function GET(req: NextRequest) {
         message: e?.message ?? String(e),
       },
     });
-
-    return err(
-      e?.message || "Gagal memuat tracking pengajuan"
-    );
+    return err("Gagal memuat tracking pengajuan");
   }
-}4
+}
 
 
 export async function POST(req: NextRequest) {
@@ -760,6 +757,6 @@ export async function POST(req: NextRequest) {
       tookMs: Date.now() - started,
       err: { name: e?.name ?? "Error", message: e?.message ?? String(e) },
     });
-    return err(e?.message || "Gagal menyimpan pengajuan");
+    return err("Gagal menyimpan pengajuan");
   }
 }

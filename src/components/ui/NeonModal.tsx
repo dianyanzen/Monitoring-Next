@@ -1,9 +1,15 @@
 // FILE: src/components/ui/NeonModal.tsx
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useId } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, AlertTriangle, Info, XCircle, HelpCircle } from "lucide-react";
+import {
+  CheckCircle2,
+  AlertTriangle,
+  Info,
+  XCircle,
+  HelpCircle,
+} from "lucide-react";
 
 export type ModalKind = "info" | "success" | "warning" | "error" | "confirm";
 
@@ -46,15 +52,47 @@ export default function NeonModal({
   onConfirm,
   onClose,
 }: Props) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
   useEffect(() => {
     if (!open) return;
+    const previous = document.activeElement as HTMLElement | null;
+    const focusTimer = window.setTimeout(
+      () =>
+        dialogRef.current
+          ?.querySelector<HTMLButtonElement>("button:not(:disabled)")
+          ?.focus(),
+      0,
+    );
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "Enter" && kind !== "confirm") onClose();
+      if (e.key === "Escape" && !loading) onClose();
+      if (e.key === "Enter" && kind !== "confirm" && !loading) onClose();
+      if (e.key === "Tab") {
+        const elements = dialogRef.current?.querySelectorAll<HTMLElement>(
+          'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex="0"]',
+        );
+        if (!elements?.length) {
+          e.preventDefault();
+          return;
+        }
+        const first = elements[0],
+          last = elements[elements.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose, kind]);
+    return () => {
+      window.clearTimeout(focusTimer);
+      window.removeEventListener("keydown", onKey);
+      previous?.focus();
+    };
+  }, [open, onClose, kind, loading]);
 
   const Icon = iconByKind[kind];
 
@@ -65,8 +103,10 @@ export default function NeonModal({
           key="overlay"
           className="fixed inset-0 z-[2000] flex items-center justify-center"
           aria-modal="true"
+          aria-labelledby={titleId}
+          ref={dialogRef}
           role="dialog"
-          onClick={(e) => e.target === e.currentTarget && onClose()}
+          onClick={(e) => !loading && e.target === e.currentTarget && onClose()}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -98,9 +138,11 @@ export default function NeonModal({
             </div>
 
             {/* BODY */}
-            <div className="relative rounded-[18px] border border-cyan-400/20 bg-[#0b0f14]/90 p-6
+            <div
+              className="relative rounded-[18px] border border-cyan-400/20 bg-[#0b0f14]/90 p-6
                             shadow-[0_0_35px_rgba(0,255,255,.12),inset_0_0_60px_rgba(255,0,170,.05)]
-                            backdrop-blur">
+                            backdrop-blur"
+            >
               {/* SCANLINES & SHIMMER */}
               <div className="pointer-events-none absolute inset-0 rounded-[18px] overflow-hidden">
                 <div className="absolute inset-0 opacity-[0.08] mix-blend-soft-light bg-[linear-gradient(transparent_7px,rgba(255,255,255,.2)_8px,transparent_9px)] bg-[length:100%_9px] animate-[scanlines_10s_linear_infinite]" />
@@ -116,7 +158,12 @@ export default function NeonModal({
                   <Icon className="relative w-7 h-7 text-cyan-200 drop-shadow-[0_0_8px_rgba(0,255,255,.45)]" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-extrabold tracking-wide text-cyan-100">{title}</h3>
+                  <h3
+                    id={titleId}
+                    className="text-lg font-extrabold tracking-wide text-cyan-100"
+                  >
+                    {title}
+                  </h3>
                   {message && (
                     <p className="mt-2 text-[13.5px] leading-relaxed text-cyan-100/85">
                       {message}
@@ -153,7 +200,11 @@ export default function NeonModal({
                 >
                   {/* tombol glow ring */}
                   <span className="pointer-events-none absolute -inset-[1px] rounded-xl bg-[radial-gradient(220px_80px_at_50%_-20%,rgba(0,255,255,.35),transparent_60%)] opacity-0 group-hover:opacity-100 transition" />
-                  {loading ? "Processing…" : kind === "confirm" ? confirmText : "OK"}
+                  {loading
+                    ? "Processing…"
+                    : kind === "confirm"
+                      ? confirmText
+                      : "OK"}
                 </button>
               </div>
             </div>
